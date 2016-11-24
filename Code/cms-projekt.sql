@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 23. Nov 2016 um 15:16
+-- Erstellungszeit: 24. Nov 2016 um 18:09
 -- Server-Version: 10.1.16-MariaDB
 -- PHP-Version: 5.6.24
 
@@ -17,24 +17,48 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Datenbank: `cms-db`
+-- Datenbank: `cms-projekt`
 --
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `content`
+-- Tabellenstruktur für Tabelle `article`
 --
 
-CREATE TABLE `content` (
+CREATE TABLE `article` (
   `id` int(11) NOT NULL,
   `header` varchar(255) NOT NULL,
-  `inhalt` text NOT NULL,
-  `datum` date NOT NULL,
+  `content` text NOT NULL,
+  `date` date NOT NULL,
   `page_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `typ` varchar(255) NOT NULL,
-  `oeffentlich` tinyint(1) DEFAULT NULL
+  `author` int(11) NOT NULL,
+  `type` varchar(255) NOT NULL,
+  `public` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `ban`
+--
+
+CREATE TABLE `ban` (
+  `id` int(11) NOT NULL,
+  `reason` text NOT NULL,
+  `begin` datetime NOT NULL,
+  `end` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `ban_user`
+--
+
+CREATE TABLE `ban_user` (
+  `ban_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -45,7 +69,7 @@ CREATE TABLE `content` (
 
 CREATE TABLE `page` (
   `id` int(11) NOT NULL,
-  `titel` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL,
   `template_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -57,40 +81,15 @@ CREATE TABLE `page` (
 
 CREATE TABLE `role` (
   `id` int(11) NOT NULL,
-  `uri` text NOT NULL,
-  `rollenname` varchar(255) NOT NULL,
-  `gaestebuchverwaltung` tinyint(1) DEFAULT NULL,
-  `benutzerverwaltung` tinyint(1) DEFAULT NULL,
-  `seitenverwaltung` tinyint(1) DEFAULT NULL,
-  `inhaltsverwaltung` tinyint(1) DEFAULT NULL,
-  `gaestebuchnutzung` tinyint(1) DEFAULT NULL,
-  `datenbankverwaltung` tinyint(1) DEFAULT NULL,
-  `templateerstellung` tinyint(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `sperre`
---
-
-CREATE TABLE `sperre` (
-  `id` int(11) NOT NULL,
-  `begruendung` varchar(767) NOT NULL,
-  `anfang_sperre` datetime NOT NULL,
-  `ende_sperre` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `sperre_user`
---
-
-CREATE TABLE `sperre_user` (
-  `id` int(11) NOT NULL,
-  `sperre_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL
+  `uri` varchar(767) NOT NULL,
+  `rolename` varchar(255) NOT NULL,
+  `guestbookmanagement` tinyint(1) NOT NULL DEFAULT '0',
+  `usermanagement` tinyint(1) NOT NULL DEFAULT '0',
+  `pagemanagement` tinyint(1) NOT NULL DEFAULT '0',
+  `articlemanagement` tinyint(1) NOT NULL DEFAULT '0',
+  `guestbookusage` tinyint(1) NOT NULL DEFAULT '1',
+  `databasemanagement` tinyint(1) NOT NULL DEFAULT '0',
+  `templateconstruction` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -102,29 +101,27 @@ CREATE TABLE `sperre_user` (
 CREATE TABLE `tag` (
   `id` int(11) NOT NULL,
   `tagname` varchar(255) NOT NULL,
-  `uri` text NOT NULL
+  `uri` varchar(767) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `tag-content`
+-- Tabellenstruktur für Tabelle `tag_content`
 --
 
-CREATE TABLE `tag-content` (
-  `id` int(11) NOT NULL,
+CREATE TABLE `tag_content` (
   `tag_id` int(11) NOT NULL,
-  `content_id` int(11) NOT NULL
+  `article_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `tag-user`
+-- Tabellenstruktur für Tabelle `tag_user`
 --
 
-CREATE TABLE `tag-user` (
-  `id` int(11) NOT NULL,
+CREATE TABLE `tag_user` (
   `tag_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -138,7 +135,7 @@ CREATE TABLE `tag-user` (
 CREATE TABLE `template` (
   `id` int(11) NOT NULL,
   `templatename` varchar(255) NOT NULL,
-  `datenverweis` text NOT NULL
+  `filelink` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -149,14 +146,14 @@ CREATE TABLE `template` (
 
 CREATE TABLE `user` (
   `id` int(11) NOT NULL,
-  `rolle_id` int(11) NOT NULL,
-  `nachname` varchar(255) NOT NULL,
-  `vorname` varchar(255) NOT NULL,
-  `benutzername` varchar(255) NOT NULL,
-  `passwort` text NOT NULL,
+  `role_id` int(11) NOT NULL,
+  `lastname` varchar(255) NOT NULL,
+  `firstname` int(11) NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `status` varchar(255) NOT NULL,
-  `registrierdatum` date NOT NULL
+  `state` varchar(255) NOT NULL,
+  `registrydate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -164,82 +161,84 @@ CREATE TABLE `user` (
 --
 
 --
--- Indizes für die Tabelle `content`
+-- Indizes für die Tabelle `article`
 --
-ALTER TABLE `content`
+ALTER TABLE `article`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes für die Tabelle `ban`
+--
+ALTER TABLE `ban`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `header` (`header`,`page_id`,`user_id`);
+  ADD UNIQUE KEY `begin` (`begin`,`end`);
+
+--
+-- Indizes für die Tabelle `ban_user`
+--
+ALTER TABLE `ban_user`
+  ADD UNIQUE KEY `ban_id` (`ban_id`,`user_id`);
 
 --
 -- Indizes für die Tabelle `page`
 --
 ALTER TABLE `page`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `titel` (`titel`);
+  ADD UNIQUE KEY `title` (`title`);
 
 --
 -- Indizes für die Tabelle `role`
 --
 ALTER TABLE `role`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `rollenname` (`rollenname`);
-
---
--- Indizes für die Tabelle `sperre`
---
-ALTER TABLE `sperre`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `begruendung` (`begruendung`,`anfang_sperre`,`ende_sperre`);
-
---
--- Indizes für die Tabelle `sperre_user`
---
-ALTER TABLE `sperre_user`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `sperre_id` (`sperre_id`,`user_id`);
+  ADD UNIQUE KEY `rolename` (`rolename`);
 
 --
 -- Indizes für die Tabelle `tag`
 --
 ALTER TABLE `tag`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `tagname` (`tagname`);
+  ADD UNIQUE KEY `uri` (`uri`);
 
 --
--- Indizes für die Tabelle `tag-content`
+-- Indizes für die Tabelle `tag_content`
 --
-ALTER TABLE `tag-content`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `tag_id` (`tag_id`,`content_id`);
+ALTER TABLE `tag_content`
+  ADD UNIQUE KEY `tag_id` (`tag_id`,`article_id`);
 
 --
--- Indizes für die Tabelle `tag-user`
+-- Indizes für die Tabelle `tag_user`
 --
-ALTER TABLE `tag-user`
-  ADD PRIMARY KEY (`id`),
+ALTER TABLE `tag_user`
   ADD UNIQUE KEY `tag_id` (`tag_id`,`user_id`);
 
 --
 -- Indizes für die Tabelle `template`
 --
 ALTER TABLE `template`
-  ADD PRIMARY KEY (`id`,`templatename`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `templatename` (`templatename`);
 
 --
 -- Indizes für die Tabelle `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `rolle_id` (`rolle_id`,`benutzername`,`email`);
+  ADD UNIQUE KEY `username` (`username`,`email`);
 
 --
 -- AUTO_INCREMENT für exportierte Tabellen
 --
 
 --
--- AUTO_INCREMENT für Tabelle `content`
+-- AUTO_INCREMENT für Tabelle `article`
 --
-ALTER TABLE `content`
+ALTER TABLE `article`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT für Tabelle `ban`
+--
+ALTER TABLE `ban`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT für Tabelle `page`
@@ -252,29 +251,9 @@ ALTER TABLE `page`
 ALTER TABLE `role`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT für Tabelle `sperre`
---
-ALTER TABLE `sperre`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT für Tabelle `sperre_user`
---
-ALTER TABLE `sperre_user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
 -- AUTO_INCREMENT für Tabelle `tag`
 --
 ALTER TABLE `tag`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT für Tabelle `tag-content`
---
-ALTER TABLE `tag-content`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT für Tabelle `tag-user`
---
-ALTER TABLE `tag-user`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT für Tabelle `template`
