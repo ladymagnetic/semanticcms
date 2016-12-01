@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 24. Nov 2016 um 18:09
+-- Erstellungszeit: 01. Dez 2016 um 17:26
 -- Server-Version: 10.1.16-MariaDB
 -- PHP-Version: 5.6.24
 
@@ -64,6 +64,40 @@ CREATE TABLE `ban_user` (
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `lable`
+--
+
+CREATE TABLE `lable` (
+  `id` int(11) NOT NULL,
+  `lablename` varchar(255) NOT NULL,
+  `uri` varchar(767) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `lable_article`
+--
+
+CREATE TABLE `lable_article` (
+  `lable_id` int(11) NOT NULL,
+  `article_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `lable_user`
+--
+
+CREATE TABLE `lable_user` (
+  `lable_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `page`
 --
 
@@ -88,42 +122,30 @@ CREATE TABLE `role` (
   `pagemanagement` tinyint(1) NOT NULL DEFAULT '0',
   `articlemanagement` tinyint(1) NOT NULL DEFAULT '0',
   `guestbookusage` tinyint(1) NOT NULL DEFAULT '1',
-  `databasemanagement` tinyint(1) NOT NULL DEFAULT '0',
   `templateconstruction` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `tag`
+-- Tabellenstruktur für Tabelle `searchphrase`
 --
 
-CREATE TABLE `tag` (
+CREATE TABLE `searchphrase` (
   `id` int(11) NOT NULL,
-  `tagname` varchar(255) NOT NULL,
-  `uri` varchar(767) NOT NULL
+  `searchphrase` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `tag_content`
+-- Tabellenstruktur für Tabelle `searchphrase_user`
 --
 
-CREATE TABLE `tag_content` (
-  `tag_id` int(11) NOT NULL,
-  `article_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `tag_user`
---
-
-CREATE TABLE `tag_user` (
-  `tag_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL
+CREATE TABLE `searchphrase_user` (
+  `user_id` int(11) NOT NULL,
+  `searchphrase_id` int(11) NOT NULL,
+  `searchdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -152,7 +174,6 @@ CREATE TABLE `user` (
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `state` varchar(255) NOT NULL,
   `registrydate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -180,6 +201,25 @@ ALTER TABLE `ban_user`
   ADD UNIQUE KEY `ban_id` (`ban_id`,`user_id`);
 
 --
+-- Indizes für die Tabelle `lable`
+--
+ALTER TABLE `lable`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uri` (`uri`);
+
+--
+-- Indizes für die Tabelle `lable_article`
+--
+ALTER TABLE `lable_article`
+  ADD UNIQUE KEY `tag_id` (`lable_id`,`article_id`);
+
+--
+-- Indizes für die Tabelle `lable_user`
+--
+ALTER TABLE `lable_user`
+  ADD UNIQUE KEY `tag_id` (`lable_id`,`user_id`);
+
+--
 -- Indizes für die Tabelle `page`
 --
 ALTER TABLE `page`
@@ -194,23 +234,17 @@ ALTER TABLE `role`
   ADD UNIQUE KEY `rolename` (`rolename`);
 
 --
--- Indizes für die Tabelle `tag`
+-- Indizes für die Tabelle `searchphrase`
 --
-ALTER TABLE `tag`
+ALTER TABLE `searchphrase`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `uri` (`uri`);
+  ADD UNIQUE KEY `searchphrase` (`searchphrase`);
 
 --
--- Indizes für die Tabelle `tag_content`
+-- Indizes für die Tabelle `searchphrase_user`
 --
-ALTER TABLE `tag_content`
-  ADD UNIQUE KEY `tag_id` (`tag_id`,`article_id`);
-
---
--- Indizes für die Tabelle `tag_user`
---
-ALTER TABLE `tag_user`
-  ADD UNIQUE KEY `tag_id` (`tag_id`,`user_id`);
+ALTER TABLE `searchphrase_user`
+  ADD UNIQUE KEY `user_id` (`user_id`,`searchphrase_id`);
 
 --
 -- Indizes für die Tabelle `template`
@@ -241,6 +275,11 @@ ALTER TABLE `article`
 ALTER TABLE `ban`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
+-- AUTO_INCREMENT für Tabelle `lable`
+--
+ALTER TABLE `lable`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT für Tabelle `page`
 --
 ALTER TABLE `page`
@@ -251,9 +290,9 @@ ALTER TABLE `page`
 ALTER TABLE `role`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT für Tabelle `tag`
+-- AUTO_INCREMENT für Tabelle `searchphrase`
 --
-ALTER TABLE `tag`
+ALTER TABLE `searchphrase`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT für Tabelle `template`
