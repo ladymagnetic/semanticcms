@@ -1,5 +1,0 @@
-Passwörter sicher abspeichern:
-http://www.webmasterpro.de/coding/article/php-sicherheit-passwoerter-sicher-speichern.html
-
-Link für das Moqups Projekt:
-https://app.moqups.com/dimMoq25/D0SlTnyXJb/view
