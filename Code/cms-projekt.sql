@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.1
+-- version 4.4.12
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 01. Dez 2016 um 17:26
--- Server-Version: 10.1.16-MariaDB
--- PHP-Version: 5.6.24
+-- Erstellungszeit: 07. Dez 2016 um 17:48
+-- Server-Version: 5.6.25
+-- PHP-Version: 5.6.11
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Datenbank: `cms-projekt`
+-- Datenbank: `cmsprojekt`
 --
 
 -- --------------------------------------------------------
@@ -26,7 +26,7 @@ SET time_zone = "+00:00";
 -- Tabellenstruktur für Tabelle `article`
 --
 
-CREATE TABLE `article` (
+CREATE TABLE IF NOT EXISTS `article` (
   `id` int(11) NOT NULL,
   `header` varchar(255) NOT NULL,
   `content` text NOT NULL,
@@ -34,7 +34,8 @@ CREATE TABLE `article` (
   `page_id` int(11) NOT NULL,
   `author` int(11) NOT NULL,
   `type` varchar(255) NOT NULL,
-  `public` tinyint(1) NOT NULL DEFAULT '0'
+  `public` tinyint(1) NOT NULL DEFAULT '0',
+  `description` varchar(500) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -43,7 +44,7 @@ CREATE TABLE `article` (
 -- Tabellenstruktur für Tabelle `ban`
 --
 
-CREATE TABLE `ban` (
+CREATE TABLE IF NOT EXISTS `ban` (
   `id` int(11) NOT NULL,
   `reason` text NOT NULL,
   `begin` datetime NOT NULL,
@@ -56,7 +57,7 @@ CREATE TABLE `ban` (
 -- Tabellenstruktur für Tabelle `ban_user`
 --
 
-CREATE TABLE `ban_user` (
+CREATE TABLE IF NOT EXISTS `ban_user` (
   `ban_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -67,10 +68,10 @@ CREATE TABLE `ban_user` (
 -- Tabellenstruktur für Tabelle `lable`
 --
 
-CREATE TABLE `lable` (
+CREATE TABLE IF NOT EXISTS `lable` (
   `id` int(11) NOT NULL,
   `lablename` varchar(255) NOT NULL,
-  `uri` varchar(767) NOT NULL
+  `uri` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -79,7 +80,7 @@ CREATE TABLE `lable` (
 -- Tabellenstruktur für Tabelle `lable_article`
 --
 
-CREATE TABLE `lable_article` (
+CREATE TABLE IF NOT EXISTS `lable_article` (
   `lable_id` int(11) NOT NULL,
   `article_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -90,7 +91,7 @@ CREATE TABLE `lable_article` (
 -- Tabellenstruktur für Tabelle `lable_user`
 --
 
-CREATE TABLE `lable_user` (
+CREATE TABLE IF NOT EXISTS `lable_user` (
   `lable_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -101,7 +102,7 @@ CREATE TABLE `lable_user` (
 -- Tabellenstruktur für Tabelle `page`
 --
 
-CREATE TABLE `page` (
+CREATE TABLE IF NOT EXISTS `page` (
   `id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
   `template_id` int(11) NOT NULL
@@ -113,9 +114,9 @@ CREATE TABLE `page` (
 -- Tabellenstruktur für Tabelle `role`
 --
 
-CREATE TABLE `role` (
+CREATE TABLE IF NOT EXISTS `role` (
   `id` int(11) NOT NULL,
-  `uri` varchar(767) NOT NULL,
+  `uri` text NOT NULL,
   `rolename` varchar(255) NOT NULL,
   `guestbookmanagement` tinyint(1) NOT NULL DEFAULT '0',
   `usermanagement` tinyint(1) NOT NULL DEFAULT '0',
@@ -131,7 +132,7 @@ CREATE TABLE `role` (
 -- Tabellenstruktur für Tabelle `searchphrase`
 --
 
-CREATE TABLE `searchphrase` (
+CREATE TABLE IF NOT EXISTS `searchphrase` (
   `id` int(11) NOT NULL,
   `searchphrase` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -142,7 +143,7 @@ CREATE TABLE `searchphrase` (
 -- Tabellenstruktur für Tabelle `searchphrase_user`
 --
 
-CREATE TABLE `searchphrase_user` (
+CREATE TABLE IF NOT EXISTS `searchphrase_user` (
   `user_id` int(11) NOT NULL,
   `searchphrase_id` int(11) NOT NULL,
   `searchdate` date NOT NULL
@@ -154,7 +155,7 @@ CREATE TABLE `searchphrase_user` (
 -- Tabellenstruktur für Tabelle `template`
 --
 
-CREATE TABLE `template` (
+CREATE TABLE IF NOT EXISTS `template` (
   `id` int(11) NOT NULL,
   `templatename` varchar(255) NOT NULL,
   `filelink` text NOT NULL
@@ -166,7 +167,7 @@ CREATE TABLE `template` (
 -- Tabellenstruktur für Tabelle `user`
 --
 
-CREATE TABLE `user` (
+CREATE TABLE IF NOT EXISTS `user` (
   `id` int(11) NOT NULL,
   `role_id` int(11) NOT NULL,
   `lastname` varchar(255) NOT NULL,
@@ -174,7 +175,8 @@ CREATE TABLE `user` (
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `registrydate` date NOT NULL
+  `registrydate` date NOT NULL,
+  `birthsate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -204,8 +206,7 @@ ALTER TABLE `ban_user`
 -- Indizes für die Tabelle `lable`
 --
 ALTER TABLE `lable`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `uri` (`uri`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indizes für die Tabelle `lable_article`
