@@ -6,6 +6,11 @@
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
 <title>Inhalt bearbeiten</title>
 <link rel="stylesheet" href="BackendCSS.css">
+<link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.css" rel="stylesheet">
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script> 
+  <script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.js"></script> 
+  <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.css" rel="stylesheet">
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.js"></script>
 </head>
 
 <body>
@@ -19,10 +24,12 @@
 </nav>
 <section id="main">
     <h1>Inhalt bearbeiten</h1>
-    <form method="post">
-        <input id="addMedia" name="addMedia" type="button" value="Medien hinzufügen"></form>
-    <form method="post">
-        <textarea cols="20" id="contentText" name="contentText" rows="2"></textarea></form>
+    <div id="summernote"><p>Hello Summernote</p></div>
+      <script>
+        $(document).ready(function() {
+            $('#summernote').summernote();
+        });
+      </script>
     <form method="post">
         <input id="publish" name="publish" type="button" value="Publish">
     </form>
