@@ -9,7 +9,15 @@
 </head>
 
 <body>
-
+<!-- menue -->
+<nav id="menue">
+	<ul>
+	<li><a href="Benutzerverwaltung.php" title="Struktur">Benutzerverwaltung</a></li>
+	<li><a href="Seitenverwaltung.php" title="Darstellung">Seitenverwaltung</a></li>
+	<li><a href="Inhaltsverwaltung.php" title="Formulare">Inhaltsverwaltung</a></li>
+	<li><a href="Templates.php" title="Verweise">Templates</a></li>
+	</ul>
+</nav>
 <h1>Benutzerverwaltung</h1>
 <table>
 	<tr>
