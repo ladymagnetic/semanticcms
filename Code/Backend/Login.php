@@ -12,10 +12,10 @@
 
 <h1>Login</h1>
 <form method="post">
-	<input name="username" type="text">
-	<input name="password" type="password">
-	<input name="ok" type="button" value="OK">
-	<input name="forgotPassword" type="button" value="Passwort vergessen">
+	<input id="username" name="username" type="text">
+	<input id="password" name="password" type="password">
+	<input id="ok" name="ok" type="button" value="OK">
+	<input id="forgotPassword" name="forgotPassword" type="button" value="Passwort vergessen">
 </form>
 
 </body>

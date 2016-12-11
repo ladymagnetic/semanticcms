@@ -18,7 +18,7 @@
 	</ul>
 </nav>
 <h1>Inhaltsverwaltung</h1>
-<form action="select.html"> <label>Künstler(in): <select name="top5" size="5"> <option>Heino</option> <option>Michael Jackson</option> <option>Tom Waits</option> <option>Nina Hagen</option> <option>Marianne Rosenberg</option> </select> </label> </form>
+<form id="page" name="page" action="select.html"> <label>Seite: <select name="top5" size="5"> <option>Heino</option> <option>Michael Jackson</option> <option>Tom Waits</option> <option>Nina Hagen</option> <option>Marianne Rosenberg</option> </select> </label> </form>
 <table>
 	<tr>
 		<td>Inhalte</td>
@@ -30,7 +30,7 @@
 		<td>&nbsp;</td>
 		<td>
 		<form method="post">
-			<input name="delete" type="button" value="Löschen"><input name="Button2" type="button" value="Bearbeiten"></form>
+			<input id="delete" name="delete" type="button" value="Löschen"><input name="Button2" type="button" value="Bearbeiten"></form>
 		</td>
 	</tr>
 	<tr>
@@ -45,7 +45,7 @@
 	</tr>
 </table>
 <form method="post">
-	<input name="newContent" type="button" value="Neuer Inhalt"></form>
+	<input id="newContent" name="newContent" type="button" value="Neuer Inhalt"></form>
 
 </body>
 

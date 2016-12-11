@@ -21,23 +21,23 @@
 <p>
 <form method="post">
     <label for="userName">Benutzername</label>
-	<input name="userName" type="text">
+	<input id="userName" name="userName" type="text">
     <label for="name">Name</label>
-	<input name="name" type="text">
+	<input id="name" name="name" type="text">
     <label for="foreName">Vorname</label>
-	<input name="email" type="text">
+	<input id="foreName" name="foreName" type="text">
     <label for="email">Email</label>
-	<input name="Password4" type="text">
+	<input id="email" name="email" type="text">
 </form>
 <h2>Passwort ändern</h2>
 <form method="post">
     <label for="currentPassword">aktuelles Passwort</label>
-	<input name="currentPassword" type="password">
+	<input id="currentPassword" name="currentPassword" type="password">
     <label for="newPassword">neues Passwort</label>
-	<input name="newPassword" type="password">
+	<input id="newPassword" name="newPassword" type="password">
     <label for="newPasswordRepeat">neues Passwort bestätigen</label>
-	<input name="newPasswordRepeat" type="password">
-	<input name="applyChanges" type="button" value="Änderungen übernehmen">
+	<input id="newPasswordRepeat" name="newPasswordRepeat" type="password">
+	<input id="applyChanges" name="applyChanges" type="button" value="Änderungen übernehmen">
 </form>
 
 </body>

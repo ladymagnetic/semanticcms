@@ -39,8 +39,8 @@
 	</tr>
 </table>
 <form method="post">
-	<input name="exportDatabase" type="button" value="Datenbank exportieren">
-	<input name="importDatabase" type="button" value="Datenbank importieren">
+	<input id="exportDatabase" name="exportDatabase" type="button" value="Datenbank exportieren">
+	<input id="importDatabase" name="importDatabase" type="button" value="Datenbank importieren">
 </form>
 
 </body>

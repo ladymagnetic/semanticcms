@@ -19,11 +19,11 @@
 </nav>
 <h1>Inhalt bearbeiten</h1>
 <form method="post">
-	<input name="addMedia" type="button" value="Medien hinzufügen"></form>
+	<input id="addMedia" name="addMedia" type="button" value="Medien hinzufügen"></form>
 <form method="post">
-	<textarea cols="20" name="TextArea1" rows="2"></textarea></form>
+	<textarea cols="20" id="contentText" name="contentText" rows="2"></textarea></form>
 <form method="post">
-	<input name="publish" type="button" value="Publish">
+	<input id="publish" name="publish" type="button" value="Publish">
 </form>
 
 </body>
