@@ -29,10 +29,10 @@
         <tr>
             <td>&nbsp;</td>
             <td>
-                <form id="template" name="template" action="select.html"> <label>Template: <select name="top5" size="5"> <option>Heino</option> <option>Michael Jackson</option> <option>Tom Waits</option> <option>Nina Hagen</option> <option>Marianne Rosenberg</option> </select> </label> </form>
+                <form id="template" name="template" action="BackendComponentPrinter.class.php"> <label>Template: <select name="top5" size="5"> <option>Heino</option> <option>Michael Jackson</option> <option>Tom Waits</option> <option>Nina Hagen</option> <option>Marianne Rosenberg</option> </select> </label> </form>
             </td>
             <td>
-            <form method="post">
+            <form method="post" action="BackendComponentPrinter.class.php">
                 <input id="public" name="public" type="checkbox"></form>
             </td>
             <td>
@@ -59,7 +59,7 @@
             <td>&nbsp;</td>
         </tr>
     </table>
-    <form method="post">
+    <form method="post" action="BackendComponentPrinter.class.php">
         <input id="newPage" name="newPage" type="button" value="Neue Seite">
         <input id="options" name="options" type="button" value="Optionen">
     </form>

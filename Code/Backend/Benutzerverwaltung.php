@@ -30,12 +30,12 @@
         <tr>
             <td>&nbsp;</td>
             <td>
-            <form method="post">
+            <form method="post" action="BackendComponentPrinter.class.php">
                 <input id="unlock" name="unlock" type="button" value="entsperren"></form>
             </td>
             <td>&nbsp;</td>
             <td>
-            <form method="post">
+            <form method="post" action="BackendComponentPrinter.class.php">
                 <input id="delete" name="delete" type="button" value="Details"><input name="Button5" type="button" value="löschen"></form>
             </td>
         </tr>
@@ -58,7 +58,7 @@
             <td>&nbsp;</td>
         </tr>
     </table>
-    <form method="post">
+    <form method="post" action="BackendComponentPrinter.class.php">
         <input id="newUser" name="newUser" type="button" value="Neuer Benutzer">
         <input id="defineRole" name="defineRole" type="button" value="Rollen definieren">
     </form>
@@ -75,12 +75,12 @@
             <td>Gast</td>
         </tr>
     </table>
-    <form method="post">
+    <form method="post" action="BackendComponentPrinter.class.php">
         <input id="newRole" name="newRole" type="button" value="Neue Rolle">
         <input id="deleteRole" name="deleteRole" type="button" value="Rolle löschen">
     </form>
     <h3>Rechte</h3>
-    <form method="post">
+    <form method="post" action="BackendComponentPrinter.class.php">
         <input id="right1" name="right1" type="checkbox">
         <input id="right2" name="right2" type="checkbox">
         <input id="saveChanges" name="saveChanges" type="button" value="Änderungen speichern">
