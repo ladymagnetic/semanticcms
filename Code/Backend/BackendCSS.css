@@ -1,6 +1,7 @@
 body, html {
     margin: 0px;
     padding: 0px;
+    font-family: Arial,Helvetica Neue,Helvetica,sans-serif; 
 }
 
 nav{    
@@ -9,7 +10,7 @@ nav{
   margin: 0;
   padding: 0;
   margin-right: 10px;
-  width: 400px;
+  width: 20%;
   height: 100vh;
   background-color: chocolate;
 }
@@ -18,7 +19,7 @@ section#main{
   float: left;
   margin: 0;
   padding: 0;
-  display: inline;     
+  display: inline;
 }
 
 #menue ul
@@ -42,6 +43,8 @@ section#main{
     text-decoration: none;
     width: 100%;
     height: 50px;
+    text-align: center;
+    line-height: 50px;
 }
 
 #menue a:hover
@@ -63,3 +66,19 @@ table, th, td {
 th {
     text-align: left;
 }
+
+input[type=button] {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+input[type=button]:hover {
+    background-color:darkgreen;
+}
+
