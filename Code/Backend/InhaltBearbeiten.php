@@ -17,15 +17,16 @@
 	<li><a href="Templates.php" title="Verweise">Templates</a></li>
 	</ul>
 </nav>
-<h1>Inhalt bearbeiten</h1>
-<form method="post">
-	<input id="addMedia" name="addMedia" type="button" value="Medien hinzufügen"></form>
-<form method="post">
-	<textarea cols="20" id="contentText" name="contentText" rows="2"></textarea></form>
-<form method="post">
-	<input id="publish" name="publish" type="button" value="Publish">
-</form>
-
+<section id="main">
+    <h1>Inhalt bearbeiten</h1>
+    <form method="post">
+        <input id="addMedia" name="addMedia" type="button" value="Medien hinzufügen"></form>
+    <form method="post">
+        <textarea cols="20" id="contentText" name="contentText" rows="2"></textarea></form>
+    <form method="post">
+        <input id="publish" name="publish" type="button" value="Publish">
+    </form>
+</section>
 </body>
 
 </html>

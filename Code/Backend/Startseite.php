@@ -17,32 +17,33 @@
 	<li><a href="Templates.php" title="Verweise">Templates</a></li>
 	</ul>
 </nav>
-<h1>Startseite</h1>
-<table>
-	<tr>
-		<td>Letzte Änderungen</td>
-	</tr>
-	<tr>
-		<td>&nbsp;</td>
-	</tr>
-	<tr>
-		<td>&nbsp;</td>
-	</tr>
-	<tr>
-		<td>&nbsp;</td>
-	</tr>
-	<tr>
-		<td>&nbsp;</td>
-	</tr>
-	<tr>
-		<td>&nbsp;</td>
-	</tr>
-</table>
-<form method="post">
-	<input id="exportDatabase" name="exportDatabase" type="button" value="Datenbank exportieren">
-	<input id="importDatabase" name="importDatabase" type="button" value="Datenbank importieren">
-</form>
-
+<section id="main">
+    <h1>Startseite</h1>
+    <table>
+        <tr>
+            <td>Letzte Änderungen</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+        </tr>
+    </table>
+    <form method="post">
+        <input id="exportDatabase" name="exportDatabase" type="button" value="Datenbank exportieren">
+        <input id="importDatabase" name="importDatabase" type="button" value="Datenbank importieren">
+    </form>
+</section>
 </body>
 
 </html>

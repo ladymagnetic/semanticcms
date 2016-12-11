@@ -17,8 +17,8 @@
 	<li><a href="Templates.php" title="Verweise">Templates</a></li>
 	</ul>
 </nav>
-<h1>Templates</h1>
-
+    <section id="main">
+    <h1>Templates</h1>
+</section>
 </body>
-
 </html>

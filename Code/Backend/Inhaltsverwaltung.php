@@ -17,36 +17,37 @@
 	<li><a href="Templates.php" title="Verweise">Templates</a></li>
 	</ul>
 </nav>
-<h1>Inhaltsverwaltung</h1>
-<form id="page" name="page" action="select.html"> <label>Seite: <select name="top5" size="5"> <option>Heino</option> <option>Michael Jackson</option> <option>Tom Waits</option> <option>Nina Hagen</option> <option>Marianne Rosenberg</option> </select> </label> </form>
-<table>
-	<tr>
-		<td>Inhalte</td>
-		<td>Veröffentlichungsdatum</td>
-		<td>Aktion</td>
-	</tr>
-	<tr>
-		<td>&nbsp;</td>
-		<td>&nbsp;</td>
-		<td>
-		<form method="post">
-			<input id="delete" name="delete" type="button" value="Löschen"><input name="Button2" type="button" value="Bearbeiten"></form>
-		</td>
-	</tr>
-	<tr>
-		<td>&nbsp;</td>
-		<td>&nbsp;</td>
-		<td>&nbsp;</td>
-	</tr>
-	<tr>
-		<td>&nbsp;</td>
-		<td>&nbsp;</td>
-		<td>&nbsp;</td>
-	</tr>
-</table>
-<form method="post">
-	<input id="newContent" name="newContent" type="button" value="Neuer Inhalt"></form>
-
+<section id="main">
+    <h1>Inhaltsverwaltung</h1>
+    <form id="page" name="page" action="select.html"> <label>Seite: <select name="top5" size="5"> <option>Heino</option> <option>Michael Jackson</option> <option>Tom Waits</option> <option>Nina Hagen</option> <option>Marianne Rosenberg</option> </select> </label> </form>
+    <table>
+        <tr>
+            <td>Inhalte</td>
+            <td>Veröffentlichungsdatum</td>
+            <td>Aktion</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>
+            <form method="post">
+                <input id="delete" name="delete" type="button" value="Löschen"><input name="Button2" type="button" value="Bearbeiten"></form>
+            </td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+    </table>
+    <form method="post">
+        <input id="newContent" name="newContent" type="button" value="Neuer Inhalt"></form>
+</section>
 </body>
 
 </html>

@@ -9,7 +9,7 @@
 </head>
 
 <body>
-
+<section id="login">
 <h1>Login</h1>
 <form method="post">
 	<input id="username" name="username" type="text">
@@ -17,7 +17,7 @@
 	<input id="ok" name="ok" type="button" value="OK">
 	<input id="forgotPassword" name="forgotPassword" type="button" value="Passwort vergessen">
 </form>
-
+</section>
 </body>
 
 </html>

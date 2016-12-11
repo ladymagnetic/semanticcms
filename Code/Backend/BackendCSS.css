@@ -1,3 +1,49 @@
+nav{    
+  float: left;
+  display: inline;
+  margin: 0;
+  padding: 0;
+  margin-right: 10px;
+  width: 400px;
+}
+
+section#main{
+  float: left;
+  margin: 0;
+  padding: 0;
+  display: inline;     
+}
+
+#menue ul
+{
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+    text-align: left;
+}
+
+#menue li
+{
+    border-top: 5px solid #E9EFE5;
+}
+
+#menue a
+{
+    display: block;
+    background-color: #A8BE96;
+    color: #000;
+    text-decoration: none;
+    width: 100%;
+    padding-left: 2px;
+}
+
+#menue a:hover
+{
+    text-decoration: none;
+    color: #fff;
+    background-color: #000;
+}
+
 table {
     border-collapse: collapse;
     width: 100%;
