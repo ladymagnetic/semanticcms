@@ -32,11 +32,11 @@
         </td>
 		<td>
 		<form method="post">
-			<input name="Checkbox1" type="checkbox"></form>
+			<input name="public" type="checkbox"></form>
 		</td>
 		<td>
 		<form method="post">
-			<input name="Button1" type="button" value="Löschen"><input name="Button2" type="button" value="Inhalte bearbeiten"></form>
+			<input name="editContent" type="button" value="Löschen"><input name="Button2" type="button" value="Inhalte bearbeiten"></form>
 		</td>
 	</tr>
 	<tr>
@@ -59,9 +59,9 @@
 	</tr>
 </table>
 <form method="post">
-	<input name="Button3" type="button" value="Neue Seite"></form>
-<form method="post">
-	<input name="Button4" type="button" value="Optionen"></form>
+	<input name="newPage" type="button" value="Neue Seite">
+	<input name="options" type="button" value="Optionen">
+</form>
 
 </body>
 

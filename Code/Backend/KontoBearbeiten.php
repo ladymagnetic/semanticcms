@@ -20,25 +20,25 @@
 <h1>Kontodaten bearbeiten</h1>
 <p>
 <form method="post">
-	<input name="Password1" type="text"></form>
-</p>
-<form method="post">
-	<input name="Password2" type="text"></form>
-<form method="post">
-	<input name="Password3" type="text"></form>
-<form method="post">
-	<input name="Password4" type="text"></form>
+    <label for="userName">Benutzername</label>
+	<input name="userName" type="text">
+    <label for="name">Name</label>
+	<input name="name" type="text">
+    <label for="foreName">Vorname</label>
+	<input name="email" type="text">
+    <label for="email">Email</label>
+	<input name="Password4" type="text">
+</form>
 <h2>Passwort ändern</h2>
-<p>
 <form method="post">
-	<input name="Password5" type="password"></form>
-</p>
-<form method="post">
-	<input name="Password6" type="password"></form>
-<form method="post">
-	<input name="Password7" type="password"></form>
-<form method="post">
-	<input name="Button1" type="button" value="Änderungen übernehmen"></form>
+    <label for="currentPassword">aktuelles Passwort</label>
+	<input name="currentPassword" type="password">
+    <label for="newPassword">neues Passwort</label>
+	<input name="newPassword" type="password">
+    <label for="newPasswordRepeat">neues Passwort bestätigen</label>
+	<input name="newPasswordRepeat" type="password">
+	<input name="applyChanges" type="button" value="Änderungen übernehmen">
+</form>
 
 </body>
 

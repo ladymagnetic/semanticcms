@@ -30,12 +30,12 @@
 		<td>&nbsp;</td>
 		<td>
 		<form method="post">
-			<input name="Button3" type="button" value="entsperren"></form>
+			<input name="unlock" type="button" value="entsperren"></form>
 		</td>
 		<td>&nbsp;</td>
 		<td>
 		<form method="post">
-			<input name="Button4" type="button" value="Details"><input name="Button5" type="button" value="löschen"></form>
+			<input name="delete" type="button" value="Details"><input name="Button5" type="button" value="löschen"></form>
 		</td>
 	</tr>
 	<tr>
@@ -58,9 +58,9 @@
 	</tr>
 </table>
 <form method="post">
-	<input name="Button1" type="button" value="Neuer Benutzer"></form>
-<form method="post">
-	<input name="Button2" type="button" value="Rollen definieren"></form>
+	<input name="newUser" type="button" value="Neuer Benutzer">
+	<input name="defineRole" type="button" value="Rollen definieren">
+</form>
 <h2>Rollen definieren</h2>
 <h3>Rollenname</h3>
 <table>
@@ -75,16 +75,15 @@
 	</tr>
 </table>
 <form method="post">
-	<input name="Button6" type="button" value="Neue Rolle"></form>
-<form method="post">
-	<input name="Button7" type="button" value="Rolle löschen"></form>
+	<input name="newRole" type="button" value="Neue Rolle">
+	<input name="deleteRole" type="button" value="Rolle löschen">
+</form>
 <h3>Rechte</h3>
 <form method="post">
-	<input name="Checkbox1" type="checkbox"></form>
-<form method="post">
-	<input name="Checkbox2" type="checkbox"></form>
-<form method="post">
-	<input name="Button8" type="button" value="Änderungen speichern"></form>
+	<input name="right1" type="checkbox">
+	<input name="right2" type="checkbox">
+	<input name="saveChanges" type="button" value="Änderungen speichern">
+</form>
 
 </body>
 

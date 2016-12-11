@@ -30,7 +30,7 @@
 		<td>&nbsp;</td>
 		<td>
 		<form method="post">
-			<input name="Button1" type="button" value="Löschen"><input name="Button2" type="button" value="Bearbeiten"></form>
+			<input name="delete" type="button" value="Löschen"><input name="Button2" type="button" value="Bearbeiten"></form>
 		</td>
 	</tr>
 	<tr>
@@ -45,7 +45,7 @@
 	</tr>
 </table>
 <form method="post">
-	<input name="Button3" type="button" value="Neuer Inhalt"></form>
+	<input name="newContent" type="button" value="Neuer Inhalt"></form>
 
 </body>
 
