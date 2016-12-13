@@ -10,6 +10,7 @@
 
 <body>
 <nav id="menue">
+    <div id="logo"></div>
 	<ul>
 	<li><a href="Benutzerverwaltung.php" title="Struktur">Benutzerverwaltung</a></li>
 	<li><a href="Seitenverwaltung.php" title="Darstellung">Seitenverwaltung</a></li>
@@ -22,9 +23,9 @@
     <form id="page" name="page" action="../lib/BackendComponentPrinter.class.php"> <label>Seite: <select name="top5" size="5"> <option>Heino</option> <option>Michael Jackson</option> <option>Tom Waits</option> <option>Nina Hagen</option> <option>Marianne Rosenberg</option> </select> </label> </form>
     <table>
         <tr>
-            <td>Inhalte</td>
-            <td>Veröffentlichungsdatum</td>
-            <td>Aktion</td>
+            <th>Inhalte</th>
+            <th>Veröffentlichungsdatum</th>
+            <th>Aktion</th>
         </tr>
         <tr>
             <td>&nbsp;</td>

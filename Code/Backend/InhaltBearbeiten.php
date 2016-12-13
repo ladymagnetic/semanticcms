@@ -15,6 +15,7 @@
 
 <body>
 <nav id="menue">
+    <div id="logo"></div>
 	<ul>
 	<li><a href="Benutzerverwaltung.php" title="Struktur">Benutzerverwaltung</a></li>
 	<li><a href="Seitenverwaltung.php" title="Darstellung">Seitenverwaltung</a></li>

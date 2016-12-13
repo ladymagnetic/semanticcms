@@ -10,6 +10,7 @@
 
 <body>
 <nav id="menue">
+    <div id="logo"></div>
 	<ul>
 	<li><a href="Benutzerverwaltung.php" title="Struktur">Benutzerverwaltung</a></li>
 	<li><a href="Seitenverwaltung.php" title="Darstellung">Seitenverwaltung</a></li>
@@ -21,10 +22,10 @@
     <h1>Seitenverwaltung</h1>
     <table>
         <tr>
-            <td>Seite</td>
-            <td>Template</td>
-            <td>Öffentlich</td>
-            <td>Aktionen</td>
+            <th>Seite</th>
+            <th>Template</th>
+            <th>Öffentlich</th>
+            <th>Aktionen</th>
         </tr>
         <tr>
             <td>&nbsp;</td>

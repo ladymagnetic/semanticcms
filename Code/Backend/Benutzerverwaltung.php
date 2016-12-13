@@ -11,6 +11,7 @@
 <body>
 <!-- menue -->
 <nav id="menue">
+    <div id="logo"></div>
 	<ul>
         <li><a href="Benutzerverwaltung.php" title="Struktur">Benutzerverwaltung</a></li>
         <li><a href="Seitenverwaltung.php" title="Darstellung">Seitenverwaltung</a></li>
@@ -22,10 +23,10 @@
     <h1>Benutzerverwaltung</h1>
     <table>
         <tr>
-            <td>Benutzer</td>
-            <td>entsperren/sperren</td>
-            <td>Rolle</td>
-            <td>Aktion</td>
+            <th>Benutzer</th>
+            <th>entsperren/sperren</th>
+            <th>Rolle</th>
+            <th>Aktion</th>
         </tr>
         <tr>
             <td>&nbsp;</td>

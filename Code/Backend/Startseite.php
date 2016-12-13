@@ -10,6 +10,7 @@
 
 <body>
 <nav id="menue">
+    <div id="logo"></div>
 	<ul>
 	<li><a href="Benutzerverwaltung.php" title="Struktur">Benutzerverwaltung</a></li>
 	<li><a href="Seitenverwaltung.php" title="Darstellung">Seitenverwaltung</a></li>
@@ -21,7 +22,7 @@
     <h1>Startseite</h1>
     <table>
         <tr>
-            <td>Letzte Änderungen</td>
+            <th>Letzte Änderungen</th>
         </tr>
         <tr>
             <td>&nbsp;</td>
