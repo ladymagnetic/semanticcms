@@ -171,12 +171,12 @@ CREATE TABLE IF NOT EXISTS `user` (
   `id` int(11) NOT NULL,
   `role_id` int(11) NOT NULL,
   `lastname` varchar(255) NOT NULL,
-  `firstname` int(11) NOT NULL,
+  `firstname` varchar(255) NOT NULL,
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `registrydate` date NOT NULL,
-  `birthsate` date NOT NULL
+  `birthdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
