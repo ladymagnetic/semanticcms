@@ -39,7 +39,7 @@
             <td>&nbsp;</td>
         </tr>
     </table>
-    <form method="post" action="BackendComponentPrinter.class.php">
+    <form method="post" action="../lib/BackendComponentPrinter.class.php">
         <input id="exportDatabase" name="exportDatabase" type="button" value="Datenbank exportieren">
         <input id="importDatabase" name="importDatabase" type="button" value="Datenbank importieren">
     </form>

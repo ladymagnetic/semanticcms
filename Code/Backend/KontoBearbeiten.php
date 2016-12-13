@@ -19,7 +19,7 @@
 </nav>
 <section id="main">
 <h1>Kontodaten bearbeiten</h1>
-    <form method="post" action="BackendComponentPrinter.class.php">
+    <form method="post" action="../lib/BackendComponentPrinter.class.php">
         <label for="userName">Benutzername</label>
         <input id="userName" name="userName" type="text">
         <label for="name">Name</label>
@@ -30,7 +30,7 @@
         <input id="email" name="email" type="text">
     </form>
     <h2>Passwort ändern</h2>
-    <form method="post" action="BackendComponentPrinter.class.php">
+    <form method="post" action="../lib/BackendComponentPrinter.class.php">
         <label for="currentPassword">aktuelles Passwort</label>
         <input id="currentPassword" name="currentPassword" type="password">
         <label for="newPassword">neues Passwort</label>

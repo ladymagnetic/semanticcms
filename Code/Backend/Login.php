@@ -11,7 +11,7 @@
 <body>
 <section id="login">
 <h1>Login</h1>
-<form method="post" action="BackendComponentPrinter.class.php">
+<form method="post" action="../lib/BackendComponentPrinter.class.php">
 	<input id="username" name="username" type="text">
 	<input id="password" name="password" type="password">
 	<input id="ok" name="ok" type="button" value="OK">

@@ -30,7 +30,7 @@
             $('#summernote').summernote();
         });
       </script>
-    <form method="post" action="BackendComponentPrinter.class.php">
+    <form method="post" action="../lib/BackendComponentPrinter.class.php">
         <input id="publish" name="publish" type="button" value="Publish">
     </form>
 </section>

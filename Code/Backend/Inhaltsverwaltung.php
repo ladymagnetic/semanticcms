@@ -19,7 +19,7 @@
 </nav>
 <section id="main">
     <h1>Inhaltsverwaltung</h1>
-    <form id="page" name="page" action="BackendComponentPrinter.class.php"> <label>Seite: <select name="top5" size="5"> <option>Heino</option> <option>Michael Jackson</option> <option>Tom Waits</option> <option>Nina Hagen</option> <option>Marianne Rosenberg</option> </select> </label> </form>
+    <form id="page" name="page" action="../lib/BackendComponentPrinter.class.php"> <label>Seite: <select name="top5" size="5"> <option>Heino</option> <option>Michael Jackson</option> <option>Tom Waits</option> <option>Nina Hagen</option> <option>Marianne Rosenberg</option> </select> </label> </form>
     <table>
         <tr>
             <td>Inhalte</td>
@@ -30,7 +30,7 @@
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td>
-            <form method="post" action="BackendComponentPrinter.class.php">
+            <form method="post" action="../lib/BackendComponentPrinter.class.php">
                 <input id="delete" name="delete" type="button" value="Löschen"><input name="Button2" type="button" value="Bearbeiten"></form>
             </td>
         </tr>
@@ -45,7 +45,7 @@
             <td>&nbsp;</td>
         </tr>
     </table>
-    <form method="post" action="BackendComponentPrinter.class.php">
+    <form method="post" action="../lib/BackendComponentPrinter.class.php">
         <input id="newContent" name="newContent" type="button" value="Neuer Inhalt"></form>
 </section>
 </body>
