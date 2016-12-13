@@ -36,7 +36,7 @@
             <td>&nbsp;</td>
             <td>
             <form method="post" action="../lib/BackendComponentPrinter.class.php">
-                <input id="delete" name="delete" type="button" value="Details"><input name="Button5" type="button" value="löschen"></form>
+                <input id="details" name="details" type="button" value="Details"><input id="delete" name="delete" type="button" value="löschen"></form>
             </td>
         </tr>
         <tr>
