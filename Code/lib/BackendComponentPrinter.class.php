@@ -8,7 +8,7 @@ namespace SemanticCms\ComponentPrinter;
 /**
 * Provides static functions for creating the backend page.
 */
-abstract class BackendComponentPrinter
+class BackendComponentPrinter
 {
 	/* -------- BEISPIEL METHODEN - BITTE LÖSCHEN WENN NICHT MEHR BENÖTIGT --------- */
 	
@@ -40,27 +40,28 @@ abstract class BackendComponentPrinter
 	 // echo "</section>";
 	// }
 	
-	// /**
-	// * Start the quarantine table and print table head
-	// * @params string $search search result to display
-	// */
-	// public static function start_table($search="")
-	// {
-		// echo "<section id=\"mailtable\">";
-		// echo "<p>".$search."</p>";
-		// echo "<table id=\"quar_table\"class=\"sortierbar\">
-			// <thead>
-				// <tr>
-					// <th id=\"qcont\" class=\"b_bott sortierbar\">Inhalt</th>
-					// <th id=\"qscore\" class=\"b_bott b_left sortierbar\">Score</th>
-					// <th id=\"qfrom\" class=\"b_bott b_left sortierbar\">Von</th>
-					// <th id=\"qto\" class=\"b_bott b_left sortierbar\">An</th>
-					// <th id=\"qsubj\" class=\"b_bott b_left sortierbar\">Betreff</th>
-					// <th id=\"qdate\" class=\"b_bott b_left sortierbar\">Datum</th>
-					// <th id=\"qfree\" class=\"b_bott b_left\"></th>
-				// </tr>
-			// </thead>";
-	// }
+	/**
+	* Start the quarantine table and print table head
+	* BEISPIEL AUCH HIER!!!!!!
+	* @params string $search search result to display
+	*/
+	public static function start_table($search="")
+	{
+		echo "<section id=\"mailtable\">";
+		echo "<p>".$search."</p>";
+		echo "<table id=\"quar_table\"class=\"sortierbar\">
+			<thead>
+				<tr>
+					<th id=\"qcont\" class=\"b_bott sortierbar\">Inhalt</th>
+					<th id=\"qscore\" class=\"b_bott b_left sortierbar\">Score</th>
+					<th id=\"qfrom\" class=\"b_bott b_left sortierbar\">Von</th>
+					<th id=\"qto\" class=\"b_bott b_left sortierbar\">An</th>
+					<th id=\"qsubj\" class=\"b_bott b_left sortierbar\">Betreff</th>
+					<th id=\"qdate\" class=\"b_bott b_left sortierbar\">Datum</th>
+					<th id=\"qfree\" class=\"b_bott b_left\"></th>
+				</tr>
+			</thead>";
+	}
 
 	// /**
 	// * Prints a table row with the given values to quarantine table
@@ -100,15 +101,16 @@ abstract class BackendComponentPrinter
 		// return 1;
 	// }
 
-	// /**
-	// * Ends the table and prints invisible form with given action.
-	// * @params string $action action to be performed by the <form>
-	// */
-	// public static function end_table($action)
-	// {
-		// echo "</table>";
-		// echo "<form id=\"rel\" method=\"post\" action=\"".$action."\"></form>";
-		// echo "</section>";
-	// }
+	/**
+	* Ends the table and prints invisible form with given action.
+	* BEISPIEL BITTE WIEDER LÖSCHEN WENN NICHT GEBRAUCHT
+	* @params string $action action to be performed by the <form>
+	*/
+	public static function end_table($action)
+	{
+		echo "</table>";
+		echo "<form id=\"rel\" method=\"post\" action=\"".$action."\"></form>";
+		echo "</section>";
+	}
 }
 ?>

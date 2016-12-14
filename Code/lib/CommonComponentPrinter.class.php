@@ -8,7 +8,7 @@ namespace SemanticCms\ComponentPrinter;
 /**
 * Provides static functions for creating a page.
 */
-abstract class CommonComponentPrinter
+class CommonComponentPrinter
 {
 	/* -------- BEISPIEL METHODE - BITTE LÖSCHEN WENN NICHT MEHR GEBRAUCHT --------- */
 	/**
