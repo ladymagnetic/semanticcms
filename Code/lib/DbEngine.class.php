@@ -2,37 +2,53 @@
 /* namespace */
 namespace SemanticCms\DatabaseAbstraction;
 
+/* use namespace(s) */
+use Mysqli;
+
 /**
 * Provides basic functionality for communication with the database
 */
 class DbEngine
 {
-	/* ------ BEISPIEL CODE ------*/
-	// private $conn;	// database connection
+	private $conn;	// database connection
 
 	/* ---- Constructor / Destructor ---- */
-	// /**
-	// * constructor
-	// * @params string $dsn database connection string
-	// */
-	// public function __construct($dsn) { $this->connect_db($dsn); }
-	// public function __destruct()
-	// {
-	 // // Does connection still exist?
-	 // if(empty($this->conn)) {$this->disconnect_db();}
-	// }
+	/**
+	* constructor
+	* @params string $dsn database connection string
+	*/
+	public function __construct($host, $user, $password, $database) { $this->connect_db($host, $user, $password, $database); }
+	public function __destruct()
+	{
+	 // Does connection still exist?
+	 if(empty($this->conn)) {$this->disconnect_db();}
+	}
 	
 	/* ---- Methods ---- */	
-	// /**
-	// * connect_db($dsn)
-	// * Establishes database connection
-	// * @param string $dsn connection string
-	// */
-	// private function connect_db($dsn)
-	// {
-	 // $this->conn = pg_connect($dsn)
-	       // or die ("Verbindung zur Datenbank konnte nicht hergestellt werden!");
-	// }
+	/**
+	* connect_db()
+	* Establishes database connection
+	*/
+	private function connect_db($host, $user, $password, $database)
+	{
+		// Create connection
+		$this->conn = new mysqli($host, $user, $password, $database, NULL);
+			
+		if ($this->conn->connect_error)
+		{
+			die("Verbindung zur Datenbank konnte nicht hergestellt werden!(".$conn->connect_errno.")");
+		}
+	}
+	
+	/**
+	* disconnect_db()
+	* Establishes database connection
+	*/
+	private function disconnect_db()
+	{
+		$this->$conn->close();
+		unset($this->conn);
+	}
 	
 	// /**
 	// * prepare_statement()
@@ -46,5 +62,5 @@ class DbEngine
 	 // if(!pg_prepare($this->conn, $name, $query)) { return 0; }
 	 // else {return 1;}
 	// }
-	
+}
 ?>

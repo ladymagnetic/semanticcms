@@ -1,22 +1,21 @@
 <?php
-/* Platzhalter fuer config */
+namespace SemanticCms\config;
 
-//namespace semanticcms\config;
-
-/* settings (BEISPIEL) */
+/* settings */
 $config =
 [
-	/* Datenbank */
+	/* database specific settings */
 	'cms_db' =>
 	[
-	 // Name der Datenbank
-	 'database' => '',
-	 // Name des Datenbankbenutzers
-	 'dbuser' => '',
-	 // Passwort des Benutzers
-	 'dbpass' => '',
- 	 // Host der Datenbank
-	 'dbhost' => ''
+	 // database-name 
+	 'database' => 'cms-projekt',
+	 // username
+	 'dbuser' => 'cms',
+	 // password
+	 'dbpass' => 'pleasechange',
+ 	 // servername (database host)
+	 'dbhost' => 'localhost'
+	 //
 	]
 ];
 ?>
