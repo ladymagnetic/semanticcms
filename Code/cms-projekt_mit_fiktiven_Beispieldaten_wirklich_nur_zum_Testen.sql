@@ -19,6 +19,16 @@ SET time_zone = "+00:00";
 --
 -- Datenbank: `cms-projekt`
 --
+DROP DATABASE IF EXISTS`cms-projekt`;
+CREATE DATABASE IF NOT EXISTS `cms-projekt` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `cms-projekt`;
+
+--
+-- User fuer Webanwendung
+--
+DROP USER IF EXISTS cms@localhost;
+CREATE USER IF NOT EXISTS cms@localhost IDENTIFIED BY 'pleasechange';
+GRANT SELECT, INSERT, UPDATE, DELETE ON *.* TO 'cms'@'localhost' IDENTIFIED BY 'pleasechange';
 
 -- --------------------------------------------------------
 
