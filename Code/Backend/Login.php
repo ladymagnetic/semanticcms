@@ -6,6 +6,7 @@
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
 <title>Login</title>
 <link rel="stylesheet" href="BackendCSS.css">
+<link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
 </head>
 
 <body>
