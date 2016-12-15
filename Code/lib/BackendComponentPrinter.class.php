@@ -8,25 +8,10 @@ namespace SemanticCms\ComponentPrinter;
 /**
 * Provides static functions for creating the backend page.
 */
-abstract class BackendComponentPrinter
+class BackendComponentPrinter
 {
-
-	print_navigation_menue()
-	{
-		echo
-			"<!-- menue -->
-			<nav id="menue">
-			    <div id="logo"></div>
-				<ul>
-			        <li><a href="Benutzerverwaltung.php" title="Benutzerverwaltung"><i class="fa fa-user fontawesome"></i> Benutzerverwaltung</a></li>
-			        <li><a href="Seitenverwaltung.php" title="Seitenverwaltung"><i class="fa fa-file-text fontawesome"></i> Seitenverwaltung</a></li>
-			        <li><a href="Inhaltsverwaltung.php" title="Inhaltsverwaltung"><i class="fa fa-align-justify fontawesome"></i> Inhaltsverwaltung</a></li>
-			        <li><a href="Templates.php" title="Templates"><i class="fa fa-paint-brush fontawesome"></i> Templates</a></li>
-				</ul>
-			</nav>";
-	}
-	/* -------- BEISPIEL METHODEN - BITTE Lï¿½SCHEN WENN NICHT MEHR BENï¿½TIGT --------- */
-
+	/* -------- BEISPIEL METHODEN - BITTE LÖSCHEN WENN NICHT MEHR BENÖTIGT --------- */
+	
 	// /**
 	// * print_showall_navigation()
 	// * Print back and next navigation buttons
@@ -40,7 +25,7 @@ abstract class BackendComponentPrinter
 	 // if($page > 0)
 	 // {
 	  // echo   "<form class=\"inline\" method=\"POST\" action=\"".$action."\">".
-			 // "<button class=\"btn navbtn\" type=\"submit\" name=\"showall\">Seite zurï¿½ck</button>".
+			 // "<button class=\"btn navbtn\" type=\"submit\" name=\"showall\">Seite zurück</button>".
 			 // "<input type=\"hidden\" name=\"pagenum\" value=\"".($page-1)."\">".
 			 // "</form>";
 	 // }
@@ -54,28 +39,66 @@ abstract class BackendComponentPrinter
 	 // }
 	 // echo "</section>";
 	// }
-
-	// /**
-	// * Start the quarantine table and print table head
-	// * @params string $search search result to display
-	// */
-	// public static function start_table($search="")
-	// {
-		// echo "<section id=\"mailtable\">";
-		// echo "<p>".$search."</p>";
-		// echo "<table id=\"quar_table\"class=\"sortierbar\">
-			// <thead>
-				// <tr>
-					// <th id=\"qcont\" class=\"b_bott sortierbar\">Inhalt</th>
-					// <th id=\"qscore\" class=\"b_bott b_left sortierbar\">Score</th>
-					// <th id=\"qfrom\" class=\"b_bott b_left sortierbar\">Von</th>
-					// <th id=\"qto\" class=\"b_bott b_left sortierbar\">An</th>
-					// <th id=\"qsubj\" class=\"b_bott b_left sortierbar\">Betreff</th>
-					// <th id=\"qdate\" class=\"b_bott b_left sortierbar\">Datum</th>
-					// <th id=\"qfree\" class=\"b_bott b_left\"></th>
-				// </tr>
-			// </thead>";
-	// }
+	
+	/**
+	* Start the quarantine table and print table head
+	* BEISPIEL AUCH HIER!!!!!!
+	* @params string $search search result to display
+	*/
+	public static function start_table($search="")
+	{
+		echo "<section id=\"mailtable\">";
+		echo "<p>".$search."</p>";
+		echo "<table id=\"quar_table\"class=\"sortierbar\">
+			<thead>
+				<tr>
+					<th id=\"qcont\" class=\"b_bott sortierbar\">Inhalt</th>
+					<th id=\"qscore\" class=\"b_bott b_left sortierbar\">Score</th>
+					<th id=\"qfrom\" class=\"b_bott b_left sortierbar\">Von</th>
+					<th id=\"qto\" class=\"b_bott b_left sortierbar\">An</th>
+					<th id=\"qsubj\" class=\"b_bott b_left sortierbar\">Betreff</th>
+					<th id=\"qdate\" class=\"b_bott b_left sortierbar\">Datum</th>
+					<th id=\"qfree\" class=\"b_bott b_left\"></th>
+				</tr>
+			</thead>";
+	}
+	
+	/**
+	*
+	*
+	*/
+	public static function printSidebar(array $permissions)
+	{
+		// Je nach Rechten bestimmte Menue-Punkte gar nicht erst sichtbar 
+		/*
+		<nav id="menue">
+			<div id="logo"></div>
+			<ul>
+				// Startseite beachten -> fehlt noch in der Navigation (Index.php)
+				<li><a href="Benutzerverwaltung.php" title="Benutzerverwaltung"><i class="fa fa-user fontawesome"></i> Benutzerverwaltung</a></li>
+				<li><a href="Seitenverwaltung.php" title="Seitenverwaltung"><i class="fa fa-file-text fontawesome"></i> Seitenverwaltung</a></li>
+				<li><a href="Inhaltsverwaltung.php" title="Inhaltsverwaltung"><i class="fa fa-align-justify fontawesome"></i> Inhaltsverwaltung</a></li>
+				<li><a href="Templates.php" title="Templates"><i class="fa fa-paint-brush fontawesome"></i> Templates</a></li>
+			</ul>
+		</nav>
+		*/
+		echo "<nav id=\"menue\"> Hier waere das Menue, aber der Code fehlt noch </nav>";
+	}
+	
+	/* Idee: print Head -> im Backend ueberall(?) der selbe HTML-Code (ggf. noch mal nachschauen)	*/
+	/*
+	public static printHead(/*sowas wie z.B. titel*/)
+	{
+		// RDF-Tags mit einfuegen => dazu steht unter Allgemeines/SemanticWeb/ was
+		// <head>
+		// <meta content="de" http-equiv="Content-Language">
+		// <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+		// <title>Inhaltsverwaltung</title>
+		// <link rel="stylesheet" href="BackendCSS.css">
+		// <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+		// </head>
+	}
+	*/
 
 	// /**
 	// * Prints a table row with the given values to quarantine table
@@ -115,15 +138,16 @@ abstract class BackendComponentPrinter
 		// return 1;
 	// }
 
-	// /**
-	// * Ends the table and prints invisible form with given action.
-	// * @params string $action action to be performed by the <form>
-	// */
-	// public static function end_table($action)
-	// {
-		// echo "</table>";
-		// echo "<form id=\"rel\" method=\"post\" action=\"".$action."\"></form>";
-		// echo "</section>";
-	// }
+	/**
+	* Ends the table and prints invisible form with given action.
+	* BEISPIEL BITTE WIEDER LÖSCHEN WENN NICHT GEBRAUCHT
+	* @params string $action action to be performed by the <form>
+	*/
+	public static function end_table($action)
+	{
+		echo "</table>";
+		echo "<form id=\"rel\" method=\"post\" action=\"".$action."\"></form>";
+		echo "</section>";
+	}
 }
 ?>
