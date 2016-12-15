@@ -56,7 +56,8 @@ CREATE TABLE IF NOT EXISTS `article` (
 
 CREATE TABLE IF NOT EXISTS `ban` (
   `id` int(11) NOT NULL,
-  `reason` text NOT NULL,
+  `reason` varchar(255) NOT NULL,
+  `description` text NOT NULL,
   `begin` datetime NOT NULL,
   `end` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -203,8 +204,7 @@ ALTER TABLE `article`
 -- Indizes für die Tabelle `ban`
 --
 ALTER TABLE `ban`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `begin` (`begin`,`end`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indizes für die Tabelle `ban_user`
