@@ -1,3 +1,84 @@
+<?php
+/* Include(s) */
+require_once 'lib/DbEngine.class.php';
+require_once 'lib/BackendComponentPrinter.class.php';
+require_once 'config/config.php';
+
+/* use namespace(s) */
+use SemanticCms\config;
+use SemanticCms\DatabaseAbstraction\DbEngine;
+use SemanticCms\ComponentPrinter\BackendComponentPrinter;
+
+$db = new DbEngine($config['cms_db']['dbhost'],$config['cms_db']['dbuser'],$config['cms_db']['dbpass'],$config['cms_db']['database']);
+
+echo "<br><br> var_dump db <br><br>";
+var_dump($db);
+echo "<br>";
+
+echo "IT WORKS";
+
+// Printer Beispiel
+BackendComponentPrinter::start_table();
+BackendComponentPrinter::end_table("index.php");
+
+// actions dbuser
+if (isset($_POST['unlock'])) {
+    include("../lib/DbUser.class.php");
+    dbUser = new DbUser();
+    $userId = 1234567988123456789876543234567; // to get from html
+    dbUser.unlockUser($userId);    
+}
+else if (isset($_POST['lock'])) {
+    include("../lib/DbUser.class.php");
+    dbUser = new DbUser();
+    $userId = 1234567988123456789876543234567; // to get from html
+    dbUser.lockUser();
+}
+else if (isset($_POST['details'])) {
+    $userId = 1234567988123456789876543234567; // to get from html
+    editUser();
+}
+else if (isset($_POST['delete'])) {
+    include("../lib/DbUser.class.php");
+    dbUser = new DbUser();
+    $userId = 1234567988123456789876543234567; // to get from html
+    dbUser.deleteUser($userId);
+}
+else if (isset($_POST['newUser'])) {
+    include("../lib/DbUser.class.php");
+    dbUser = new DbUser();
+    dbUser.createUser();
+    $userId = newUser.id; // from dbuser
+    editUser();
+}
+else if (isset($_POST['defineRole'])) {
+    include("../lib/DbUser.class.php");
+    dbUser = new DbUser();
+    dbUser.defineRole();
+}
+else if (isset($_POST['newRole'])) {
+    include("../lib/DbUser.class.php");
+    dbUser = new DbUser(); 
+    dbUser.defineRole();   
+}
+else if (isset($_POST['deleteRole'])) {
+    include("../lib/DbUser.class.php")
+    dbUser = new DbUser();
+    $roleId = = 1234567988123456789876543234567; // to get from html
+    dbUser.deleteRole();
+}
+else if (isset($_POST['saveChanges'])) {
+    include("../lib/DbUser.class.php");
+    dbUser = new DbUser();
+    dbUser.saveChanges();
+}
+
+function editUser()
+{
+    // must call the page to edit the details of the user
+}
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -43,12 +124,12 @@ BackendComponentPrinter::printSidebar(array()/*Parameter fehlen noch -> Rechte d
         <tr>
             <td>&nbsp;</td>
             <td>
-            <form method="post" action="../lib/BackendComponentPrinter.class.php">
+            <form method="post" action="Benutzerverwaltung.php">
                 <input id="unlock" name="unlock" type="button" value="entsperren"></form>
             </td>
             <td>&nbsp;</td>
             <td>
-            <form method="post" action="../lib/BackendComponentPrinter.class.php">
+            <form method="post" action="Benutzerverwaltung.php">
                 <input id="details" name="details" type="button" value="Details"><input id="delete" name="delete" type="button" value="löschen"></form>
             </td>
         </tr>
@@ -71,7 +152,7 @@ BackendComponentPrinter::printSidebar(array()/*Parameter fehlen noch -> Rechte d
             <td>&nbsp;</td>
         </tr>
     </table>
-    <form method="post" action="../lib/BackendComponentPrinter.class.php">
+    <form method="post" action="Benutzerverwaltung.php">
         <input id="newUser" name="newUser" type="button" value="Neuer Benutzer">
         <input id="defineRole" name="defineRole" type="button" value="Rollen definieren">
     </form>
@@ -88,12 +169,12 @@ BackendComponentPrinter::printSidebar(array()/*Parameter fehlen noch -> Rechte d
             <td>Gast</td>
         </tr>
     </table>
-    <form method="post" action="../lib/BackendComponentPrinter.class.php">
+    <form method="post" action="Benutzerverwaltung.php">
         <input id="newRole" name="newRole" type="button" value="Neue Rolle">
         <input id="deleteRole" name="deleteRole" type="button" value="Rolle löschen">
     </form>
     <h3>Rechte</h3>
-    <form method="post" action="../lib/BackendComponentPrinter.class.php">
+    <form method="post" action="Benutzerverwaltung.php">
         <input id="right1" name="right1" type="checkbox">
         <input id="right2" name="right2" type="checkbox">
         <input id="saveChanges" name="saveChanges" type="button" value="Änderungen speichern">

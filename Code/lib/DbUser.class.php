@@ -60,6 +60,28 @@ class DbUser
 	public function loginUser()
 	{
 	}
+	public function lockUser($userId)
+	{
+	}
+	public function unlockUser($userId)
+	{
+	}
+	public function deleteUser($userId)
+	{
+	}
+	public function createUser()
+	{
+	}
+	public function saveChanges()
+	{
+	}
+	// perhaps other class
+	public function defineRole()
+	{
+	}
+	public function deleteRole($roleId)
+	{
+	}	
 }
 
 ?>
