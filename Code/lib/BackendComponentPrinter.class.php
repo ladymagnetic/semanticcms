@@ -10,8 +10,23 @@ namespace SemanticCms\ComponentPrinter;
 */
 abstract class BackendComponentPrinter
 {
-	/* -------- BEISPIEL METHODEN - BITTE LÖSCHEN WENN NICHT MEHR BENÖTIGT --------- */
-	
+
+	print_navigation_menue()
+	{
+		echo
+			"<!-- menue -->
+			<nav id="menue">
+			    <div id="logo"></div>
+				<ul>
+			        <li><a href="Benutzerverwaltung.php" title="Benutzerverwaltung"><i class="fa fa-user fontawesome"></i> Benutzerverwaltung</a></li>
+			        <li><a href="Seitenverwaltung.php" title="Seitenverwaltung"><i class="fa fa-file-text fontawesome"></i> Seitenverwaltung</a></li>
+			        <li><a href="Inhaltsverwaltung.php" title="Inhaltsverwaltung"><i class="fa fa-align-justify fontawesome"></i> Inhaltsverwaltung</a></li>
+			        <li><a href="Templates.php" title="Templates"><i class="fa fa-paint-brush fontawesome"></i> Templates</a></li>
+				</ul>
+			</nav>";
+	}
+	/* -------- BEISPIEL METHODEN - BITTE Lï¿½SCHEN WENN NICHT MEHR BENï¿½TIGT --------- */
+
 	// /**
 	// * print_showall_navigation()
 	// * Print back and next navigation buttons
@@ -25,7 +40,7 @@ abstract class BackendComponentPrinter
 	 // if($page > 0)
 	 // {
 	  // echo   "<form class=\"inline\" method=\"POST\" action=\"".$action."\">".
-			 // "<button class=\"btn navbtn\" type=\"submit\" name=\"showall\">Seite zurück</button>".
+			 // "<button class=\"btn navbtn\" type=\"submit\" name=\"showall\">Seite zurï¿½ck</button>".
 			 // "<input type=\"hidden\" name=\"pagenum\" value=\"".($page-1)."\">".
 			 // "</form>";
 	 // }
@@ -39,7 +54,7 @@ abstract class BackendComponentPrinter
 	 // }
 	 // echo "</section>";
 	// }
-	
+
 	// /**
 	// * Start the quarantine table and print table head
 	// * @params string $search search result to display
