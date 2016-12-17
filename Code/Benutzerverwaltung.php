@@ -25,23 +25,23 @@ BackendComponentPrinter::end_table("index.php");
 if (isset($_POST['unlock'])) {
     include("../lib/DbUser.class.php");
     dbUser = new DbUser();
-    $userId = 1234567988123456789876543234567; // to get from html
+    $userId = $_POST['unlock'];
     dbUser.unlockUser($userId);    
 }
 else if (isset($_POST['lock'])) {
     include("../lib/DbUser.class.php");
     dbUser = new DbUser();
-    $userId = 1234567988123456789876543234567; // to get from html
+    $userId = $_POST['lock'];
     dbUser.lockUser($userId);
 }
 else if (isset($_POST['details'])) {
-    $userId = 1234567988123456789876543234567; // to get from html
+    $userId = $_POST['details'];
     editUser($userId);
 }
 else if (isset($_POST['delete'])) {
     include("../lib/DbUser.class.php");
     dbUser = new DbUser();
-    $userId = 1234567988123456789876543234567; // to get from html
+    $userId = $_POST['delete'];
     dbUser.deleteUser($userId);
 }
 else if (isset($_POST['newUser'])) {
@@ -49,7 +49,7 @@ else if (isset($_POST['newUser'])) {
     dbUser = new DbUser();
     dbUser.createUser();
     $userId = newUser.id; // from dbuser
-    editUser$userId();
+    editUser($userId);
 }
 else if (isset($_POST['defineRole'])) {
     include("../lib/DbUser.class.php");
@@ -64,18 +64,19 @@ else if (isset($_POST['newRole'])) {
 else if (isset($_POST['deleteRole'])) {
     include("../lib/DbUser.class.php")
     dbUser = new DbUser();
-    $roleId = = 1234567988123456789876543234567; // to get from html
+    $roleId = $_POST['deleteRole'];
     dbUser.deleteRole();
 }
 else if (isset($_POST['saveChanges'])) {
     include("../lib/DbUser.class.php");
     dbUser = new DbUser();
-    dbUser.saveChanges($userId);
+    dbUser.saveChanges();
 }
 
-function editUser()
+function editUser($userID)
 {
     // must call the page to edit the details of the user
+    
 }
 ?>
 
@@ -87,8 +88,8 @@ function editUser()
 <meta content="de" http-equiv="Content-Language">
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
 <title>Benutzerverwaltung</title>
-<link rel="stylesheet" href="css\backend.css">
-<link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="css/backend.css">
+<link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">
 </head>
 
 <body>
@@ -130,7 +131,7 @@ BackendComponentPrinter::printSidebar(array()/*Parameter fehlen noch -> Rechte d
             <td>&nbsp;</td>
             <td>
             <form method="post" action="Benutzerverwaltung.php">
-                <input id="details" name="details" type="button" value="Details"><input id="delete" name="delete" type="button" value="löschen"></form>
+                <input id="details" name="details" type="button" value="userID"><input id="delete" name="delete" type="button" value="userID"></form>
             </td>
         </tr>
         <tr>
@@ -154,7 +155,7 @@ BackendComponentPrinter::printSidebar(array()/*Parameter fehlen noch -> Rechte d
     </table>
     <form method="post" action="Benutzerverwaltung.php">
         <input id="newUser" name="newUser" type="button" value="Neuer Benutzer">
-        <input id="defineRole" name="defineRole" type="button" value="Rollen definieren">
+        <input id="defineRole" name="defineRole" type="button" value="roleID">
     </form>
     <h2>Rollen definieren</h2>
     <h3>Rollenname</h3>
@@ -170,14 +171,14 @@ BackendComponentPrinter::printSidebar(array()/*Parameter fehlen noch -> Rechte d
         </tr>
     </table>
     <form method="post" action="Benutzerverwaltung.php">
-        <input id="newRole" name="newRole" type="button" value="Neue Rolle">
-        <input id="deleteRole" name="deleteRole" type="button" value="Rolle löschen">
+        <input id="newRole" name="newRole" type="button" value="roleId">
+        <input id="deleteRole" name="deleteRole" type="button" value="roleId">
     </form>
     <h3>Rechte</h3>
     <form method="post" action="Benutzerverwaltung.php">
         <input id="right1" name="right1" type="checkbox">
         <input id="right2" name="right2" type="checkbox">
-        <input id="saveChanges" name="saveChanges" type="button" value="Änderungen speichern">
+        <input id="saveChanges" name="saveChanges" type="button" value="">
     </form>
 </section>
 </body>

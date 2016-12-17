@@ -72,6 +72,7 @@ class DbUser
 	public function createUser()
 	{
 	}
+	// has to save all values from "Benutzerverwaltung.php"
 	public function saveChanges()
 	{
 	}
