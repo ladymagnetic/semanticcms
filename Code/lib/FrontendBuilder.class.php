@@ -8,7 +8,8 @@ require_once 'HTMLComponentPrinter.class.php';
 require_once 'TemplateParser.class.php';
 
 /* namespace use(s) */
-use SemanticCms\ComponentPrinter\Frontend\{CSSComponentPrinter as CSS, HTMLComponentPrinter as HTML};
+use SemanticCms\ComponentPrinter\Frontend\CSSComponentPrinter as CSS;
+use SemanticCms\ComponentPrinter\Frontend\HTMLComponentPrinter as HTML;
 
 /**
 * Provides functionality for building a frontend page
@@ -28,25 +29,34 @@ class FrontendBuilder
 	
 	/* ---- Methods ---- */
 
-	/**
+/**
 	* makePage()
 	* generates the page ...
 	*/
 	public function makePage($pageName, $templatePath)
 	{
-		$pagePath = pageFilePath($pageName);
+		$pagePath = $this->pageFilePath($pageName);
 		$cssName = basename($templatePath, ".xml");
-		$cssPath = cssFilePath($cssName);
+		$cssPath = $this->cssFilePath($cssName);
 		
 		// write HTML + PHP Code
-		$handle = fopen($pagePath, "x");
+		$pageHandle = fopen($pagePath, "x");
 		
-			fwrite($handle, HTML::getHtmlStart());
-			fwrite($handle, HTML::getHead($pageName, $));
-			fwrite($handle, HTML::getHeader("Aus Template: Unser toller Beispiel-Blog"));
-			fwrite($handle, "\n<\html>");
+			fwrite($pageHandle, HTML::getHtmlStart());
+			fwrite($pageHandle, HTML::getHead($pageName, $cssName));
+			fwrite($pageHandle, HTML::getHeader("Aus Template: Unser toller Beispiel-Blog"));
+			// ...
+			fwrite($pageHandle, "\n</body></html>");
 		
-		fclose($handle);
+		fclose($pageHandle);
+		
+		// write css Code
+		$cssHandle = fopen($cssPath, "x");
+		
+			fwrite($cssHandle, CSS::getHeader("#89aed5", "#14571a"));
+			// ...
+		
+		fclose($cssHandle);
 	}
 	
 	/**
@@ -62,7 +72,7 @@ class FrontendBuilder
 		// pagename pruefen auf / 
 		// templateName pruefen auf string etc.
 		
-		$pagePath = pageFilePath($pageName);
+		$pagePath = $this->pageFilePath($pageName);
 		
 		if(file_exists($pagePath))
 		{
@@ -77,7 +87,7 @@ class FrontendBuilder
 		}
 	}
 
-	/**
+/**
 	* cssFilePath()
 	* gives the real path to the css file corresponding to the template. Does not check if the file exists.
 	* @params string $templateName only the name of the template without any file extension or path information
@@ -85,7 +95,11 @@ class FrontendBuilder
 	*/
 	private function cssFilePath($templateName)
 	{
-		$path = realpath("../frontend/css");
+		$path = "";
+		
+		if(strcmp(basename(getcwd()),"lib") === 0) { $path = realpath("../frontend/css");	}
+		else { $path = realpath("frontend/css"); }
+		
 		return $path."\\".$templateName.".css";		
 	}
 	
@@ -97,7 +111,11 @@ class FrontendBuilder
 	*/
 	private function pageFilePath($pageName)
 	{
-		$path = realpath("../frontend");
+		$path = "";
+		
+		if(strcmp(basename(getcwd()),"lib") === 0) { $path = realpath("../frontend/");	}
+		else { $path = realpath("frontend/"); }
+		
 		return $path."\\".$pageName.".php";		
 	}
 }

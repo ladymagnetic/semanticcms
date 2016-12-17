@@ -86,7 +86,6 @@ class BackendComponentPrinter
 	}
 	
 	/* Idee: print Head -> im Backend ueberall(?) der selbe HTML-Code (ggf. noch mal nachschauen)	*/
-	/*
 	public static printHead(/*sowas wie z.B. titel*/)
 	{
 		// RDF-Tags oder schema.org oder so mit einfuegen => dazu steht unter Allgemeines/SemanticWeb/ was
@@ -98,7 +97,6 @@ class BackendComponentPrinter
 		// <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
 		// </head>
 	}
-	*/
 
 	// /**
 	// * Prints a table row with the given values to quarantine table
