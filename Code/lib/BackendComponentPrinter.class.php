@@ -10,7 +10,7 @@ namespace SemanticCms\ComponentPrinter;
 */
 class BackendComponentPrinter
 {
-	/* -------- BEISPIEL METHODEN - BITTE LÖSCHEN WENN NICHT MEHR BENÖTIGT --------- */
+	/* -------- BEISPIEL METHODEN - BITTE LÃ–SCHEN WENN NICHT MEHR BENÃ–TIGT --------- */
 	
 	// /**
 	// * print_showall_navigation()
@@ -25,7 +25,7 @@ class BackendComponentPrinter
 	 // if($page > 0)
 	 // {
 	  // echo   "<form class=\"inline\" method=\"POST\" action=\"".$action."\">".
-			 // "<button class=\"btn navbtn\" type=\"submit\" name=\"showall\">Seite zurück</button>".
+			 // "<button class=\"btn navbtn\" type=\"submit\" name=\"showall\">Seite zurÃ¼ck</button>".
 			 // "<input type=\"hidden\" name=\"pagenum\" value=\"".($page-1)."\">".
 			 // "</form>";
 	 // }
@@ -89,7 +89,7 @@ class BackendComponentPrinter
 	/*
 	public static printHead(/*sowas wie z.B. titel*/)
 	{
-		// RDF-Tags mit einfuegen => dazu steht unter Allgemeines/SemanticWeb/ was
+		// RDF-Tags oder schema.org oder so mit einfuegen => dazu steht unter Allgemeines/SemanticWeb/ was
 		// <head>
 		// <meta content="de" http-equiv="Content-Language">
 		// <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
@@ -140,7 +140,7 @@ class BackendComponentPrinter
 
 	/**
 	* Ends the table and prints invisible form with given action.
-	* BEISPIEL BITTE WIEDER LÖSCHEN WENN NICHT GEBRAUCHT
+	* BEISPIEL BITTE WIEDER LÃ–SCHEN WENN NICHT GEBRAUCHT
 	* @params string $action action to be performed by the <form>
 	*/
 	public static function end_table($action)
