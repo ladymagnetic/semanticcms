@@ -25,30 +25,30 @@ BackendComponentPrinter::end_table("index.php");
 if (isset($_POST['unlock'])) {
     include("../lib/DbUser.class.php");
     dbUser = new DbUser();
-    $userId = $_POST['unlock'];
+    $userId = $_POST['userId'];
     dbUser.unlockUser($userId);    
 }
 else if (isset($_POST['lock'])) {
     include("../lib/DbUser.class.php");
     dbUser = new DbUser();
-    $userId = $_POST['lock'];
+    $userId = $_POST['userId'];
     dbUser.lockUser($userId);
 }
 else if (isset($_POST['details'])) {
-    $userId = $_POST['details'];
+    $userId = $_POST['userId'];
     editUser($userId);
 }
 else if (isset($_POST['delete'])) {
     include("../lib/DbUser.class.php");
     dbUser = new DbUser();
-    $userId = $_POST['delete'];
+    $userId = $_POST['userId'];
     dbUser.deleteUser($userId);
 }
 else if (isset($_POST['newUser'])) {
     include("../lib/DbUser.class.php");
     dbUser = new DbUser();
     dbUser.createUser();
-    $userId = newUser.id; // from dbuser
+    //$userId = newUser.id; // from dbuser
     editUser($userId);
 }
 else if (isset($_POST['defineRole'])) {
@@ -64,7 +64,7 @@ else if (isset($_POST['newRole'])) {
 else if (isset($_POST['deleteRole'])) {
     include("../lib/DbUser.class.php")
     dbUser = new DbUser();
-    $roleId = $_POST['deleteRole'];
+    $roleId = $_POST['roleId'];
     dbUser.deleteRole();
 }
 else if (isset($_POST['saveChanges'])) {
@@ -126,12 +126,16 @@ BackendComponentPrinter::printSidebar(array()/*Parameter fehlen noch -> Rechte d
             <td>&nbsp;</td>
             <td>
             <form method="post" action="Benutzerverwaltung.php">
-                <input id="unlock" name="unlock" type="button" value="entsperren"></form>
+                <input id="unlock" name="unlock" type="button" value="entsperren">
+                <input id="userId" name="userId" type="hidden" value="userId">
+            </form>
             </td>
             <td>&nbsp;</td>
             <td>
             <form method="post" action="Benutzerverwaltung.php">
-                <input id="details" name="details" type="button" value="userID"><input id="delete" name="delete" type="button" value="userID"></form>
+                <input id="details" name="details" type="button" value="Details"><input id="delete" name="delete" type="button" value="löschen">
+                <input id="userId" name="userId" type="hidden" value="userId">
+            </form>
             </td>
         </tr>
         <tr>
@@ -155,7 +159,9 @@ BackendComponentPrinter::printSidebar(array()/*Parameter fehlen noch -> Rechte d
     </table>
     <form method="post" action="Benutzerverwaltung.php">
         <input id="newUser" name="newUser" type="button" value="Neuer Benutzer">
-        <input id="defineRole" name="defineRole" type="button" value="roleID">
+        <input id="userId" name="userId" type="hidden" value="userId">
+        <input id="defineRole" name="defineRole" type="button" value="Rolle definieren">
+        <input id="roleId" name="roleId" type="hidden" value="roleId">
     </form>
     <h2>Rollen definieren</h2>
     <h3>Rollenname</h3>
@@ -172,13 +178,14 @@ BackendComponentPrinter::printSidebar(array()/*Parameter fehlen noch -> Rechte d
     </table>
     <form method="post" action="Benutzerverwaltung.php">
         <input id="newRole" name="newRole" type="button" value="roleId">
-        <input id="deleteRole" name="deleteRole" type="button" value="roleId">
+        <input id="deleteRole" name="deleteRole" type="button" value="Rolle löschen">
     </form>
     <h3>Rechte</h3>
     <form method="post" action="Benutzerverwaltung.php">
         <input id="right1" name="right1" type="checkbox">
         <input id="right2" name="right2" type="checkbox">
-        <input id="saveChanges" name="saveChanges" type="button" value="">
+        <input id="roleId" name="roleId" type="hidden" value="roleId">
+        <input id="saveChanges" name="saveChanges" type="button" value="Änderungen speichern">
     </form>
 </section>
 </body>
