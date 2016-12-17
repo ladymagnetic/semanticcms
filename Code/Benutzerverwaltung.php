@@ -32,11 +32,11 @@ else if (isset($_POST['lock'])) {
     include("../lib/DbUser.class.php");
     dbUser = new DbUser();
     $userId = 1234567988123456789876543234567; // to get from html
-    dbUser.lockUser();
+    dbUser.lockUser($userId);
 }
 else if (isset($_POST['details'])) {
     $userId = 1234567988123456789876543234567; // to get from html
-    editUser();
+    editUser($userId);
 }
 else if (isset($_POST['delete'])) {
     include("../lib/DbUser.class.php");
@@ -49,7 +49,7 @@ else if (isset($_POST['newUser'])) {
     dbUser = new DbUser();
     dbUser.createUser();
     $userId = newUser.id; // from dbuser
-    editUser();
+    editUser$userId();
 }
 else if (isset($_POST['defineRole'])) {
     include("../lib/DbUser.class.php");
@@ -70,7 +70,7 @@ else if (isset($_POST['deleteRole'])) {
 else if (isset($_POST['saveChanges'])) {
     include("../lib/DbUser.class.php");
     dbUser = new DbUser();
-    dbUser.saveChanges();
+    dbUser.saveChanges($userId);
 }
 
 function editUser()
@@ -87,7 +87,7 @@ function editUser()
 <meta content="de" http-equiv="Content-Language">
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
 <title>Benutzerverwaltung</title>
-<link rel="stylesheet" href="BackendCSS.css">
+<link rel="stylesheet" href="css\backend.css">
 <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
 </head>
 
