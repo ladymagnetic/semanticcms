@@ -57,30 +57,30 @@ class DbUser
 	* @params string $password the user's password
 	* @result User User object if login was successfull otherwise // false / 0 wie auch immer => entscheidnug bei Implementierung
 	*/
-	public function loginUser()
+	public function LoginUser()
 	{
 	}
-	public function lockUser($userId)
+	public function LockUser($userId)
 	{
 	}
-	public function unlockUser($userId)
+	public function UnlockUser($userId)
 	{
 	}
-	public function deleteUser($userId)
+	public function DeleteUser($userId)
 	{
 	}
-	public function createUser()
+	public function CreateUser()
 	{
 	}
 	// has to save all values from "Benutzerverwaltung.php"
-	public function saveChanges()
+	public function SaveChanges()
 	{
 	}
 	// perhaps other class
-	public function defineRole()
+	public function DefineRole()
 	{
 	}
-	public function deleteRole($roleId)
+	public function DeleteRole($roleId)
 	{
 	}	
 }

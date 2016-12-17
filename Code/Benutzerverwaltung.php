@@ -26,54 +26,54 @@ if (isset($_POST['unlock'])) {
     include("../lib/DbUser.class.php");
     dbUser = new DbUser();
     $userId = $_POST['userId'];
-    dbUser.unlockUser($userId);    
+    dbUser.UnlockUser($userId);    
 }
 else if (isset($_POST['lock'])) {
     include("../lib/DbUser.class.php");
     dbUser = new DbUser();
     $userId = $_POST['userId'];
-    dbUser.lockUser($userId);
+    dbUser.LockUser($userId);
 }
 else if (isset($_POST['details'])) {
     $userId = $_POST['userId'];
-    editUser($userId);
+    EditUser($userId);
 }
 else if (isset($_POST['delete'])) {
     include("../lib/DbUser.class.php");
     dbUser = new DbUser();
     $userId = $_POST['userId'];
-    dbUser.deleteUser($userId);
+    dbUser.DeleteUser($userId);
 }
 else if (isset($_POST['newUser'])) {
     include("../lib/DbUser.class.php");
     dbUser = new DbUser();
-    dbUser.createUser();
+    dbUser.CreateUser();
     //$userId = newUser.id; // from dbuser
-    editUser($userId);
+    EditUser($userId);
 }
 else if (isset($_POST['defineRole'])) {
     include("../lib/DbUser.class.php");
     dbUser = new DbUser();
-    dbUser.defineRole();
+    dbUser.DefineRole();
 }
 else if (isset($_POST['newRole'])) {
     include("../lib/DbUser.class.php");
     dbUser = new DbUser(); 
-    dbUser.defineRole();   
+    dbUser.DefineRole();   
 }
 else if (isset($_POST['deleteRole'])) {
     include("../lib/DbUser.class.php")
     dbUser = new DbUser();
     $roleId = $_POST['roleId'];
-    dbUser.deleteRole();
+    dbUser.DeleteRole();
 }
 else if (isset($_POST['saveChanges'])) {
     include("../lib/DbUser.class.php");
     dbUser = new DbUser();
-    dbUser.saveChanges();
+    dbUser.SaveChanges();
 }
 
-function editUser($userID)
+function EditUser($userID)
 {
     // must call the page to edit the details of the user
     
