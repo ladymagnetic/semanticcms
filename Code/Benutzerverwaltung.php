@@ -101,17 +101,6 @@ use SemanticCms\ComponentPrinter\BackendComponentPrinter;
 BackendComponentPrinter::printSidebar(array()/*Parameter fehlen noch -> Rechte des gerade eingeloggten Nutzers*/);
 ?>
 
-<!--<nav id="menue">
-    <div id="logo"></div>
-	<ul>
-        <li><a href="Benutzerverwaltung.php" title="Benutzerverwaltung"><i class="fa fa-user fontawesome"></i> Benutzerverwaltung</a></li>
-        <li><a href="Seitenverwaltung.php" title="Seitenverwaltung"><i class="fa fa-file-text fontawesome"></i> Seitenverwaltung</a></li>
-        <li><a href="Inhaltsverwaltung.php" title="Inhaltsverwaltung"><i class="fa fa-align-justify fontawesome"></i> Inhaltsverwaltung</a></li>
-        <li><a href="Templates.php" title="Templates"><i class="fa fa-paint-brush fontawesome"></i> Templates</a></li>
-	</ul>
-</nav> -->
-
-
 <section id="main">
     <h1><i class="fa fa-user fontawesome"></i> Benutzerverwaltung</h1>
     <table>
@@ -121,6 +110,11 @@ BackendComponentPrinter::printSidebar(array()/*Parameter fehlen noch -> Rechte d
             <th>Rolle</th>
             <th>Aktion</th>
         </tr>
+        <?php
+            // foreach user in database print
+
+            // if user is ulocked --> <input id="unlock" name="unlock" type="button" value="entsperren"> else <input id="lock" name="lock" type="button" value="sperren">
+        ?>
         <tr>
             <td>&nbsp;</td>
             <td>
@@ -137,24 +131,6 @@ BackendComponentPrinter::printSidebar(array()/*Parameter fehlen noch -> Rechte d
             </form>
             </td>
         </tr>
-        <tr>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-        </tr>
-        <tr>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-        </tr>
-        <tr>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-        </tr>
     </table>
     <form method="post" action="Benutzerverwaltung.php">
         <input id="newUser" name="newUser" type="button" value="Neuer Benutzer">
@@ -165,6 +141,9 @@ BackendComponentPrinter::printSidebar(array()/*Parameter fehlen noch -> Rechte d
     <h2>Rollen definieren</h2>
     <h3>Rollenname</h3>
     <table>
+    <?php
+            // foreach role in database print
+    ?>
         <tr>
             <td>Admin</td>
         </tr>
@@ -181,6 +160,9 @@ BackendComponentPrinter::printSidebar(array()/*Parameter fehlen noch -> Rechte d
     </form>
     <h3>Rechte</h3>
     <form method="post" action="Benutzerverwaltung.php">
+        <?php
+            // foreach right in database print
+        ?>
         <input id="right1" name="right1" type="checkbox">
         <input id="right2" name="right2" type="checkbox">
         <input id="roleId" name="roleId" type="hidden" value="roleId">
