@@ -47,8 +47,7 @@ else if (isset($_POST['delete'])) {
 else if (isset($_POST['newUser'])) {
     include("../lib/DbUser.class.php");
     dbUser = new DbUser();
-    dbUser.CreateUser();
-    //$userId = newUser.id; // from dbuser
+    $userId = dbUser.CreateUser();
     EditUser($userId);
 }
 else if (isset($_POST['defineRole'])) {
@@ -59,7 +58,7 @@ else if (isset($_POST['defineRole'])) {
 else if (isset($_POST['newRole'])) {
     include("../lib/DbUser.class.php");
     dbUser = new DbUser(); 
-    dbUser.DefineRole();   
+    dbUser.NewRole();   
 }
 else if (isset($_POST['deleteRole'])) {
     include("../lib/DbUser.class.php")

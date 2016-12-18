@@ -33,7 +33,7 @@ class DbUser
 	* prepare_sql()
 	* Prepares the SQL statements
 	*/
-	private function prepare_sql()
+	private function Prepare_sql()
 	{
 		// put your queries here
 	}
@@ -47,7 +47,7 @@ class DbUser
 	* @params string $password the user's password
 	* @params string $birthdate the user's birthdate as date formatted string
 	*/
-	public function registrateUser()
+	public function RegistrateUser()
 	{
 	}
 	
@@ -71,13 +71,17 @@ class DbUser
 	}
 	public function CreateUser()
 	{
+		return $userId;
 	}
 	// has to save all values from "Benutzerverwaltung.php"
 	public function SaveChanges()
 	{
 	}
 	// perhaps other class
-	public function DefineRole()
+	public function NewRole($roleId)
+	{
+	}
+	public function DefineRole($roleId)
 	{
 	}
 	public function DeleteRole($roleId)
