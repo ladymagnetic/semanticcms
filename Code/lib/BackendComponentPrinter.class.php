@@ -4,6 +4,9 @@ namespace SemanticCms\ComponentPrinter;
 
 /* includes */
 // require_once 'filename';
+require_once 'lib/Permission.enum.php';
+
+use SemanticCms\Model\Permission;
 
 /**
 * Provides static functions for creating the backend page.
@@ -11,7 +14,7 @@ namespace SemanticCms\ComponentPrinter;
 class BackendComponentPrinter
 {
 	/* -------- BEISPIEL METHODEN - BITTE LÖSCHEN WENN NICHT MEHR BENÖTIGT --------- */
-	
+
 	// /**
 	// * print_showall_navigation()
 	// * Print back and next navigation buttons
@@ -39,7 +42,7 @@ class BackendComponentPrinter
 	 // }
 	 // echo "</section>";
 	// }
-	
+
 	/**
 	* Start the quarantine table and print table head
 	* BEISPIEL AUCH HIER!!!!!!
@@ -62,31 +65,39 @@ class BackendComponentPrinter
 				</tr>
 			</thead>";
 	}
-	
+
 	/**
-	*
-	*
+	* Prints the sidebar navigation menu. Menu items will not be displayed if the user does not have the
+    * corresponding permission.
+	* @params array $permissions The permissions of the currently logged in user.
 	*/
-	public static function printSidebar(array $permissions)
-	{
-		// Je nach Rechten bestimmte Menue-Punkte gar nicht erst sichtbar 
-		/*
-		<nav id="menue">
-			<div id="logo"></div>
-			<ul>
-				// Startseite beachten -> fehlt noch in der Navigation (Index.php)
-				<li><a href="Benutzerverwaltung.php" title="Benutzerverwaltung"><i class="fa fa-user fontawesome"></i> Benutzerverwaltung</a></li>
-				<li><a href="Seitenverwaltung.php" title="Seitenverwaltung"><i class="fa fa-file-text fontawesome"></i> Seitenverwaltung</a></li>
-				<li><a href="Inhaltsverwaltung.php" title="Inhaltsverwaltung"><i class="fa fa-align-justify fontawesome"></i> Inhaltsverwaltung</a></li>
-				<li><a href="Templates.php" title="Templates"><i class="fa fa-paint-brush fontawesome"></i> Templates</a></li>
-			</ul>
-		</nav>
-		*/
-		echo "<nav id=\"menue\"> Hier waere das Menue, aber der Code fehlt noch </nav>";
-	}
-	
+    public static function printSidebar(array $permissions)
+    {
+        echo
+        "<nav id=\"menue\">
+			<div id=\"logo\" style=\"cursor: pointer;\" onclick=\"window.location='Index.php';\"></div>
+			<ul>";
+        // Je nach Rechten bestimmte Menue-Punkte gar nicht erst sichtbar
+        if (in_array(Permission::Usermanagment, $permissions)) {
+            echo "<li><a href=\"Benutzerverwaltung.php\" title=\"Benutzerverwaltung\"><i class=\"fa fa-user fontawesome\"></i> Benutzerverwaltung</a></li>";
+        }
+        if (in_array(Permission::Pagemanagment, $permissions)) {
+            echo "<li><a href=\"Seitenverwaltung.php\" title=\"Seitenverwaltung\"><i class=\"fa fa-file-text fontawesome\"></i> Seitenverwaltung</a></li>";
+        }
+        if (in_array(Permission::Articlemanagment, $permissions)) {
+            echo "<li><a href=\"Inhaltsverwaltung.php\" title=\"Inhaltsverwaltung\"><i class=\"fa fa-align-justify fontawesome\"></i> Inhaltsverwaltung</a></li>";
+        }
+        if (in_array(Permission::Templateconstruction, $permissions)) {
+            echo "<li><a href=\"Templates.php\" title=\"Templates\"><i class=\"fa fa-paint-brush fontawesome\"></i> Templates</a></li>";
+        }
+
+        echo
+        "</ul>
+		</nav>";
+    }
+
 	/* Idee: print Head -> im Backend ueberall(?) der selbe HTML-Code (ggf. noch mal nachschauen)	*/
-	public static printHead(/*sowas wie z.B. titel*/)
+	public static function printHead(/*sowas wie z.B. titel*/)
 	{
 		// RDF-Tags oder schema.org oder so mit einfuegen => dazu steht unter Allgemeines/SemanticWeb/ was
 		// <head>

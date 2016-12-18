@@ -3,11 +3,11 @@
 
 <!-- fuer head wird es wahrscheinlich ebenfalls eine Methode geben: printHead(titel?), diese dann ggf. nutzen -->
 <head>
-<meta content="de" http-equiv="Content-Language">
-<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-<title>Startseite</title>
-<link rel="stylesheet" href="BackendCSS.css">
-<link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+    <meta content="de" http-equiv="Content-Language">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <title>Startseite</title>
+    <link rel="stylesheet" href="css/backend.css">
+    <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">
 </head>
 
 <body>
