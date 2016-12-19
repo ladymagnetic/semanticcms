@@ -3,6 +3,8 @@
 require_once 'lib/DbEngine.class.php';
 //require_once 'lib/BackendComponentPrinter.class.php';
 require_once 'config/config.php';
+//require_once 'lib/DbUser.class.php';
+require_once 'config/config.php';
 
 /* use namespace(s) */
 use SemanticCms\config;
@@ -24,13 +26,11 @@ echo "IT WORKS";
 /*
 // actions dbuser
 if (isset($_POST['unlock'])) {
-    include("../lib/DbUser.class.php");
     dbUser = new DbUser();
     $userId = $_POST['userId'];
     dbUser.UnlockUser($userId);    
 }
 else if (isset($_POST['lock'])) {
-    include("../lib/DbUser.class.php");
     dbUser = new DbUser();
     $userId = $_POST['userId'];
     dbUser.LockUser($userId);
@@ -40,35 +40,29 @@ else if (isset($_POST['details'])) {
     EditUser($userId);
 }
 else if (isset($_POST['delete'])) {
-    include("../lib/DbUser.class.php");
     dbUser = new DbUser();
     $userId = $_POST['userId'];
     dbUser.DeleteUser($userId);
 }
 else if (isset($_POST['newUser'])) {
-    include("../lib/DbUser.class.php");
     dbUser = new DbUser();
     $userId = dbUser.CreateUser();
     EditUser($userId);
 }
 else if (isset($_POST['defineRole'])) {
-    include("../lib/DbUser.class.php");
     dbUser = new DbUser();
     dbUser.DefineRole();
 }
 else if (isset($_POST['newRole'])) {
-    include("../lib/DbUser.class.php");
     dbUser = new DbUser(); 
     dbUser.NewRole();   
 }
 else if (isset($_POST['deleteRole'])) {
-    include("../lib/DbUser.class.php")
     dbUser = new DbUser();
     $roleId = $_POST['roleId'];
     dbUser.DeleteRole();
 }
 else if (isset($_POST['saveRoleChanges'])) {
-    include("../lib/DbUser.class.php");
     dbUser = new DbUser();
     dbUser.SaveRoleChanges();
 }
