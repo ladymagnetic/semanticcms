@@ -3,8 +3,7 @@
 require_once 'lib/DbEngine.class.php';
 //require_once 'lib/BackendComponentPrinter.class.php';
 require_once 'config/config.php';
-//require_once 'lib/DbUser.class.php';
-require_once 'config/config.php';
+require_once 'lib/DbUser.class.php';
 
 /* use namespace(s) */
 use SemanticCms\config;
