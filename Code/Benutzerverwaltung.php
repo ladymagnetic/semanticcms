@@ -59,7 +59,7 @@ else if (isset($_POST['newRole'])) {
 else if (isset($_POST['deleteRole'])) {
     dbUser = new DbUser();
     $roleId = $_POST['roleId'];
-    dbUser.DeleteRole();
+    dbUser.DeleteRole($roleId);
 }
 else if (isset($_POST['saveRoleChanges'])) {
     dbUser = new DbUser();
@@ -111,7 +111,7 @@ function EditUser($userID)
             foreach ($db->query($sql) as $row) {
 
                 echo 
-                "<tr>" + $row['firstname']." ".row['lastname'] + "<td>";
+                "<tr>".$row['firstname']." ".row['lastname']."<td>";
 
             // if user is unlocked --> <input id="unlock" name="unlock" type="button" value="entsperren"> else <input id="lock" name="lock" type="button" value="sperren">
             //if ($row[])
@@ -119,14 +119,14 @@ function EditUser($userID)
             <form method='post' action='Benutzerverwaltung.php'>
                 <input id='unlock' name='unlock' type='button' value='entsperren'>";
             echo
-                "<input id='userId' name='userId' type='hidden' value='" + $row['id'] + "'></form></td>";
+                "<input id='userId' name='userId' type='hidden' value='".$row['id']."'></form></td>";
             echo
-                "<td>" + row['role_id'] + "</td>";
+                "<td>".row['role_id'."</td>";
             echo
                 "<td><form method='post' action='Benutzerverwaltung.php'>"
-                + "<input id='details' name='details' type='button' value='Details'><input id='delete' name='delete' type='button' value='löschen'>";
-                + "<input id='userId' name='userId' type='hidden' value='" + row['id'] + "'>" 
-                + "</form></td>";
+                ."<input id='details' name='details' type='button' value='Details'><input id='delete' name='delete' type='button' value='löschen'>";
+                ."<input id='userId' name='userId' type='hidden' value='".row['id']."'>" 
+                ."</form></td>";
             echo 
                 "</tr>";
             }
@@ -153,7 +153,7 @@ function EditUser($userID)
                 echo row['name'];
                 echo "</td>";
                 echo "<td><input id='deleteRole' name='deleteRole' type='button' value='Rolle löschen'></td>";
-                echo "<input id='roleId' name='roleId' type='hidden' value='" + row['id'] + "'>";
+                echo "<input id='roleId' name='roleId' type='hidden' value='".row['id']."'>";
                 echo "</tr>";
             }
     ?>
