@@ -10,25 +10,26 @@ use Mysqli;
 */
 class DbEngine
 {
+	require_once("..config/config.php");
 	private $conn;	// database connection
-	
+
 	/* ---- Constructor / Destructor ---- */
 	/**
 	* constructor
 	* @params string $dsn database connection string
 	*/
-	public function __construct($host, $user, $password, $database) 
-	{ 
-		$this->connect_db($host, $user, $password, $database); 
+	public function __construct($host, $user, $password, $database)
+	{
+		$this->connect_db($host, $user, $password, $database);
 	}
-	
+
 	public function __destruct()
 	{
 		// Does connection still exist?
 		if(empty($this->conn)) {$this->disconnect_db();}
 	}
-	
-	/* ---- Methods ---- */	
+
+	/* ---- Methods ---- */
 	/**
 	* connect_db()
 	* Establishes database connection
@@ -37,13 +38,13 @@ class DbEngine
 	{
 		// Create connection
 		$this->conn = new mysqli($host, $user, $password, $database, NULL);
-			
+
 		if ($this->conn->connect_error)
 		{
 			die("Verbindung zur Datenbank konnte nicht hergestellt werden!(".$conn->connect_errno.")");
 		}
 	}
-	
+
 	/**
 	* disconnect_db()
 	* Establishes database connection
@@ -53,7 +54,7 @@ class DbEngine
 		$this->$conn->close();
 		unset($this->conn);
 	}
-	
+
 	// /**
 	// * prepare_statement()
 	// * Prepares one query with a specific name

@@ -20,6 +20,16 @@
 	<input id="forgotPassword" name="forgotPassword" type="button" value="Passwort vergessen">
 </form>
 </section>
+
+<?php
+// hier Logik für logIn rein (Funktionsaufruf LoginUser.php)
+  $nameInput =  $_POST["username"];
+  $password = $_POST["password"];
+  loginUser($nameInput, $password);
+?>
+
+
+
 </body>
 
 </html>
