@@ -73,10 +73,6 @@ class DbUser
 	{
 		return $userId;
 	}
-	// has to save all values from "Benutzerverwaltung.php"
-	public function SaveChanges()
-	{
-	}
 	// perhaps other class
 	public function NewRole($roleId)
 	{
@@ -85,6 +81,10 @@ class DbUser
 	{
 	}
 	public function DeleteRole($roleId)
+	{
+	}
+	// has to save role permissions from "Benutzerverwaltung.php"
+	public function SaveRoleChanges()
 	{
 	}	
 }

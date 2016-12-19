@@ -67,10 +67,10 @@ else if (isset($_POST['deleteRole'])) {
     $roleId = $_POST['roleId'];
     dbUser.DeleteRole();
 }
-else if (isset($_POST['saveChanges'])) {
+else if (isset($_POST['saveRoleChanges'])) {
     include("../lib/DbUser.class.php");
     dbUser = new DbUser();
-    dbUser.SaveChanges();
+    dbUser.SaveRoleChanges();
 }
 
 function EditUser($userID)
@@ -175,7 +175,7 @@ function EditUser($userID)
         ?>
         <input id="right1" name="right1" type="checkbox">
         <input id="right2" name="right2" type="checkbox">
-        <input id="saveChanges" name="saveChanges" type="button" value="Änderungen speichern">
+        <input id="saveRoleChanges" name="saveRoleChanges" type="button" value="Änderungen speichern">
     </form>
 </section>
 </body>
