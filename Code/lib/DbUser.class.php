@@ -78,9 +78,8 @@ public function DoesUserAlreadyExist($username, $email)
 	*/
 	public function LoginUser($nameInput, $password)
 	{
-			$stmt = $mysqli->prepare("SELECT password FROM user WHERE email =" $nameInput "OR username =" $nameInput);
-			$stmt->bind_param('s', $_POST['password']);
-			$stmt->execute();
+			$stmt = $mysqli->query("SELECT password FROM user WHERE email =" $nameInput "OR username =" $nameInput);
+
 			if($stmt == $password)
 			{
 				echo "hallo ich bin richtig";
