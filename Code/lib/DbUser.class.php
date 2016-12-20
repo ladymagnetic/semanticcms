@@ -218,7 +218,7 @@ public function DoesUserAlreadyExist($username, $email)
 	}
 
 	// Jonas: // checkt ob der user mit der userid gesperrt (gebannt) ist und gibt true oder false zurück
-	public function CheckIfUserIsBanned($userId)
+	public function IsUserBanned($userId)
 	{
 		return true/false;
 	}

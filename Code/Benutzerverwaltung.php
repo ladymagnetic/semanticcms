@@ -130,7 +130,7 @@ echo
                 "<tr>".$row['firstname']." ".$row['lastname']."<td>";
 
                 // if user is unlocked/locked
-                $unlocked = $dbUser.CheckIfUserIsBanned($row['id']);
+                $unlocked = $dbUser.IsUserBanned($row['id']);
                 if ($unlocked)
                 {
                     echo "<td>
@@ -253,7 +253,7 @@ function EditUser($userId)
 }
 function EditRole($roleId)
 {
-     // must call the page to edit the details of the user
+     // must call the page to edit the details of the role
     echo
     "<!DOCTYPE html>
     <html>
