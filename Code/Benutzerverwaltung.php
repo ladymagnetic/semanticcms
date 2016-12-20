@@ -198,38 +198,37 @@ echo
                 echo "<input id='roleId' name='roleId' type='hidden' value='".$row['id']."'>";
                 echo "</tr>";
             }
-</section>
-</body>
+echo
+    "</section>
+    </body>
 
-</html>";
+    </html>";
 
 
 function EditUser($userId)
 {
     // must call the page to edit the details of the user
-    echo
-    "<!DOCTYPE html>
+    <-------------------------------------------------------- wird durch Header Methode ersetzt ----------------------------------------------------->
+    echo "<!DOCTYPE html>
     <html>
-
     <head>
     <meta content="de" http-equiv="Content-Language">
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-    <title>Kontodaten bearbeiten</title>
-    <link rel="stylesheet" href="BackendCSS.css">
-    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+    <title>Benutzerverwaltung</title>
+    <link rel="stylesheet" href="css/backend.css">
+    <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">
     </head>
+    <body>";
+    <-------------------------------------------------------- wird durch Header Methode ersetzt ----------------------------------------------------->
 
-    <body>
-    <nav id="menue">
-        <div id="logo"></div>
-        <ul>
-            <li><a href="Benutzerverwaltung.php" title="Benutzerverwaltung"><i class="fa fa-user fontawesome"></i> Benutzerverwaltung</a></li>
-            <li><a href="Seitenverwaltung.php" title="Seitenverwaltung"><i class="fa fa-file-text fontawesome"></i> Seitenverwaltung</a></li>
-            <li><a href="Inhaltsverwaltung.php" title="Inhaltsverwaltung"><i class="fa fa-align-justify fontawesome"></i> Inhaltsverwaltung</a></li>
-            <li><a href="Templates.php" title="Templates"><i class="fa fa-paint-brush fontawesome"></i> Templates</a></li>
-        </ul>
-    </nav>
-    <section id="main">
+    <!-- menue -->
+    <!-- dynamisch erzeugt je nach Rechten -->
+    require_once 'lib/BackendComponentPrinter.class.php';
+    use SemanticCms\ComponentPrinter\BackendComponentPrinter;
+
+    BackendComponentPrinter::printSidebar(array()/*Parameter fehlen noch -> Rechte des gerade eingeloggten Nutzers*/);
+    echo
+    "<section id="main">
     <h1>Kontodaten bearbeiten</h1>
         <form method="post" action="../lib/BackendComponentPrinter.class.php">";
     $dbUser = new DbUser();
@@ -272,29 +271,27 @@ function EditUser($userId)
 function EditRole($roleId)
 {
      // must call the page to edit the details of the role
-    echo
-    "<!DOCTYPE html>
+    <-------------------------------------------------------- wird durch Header Methode ersetzt ----------------------------------------------------->
+    echo "<!DOCTYPE html>
     <html>
-
     <head>
     <meta content="de" http-equiv="Content-Language">
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-    <title>Kontodaten bearbeiten</title>
-    <link rel="stylesheet" href="BackendCSS.css">
-    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+    <title>Benutzerverwaltung</title>
+    <link rel="stylesheet" href="css/backend.css">
+    <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">
     </head>
+    <body>";
+    <-------------------------------------------------------- wird durch Header Methode ersetzt ----------------------------------------------------->
+    <!-- menue -->
+    <!-- dynamisch erzeugt je nach Rechten -->
+    require_once 'lib/BackendComponentPrinter.class.php';
+    use SemanticCms\ComponentPrinter\BackendComponentPrinter;
 
-    <body>
-    <nav id="menue">
-        <div id="logo"></div>
-        <ul>
-            <li><a href="Benutzerverwaltung.php" title="Benutzerverwaltung"><i class="fa fa-user fontawesome"></i> Benutzerverwaltung</a></li>
-            <li><a href="Seitenverwaltung.php" title="Seitenverwaltung"><i class="fa fa-file-text fontawesome"></i> Seitenverwaltung</a></li>
-            <li><a href="Inhaltsverwaltung.php" title="Inhaltsverwaltung"><i class="fa fa-align-justify fontawesome"></i> Inhaltsverwaltung</a></li>
-            <li><a href="Templates.php" title="Templates"><i class="fa fa-paint-brush fontawesome"></i> Templates</a></li>
-        </ul>
-    </nav>
-    <section id="main">
+    BackendComponentPrinter::printSidebar(array()/*Parameter fehlen noch -> Rechte des gerade eingeloggten Nutzers*/);
+    
+    echo
+    "<section id="main">
     <h1>Rolle bearbeiten</h1>
     echo
     $dbUser = new DbUser();
