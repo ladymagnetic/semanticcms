@@ -116,21 +116,21 @@ public function DoesUserAlreadyExist($username, $email)
 
 
 	// assignes an existing role to an existing user (user-object given from User.class)
-	// das mit den Rollen muss ich nochmal überdenken, aber wahrscheinlich erzeugt es eine neue Rolle und gibt die Rollenid zurück
-	public function NewRole($roleId, $userId)
+	// neue blanke Rolle erstellen und die id davon zurückgeben
+	public function NewRole($roleId)
 	{
 		$stmt = $mysqli->prepare("UPDATE User SET role_id = ? WHERE user.id =" $userId);
 		$stmt->bind_param("i", $_POST[$roleId]);
 		$stmt->execute();
 		$stmt->close();
+		return $roleId;
 	}
 
+	GetRoleInfo($roleId)
+
 	// creats new role by given attributes (booleans)
-	// kann sein dass das nicht direkt so gebraucht wird, oder bisschen anders --> wird aber saveRolechanges
-	// defineRole gibt es nicht mehr aber saveRoleChanges wird so ähnlich
-	// da habe ich mich vertan, define role ist eigentlich nur zum Ausklappen, aber kann man weglassen ohne javascript
-	// aber der Inhalt der Funktion wird für saveRoleChanges gebraucht, das ist das mit Checkboxes
-	public function DefineRole($rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction)
+	// alle Werte der Rolle mit roleId zuweisen
+	public function SaveRoleChanges($roleId, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction)
 	{
 		//Check rolename if exists
 		$result = mysqli->prepare("SELECT role.rolename FROM Role WHERE rolename = " $rolename);
@@ -168,11 +168,6 @@ public function DoesUserAlreadyExist($username, $email)
 		$stmt->bind_param('i', $_POST['roleID']);
 		$stmt->execute();
 		$stmt->close();
-	}
-	// has to save role permissions from "Benutzerverwaltung.php" -> Conny: which role should be saved? A new role or a new assigned role?
-	// wird so ähnlich wie defineRole, das muss ich noch ändern
-	public function SaveRoleChanges()
-	{
 	}
 }
 

@@ -43,26 +43,25 @@ else if (isset($_POST['newUser'])) {
     $userId = dbUser.CreateUser();
     EditUser($userId);
 }
-else if (isset($_POST['defineRole'])) {
-    $dbUser = new DbUser();
-    $dbUser.DefineRole();
-}
 else if (isset($_POST['newRole'])) {
     $dbUser = new DbUser(); 
-    $dbUser.NewRole();   
+    $roleId = $dbUser.NewRole();   
+    EditRole($roleId);
 }
 else if (isset($_POST['deleteRole'])) {
     $dbUser = new DbUser();
     $roleId = $_POST['roleId'];
     $dbUser.DeleteRole($roleId);
 }
-else if (isset($_POST['saveRoleChanges'])) {
+else if (isset($_POST['roleDetails'])) {
     $dbUser = new DbUser();
-    $dbUser.SaveRoleChanges();
+    $roleId = $_POST['roleId'];
+    $dbUser.EditRole($roleId);
 }
 else if (isset($_POST['applyChanges']))
 {
     $dbUser = new DbUser();
+    $userId = $_POST['userId'];
     $userName = $_POST['userName'];
     $name = $_POST['name'];
     $foreName = $_POST['foreName'];
@@ -77,6 +76,18 @@ else if (isset($_POST['applyPasswordChanges']))
     $newPassword = $_POST['newPassword'];
     $newPasswordRepeat = $_POST['newPasswordRepeat'];
     $dbUser.ApplyPasswordChangesToUser($userId, $password, $newPassword, $newPasswordRepeat);
+}
+else if (isset($_POST['saveRoleChanges'])) {
+    $dbUser = new DbUser();
+    $roleId = $_POST['roleId'];
+    $rolename = $_POST['rolename'];
+    $guestbookmanagement = $_POST['guestbookmanagement'];
+    $usermanagement = $_POST['usermanagement'];
+    $pagemanagement = $_POST['pagemanagement'];
+    $articlemanagement = $_POST['articlemanagement'];
+    $guestbookusage = $_POST['guestbookusage'];
+    $templateconstruction = $_POST['templateconstruction'];
+    $dbUser.SaveRoleChanges($roleId, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction);
 }
 
 echo "<!DOCTYPE html>
@@ -150,8 +161,6 @@ echo
     <form method="post" action="Benutzerverwaltung.php">
         <input id="newUser" name="newUser" type="button" value="Neuer Benutzer">
         <input id="userId" name="userId" type="hidden" value="userId">
-        <input id="defineRole" name="defineRole" type="button" value="Rolle definieren">
-        <input id="roleId" name="roleId" type="hidden" value="roleId">
     </form>
     <h2>Rollen definieren</h2>
     <table>
@@ -167,27 +176,10 @@ echo
                 echo "<td>";
                 echo $row['rolename'];
                 echo "</td>";
-                echo "<td><input id='deleteRole' name='deleteRole' type='button' value='Rolle löschen'></td>";
+                echo "<td><form method='post' action='Benutzerverwaltung.php'><input id='roleDetails' name='roleDetails' type='button' value='Details'><input id='deleteRole' name='deleteRole' type='button' value='Rolle löschen'></form></td>";
                 echo "<input id='roleId' name='roleId' type='hidden' value='".$row['id']."'>";
                 echo "</tr>";
             }
-echo
-    "</table>
-    <form method="post" action="Benutzerverwaltung.php">
-        <input id="newRole" name="newRole" type="button" value="roleId">        
-    </form>
-    <h3>Rechte</h3>
-    <form method="post" action="Benutzerverwaltung.php">";
-            // foreach right in database print
-            $dbUser = new DbUser();
-            $roleRightsRows = $dbUser.GetRoleRights();
-            foreach ($roleRightsRows as $row) {
-                echo
-                    //"<input id='".row['right']."'' name='".row['right']."' value='".row['right']."' type='checkbox'>";
-            }
-echo
-        "<input id="saveRoleChanges" name="saveRoleChanges" type="button" value="Rollenänderung speichern">
-    </form>
 </section>
 </body>
 
@@ -238,7 +230,7 @@ function EditUser($userId)
             <input id="email" name="email" type="text" value='".$userRow['username']."'>";
     echo
             "<input id="userId" name="userId" type="hidden" value='".$userId."'>".
-            "<input id="applyChanges" name="applyChanges" type="button" value="Änderungen übernehmen">"
+            "<input id="applyChanges" name="applyChanges" type="button" value="Änderungen übernehmen">";
         echo
         "</form>
         <h2>Passwort ändern</h2>
@@ -250,7 +242,7 @@ function EditUser($userId)
             <input id="newPassword" name="newPassword" type="password">
             <label for="newPasswordRepeat">neues Passwort bestätigen</label>
             <input id="newPasswordRepeat" name="newPasswordRepeat" type="password">
-            <input id="userID" name="userID" type="hidden" value='".$userId."'>".
+            <input id="userId" name="userId" type="hidden" value='".$userId."'>".
             "<input id="applyPasswordChanges" name="applyPasswordChanges" type="button" value="Passwort übernehmen">";
         echo
         "</form>
@@ -258,5 +250,65 @@ function EditUser($userId)
     </body>
 
     </html>";
+}
+function EditRole($roleId)
+{
+     // must call the page to edit the details of the user
+    echo
+    "<!DOCTYPE html>
+    <html>
+
+    <head>
+    <meta content="de" http-equiv="Content-Language">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <title>Kontodaten bearbeiten</title>
+    <link rel="stylesheet" href="BackendCSS.css">
+    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+    </head>
+
+    <body>
+    <nav id="menue">
+        <div id="logo"></div>
+        <ul>
+            <li><a href="Benutzerverwaltung.php" title="Benutzerverwaltung"><i class="fa fa-user fontawesome"></i> Benutzerverwaltung</a></li>
+            <li><a href="Seitenverwaltung.php" title="Seitenverwaltung"><i class="fa fa-file-text fontawesome"></i> Seitenverwaltung</a></li>
+            <li><a href="Inhaltsverwaltung.php" title="Inhaltsverwaltung"><i class="fa fa-align-justify fontawesome"></i> Inhaltsverwaltung</a></li>
+            <li><a href="Templates.php" title="Templates"><i class="fa fa-paint-brush fontawesome"></i> Templates</a></li>
+        </ul>
+    </nav>
+    <section id="main">
+    <h1>Rolle bearbeiten</h1>
+    echo
+    $dbUser = new DbUser();
+    $roleRow = $dbUser.GetRoleInfo($roleId);
+    echo
+            "<form method='post' action='Benutzerverwaltung.php'>".
+            "<input id="userId" name="userId" type="hidden" value='".$roleId."'>"
+    echo
+            "<label for="roleName">Benutzername</label>
+            <input id="roleName" name="roleName" type="checkbox" value='".$roleRow['rolename']."'>";
+    echo
+            "<label for="uri">Name</label>
+            <input id="uri" name="uri" type="checkbox" value='".$roleRow['uri']."'>";
+    echo    
+            "<label for="guestbookmanagement">Vorname</label>
+            <input id="guestbookmanagement" name="guestbookmanagement" type="checkbox" value='".$roleRow['guestbookmanagement']."'>";
+    echo
+            "<label for="usermanagement">Email</label>
+            <input id="usermanagement" name="usermanagement" type="checkbox" value='".$roleRow['usermanagement']."'>";
+    echo
+            "<label for="pagemanagement">Email</label>".
+            "<input id="pagemanagement" name="pagemanagement" type="checkbox" value='".$roleRow['pagemanagement']."'>";
+    echo
+            "<label for="articlemanagement">Email</label>".
+            "<input id="articlemanagement" name="articlemanagement" type="checkbox" value='".$roleRow['articlemanagement']."'>";
+    echo
+            "<label for="guestbookusage">Email</label>".
+            "<input id="guestbookusage" name="guestbookusage" type="checkbox" value='".$roleRow['guestbookusage']."'>";
+    echo
+            "<label for="templateconstruction">Email</label>".
+            "<input id="templateconstruction" name="templateconstruction" type="checkbox" value='".$roleRow['templateconstruction']."'>".
+            "<input id="saveRoleChanges" name="saveRoleChanges" type="button" value="Rollenänderung speichern"></form>";
+
 }
 ?>
