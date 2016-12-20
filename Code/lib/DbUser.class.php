@@ -189,4 +189,9 @@ public function GetRoleRights()
 
 }
 
+public function CheckIfUserIsUnlocked($userId)
+{
+	return true/false;
+}
+
 ?>

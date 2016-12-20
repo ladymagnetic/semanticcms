@@ -8,7 +8,7 @@ require_once 'lib/DbUser.class.php';
 /* use namespace(s) */
 use SemanticCms\config;
 use SemanticCms\DatabaseAbstraction\DbEngine;
-//use SemanticCms\ComponentPrinter\BackendComponentPrinter;
+use SemanticCms\ComponentPrinter\BackendComponentPrinter;
 
 $db = new DbEngine($config['cms_db']['dbhost'],$config['cms_db']['dbuser'],$config['cms_db']['dbpass'],$config['cms_db']['database']);
 
@@ -107,18 +107,28 @@ echo
                 "<tr>".$row['firstname']." ".row['lastname']."<td>";
 
             // if user is unlocked --> <input id="unlock" name="unlock" type="button" value="entsperren"> else <input id="lock" name="lock" type="button" value="sperren">
-            //if ($row[])
-            echo "<td>
-            <form method='post' action='Benutzerverwaltung.php'>
+            $unlocked = $dbUser.CheckIfUserIsUnlocked($row['id']);
+            if ($unlocked)
+            {
+                echo "<td>
+                <form method='post' action='Benutzerverwaltung.php'>
                 <input id='unlock' name='unlock' type='button' value='entsperren'>";
+            }
+            else
+            {
+                echo "<td>
+                <form method='post' action='Benutzerverwaltung.php'>
+                <input id='lock' name='lock' type='button' value='sperren'>";
+            }
+            
             echo
                 "<input id='userId' name='userId' type='hidden' value='".$row['id']."'></form></td>";
             echo
-                "<td>".row['role_id'."</td>";
+                "<td>".$row['role_id'."</td>";
             echo
                 "<td><form method='post' action='Benutzerverwaltung.php'>"
                 ."<input id='details' name='details' type='button' value='Details'><input id='delete' name='delete' type='button' value='löschen'>";
-                ."<input id='userId' name='userId' type='hidden' value='".row['id']."'>" 
+                ."<input id='userId' name='userId' type='hidden' value='".$row['id']."'>" 
                 ."</form></td>";
             echo 
                 "</tr>";
