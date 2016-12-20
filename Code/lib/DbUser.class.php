@@ -17,15 +17,15 @@ class DbUser
 	* constructor
 	* @params string $dsn database connection string
 	*/
-	 public function __construct($dsn)
+	 public function __construct($host, $user, $password, $db)
   	{
-	   $this->database = new DbEngine($dsn);
-	   $this->prepare_sql();
+	   $this->database = new DbEngine($host, $user, $password, $db);
+	   $this->prepareSQL();
     }
 
 		public function __destruct()
 		{
-	  	$this->database->__destruct();
+			$this->database->__destruct();
 		}
 
 	/* ---- Methods ---- */
@@ -33,9 +33,17 @@ class DbUser
 	* prepare_sql()
 	* Prepares the SQL statements
 	*/
-	private function Prepare_sql()
+	private function prepareSQL()
 	{
-		// put your queries here
+		$registrate = "INSERT INTO user (id, role_id, lastname, firstname, username, password, email, registrydate, birthdate)
+				  VALUES (NULL, ?, ?, ?, ?, ? , ? , NOW(), ?);";
+
+		$this->database->PrepareStatement("registrateUser", $registrate);
+
+/*
+		$deleteUser = "...."
+		$this->database->PrepareStatement("deleteUser", $deleteUser);
+*/
 	}
 
 /*Maybe other required function DoesUserAlreadyExist($username, $email)*/
@@ -58,16 +66,16 @@ public function DoesUserAlreadyExist($username, $email)
 	* @params string $password the user's password
 	* @params string $birthdate the user's birthdate as date formatted string
 	*/
-	public function RegistrateUser()
+	public function RegistrateUser($role_id, $lastname, $firstname, $username, $password, $email, $birthdate)
 	{
-		//if(!DoesUserAlreadyExist) ...
-		$stmt = $mysqli->prepare("INSERT INTO user(username, fistname, lastname, mail, password, birthdate) VALUES (?, ?, ?, ?, ?, ?)");
-		$stmt->bind_param('ssssss', $username, $firstname, $lastname, $mail, $password, $birthdate);
-							/*Vorsicht => Datentyp für birthdate, es gibt nur integer, double, string, blob
-								http://php.net/manual/de/mysqli-stmt.bind-param.php
-							*/
-		$stmt->execute();
-		$stmt->close();
+
+		/*
+		INSERT INTO user VALUES (NULL, 2, "Muster", "Johanna", "jojo20", "password1234" , "j.m@web.de" , NOW(), "1996-08-16");
+		*/
+
+
+		/*Prüfungen der Eingaben => Benutzername, Email-Adresse, Ist das ein Datum?,  ect.*/
+		$this->database->ExecutePreparedStatement("registrateUser", array($role_id, $lastname, $firstname, $username, $password, $email, $birthdate));
 	}
 
 	/**
@@ -78,8 +86,17 @@ public function DoesUserAlreadyExist($username, $email)
 	*/
 	public function LoginUser($nameInput, $password)
 	{
-			$stmt = $mysqli->query("SELECT password FROM user WHERE email =" $nameInput "OR username =" $nameInput);
+		echo "Hallo Funktion LoginUser wird aufgerufen :)</br>";
 
+
+			$nameInput = $this->database->RealEscapeString($nameInput);
+
+			//$stmt = $this->database->ExecuteQuery("SELECT password FROM user WHERE email =".$nameInput." OR username =".$nameInput);
+			$stmt = $this->database->ExecuteQuery("SELECT id FROM user WHERE (email =".$nameInput." OR username =".$nameInput.") AND password = ". $password));
+
+			// Rückgabe prüfen => ist der Datensatz auch wirklich vorhanden? Ist es genau EIN Datensatz, der zurück kommt?
+
+/*
 			if($stmt == $password)
 			{
 				echo "hallo ich bin richtig";
@@ -87,28 +104,32 @@ public function DoesUserAlreadyExist($username, $email)
 			}
 			else
 			{
-			echo "hallo ich bin falsch";
-			return false;
+				echo "hallo ich bin falsch";
+				return false;
 			}
+*/
+
 	}
 
-	// ist das gleiche wie ban, also sperrung
+	//same function than "Ban()"?
+	// Jonas: ist das gleiche wie ban, also sperrung
 	public function BanUser($userId)
 	{
 	}
-	// ist das gleiche wie deban, also sperrung
-	public function DebanUser($userId)
+	//Jonas: ist das gleiche wie deban, also sperrung
+		//same function than "Deban()"?
+ public function DebanUser($userId)
 	{
 	}
 	public function DeleteUser($userId)
 	{
-		$stmt = $mysqli->prepare("DELETE FROM user WHERE id="$userId);
+		/* aufbauen wie Registrieren  => siehe oben §deleteUser*/
+		$stmt = $mysqli->prepare("DELETE FROM user WHERE id=".$userId);
 		$stmt->bind_param('i', $_POST['userId']);
 		$stmt->execute();
 		$stmt->close();
 	}
-
-    // muss einen neuen user erzeugen und die id von diesem zurückgeben
+//Jonas: muss einen neuen user erzeugen und die id von diesem zurückgeben
 	public function CreateUser()
 	{
 		return $userId;
@@ -119,27 +140,34 @@ public function DoesUserAlreadyExist($username, $email)
 	// neue blanke Rolle erstellen und die id davon zurückgeben
 	public function NewRole($roleId)
 	{
-		$stmt = $mysqli->prepare("UPDATE User SET role_id = ? WHERE user.id =" $userId);
+
+	}
+	// Rolle zuweisen muss ich erst noch einbringen
+	public function AssignRole($roleId, $userId)
+	{
+		$stmt = $mysqli->prepare("UPDATE User SET role_id = ? WHERE user.id =".$userId);
 		$stmt->bind_param("i", $_POST[$roleId]);
 		$stmt->execute();
 		$stmt->close();
 		return $roleId;
 	}
 
-	GetRoleInfo($roleId)
+	public function GetRoleInfo($roleId)
+	{
+		// alle Werte von role zurückgeben
+	}
 
-	// creats new role by given attributes (booleans)
-	// alle Werte der Rolle mit roleId zuweisen
+	// speichert alle Informationen der Rolle
 	public function SaveRoleChanges($roleId, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction)
 	{
 		//Check rolename if exists
-		$result = mysqli->prepare("SELECT role.rolename FROM Role WHERE rolename = " $rolename);
+		$result = $mysqli->prepare("SELECT role.rolename FROM Role WHERE rolename = ".$rolename);
 		$result->bind_param('s', $_POST['rolename']);
 		$result->execute();
 
 				if($result != $rolename)
 				{
-					$rolename 						= $_POST['rolename']);
+					$rolename 						= $_POST['rolename'];
 					$guestbookmanagement  = $_POST['guestbookmanagement'];
 					$usermanagement	  		 = $_POST['usermanagement'];
 					$pagemanagement 		  = $_POST['pagemanagement'];
@@ -161,17 +189,18 @@ public function DoesUserAlreadyExist($username, $email)
 
 				}
 	}
+	// Jonas:
 	// Rolle mit roleId löschen
 	public function DeleteRole($roleId)
 	{
-		$stmt = $mysqli->prepare("DELETE FROM role WHERE id="$roleId);
+		$stmt = $mysqli->prepare("DELETE FROM role WHERE id=".$roleId);
 		$stmt->bind_param('i', $_POST['roleID']);
 		$stmt->execute();
 		$stmt->close();
 	}
-}
 
 // return users as rows
+//Jonas:
 // muss alle user mit den angegebenen Werten bevorzugt als rows zurückgeben zur Auflistung in der Tabelle
 public function GetUsers()
 {
@@ -181,45 +210,51 @@ public function GetUsers()
 }
 
 // return roles as rows
-// muss alle roles mit den angegebenen Werten bevorzugt als rows zurückgeben zur Auflistung in der Tabelle
+// Jonas: muss alle roles mit den angegebenen Werten bevorzugt als rows zurückgeben zur Auflistung in der Tabelle
 public function GetRoles()
 {
 	$sql = "SELECT id, name FROM role";
 	return;
 }
 
-// return rolerights as rows
-// das steht noch aus, mussich nochmal überdenken
-public function GetRoleRights()
-{
-
-}
-
-// checkt ob der user mit der userid gesperrt (gebannt) ist und gibt true oder false zurück
-public function CheckIfUserIsBanned($userId)
+// Jonas: // checkt ob der user mit der userid gesperrt (gebannt) ist und gibt true oder false zurück
+public function CheckIfUserIsUnlocked($userId)
 {
 	return true/false;
 }
 
+
+public function GetUserInformation($userId)
+{
+	$sql = "SELECT username, firstname, lastname, email FROM user";
+}
+
 // has to save the changes of the user
-// speichert die angegebenen Werte in den user mit $userId
+// Jonas: speichert die angegebenen Werte in den user mit $userId
 public function ApplyChangesToUser($userId, $userName, $name, $foreName, $email)
 {
 
 }
 
 // has to save the changes for the passwords of the user
+// Jonas
 // speichert die Passwortänderung
-// am besten nur, wenn das password mit dem Passwort des Users mit userId übereinstmmt und newPassword und newPasswordRepeat gleich sind
+// am besten nur, wenn das password mit dem Passwort des Users mit userId übereinstmmt und newP
 public function ApplyPasswordChangesToUser($userId, $password, $newPassword, $newPasswordRepeat)
 {
 		// check if password correct --> change of password with newPassword else no change
 }
 
-// Holt die userInformation mit den aufgelisteten Werten des users mit userId zur Anzeige im Editiermodus des Users
+// Jonas// Holt die userInformation mit den aufgelisteten Werten des users mit userId zur Anzeige im Editiermodus des Users
 public function GetUserInformation($userId)
 {
-	$sql = "SELECT username, firstname, lastname, email FROM user";
+	$sql = "SELECT username, firstname, lastname, email, password FROM user";
+}
+
+
+
+
+
 }
 
 ?>
