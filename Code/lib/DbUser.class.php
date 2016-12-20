@@ -92,11 +92,11 @@ public function DoesUserAlreadyExist($username, $email)
 			}
 	}
 
-	//same function than "Ban()"?
+	// ist das gleiche wie ban, also sperrung
 	public function BanUser($userId)
 	{
 	}
-		//same function than "Deban()"?
+		//ist das gleiche wie "Deban()"?
 	public function DebanUser($userId)
 	{
 	}
@@ -108,6 +108,7 @@ public function DoesUserAlreadyExist($username, $email)
 		$stmt->close();
 	}
 
+	// muss einen neuen user erzeugen und die id von diesem zurückgeben
 	public function CreateUser()
 	{
 		return $userId;
@@ -115,6 +116,7 @@ public function DoesUserAlreadyExist($username, $email)
 
 
 	// assignes an existing role to an existing user (user-object given from User.class)
+	// das mit den Rollen muss ich nochmal überdenken, aber wahrscheinlich erzeugt es eine neue Rolle und gibt die Rollenid zurück
 	public function NewRole($roleId, $userId)
 	{
 		$stmt = $mysqli->prepare("UPDATE User SET role_id = ? WHERE user.id =" $userId);
@@ -124,6 +126,9 @@ public function DoesUserAlreadyExist($username, $email)
 	}
 
 	// creats new role by given attributes (booleans)
+	// kann sein dass das nicht direkt so gebraucht wird, oder bisschen anders --> wird aber saveRolechanges
+	// defineRole gibt es nicht mehr aber saveRoleChanges wird so ähnlich
+	// da habe ich mich vertan, define role ist eigentlich nur zum Ausklappen, aber kann man weglassen
 	public function DefineRole($rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction)
 	{
 		//Check rolename if exists
@@ -155,6 +160,7 @@ public function DoesUserAlreadyExist($username, $email)
 
 				}
 	}
+	// Rolle mit roleId löschen
 	public function DeleteRole($roleId)
 	{
 		$stmt = $mysqli->prepare("DELETE FROM role WHERE id="$roleId);
@@ -163,12 +169,14 @@ public function DoesUserAlreadyExist($username, $email)
 		$stmt->close();
 	}
 	// has to save role permissions from "Benutzerverwaltung.php" -> Conny: which role should be saved? A new role or a new assigned role?
+	// wird so ähnlich wie defineRole, das muss ich noch ändern
 	public function SaveRoleChanges()
 	{
 	}
 }
 
 // return users as rows
+// muss alle user mit den angegebenen Werten bevorzugt als rows zurückgeben zur Auflistung in der Tabelle
 public function GetUsers()
 {
 	$sql = "SELECT id, role_id, lastname, firstname, username, password, email FROM user";
@@ -177,6 +185,7 @@ public function GetUsers()
 }
 
 // return roles as rows
+// muss alle roles mit den angegebenen Werten bevorzugt als rows zurückgeben zur Auflistung in der Tabelle
 public function GetRoles()
 {
 	$sql = "SELECT id, name FROM role";
@@ -184,28 +193,34 @@ public function GetRoles()
 }
 
 // return rolerights as rows
+// das steht noch aus, mussich nochmal überdenken
 public function GetRoleRights()
 {
 
 }
 
-public function CheckIfUserIsUnlocked($userId)
+// checkt ob der user mit der userid gesparrt (gebannt) ist und gibt true oder false zurück
+public function CheckIfUserIsBanned($userId)
 {
 	return true/false;
 }
 
 // has to save the changes of the user
+// speichert die angegebenen Werte in den user mit $userId
 public function ApplyChangesToUser($userId, $userName, $name, $foreName, $email)
 {
 
 }
 
 // has to save the changes for the passwords of the user
+// speichert die Passwortänderung
+// am besten nur, wenn das password mit dem Passwort des Users mit userId übereinstmmt und newPassword und newPasswordRepeat gleich sind
 public function ApplyPasswordChangesToUser($userId, $password, $newPassword, $newPasswordRepeat)
 {
 		// check if password correct --> change of password with newPassword else no change
 }
 
+// Holt die userInformation mit den aufgelisteten Werten des users mit userId zur Anzeige im Editiermodus des Users
 public function GetUserInformation($userId)
 {
 	$sql = "SELECT username, firstname, lastname, email FROM user";
