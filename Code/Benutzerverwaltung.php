@@ -147,7 +147,7 @@ function EditUser($userID)
     <?php
             // foreach role in database print
             $dbUser = new DbUser();
-            $userRows = $dbUser.GetRoles();
+            $roleRows = $dbUser.GetRoles();
             foreach ($roleRows as $row) {
                 echo "<tr>";
                 echo "<td>";
@@ -166,9 +166,13 @@ function EditUser($userID)
     <form method="post" action="Benutzerverwaltung.php">
         <?php
             // foreach right in database print
+            $dbUser = new DbUser();
+            $roleRightsRows = $dbUser.GetRoleRights();
+            foreach ($roleRightsRows as $row) {
+                echo
+                    "<input id='".row['right']."'' name='".row['right']."' value='".row['right']."' type='checkbox'>"
+            }
         ?>
-        <input id="right1" name="right1" type="checkbox">
-        <input id="right2" name="right2" type="checkbox">
         <input id="saveRoleChanges" name="saveRoleChanges" type="button" value="Rollenänderung speichern">
     </form>
 </section>

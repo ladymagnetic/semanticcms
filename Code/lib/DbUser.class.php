@@ -183,4 +183,10 @@ public function GetRoles()
 	return;
 }
 
+// return rolerights as row
+public function GetRoleRights()
+{
+
+}
+
 ?>
