@@ -155,8 +155,8 @@ echo
                 echo 
                     "<td><form action="../lib/BackendComponentPrinter.class.php"> <label>Rolle: <select name="assignedRole">";
                     foreach ($roleRows as $rolerow) {
-                        if ($rolerow['id'] == $row['role'])
                         echo "<option id='".row['id']."'";
+                        if ($rolerow['id'] == $row['role'])
                         {
                             echo " selected ";
                         }
