@@ -48,6 +48,12 @@ else if (isset($_POST['newRole'])) {
     $roleId = $dbUser.NewRole();   
     EditRole($roleId);
 }
+else if (isset($_POST['assignRole'])) {
+    $dbUser = new DbUser();
+    $roleId = $_POST['assignedRole'];
+    $userId = $_POST['userId'];
+    $dbUser.AssignRole($roleId, $userId)
+}
 else if (isset($_POST['deleteRole'])) {
     $dbUser = new DbUser();
     $roleId = $_POST['roleId'];
@@ -124,6 +130,7 @@ echo
             // foreach user in database print
             $dbUser = new DbUser();
             $userRows = $dbUser.GetUsers();
+            $roleRows = $dbUser.GetRoles();
             foreach ($userRows as $row) {
 
                 echo 
@@ -143,9 +150,20 @@ echo
                     <form method='post' action='Benutzerverwaltung.php'>
                     <input id='lock' name='lock' type='button' value='sperren'>";
                 }
-                
                 echo
                     "<input id='userId' name='userId' type='hidden' value='".$row['id']."'></form></td>";
+                echo 
+                    "<td><form action="../lib/BackendComponentPrinter.class.php"> <label>Rolle: <select name="assignedRole">";
+                    foreach ($roleRows as $rolerow) {
+                        if ($rolerow['id'] == $row['role'])
+                        echo "<option id='".row['id']."'";
+                        {
+                            echo " selected ";
+                        }
+                        echo ">".$rolerow['rolename']."</option>"; 
+                    }
+                echo
+                    "<input id='userId' name='userId' type='hidden' value='".$row['id']."'></select></label></form></td>";
                 echo
                     "<td>".$row['role_id'."</td>";
                 echo
