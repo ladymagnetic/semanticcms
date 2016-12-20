@@ -140,7 +140,7 @@ public function DoesUserAlreadyExist($username, $email)
 	// neue blanke Rolle erstellen und die id davon zurückgeben
 	public function NewRole($roleId)
 	{
-
+		return $roleId;
 	}
 	// Rolle zuweisen muss ich erst noch einbringen
 	public function AssignRole($roleId, $userId)
