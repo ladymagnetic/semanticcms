@@ -22,12 +22,12 @@ echo "IT WORKS";
 if (isset($_POST['unlock'])) {
     $dbUser = new DbUser();
     $userId = $_POST['userId'];
-    $dbUser.UnlockUser($userId);    
+    $dbUser.DebanUser($userId);    
 }
 else if (isset($_POST['lock'])) {
     $dbUser = new DbUser();
     $userId = $_POST['userId'];
-    $dbUser.LockUser($userId);
+    $dbUser.BanUser($userId);
 }
 else if (isset($_POST['details'])) {
     $userId = $_POST['userId'];
@@ -96,7 +96,7 @@ echo "<!DOCTYPE html>
 <!-- menue -->
 <!-- dynamisch erzeugt je nach Rechten -->
 require_once 'lib/BackendComponentPrinter.class.php';
-use SemanticCms\ComponentPrinter\BackendComponentPrinter; already in use
+use SemanticCms\ComponentPrinter\BackendComponentPrinter;
 
 BackendComponentPrinter::printSidebar(array()/*Parameter fehlen noch -> Rechte des gerade eingeloggten Nutzers*/);
 
@@ -118,32 +118,32 @@ echo
                 echo 
                 "<tr>".$row['firstname']." ".$row['lastname']."<td>";
 
-            // if user is unlocked/locked
-            $unlocked = $dbUser.CheckIfUserIsUnlocked($row['id']);
-            if ($unlocked)
-            {
-                echo "<td>
-                <form method='post' action='Benutzerverwaltung.php'>
-                <input id='unlock' name='unlock' type='button' value='entsperren'>";
-            }
-            else
-            {
-                echo "<td>
-                <form method='post' action='Benutzerverwaltung.php'>
-                <input id='lock' name='lock' type='button' value='sperren'>";
-            }
-            
-            echo
-                "<input id='userId' name='userId' type='hidden' value='".$row['id']."'></form></td>";
-            echo
-                "<td>".$row['role_id'."</td>";
-            echo
-                "<td><form method='post' action='Benutzerverwaltung.php'>"
-                ."<input id='details' name='details' type='button' value='Details'><input id='delete' name='delete' type='button' value='löschen'>";
-                ."<input id='userId' name='userId' type='hidden' value='".$row['id']."'>" 
-                ."</form></td>";
-            echo 
-                "</tr>";
+                // if user is unlocked/locked
+                $unlocked = $dbUser.CheckIfUserIsUnlocked($row['id']);
+                if ($unlocked)
+                {
+                    echo "<td>
+                    <form method='post' action='Benutzerverwaltung.php'>
+                    <input id='unlock' name='unlock' type='button' value='entsperren'>";
+                }
+                else
+                {
+                    echo "<td>
+                    <form method='post' action='Benutzerverwaltung.php'>
+                    <input id='lock' name='lock' type='button' value='sperren'>";
+                }
+                
+                echo
+                    "<input id='userId' name='userId' type='hidden' value='".$row['id']."'></form></td>";
+                echo
+                    "<td>".$row['role_id'."</td>";
+                echo
+                    "<td><form method='post' action='Benutzerverwaltung.php'>"
+                    ."<input id='details' name='details' type='button' value='Details'><input id='delete' name='delete' type='button' value='löschen'>";
+                    ."<input id='userId' name='userId' type='hidden' value='".$row['id']."'>" 
+                    ."</form></td>";
+                echo 
+                    "</tr>";
             }
 echo
     "</table>

@@ -93,11 +93,11 @@ public function DoesUserAlreadyExist($username, $email)
 	}
 
 	//same function than "Ban()"?
-	public function LockUser($userId)
+	public function BanUser($userId)
 	{
 	}
 		//same function than "Deban()"?
-	public function UnlockUser($userId)
+	public function DebanUser($userId)
 	{
 	}
 	public function DeleteUser($userId)
@@ -208,7 +208,7 @@ public function ApplyPasswordChangesToUser($userId, $password, $newPassword, $ne
 
 public function GetUserInformation($userId)
 {
-	$sql = "SELECT username, firstname, lastname, email, password FROM user";
+	$sql = "SELECT username, firstname, lastname, email FROM user";
 }
 
 ?>
