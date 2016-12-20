@@ -13,19 +13,35 @@
 <body>
 <section id="login">
 <h1>Login</h1>
-<form method="post" action="../lib/BackendComponentPrinter.class.php">
+<form method="post" action="Login.php">
 	<input id="username" name="username" type="text">
 	<input id="password" name="password" type="password">
-	<input id="ok" name="ok" type="button" value="OK">
+	<input id="ok" name="ok" type="submit" value="OK">
 	<input id="forgotPassword" name="forgotPassword" type="button" value="Passwort vergessen">
 </form>
 </section>
 
 <?php
+/* Include(s) */
+require_once 'lib/DbUser.class.php';
+require_once 'config/config.php';
+
+/* use namespace(s) */
+use SemanticCms\DatabaseAbstraction\DbUser;
+use SemanticCms\config;
+
+// eigentlich das hier
+// $database = new DbUser($config['cms_db']['dbhost'],$config['cms_db']['dbuser'],$config['cms_db']['dbpass'],$config['cms_db']['database']);
+$database = new DbUser($config['cms_db']['dbhost'],$config['cms_db']['dbuser'],$config['cms_db']['dbpass'],'cms-projekt_fiktive_testdaten');
+
 // hier Logik für logIn rein (Funktionsaufruf LoginUser.php)
+
   $nameInput =  $_POST["username"];
   $password = $_POST["password"];
-  loginUser($nameInput, $password);
+  $database->LoginUser($nameInput, $password);
+  
+  			// Seitenweiterleitung bei erfolgreichem Login
+  
 ?>
 
 

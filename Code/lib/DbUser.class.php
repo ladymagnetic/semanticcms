@@ -17,15 +17,15 @@ class DbUser
 	* constructor
 	* @params string $dsn database connection string
 	*/
-	 public function __construct($dsn)
+	 public function __construct($host, $user, $password, $db)
   	{
-	   $this->database = new DbEngine($dsn);
-	   $this->prepare_sql();
+	   $this->database = new DbEngine($host, $user, $password, $db);
+	   $this->prepareSQL();
     }
 
 		public function __destruct()
 		{
-	  	$this->database->__destruct();
+			$this->database->__destruct();
 		}
 
 	/* ---- Methods ---- */
@@ -33,9 +33,12 @@ class DbUser
 	* prepare_sql()
 	* Prepares the SQL statements
 	*/
-	private function Prepare_sql()
+	private function prepareSQL()
 	{
-		// put your queries here
+		$registrate = "INSERT INTO user (id, role_id, lastname, firstname, username, password, email, registrydate, birthdate)
+				  VALUES (NULL, ?, ?, ?, ?, ? , ? , NOW(), ?);";
+
+		$this->database->PrepareStatement("registrateUser", $registrate);
 	}
 
 /*Maybe other required function DoesUserAlreadyExist($username, $email)*/
@@ -60,6 +63,12 @@ public function DoesUserAlreadyExist($username, $email)
 	*/
 	public function RegistrateUser()
 	{
+
+		/*
+		INSERT INTO user VALUES (NULL, 2, "Muster", "Johanna", "jojo20", "password1234" , "j.m@web.de" , NOW(), "1996-08-16");
+		*/
+
+
 		//if(!DoesUserAlreadyExist) ...
 		$stmt = $mysqli->prepare("INSERT INTO user(username, fistname, lastname, mail, password, birthdate) VALUES (?, ?, ?, ?, ?, ?)");
 		$stmt->bind_param('ssssss', $username, $firstname, $lastname, $mail, $password, $birthdate);
@@ -78,7 +87,9 @@ public function DoesUserAlreadyExist($username, $email)
 	*/
 	public function LoginUser($nameInput, $password)
 	{
-			$stmt = $mysqli->query("SELECT password FROM user WHERE email =" $nameInput "OR username =" $nameInput);
+		echo "Hallo Funktion LoginUser wird aufgerufen :)</br>";
+
+			$stmt = $this->database->ExecuteQuery("SELECT password FROM user WHERE email =".$nameInput." OR username =".$nameInput);
 
 			if($stmt == $password)
 			{
@@ -87,9 +98,11 @@ public function DoesUserAlreadyExist($username, $email)
 			}
 			else
 			{
-			echo "hallo ich bin falsch";
-			return false;
+				echo "hallo ich bin falsch";
+				return false;
 			}
+
+
 	}
 
 	//same function than "Ban()"?
@@ -97,12 +110,12 @@ public function DoesUserAlreadyExist($username, $email)
 	{
 	}
 		//same function than "Deban()"?
-	public function DebanUser($userId)
+ public function DebanUser($userId)
 	{
 	}
 	public function DeleteUser($userId)
 	{
-		$stmt = $mysqli->prepare("DELETE FROM user WHERE id="$userId);
+		$stmt = $mysqli->prepare("DELETE FROM user WHERE id=".$userId);
 		$stmt->bind_param('i', $_POST['userId']);
 		$stmt->execute();
 		$stmt->close();
@@ -117,7 +130,7 @@ public function DoesUserAlreadyExist($username, $email)
 	// assignes an existing role to an existing user (user-object given from User.class)
 	public function NewRole($roleId, $userId)
 	{
-		$stmt = $mysqli->prepare("UPDATE User SET role_id = ? WHERE user.id =" $userId);
+		$stmt = $mysqli->prepare("UPDATE User SET role_id = ? WHERE user.id =".$userId);
 		$stmt->bind_param("i", $_POST[$roleId]);
 		$stmt->execute();
 		$stmt->close();
@@ -127,13 +140,13 @@ public function DoesUserAlreadyExist($username, $email)
 	public function DefineRole($rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction)
 	{
 		//Check rolename if exists
-		$result = mysqli->prepare("SELECT role.rolename FROM Role WHERE rolename = " $rolename);
+		$result = $mysqli->prepare("SELECT role.rolename FROM Role WHERE rolename = ".$rolename);
 		$result->bind_param('s', $_POST['rolename']);
 		$result->execute();
 
 				if($result != $rolename)
 				{
-					$rolename 						= $_POST['rolename']);
+					$rolename 						= $_POST['rolename'];
 					$guestbookmanagement  = $_POST['guestbookmanagement'];
 					$usermanagement	  		 = $_POST['usermanagement'];
 					$pagemanagement 		  = $_POST['pagemanagement'];
@@ -157,7 +170,7 @@ public function DoesUserAlreadyExist($username, $email)
 	}
 	public function DeleteRole($roleId)
 	{
-		$stmt = $mysqli->prepare("DELETE FROM role WHERE id="$roleId);
+		$stmt = $mysqli->prepare("DELETE FROM role WHERE id=".$roleId);
 		$stmt->bind_param('i', $_POST['roleID']);
 		$stmt->execute();
 		$stmt->close();
@@ -166,7 +179,6 @@ public function DoesUserAlreadyExist($username, $email)
 	public function SaveRoleChanges()
 	{
 	}
-}
 
 // return users as rows
 public function GetUsers()
@@ -194,6 +206,12 @@ public function CheckIfUserIsUnlocked($userId)
 	return true/false;
 }
 
+
+public function GetUserInformation($userId)
+{
+	$sql = "SELECT username, firstname, lastname, email FROM user";
+}
+
 // has to save the changes of the user
 public function ApplyChangesToUser($userId, $userName, $name, $foreName, $email)
 {
@@ -208,7 +226,13 @@ public function ApplyPasswordChangesToUser($userId, $password, $newPassword, $ne
 
 public function GetUserInformation($userId)
 {
-	$sql = "SELECT username, firstname, lastname, email FROM user";
+	$sql = "SELECT username, firstname, lastname, email, password FROM user";
+}
+
+
+
+
+
 }
 
 ?>
