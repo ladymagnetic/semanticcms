@@ -1,7 +1,6 @@
 <?php
 /* namespace */
 namespace SemanticCms\DatabaseAbstraction;
-
 /* use namespace(s) */
 use Mysqli;
 
@@ -10,9 +9,8 @@ use Mysqli;
 */
 class DbEngine
 {
-	require_once("..config/config.php");
 	private $conn;	// database connection
-
+	private $statements = Array();
 	/* ---- Constructor / Destructor ---- */
 	/**
 	* constructor
@@ -20,52 +18,76 @@ class DbEngine
 	*/
 	public function __construct($host, $user, $password, $database)
 	{
-		$this->connect_db($host, $user, $password, $database);
+		$this->connectDB($host, $user, $password, $database);
 	}
-
 	public function __destruct()
 	{
 		// Does connection still exist?
 		if(empty($this->conn)) {$this->disconnect_db();}
 	}
-
 	/* ---- Methods ---- */
 	/**
 	* connect_db()
 	* Establishes database connection
 	*/
-	private function connect_db($host, $user, $password, $database)
+	private function connectDB($host, $user, $password, $database)
 	{
 		// Create connection
 		$this->conn = new mysqli($host, $user, $password, $database, NULL);
-
 		if ($this->conn->connect_error)
 		{
 			die("Verbindung zur Datenbank konnte nicht hergestellt werden!(".$conn->connect_errno.")");
 		}
 	}
-
 	/**
 	* disconnect_db()
 	* Establishes database connection
 	*/
-	private function disconnect_db()
+	private function disconnectDB()
 	{
-		$this->$conn->close();
+		$this->conn->close();
 		unset($this->conn);
 	}
-
-	// /**
-	// * prepare_statement()
-	// * Prepares one query with a specific name
-	// * @param string $name name used for the query
-	// * @param string $query desired query
-	// * @result success 0 (false) / 1 (true)
-	// */
-	// public function prepare_statement($name, $query)
-	// {
-	 // if(!pg_prepare($this->conn, $name, $query)) { return 0; }
-	 // else {return 1;}
-	// }
+ 
+	/**
+	* prepare_statement()
+	* Prepares one query with a specific name
+	* @param string $name name used for the query
+	* @param string $query desired query
+	* @result success 0 (false) / 1 (true)
+	*/
+	public function PrepareStatement($name, $query)
+	{
+		// $this->$statements[$name] = $this->$conn->prepare($query);
+		
+		$this->ExecuteQuery($query);
+		
+		
+		// FEHLER Abfragen
+		
+		// SELBER
+	}
+	
+	
+	public function ExecutePreparedStatement($name, array $values)
+	{
+		
+		// SELBER 
+		
+		// FEHLER Abfragen
+	}
+	
+	
+	public function ExecuteQuery($query)
+	{
+		$this->conn->query($query);
+	}
+	
+	public function RealEscapeString($string)
+	{
+		return $this->conn->mysqli_real_escape_string($string);
+	}
+	
+	
 }
 ?>
