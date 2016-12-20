@@ -168,4 +168,19 @@ public function DoesUserAlreadyExist($username, $email)
 	}
 }
 
+// return users as rows
+public function GetUsers()
+{
+	$sql = "SELECT id, role_id, lastname, firstname, username, password, email FROM user";
+	// $db->query($sql) as $row)
+	return;
+}
+
+// return roles as rows
+public function GetRoles()
+{
+	$sql = "SELECT id, name FROM role";
+	return;
+}
+
 ?>

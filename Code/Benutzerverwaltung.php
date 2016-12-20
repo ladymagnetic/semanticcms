@@ -22,48 +22,47 @@ echo "IT WORKS";
 //BackendComponentPrinter::start_table();
 //BackendComponentPrinter::end_table("index.php");
 
-/*
 // actions dbuser
 if (isset($_POST['unlock'])) {
-    dbUser = new DbUser();
+    $dbUser = new DbUser();
     $userId = $_POST['userId'];
-    dbUser.UnlockUser($userId);    
+    $dbUser.UnlockUser($userId);    
 }
 else if (isset($_POST['lock'])) {
-    dbUser = new DbUser();
+    $dbUser = new DbUser();
     $userId = $_POST['userId'];
-    dbUser.LockUser($userId);
+    $dbUser.LockUser($userId);
 }
 else if (isset($_POST['details'])) {
     $userId = $_POST['userId'];
     EditUser($userId);
 }
 else if (isset($_POST['delete'])) {
-    dbUser = new DbUser();
+    $dbUser = new DbUser();
     $userId = $_POST['userId'];
-    dbUser.DeleteUser($userId);
+    $dbUser.DeleteUser($userId);
 }
 else if (isset($_POST['newUser'])) {
-    dbUser = new DbUser();
+    $dbUser = new DbUser();
     $userId = dbUser.CreateUser();
     EditUser($userId);
 }
 else if (isset($_POST['defineRole'])) {
-    dbUser = new DbUser();
-    dbUser.DefineRole();
+    $dbUser = new DbUser();
+    $dbUser.DefineRole();
 }
 else if (isset($_POST['newRole'])) {
-    dbUser = new DbUser(); 
-    dbUser.NewRole();   
+    $dbUser = new DbUser(); 
+    $dbUser.NewRole();   
 }
 else if (isset($_POST['deleteRole'])) {
-    dbUser = new DbUser();
+    $dbUser = new DbUser();
     $roleId = $_POST['roleId'];
     dbUser.DeleteRole($roleId);
 }
 else if (isset($_POST['saveRoleChanges'])) {
-    dbUser = new DbUser();
-    dbUser.SaveRoleChanges();
+    $dbUser = new DbUser();
+    $dbUser.SaveRoleChanges();
 }
 
 function EditUser($userID)
@@ -71,7 +70,7 @@ function EditUser($userID)
     // must call the page to edit the details of the user
     
 }
-*/
+
 ?>
 
 <!DOCTYPE html>
@@ -107,8 +106,9 @@ function EditUser($userID)
         </tr>
         <?php
             // foreach user in database print
-            $sql = "SELECT id, role_id, lastname, firstname, username, password, email FROM user";
-            foreach ($db->query($sql) as $row) {
+            $dbUser = new DbUser();
+            $userRows = $dbUser.GetUsers();
+            foreach ($userRows as $row) {
 
                 echo 
                 "<tr>".$row['firstname']." ".row['lastname']."<td>";
@@ -146,8 +146,9 @@ function EditUser($userID)
         </tr>
     <?php
             // foreach role in database print
-            $sql = "SELECT id, name FROM role";
-            foreach ($db->query($sql) as $row) {
+            $dbUser = new DbUser();
+            $userRows = $dbUser.GetRoles();
+            foreach ($roleRows as $row) {
                 echo "<tr>";
                 echo "<td>";
                 echo row['name'];
@@ -168,7 +169,7 @@ function EditUser($userID)
         ?>
         <input id="right1" name="right1" type="checkbox">
         <input id="right2" name="right2" type="checkbox">
-        <input id="saveRoleChanges" name="saveRoleChanges" type="button" value="Änderungen speichern">
+        <input id="saveRoleChanges" name="saveRoleChanges" type="button" value="Rollenänderung speichern">
     </form>
 </section>
 </body>
