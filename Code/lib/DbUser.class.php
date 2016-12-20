@@ -20,7 +20,7 @@ class DbUser
 	 public function __construct($host, $user, $password, $db)
   	{
 	   $this->database = new DbEngine($host, $user, $password, $db);
-	   $this->prepareSQL();
+	   $this->PrepareSQL();
     }
 
 		public function __destruct()
@@ -33,7 +33,7 @@ class DbUser
 	* prepare_sql()
 	* Prepares the SQL statements
 	*/
-	private function prepareSQL()
+	private function PrepareSQL()
 	{
 		$registrate = "INSERT INTO user (id, role_id, lastname, firstname, username, password, email, registrydate, birthdate)
 				  VALUES (NULL, ?, ?, ?, ?, ? , ? , NOW(), ?);";
@@ -118,7 +118,7 @@ public function DoesUserAlreadyExist($username, $email)
 	}
 	//Jonas: ist das gleiche wie deban, also sperrung
 		//same function than "Deban()"?
- public function DebanUser($userId)
+ 	public function DebanUser($userId)
 	{
 	}
 	public function DeleteUser($userId)
@@ -129,7 +129,7 @@ public function DoesUserAlreadyExist($username, $email)
 		$stmt->execute();
 		$stmt->close();
 	}
-//Jonas: muss einen neuen user erzeugen und die id von diesem zurückgeben
+	//Jonas: muss einen neuen user erzeugen und die id von diesem zurückgeben
 	public function CreateUser()
 	{
 		return $userId;
@@ -199,62 +199,57 @@ public function DoesUserAlreadyExist($username, $email)
 		$stmt->close();
 	}
 
-// return users as rows
-//Jonas:
-// muss alle user mit den angegebenen Werten bevorzugt als rows zurückgeben zur Auflistung in der Tabelle
-public function GetUsers()
-{
-	$sql = "SELECT id, role_id, lastname, firstname, username, password, email FROM user";
-	// $db->query($sql) as $row)
-	return;
-}
+	// return users as rows
+	//Jonas:
+	// muss alle user mit den angegebenen Werten bevorzugt als rows zurückgeben zur Auflistung in der Tabelle
+	public function GetUsers()
+	{
+		$sql = "SELECT id, role_id, lastname, firstname, username, password, email FROM user";
+		// $db->query($sql) as $row)
+		return;
+	}
 
-// return roles as rows
-// Jonas: muss alle roles mit den angegebenen Werten bevorzugt als rows zurückgeben zur Auflistung in der Tabelle
-public function GetRoles()
-{
-	$sql = "SELECT id, name FROM role";
-	return;
-}
+	// return roles as rows
+	// Jonas: muss alle roles mit den angegebenen Werten bevorzugt als rows zurückgeben zur Auflistung in der Tabelle
+	public function GetRoles()
+	{
+		$sql = "SELECT id, name FROM role";
+		return;
+	}
 
-// Jonas: // checkt ob der user mit der userid gesperrt (gebannt) ist und gibt true oder false zurück
-public function CheckIfUserIsUnlocked($userId)
-{
-	return true/false;
-}
+	// Jonas: // checkt ob der user mit der userid gesperrt (gebannt) ist und gibt true oder false zurück
+	public function CheckIfUserIsBanned($userId)
+	{
+		return true/false;
+	}
 
+	// muss die Informationen des Users (angegebene SQL) zurückgeben
+	public function GetUserInformation($userId)
+	{
+		$sql = "SELECT username, firstname, lastname, email FROM user";
+	}
 
-public function GetUserInformation($userId)
-{
-	$sql = "SELECT username, firstname, lastname, email FROM user";
-}
+	// has to save the changes of the user
+	// Jonas: speichert die angegebenen Werte in den user mit $userId
+	public function ApplyChangesToUser($userId, $userName, $name, $foreName, $email)
+	{
 
-// has to save the changes of the user
-// Jonas: speichert die angegebenen Werte in den user mit $userId
-public function ApplyChangesToUser($userId, $userName, $name, $foreName, $email)
-{
+	}
 
-}
+	// has to save the changes for the passwords of the user
+	// Jonas
+	// speichert die Passwortänderung
+	// am besten nur, wenn das password mit dem Passwort des Users mit userId übereinstmmt und newPassword == newPasswordRepeat
+	public function ApplyPasswordChangesToUser($userId, $password, $newPassword, $newPasswordRepeat)
+	{
+			// check if password correct --> change of password with newPassword else no change
+	}
 
-// has to save the changes for the passwords of the user
-// Jonas
-// speichert die Passwortänderung
-// am besten nur, wenn das password mit dem Passwort des Users mit userId übereinstmmt und newP
-public function ApplyPasswordChangesToUser($userId, $password, $newPassword, $newPasswordRepeat)
-{
-		// check if password correct --> change of password with newPassword else no change
-}
-
-// Jonas// Holt die userInformation mit den aufgelisteten Werten des users mit userId zur Anzeige im Editiermodus des Users
-public function GetUserInformation($userId)
-{
-	$sql = "SELECT username, firstname, lastname, email, password FROM user";
-}
-
-
-
-
-
+	// Jonas// Holt die userInformation mit den aufgelisteten Werten des users mit userId zur Anzeige im Editiermodus des Users
+	public function GetUserInformation($userId)
+	{
+		$sql = "SELECT username, firstname, lastname, email, password FROM user";
+	}
 }
 
 ?>

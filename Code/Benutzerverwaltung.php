@@ -309,6 +309,5 @@ function EditRole($roleId)
             "<label for="templateconstruction">Email</label>".
             "<input id="templateconstruction" name="templateconstruction" type="checkbox" value='".$roleRow['templateconstruction']."'>".
             "<input id="saveRoleChanges" name="saveRoleChanges" type="button" value="Rollenänderung speichern"></form>";
-
 }
 ?>
