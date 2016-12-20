@@ -119,7 +119,7 @@ echo
                 "<tr>".$row['firstname']." ".$row['lastname']."<td>";
 
                 // if user is unlocked/locked
-                $unlocked = $dbUser.CheckIfUserIsBanned($row['id']);
+                $unlocked = $dbUser.CheckIfUserIsUnlocked($row['id']);
                 if ($unlocked)
                 {
                     echo "<td>
