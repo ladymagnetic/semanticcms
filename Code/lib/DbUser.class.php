@@ -194,4 +194,21 @@ public function CheckIfUserIsUnlocked($userId)
 	return true/false;
 }
 
+// has to save the changes of the user
+public function ApplyChangesToUser($userId, $userName, $name, $foreName, $email)
+{
+
+}
+
+// has to save the changes for the passwords of the user
+public function ApplyPasswordChangesToUser($userId, $password, $newPassword, $newPasswordRepeat)
+{
+		// check if password correct --> change of password with newPassword else no change
+}
+
+public function GetUserInformation($userId)
+{
+	$sql = "SELECT username, firstname, lastname, email, password FROM user";
+}
+
 ?>
