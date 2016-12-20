@@ -1,7 +1,7 @@
 <?php
 /* Include(s) */
 require_once 'lib/DbEngine.class.php';
-//require_once 'lib/BackendComponentPrinter.class.php';
+require_once 'lib/BackendComponentPrinter.class.php';
 require_once 'config/config.php';
 require_once 'lib/DbUser.class.php';
 
@@ -17,10 +17,6 @@ var_dump($db);
 echo "<br>";
 
 echo "IT WORKS";
-
-// Printer Beispiel
-//BackendComponentPrinter::start_table();
-//BackendComponentPrinter::end_table("index.php");
 
 // actions dbuser
 if (isset($_POST['unlock'])) {
@@ -71,9 +67,7 @@ function EditUser($userID)
     
 }
 
-?>
-
-<!DOCTYPE html>
+echo "<!DOCTYPE html>
 <html>
 
 <!-- fuer head wird es wahrscheinlich ebenfalls eine Methode geben: printHead(titel?), diese dann ggf. nutzen -->
@@ -84,18 +78,18 @@ function EditUser($userID)
 <link rel="stylesheet" href="css/backend.css">
 <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">
 </head>
+<body>";
 
-<body>
+
 <!-- menue -->
 <!-- dynamisch erzeugt je nach Rechten -->
-<?php
-//require_once 'lib/BackendComponentPrinter.class.php';
-// use SemanticCms\ComponentPrinter\BackendComponentPrinter; already in use
+require_once 'lib/BackendComponentPrinter.class.php';
+use SemanticCms\ComponentPrinter\BackendComponentPrinter; already in use
 
-//BackendComponentPrinter::printSidebar(array()/*Parameter fehlen noch -> Rechte des gerade eingeloggten Nutzers*/);
-?>
+BackendComponentPrinter::printSidebar(array()/*Parameter fehlen noch -> Rechte des gerade eingeloggten Nutzers*/);
 
-<section id="main">
+echo
+"<section id="main">
     <h1><i class="fa fa-user fontawesome"></i> Benutzerverwaltung</h1>
     <table>
         <tr>
@@ -103,8 +97,7 @@ function EditUser($userID)
             <th>entsperren/sperren</th>
             <th>Rolle</th>
             <th>Aktion</th>
-        </tr>
-        <?php
+        </tr>";
             // foreach user in database print
             $dbUser = new DbUser();
             $userRows = $dbUser.GetUsers();
@@ -130,8 +123,8 @@ function EditUser($userID)
             echo 
                 "</tr>";
             }
-        ?>
-    </table>
+echo
+    "</table>
     <form method="post" action="Benutzerverwaltung.php">
         <input id="newUser" name="newUser" type="button" value="Neuer Benutzer">
         <input id="userId" name="userId" type="hidden" value="userId">
@@ -143,8 +136,7 @@ function EditUser($userID)
         <tr>
             <th>Rollenname</th>
             <th>Aktion</th>
-        </tr>
-    <?php
+        </tr>";
             // foreach role in database print
             $dbUser = new DbUser();
             $roleRows = $dbUser.GetRoles();
@@ -157,25 +149,25 @@ function EditUser($userID)
                 echo "<input id='roleId' name='roleId' type='hidden' value='".row['id']."'>";
                 echo "</tr>";
             }
-    ?>
-    </table>
+echo
+    "</table>
     <form method="post" action="Benutzerverwaltung.php">
         <input id="newRole" name="newRole" type="button" value="roleId">        
     </form>
     <h3>Rechte</h3>
-    <form method="post" action="Benutzerverwaltung.php">
-        <?php
+    <form method="post" action="Benutzerverwaltung.php">";
             // foreach right in database print
             $dbUser = new DbUser();
             $roleRightsRows = $dbUser.GetRoleRights();
             foreach ($roleRightsRows as $row) {
                 echo
-                    "<input id='".row['right']."'' name='".row['right']."' value='".row['right']."' type='checkbox'>"
+                    "<input id='".row['right']."'' name='".row['right']."' value='".row['right']."' type='checkbox'>";
             }
-        ?>
-        <input id="saveRoleChanges" name="saveRoleChanges" type="button" value="Rollenänderung speichern">
+echo
+        "<input id="saveRoleChanges" name="saveRoleChanges" type="button" value="Rollenänderung speichern">
     </form>
 </section>
 </body>
 
-</html>
+</html>";
+?>
