@@ -67,7 +67,7 @@ else if (isset($_POST['applyChanges']))
     $name = $_POST['name'];
     $foreName = $_POST['foreName'];
     $email = $_POST['email'];
-    dbUser.ApplyChangesToUser($userId, $userName, $name, $foreName, $email);
+    $dbUser.ApplyChangesToUser($userId, $userName, $name, $foreName, $email);
 }
 else if (isset($_POST['applyPasswordChanges']))
 {
@@ -76,7 +76,7 @@ else if (isset($_POST['applyPasswordChanges']))
     $password = $_POST['currentPassword'];
     $newPassword = $_POST['newPassword'];
     $newPasswordRepeat = $_POST['newPasswordRepeat'];
-    dbUser.ApplyPasswordChangesToUser($userId, $password, $newPassword, $newPasswordRepeat);
+    $dbUser.ApplyPasswordChangesToUser($userId, $password, $newPassword, $newPasswordRepeat);
 }
 
 echo "<!DOCTYPE html>
