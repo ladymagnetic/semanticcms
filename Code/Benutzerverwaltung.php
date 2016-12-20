@@ -54,7 +54,7 @@ else if (isset($_POST['newRole'])) {
 else if (isset($_POST['deleteRole'])) {
     $dbUser = new DbUser();
     $roleId = $_POST['roleId'];
-    dbUser.DeleteRole($roleId);
+    $dbUser.DeleteRole($roleId);
 }
 else if (isset($_POST['saveRoleChanges'])) {
     $dbUser = new DbUser();
@@ -116,7 +116,7 @@ echo
             foreach ($userRows as $row) {
 
                 echo 
-                "<tr>".$row['firstname']." ".row['lastname']."<td>";
+                "<tr>".$row['firstname']." ".$row['lastname']."<td>";
 
             // if user is unlocked/locked
             $unlocked = $dbUser.CheckIfUserIsUnlocked($row['id']);
@@ -165,10 +165,10 @@ echo
             foreach ($roleRows as $row) {
                 echo "<tr>";
                 echo "<td>";
-                echo row['rolename'];
+                echo $row['rolename'];
                 echo "</td>";
                 echo "<td><input id='deleteRole' name='deleteRole' type='button' value='Rolle löschen'></td>";
-                echo "<input id='roleId' name='roleId' type='hidden' value='".row['id']."'>";
+                echo "<input id='roleId' name='roleId' type='hidden' value='".$row['id']."'>";
                 echo "</tr>";
             }
 echo
@@ -243,14 +243,15 @@ function EditUser($userId)
         "</form>
         <h2>Passwort ändern</h2>
         <form method="post" action="../lib/BackendComponentPrinter.class.php">";
-            <label for="currentPassword">aktuelles Passwort</label>
+        echo
+            "<label for="currentPassword">aktuelles Passwort</label>
             <input id="currentPassword" name="currentPassword" type="password">
             <label for="newPassword">neues Passwort</label>
             <input id="newPassword" name="newPassword" type="password">
             <label for="newPasswordRepeat">neues Passwort bestätigen</label>
             <input id="newPasswordRepeat" name="newPasswordRepeat" type="password">
-            <input id="userID" name="userID" type="hidden"> value = $userId
-            <input id="applyPasswordChanges" name="applyPasswordChanges" type="button" value="Passwort übernehmen">
+            <input id="userID" name="userID" type="hidden" value='".$userId."'>".
+            "<input id="applyPasswordChanges" name="applyPasswordChanges" type="button" value="Passwort übernehmen">";
         echo
         "</form>
     </section>
