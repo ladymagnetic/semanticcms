@@ -30,10 +30,10 @@ class FrontendBuilder
 	/* ---- Methods ---- */
 
 /**
-	* makePage()
+	* MakePage()
 	* generates the page ...
 	*/
-	public function makePage($pageName, $templatePath)
+	public function MakePage($pageName, $templatePath)
 	{
 		$pagePath = $this->pageFilePath($pageName);
 		$cssName = basename($templatePath, ".xml");
@@ -42,10 +42,13 @@ class FrontendBuilder
 		// write HTML + PHP Code
 		$pageHandle = fopen($pagePath, "x");
 		
-			fwrite($pageHandle, HTML::getHtmlStart());
-			fwrite($pageHandle, HTML::getHead($pageName, $cssName));
-			fwrite($pageHandle, HTML::getHeader("Aus Template: Unser toller Beispiel-Blog"));
+			fwrite($pageHandle, HTML::GetHtmlStart());
+			fwrite($pageHandle, HTML::GetHead($pageName, $cssName));
+			fwrite($pageHandle, "<body>");
+			fwrite($pageHandle, HTML::GetHeader("Aus Template: Unser toller Beispiel-Blog"));
+			fwrite($pageHandle, HTML::GetMenu(array($pageName,"testpage2", "testpage3", "testpage4")));
 			// ...
+			fwrite($pageHandle, HTML::GetFooter());
 			fwrite($pageHandle, "\n</body></html>");
 		
 		fclose($pageHandle);
@@ -60,13 +63,13 @@ class FrontendBuilder
 	}
 	
 	/**
-	* deletePage()
+	* DeletePage()
 	* deletes the given page (and css file corresponding to the template if no other page uses it).
 	*	Function checks if the page exists.
 	* @params string $pageName name of the page
 	* @params string $templatePath full path (incl, its name)  to the template used for the site
 	*/
-	public function deletePage($pageName, $templatePath)
+	public function DeletePage($pageName, $templatePath)
 	{
 		// pagename pruefen auf string
 		// pagename pruefen auf / 
