@@ -72,7 +72,7 @@ class DbUser
 		$selectRoleById = "SELECT * FROM role WHERE id = ?";
 		$this->database->PrepareStatement("selectRole", $selectRoleById);
 
-		$selectRoleByRolename = "SELECT * FROM role WHERE name = ?";
+		$selectRoleByRolename = "SELECT * FROM role WHERE rolename = ?";
 		$this->database->PrepareStatement("selectRoleByRolename", $selectRoleByRolename);
 
 	// => Mirjam: fuer SaveRoleChanges()
@@ -228,7 +228,7 @@ public function DoesUserAlreadyExist($username, $email)
 	*/
 	public function SelectRoleByRolename($rolename) /*oder: GetRoleInfoByRolename() als anderen Namen?*/
 	{
-			$this->database->ExecutePreparedStatement("selectRoleByRolename", array($rolename));
+		$this->database->ExecutePreparedStatement("selectRoleByRolename", array($rolename));
 	}
 
 
@@ -305,33 +305,29 @@ public function DoesUserAlreadyExist($username, $email)
 	* loginUser()
 	* @params string $nameInput the user's username or mail
 	* @params string $password the user's password
-	* @result User User object if login was successfull otherwise // false / 0 wie auch immer => entscheidnug bei Implementierung
+	* @result true if login was successfull otherwise false
 	*/
 	public function LoginUser($nameInput, $password)
 	{
-		echo "Hallo Funktion LoginUser wird aufgerufen :)</br>";
-
-
 			$nameInput = $this->database->RealEscapeString($nameInput);
 
 			//$stmt = $this->database->ExecuteQuery("SELECT password FROM user WHERE email =".$nameInput." OR username =".$nameInput);
-			$stmt = $this->database->ExecuteQuery("SELECT id FROM user WHERE (email =".$nameInput." OR username =".$nameInput.") AND password = ". $password);
+			
+			// Fehlende '' eingefügt -> jetzt gibts auch keine Fehler mehr
+			$result = $this->database->ExecuteQuery("SELECT id FROM user WHERE (email ='".$nameInput."' OR username ='".$nameInput."') AND password = '". $password."'");
 
 			// Rückgabe prüfen => ist der Datensatz auch wirklich vorhanden? Ist es genau EIN Datensatz, der zurück kommt?
-
-/*
-			if($stmt == $password)
+			// Quellcode dafür ist implementiert, ich habs hier mal als Beispiel auch umgesetzt
+			if($result==true && $this->database->GetResultCount($result) == 1)
 			{
-				echo "hallo ich bin richtig";
+				echo "hallo ich bin richtig";	// Dran denken das zu entfernen wenn nicht mehr gebraucht
 				return true;
 			}
 			else
 			{
-				echo "hallo ich bin falsch";
+				echo "hallo ich bin falsch";	// Dran denken das zu entfernen wenn nicht mehr gebraucht
 				return false;
 			}
-*/
-
 	}
 
 	//same function than "Ban()"?
@@ -393,8 +389,5 @@ public function DoesUserAlreadyExist($username, $email)
 	{
 			// check if password correct --> change of password with newPassword else no change
 	}
-
-
 }
-
 ?>

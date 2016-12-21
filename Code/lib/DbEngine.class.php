@@ -33,11 +33,8 @@ class DbEngine
 	private function connectDB($host, $user, $password, $database)
 	{
 		// Create connection
-		$this->conn = new mysqli($host, $user, $password, $database, NULL);
-		if ($this->conn->connect_error)
-		{
-			die("Verbindung zur Datenbank konnte nicht hergestellt werden!(".$conn->connect_errno.")");
-		}
+		$this->conn = mysqli_connect($host, $user, $password, $database)
+			or die("Verbindung zur Datenbank konnte nicht hergestellt werden!(".mysqli_connect_error().")");
 	}
 	/**
 	* disconnect_db()
@@ -45,7 +42,7 @@ class DbEngine
 	*/
 	private function disconnectDB()
 	{
-		$this->conn->close();
+		mysqli_close($this->conn);
 		unset($this->conn);
 	}
 
@@ -54,40 +51,110 @@ class DbEngine
 	* Prepares one query with a specific name
 	* @param string $name name used for the query
 	* @param string $query desired query
-	* @result success 0 (false) / 1 (true)
+	* @result success as boolean value: true (everything went well) / false (error occured)
 	*/
 	public function PrepareStatement($name, $query)
 	{
-		// $this->$statements[$name] = $this->$conn->prepare($query);
-
-		$this->ExecuteQuery($query);
-
-
-		// FEHLER Abfragen
-
-		// SELBER
+		$stmt = "PREPARE ".$this->RealEscapeString($name)." FROM '".$query."';";
+		$result = $this->ExecuteQuery($stmt);
+		
+		if($result === true) { return true;}
+		else  {return false;}
 	}
 
-
+	/**
+	* ExecutePreparedStatement()
+	* Executes a specifc query with the given parameters
+	* @param string $name query name (same as used in PrepareStatement())
+	* @param array $params query parameter array
+	* @result query result (could be FALSE on failure)
+	*/
 	public function ExecutePreparedStatement($name, array $values)
 	{
-
-		// SELBER
-
-		// FEHLER Abfragen
+		$using = "";
+		$counter = 0;
+		
+		foreach($values as $val)
+		{
+			// generates a variable name for sql
+			$varname = "@value_".$counter;
+			
+			$set = $varname." = ";			
+			//sets variable in SQL
+			if(is_string($val)) { $set .= "'".$val."'"; }
+			else { $set .= "".$val;}
+			//sets variable in SQL
+			$this->ExecuteQuery("SET ".$set);
+			
+			$using .= " ".$varname." ";
+		}
+			
+		$stmt = "EXECUTE ".$this->RealEscapeString($name)." USING ".$using.";";
+		
+		return $this->ExecuteQuery($stmt);
 	}
 
-
+	/**
+	* ExecuteQuery()
+	* Executes a specifc query with the given parameters
+	* @param string $query the desired query
+	* @result query result (could be FALSE on failure)
+	*/
 	public function ExecuteQuery($query)
 	{
-		$this->conn->query($query);
+		$result =  mysqli_query($this->conn, $query);
+		
+		/* ZU DEBUG ZWECKEN!!!
+		echo "</br> result EQ: </br>";
+		var_dump($result);
+		if(!$result)
+		{
+			echo "</br> errorcode: </br>";
+			$error = mysqli_error($this->conn);
+			var_dump($error);
+		}
+		echo "</br> result ende </br>";
+		*/
+		
+		return $result;
 	}
 
 	public function RealEscapeString($string)
 	{
-		return $this->conn->real_escape_string($string);
+		// Evtl. noch weitere Pruefungen erwuenscht
+		return mysqli_real_escape_string($this->conn, $string);
 	}
 
+	/**
+	* FetchArray()
+	* @params resource $result query result
+	* @result query result (could be FALSE on failure)
+	*/
+	public function FetchArray($result)
+	{
+		return mysqli_fetch_array ($result);
+	}
+
+	/**
+	* GetResultCount()
+	* Returns the number of rows in the result.
+	* @params resource $result query result
+	* @result number of results (number of rows in $result)
+	*/
+	public function GetResultCount($result)
+	{
+		return mysqli_num_rows($result);
+	}
+	
+	/**
+	* GetLastError()
+	* Returns last database error
+	* @result errorstring
+	*/
+	public function GetLastError()
+	{
+		return "DB-Fehler: ". mysqli_error($this->conn);
+	}
 
 }
 ?>

@@ -1,22 +1,29 @@
 <!DOCTYPE html>
 <html>
-	<!-- fuer head wird es wahrscheinlich ebenfalls eine Methode geben: printHead(titel?), diese dann ggf. nutzen -->
-	<head>
-		<meta content="de" http-equiv="Content-Language">
-		<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-		<title>Login</title>
-		<link rel="stylesheet" href="css/backend.css">
-		<link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">
-	</head>
-
-<body>
+	<!-- Head -->
 	<?php
+		/* Include(s) */
+		require_once 'lib/BackendComponentPrinter.class.php';
+		
+		/* use namespace(s) */
+		use SemanticCms\ComponentPrinter\BackendComponentPrinter;
+		
+		BackendComponentPrinter::printHead("Beispiel-Seite");
+	?>
+<body>
+	<div> 
+	<p> Hier kann irgendein anderer HTML Code stehen </p>
+	</div>
+
+	<!-- Sidebar -->
+	<?php
+	
+	// Der BackendComponentPrinter ist bereits eingebunden
+	
 	/* Include(s) */
-	require_once 'lib/BackendComponentPrinter.class.php';
 	require_once 'lib/Permission.enum.php';
 
 	/* use namespace(s) */
-	use SemanticCms\ComponentPrinter\BackendComponentPrinter;
 	use SemanticCms\Model\Permission;
 
 	// Printer Beispiel
@@ -31,7 +38,7 @@
 	?>
 
 	<div> 
-	<p> Hier könnte noch anderer HTML Code stehen </p>
+	<p> Hier könnte auch anderer HTML Code stehen </p>
 	</div>
 
 	<?php
@@ -46,11 +53,9 @@
 
 	$db = new DbUser($config['cms_db']['dbhost'],$config['cms_db']['dbuser'],$config['cms_db']['dbpass'],$config['cms_db']['database']);
 
-	echo "<br><br> var_dump db <br><br>";
+	echo "<br><br> Inhalt einer Variablen (in diesem Fall db) ausgeben <br><br>";
 	var_dump($db);
 	echo "<br>";
-
-	echo "IT WORKS";
 	?>
 
 </body>
