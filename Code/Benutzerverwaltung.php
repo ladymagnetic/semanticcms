@@ -12,15 +12,14 @@ use SemanticCms\ComponentPrinter\BackendComponentPrinter;
 use SemanticCms\DatabaseAbstraction\DbUser;
 
 $db = new DbEngine($config['cms_db']['dbhost'],$config['cms_db']['dbuser'],$config['cms_db']['dbpass'],$config['cms_db']['database']);
+$dbUser = new DbUser($config['cms_db']['dbhost'], $config['cms_db']['dbuser'], $config['cms_db']['dbpass'], $db);
 
 // actions dbuser
 if (isset($_POST['deban'])) {
-    $dbUser = new DbUser();
     $userId = $_POST['userId'];
     $dbUser.DebanUser($userId);    
 }
 else if (isset($_POST['ban'])) {
-    $dbUser = new DbUser();
     $userId = $_POST['userId'];
     $dbUser.BanUser($userId);
 }
@@ -31,37 +30,31 @@ else if (isset($_POST['details'])) {
     return;
 }
 else if (isset($_POST['delete'])) {
-    $dbUser = new DbUser();
     $userId = $_POST['userId'];
     $dbUser.DeleteUser($userId);
 }
 else if (isset($_POST['newUser'])) {
-    $dbUser = new DbUser();
     $userId = dbUser.CreateUser();
     EditUser($userId);
     // has to return because other page
     return;
 }
 else if (isset($_POST['newRole'])) {
-    $dbUser = new DbUser(); 
     $roleId = $dbUser.NewRole();   
     EditRole($roleId);
     // has to return because other page
     return;
 }
 else if (isset($_POST['assignRole'])) {
-    $dbUser = new DbUser();
     $roleId = $_POST['assignedRole'];
     $userId = $_POST['userId'];
     $dbUser.AssignRole($roleId, $userId);
 }
 else if (isset($_POST['deleteRole'])) {
-    $dbUser = new DbUser();
     $roleId = $_POST['roleId'];
     $dbUser.DeleteRole($roleId);
 }
 else if (isset($_POST['roleDetails'])) {
-    $dbUser = new DbUser();
     $roleId = $_POST['roleId'];
     $dbUser.EditRole($roleId);
     // has to return because other page
@@ -69,7 +62,6 @@ else if (isset($_POST['roleDetails'])) {
 }
 else if (isset($_POST['applyChanges']))
 {
-    $dbUser = new DbUser();
     $userId = $_POST['userId'];
     $userName = $_POST['userName'];
     $name = $_POST['name'];
@@ -79,7 +71,6 @@ else if (isset($_POST['applyChanges']))
 }
 else if (isset($_POST['applyPasswordChanges']))
 {
-    $dbUser = new DbUser();
     $userId = $_POST['userId'];
     $password = $_POST['currentPassword'];
     $newPassword = $_POST['newPassword'];
@@ -87,7 +78,6 @@ else if (isset($_POST['applyPasswordChanges']))
     $dbUser.ApplyPasswordChangesToUser($userId, $password, $newPassword, $newPasswordRepeat);
 }
 else if (isset($_POST['saveRoleChanges'])) {
-    $dbUser = new DbUser();
     $roleId = $_POST['roleId'];
     $rolename = $_POST['rolename'];
     $guestbookmanagement = $_POST['guestbookmanagement'];
@@ -130,7 +120,6 @@ echo
             <th>Aktion</th>
         </tr>";
             // foreach user in database print
-            $dbUser = new DbUser();
             $userRows = $dbUser.GetUsers();
             $roleRows = $dbUser.GetRoles();
             foreach ($userRows as $row) {
@@ -189,7 +178,6 @@ echo
             <th>Aktion</th>
         </tr>";
             // foreach role in database print
-            $dbUser = new DbUser();
             $roleRows = $dbUser.GetRoles();
             foreach ($roleRows as $row) {
                 echo "<tr>";
@@ -232,7 +220,6 @@ BackendComponentPrinter::printSidebar(array()/*Parameter fehlen noch -> Rechte d
     "<section id='main'>
     <h1>Kontodaten bearbeiten</h1>
         <form method='post' action='../lib/BackendComponentPrinter.class.php'>";
-    $dbUser = new DbUser();
     $userRow = $dbUser.GetUserInformation($userId);
     echo
             "<label for='userName'>Benutzername</label>
@@ -294,7 +281,6 @@ BackendComponentPrinter::printSidebar(array()/*Parameter fehlen noch -> Rechte d
     echo
     "<section id='main'>
     <h1>Rolle bearbeiten</h1>";
-    $dbUser = new DbUser();
     $roleRow = $dbUser.GetRoleInfo($roleId);
     echo
             "<form method='post' action='Benutzerverwaltung.php'>".
