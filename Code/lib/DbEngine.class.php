@@ -10,7 +10,7 @@ use Mysqli;
 class DbEngine
 {
 	private $conn;	// database connection
-	private $statements = Array();
+
 	/* ---- Constructor / Destructor ---- */
 	/**
 	* constructor
@@ -23,7 +23,7 @@ class DbEngine
 	public function __destruct()
 	{
 		// Does connection still exist?
-		if(empty($this->conn)) {$this->disconnect_db();}
+		if(empty($this->conn)) {$this->disconnectDB();}
 	}
 	/* ---- Methods ---- */
 	/**
@@ -48,7 +48,7 @@ class DbEngine
 		$this->conn->close();
 		unset($this->conn);
 	}
- 
+
 	/**
 	* prepare_statement()
 	* Prepares one query with a specific name
@@ -59,35 +59,35 @@ class DbEngine
 	public function PrepareStatement($name, $query)
 	{
 		// $this->$statements[$name] = $this->$conn->prepare($query);
-		
+
 		$this->ExecuteQuery($query);
-		
-		
+
+
 		// FEHLER Abfragen
-		
+
 		// SELBER
 	}
-	
-	
+
+
 	public function ExecutePreparedStatement($name, array $values)
 	{
-		
-		// SELBER 
-		
+
+		// SELBER
+
 		// FEHLER Abfragen
 	}
-	
-	
+
+
 	public function ExecuteQuery($query)
 	{
 		$this->conn->query($query);
 	}
-	
+
 	public function RealEscapeString($string)
 	{
 		return $this->conn->mysqli_real_escape_string($string);
 	}
-	
-	
+
+
 }
 ?>
