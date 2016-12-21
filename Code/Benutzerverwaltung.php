@@ -9,22 +9,17 @@ require_once 'lib/DbUser.class.php';
 use SemanticCms\config;
 use SemanticCms\DatabaseAbstraction\DbEngine;
 use SemanticCms\ComponentPrinter\BackendComponentPrinter;
+use SemanticCms\DatabaseAbstraction\DbUser;
 
 $db = new DbEngine($config['cms_db']['dbhost'],$config['cms_db']['dbuser'],$config['cms_db']['dbpass'],$config['cms_db']['database']);
 
-echo "<br><br> var_dump db <br><br>";
-var_dump($db);
-echo "<br>";
-
-echo "IT WORKS";
-
 // actions dbuser
-if (isset($_POST['unlock'])) {
+if (isset($_POST['deban'])) {
     $dbUser = new DbUser();
     $userId = $_POST['userId'];
     $dbUser.DebanUser($userId);    
 }
-else if (isset($_POST['lock'])) {
+else if (isset($_POST['ban'])) {
     $dbUser = new DbUser();
     $userId = $_POST['userId'];
     $dbUser.BanUser($userId);
@@ -32,6 +27,8 @@ else if (isset($_POST['lock'])) {
 else if (isset($_POST['details'])) {
     $userId = $_POST['userId'];
     EditUser($userId);
+    // has to return because other page
+    return;
 }
 else if (isset($_POST['delete'])) {
     $dbUser = new DbUser();
@@ -42,17 +39,21 @@ else if (isset($_POST['newUser'])) {
     $dbUser = new DbUser();
     $userId = dbUser.CreateUser();
     EditUser($userId);
+    // has to return because other page
+    return;
 }
 else if (isset($_POST['newRole'])) {
     $dbUser = new DbUser(); 
     $roleId = $dbUser.NewRole();   
     EditRole($roleId);
+    // has to return because other page
+    return;
 }
 else if (isset($_POST['assignRole'])) {
     $dbUser = new DbUser();
     $roleId = $_POST['assignedRole'];
     $userId = $_POST['userId'];
-    $dbUser.AssignRole($roleId, $userId)
+    $dbUser.AssignRole($roleId, $userId);
 }
 else if (isset($_POST['deleteRole'])) {
     $dbUser = new DbUser();
@@ -63,6 +64,8 @@ else if (isset($_POST['roleDetails'])) {
     $dbUser = new DbUser();
     $roleId = $_POST['roleId'];
     $dbUser.EditRole($roleId);
+    // has to return because other page
+    return;
 }
 else if (isset($_POST['applyChanges']))
 {
@@ -96,30 +99,29 @@ else if (isset($_POST['saveRoleChanges'])) {
     $dbUser.SaveRoleChanges($roleId, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction);
 }
 
-echo "<!DOCTYPE html>
-<html>
+/* ------------------------------------------------------ wird durch Header Methode ersetzt --------------------------------------------------- */
+    echo "<!DOCTYPE html>
+    <html>
+    <head>
+    <meta content='de' http-equiv='Content-Language'>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <title>Benutzerverwaltung</title>
+    <link rel='stylesheet' href='css/backend.css'>
+    <link rel='stylesheet' href='css/font-awesome/css/font-awesome.min.css'>
+    </head>
+    <body>";
+/* ------------------------------------------------------ wird durch Header Methode ersetzt --------------------------------------------------- */
 
-<!-- fuer head wird es wahrscheinlich ebenfalls eine Methode geben: printHead(titel?), diese dann ggf. nutzen -->
-<head>
-<meta content="de" http-equiv="Content-Language">
-<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-<title>Benutzerverwaltung</title>
-<link rel="stylesheet" href="css/backend.css">
-<link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">
-</head>
-<body>";
 
-
-<!-- menue -->
-<!-- dynamisch erzeugt je nach Rechten -->
+/* menue */
+/* dynamisch erzeugt je nach Rechten */
 require_once 'lib/BackendComponentPrinter.class.php';
-use SemanticCms\ComponentPrinter\BackendComponentPrinter;
 
 BackendComponentPrinter::printSidebar(array()/*Parameter fehlen noch -> Rechte des gerade eingeloggten Nutzers*/);
 
 echo
-"<section id="main">
-    <h1><i class="fa fa-user fontawesome"></i> Benutzerverwaltung</h1>
+"<section id='main'>
+    <h1><i class='fa fa-user fontawesome'></i> Benutzerverwaltung</h1>
     <table>
         <tr>
             <th>Benutzer</th>
@@ -136,24 +138,24 @@ echo
                 echo 
                 "<tr>".$row['firstname']." ".$row['lastname']."<td>";
 
-                // if user is unlocked/locked
-                $unlocked = $dbUser.IsUserBanned($row['id']);
-                if ($unlocked)
+                // if user is banned/debanned
+                $debanned = $dbUser.IsUserBanned($row['id']);
+                if ($debanned)
                 {
                     echo "<td>
                     <form method='post' action='Benutzerverwaltung.php'>
-                    <input id='unlock' name='unlock' type='button' value='entsperren'>";
+                    <input id='deban' name='deban' type='button' value='entsperren'>";
                 }
                 else
                 {
                     echo "<td>
                     <form method='post' action='Benutzerverwaltung.php'>
-                    <input id='lock' name='lock' type='button' value='sperren'>";
+                    <input id='ban' name='ban' type='button' value='sperren'>";
                 }
                 echo
                     "<input id='userId' name='userId' type='hidden' value='".$row['id']."'></form></td>";
                 echo 
-                    "<td><form action="../lib/BackendComponentPrinter.class.php"> <label>Rolle: <select name="assignedRole">";
+                    "<td><form action='../lib/BackendComponentPrinter.class.php'> <label>Rolle: <select name='assignedRole'>";
                     foreach ($roleRows as $rolerow) {
                         echo "<option id='".row['id']."'";
                         if ($rolerow['id'] == $row['role'])
@@ -165,10 +167,10 @@ echo
                 echo
                     "<input id='userId' name='userId' type='hidden' value='".$row['id']."'></select></label></form></td>";
                 echo
-                    "<td>".$row['role_id'."</td>";
+                    "<td>".$row['role_id']."</td>";
                 echo
                     "<td><form method='post' action='Benutzerverwaltung.php'>"
-                    ."<input id='details' name='details' type='button' value='Details'><input id='delete' name='delete' type='button' value='löschen'>";
+                    ."<input id='details' name='details' type='button' value='Details'><input id='delete' name='delete' type='button' value='löschen'>"
                     ."<input id='userId' name='userId' type='hidden' value='".$row['id']."'>" 
                     ."</form></td>";
                 echo 
@@ -176,9 +178,9 @@ echo
             }
 echo
     "</table>
-    <form method="post" action="Benutzerverwaltung.php">
-        <input id="newUser" name="newUser" type="button" value="Neuer Benutzer">
-        <input id="userId" name="userId" type="hidden" value="userId">
+    <form method='post' action='Benutzerverwaltung.php'>
+        <input id='newUser' name='newUser' type='button' value='Neuer Benutzer'>
+        <input id='userId' name='userId' type='hidden' value='userId'>
     </form>
     <h2>Rollen definieren</h2>
     <table>
@@ -207,60 +209,59 @@ echo
 
 function EditUser($userId)
 {
-    // must call the page to edit the details of the user
-    <-------------------------------------------------------- wird durch Header Methode ersetzt ----------------------------------------------------->
+/* ------------------------------------------------------ wird durch Header Methode ersetzt --------------------------------------------------- */
     echo "<!DOCTYPE html>
     <html>
     <head>
-    <meta content="de" http-equiv="Content-Language">
-    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta content='de' http-equiv='Content-Language'>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
     <title>Benutzerverwaltung</title>
-    <link rel="stylesheet" href="css/backend.css">
-    <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">
+    <link rel='stylesheet' href='css/backend.css'>
+    <link rel='stylesheet' href='css/font-awesome/css/font-awesome.min.css'>
     </head>
     <body>";
-    <-------------------------------------------------------- wird durch Header Methode ersetzt ----------------------------------------------------->
+/* ------------------------------------------------------ wird durch Header Methode ersetzt --------------------------------------------------- */
 
-    <!-- menue -->
-    <!-- dynamisch erzeugt je nach Rechten -->
-    require_once 'lib/BackendComponentPrinter.class.php';
-    use SemanticCms\ComponentPrinter\BackendComponentPrinter;
 
-    BackendComponentPrinter::printSidebar(array()/*Parameter fehlen noch -> Rechte des gerade eingeloggten Nutzers*/);
+/* menue */
+/* dynamisch erzeugt je nach Rechten */
+require_once 'lib/BackendComponentPrinter.class.php';
+
+BackendComponentPrinter::printSidebar(array()/*Parameter fehlen noch -> Rechte des gerade eingeloggten Nutzers*/);
     echo
-    "<section id="main">
+    "<section id='main'>
     <h1>Kontodaten bearbeiten</h1>
-        <form method="post" action="../lib/BackendComponentPrinter.class.php">";
+        <form method='post' action='../lib/BackendComponentPrinter.class.php'>";
     $dbUser = new DbUser();
     $userRow = $dbUser.GetUserInformation($userId);
     echo
-            "<label for="userName">Benutzername</label>
-            <input id="userName" name="userName" type="text" value='".$userRow['username']."'>";
+            "<label for='userName'>Benutzername</label>
+            <input id='userName' name='userName' type='text' value='".$userRow['username']."'>";
     echo
-            "<label for="name">Name</label>
-            <input id="name" name="name" type="text" value='".$userRow['lastname']."'>";
+            "<label for='name'>Name</label>
+            <input id='name' name='name' type='text' value='".$userRow['lastname']."'>";
     echo    
-            "<label for="foreName">Vorname</label>
-            <input id="foreName" name="foreName" type="text" value='".$userRow['firstname']."'>";
+            "<label for='foreName'>Vorname</label>
+            <input id='foreName' name='foreName' type='text' value='".$userRow['firstname']."'>";
     echo
-            "<label for="email">Email</label>
-            <input id="email" name="email" type="text" value='".$userRow['email']."'>";
+            "<label for='email'>Email</label>
+            <input id='email' name='email' type='text' value='".$userRow['email']."'>";
     echo
-            "<input id="userId" name="userId" type="hidden" value='".$userId."'>".
-            "<input id="applyChanges" name="applyChanges" type="button" value="Änderungen übernehmen">";
+            "<input id='userId' name='userId' type='hidden' value='".$userId."'>".
+            "<input id='applyChanges' name='applyChanges' type='button' value='Änderungen übernehmen'>";
         echo
         "</form>
         <h2>Passwort ändern</h2>
-        <form method="post" action="../lib/BackendComponentPrinter.class.php">";
+        <form method='post' action='../lib/BackendComponentPrinter.class.php'>";
         echo
-            "<label for="currentPassword">aktuelles Passwort</label>
-            <input id="currentPassword" name="currentPassword" type="password">
-            <label for="newPassword">neues Passwort</label>
-            <input id="newPassword" name="newPassword" type="password">
-            <label for="newPasswordRepeat">neues Passwort bestätigen</label>
-            <input id="newPasswordRepeat" name="newPasswordRepeat" type="password">
-            <input id="userId" name="userId" type="hidden" value='".$userId."'>".
-            "<input id="applyPasswordChanges" name="applyPasswordChanges" type="button" value="Passwort übernehmen">";
+            "<label for='currentPassword'>aktuelles Passwort</label>
+            <input id='currentPassword' name='currentPassword' type='password'>
+            <label for='newPassword'>neues Passwort</label>
+            <input id='newPassword' name='newPassword' type='password'>
+            <label for='newPasswordRepeat'>neues Passwort bestätigen</label>
+            <input id='newPasswordRepeat' name='newPasswordRepeat' type='password'>
+            <input id='userId' name='userId' type='hidden' value='".$userId."'>".
+            "<input id='applyPasswordChanges' name='applyPasswordChanges' type='button' value='Passwort übernehmen'>";
         echo
         "</form>
     </section>
@@ -270,59 +271,57 @@ function EditUser($userId)
 }
 function EditRole($roleId)
 {
-     // must call the page to edit the details of the role
-    <-------------------------------------------------------- wird durch Header Methode ersetzt ----------------------------------------------------->
+/* ------------------------------------------------------ wird durch Header Methode ersetzt --------------------------------------------------- */
     echo "<!DOCTYPE html>
     <html>
     <head>
-    <meta content="de" http-equiv="Content-Language">
-    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta content='de' http-equiv='Content-Language'>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
     <title>Benutzerverwaltung</title>
-    <link rel="stylesheet" href="css/backend.css">
-    <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">
+    <link rel='stylesheet' href='css/backend.css'>
+    <link rel='stylesheet' href='css/font-awesome/css/font-awesome.min.css'>
     </head>
     <body>";
-    <-------------------------------------------------------- wird durch Header Methode ersetzt ----------------------------------------------------->
-    <!-- menue -->
-    <!-- dynamisch erzeugt je nach Rechten -->
-    require_once 'lib/BackendComponentPrinter.class.php';
-    use SemanticCms\ComponentPrinter\BackendComponentPrinter;
+/* ------------------------------------------------------ wird durch Header Methode ersetzt --------------------------------------------------- */
 
-    BackendComponentPrinter::printSidebar(array()/*Parameter fehlen noch -> Rechte des gerade eingeloggten Nutzers*/);
+
+/* menue */
+/* dynamisch erzeugt je nach Rechten */
+require_once 'lib/BackendComponentPrinter.class.php';
+
+BackendComponentPrinter::printSidebar(array()/*Parameter fehlen noch -> Rechte des gerade eingeloggten Nutzers*/);
     
     echo
-    "<section id="main">
-    <h1>Rolle bearbeiten</h1>
-    echo
+    "<section id='main'>
+    <h1>Rolle bearbeiten</h1>";
     $dbUser = new DbUser();
     $roleRow = $dbUser.GetRoleInfo($roleId);
     echo
             "<form method='post' action='Benutzerverwaltung.php'>".
-            "<input id="userId" name="userId" type="hidden" value='".$roleId."'>"
+            "<input id='userId' name='userId' type='hidden' value='".$roleId."'>".
+            "<label for='roleName'>Benutzername</label>
+            <input id='roleName' name='roleName' type='checkbox' value='".$roleRow['rolename']."'>";
     echo
-            "<label for="roleName">Benutzername</label>
-            <input id="roleName" name="roleName" type="checkbox" value='".$roleRow['rolename']."'>";
-    echo
-            "<label for="uri">Name</label>
-            <input id="uri" name="uri" type="checkbox" value='".$roleRow['uri']."'>";
+            "<label for='uri'>Name</label>
+            <input id='uri' name='uri' type='checkbox' value='".$roleRow['uri']."'>";
     echo    
-            "<label for="guestbookmanagement">Vorname</label>
-            <input id="guestbookmanagement" name="guestbookmanagement" type="checkbox" value='".$roleRow['guestbookmanagement']."'>";
+            "<label for='guestbookmanagement'>Vorname</label>
+            <input id='guestbookmanagement' name='guestbookmanagement' type='checkbox' value='".$roleRow['guestbookmanagement']."'>";
     echo
-            "<label for="usermanagement">Email</label>
-            <input id="usermanagement" name="usermanagement" type="checkbox" value='".$roleRow['usermanagement']."'>";
+            "<label for='usermanagement'>Email</label>
+            <input id='usermanagement' name='usermanagement' type='checkbox' value='".$roleRow['usermanagement']."'>";
     echo
-            "<label for="pagemanagement">Email</label>".
-            "<input id="pagemanagement" name="pagemanagement" type="checkbox" value='".$roleRow['pagemanagement']."'>";
+            "<label for='pagemanagement'>Email</label>".
+            "<input id='pagemanagement' name='pagemanagement' type='checkbox' value='".$roleRow['pagemanagement']."'>";
     echo
-            "<label for="articlemanagement">Email</label>".
-            "<input id="articlemanagement" name="articlemanagement" type="checkbox" value='".$roleRow['articlemanagement']."'>";
+            "<label for='articlemanagement'>Email</label>".
+            "<input id='articlemanagement' name='articlemanagement' type='checkbox' value='".$roleRow['articlemanagement']."'>";
     echo
-            "<label for="guestbookusage">Email</label>".
-            "<input id="guestbookusage" name="guestbookusage" type="checkbox" value='".$roleRow['guestbookusage']."'>";
+            "<label for='guestbookusage'>Email</label>".
+            "<input id='guestbookusage' name='guestbookusage' type='checkbox' value='".$roleRow['guestbookusage']."'>";
     echo
-            "<label for="templateconstruction">Email</label>".
-            "<input id="templateconstruction" name="templateconstruction" type="checkbox" value='".$roleRow['templateconstruction']."'>".
-            "<input id="saveRoleChanges" name="saveRoleChanges" type="button" value="Rollenänderung speichern"></form>";
+            "<label for='templateconstruction'>Email</label>".
+            "<input id='templateconstruction' name='templateconstruction' type='checkbox' value='".$roleRow['templateconstruction']."'>".
+            "<input id='saveRoleChanges' name='saveRoleChanges' type='button' value'Rollenänderung speichern'></form>";
 }
 ?>
