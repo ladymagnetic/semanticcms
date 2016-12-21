@@ -75,8 +75,20 @@ class DbUser
 		$selectRoleByRolename = "SELECT * FROM role WHERE name = ?";
 		$this->database->PrepareStatement("selectRoleByRolename", $selectRoleByRolename);
 
-	//	$updateRole = "UPDATE role SET " => Mirjam: fuer SaveRoleChanges() => kommt noch!
-	//	$this->database->PrepareStatement("updateRole", $updateRole);
+	// => Mirjam: fuer SaveRoleChanges()
+	 	$updateRoleById = "UPDATE role SET uri = ?, rolename = ?, guestbookmanagement = ?, usermanagement = ?, pagemanagement = ?, articlemanagement = ?, guestbookusage = ?, templateconstruction = ?)
+						WHERE id = ?";
+		$this->database->PrepareStatement("updateRoleById", $updateRoleById);
+
+		$updateUserDifferentNamesById= "UPDATE user SET lastname = ?, firstname = ?, username = ?, email= ? WHERE id = ?";
+		$this->database->PrepareStatement("updateUserDifferentNamesById", $updateUserDifferentNamesById);
+
+		$selectUserByEmail = "SELECT * FROM user WHERE email = ?";
+		$this->database->PrepareStatement("selectUserByEmail", $selectUserByEmail);
+
+		// => kommt noch:
+		//$selectUserByUsernameOrEmail = "SELECT * FROM user WHERE ( username = ? OR email = ? )";
+		//$this->database->PrepareStatement("selectUserByUsernameOrEmail ", $selectUserByUsernameOrEmail );
 
 
 
@@ -220,8 +232,70 @@ public function DoesUserAlreadyExist($username, $email)
 	}
 
 
+	/**
+	* UpdateRoleById()  => @Jonas: vorher: SaveRoleChanges()
+	* saves role changes
+	* @params int $uri the role's uri
+	* @params string $rolename the name of the role
+	* @params bool $guestbookmanagement
+	* @params bool $usermanagement
+	* @params bool $pagemanagement
+	* @params bool $articlemanagement
+	* @params bool $guestbookusage
+	* @params bool $templateconstruction
+	*/
+	public function UpdateRoleById($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $id)
+	{
+			$this->database->ExecutePreparedStatement("updateRoleById", array($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $id));
+	}
 
+	
+	/**
+	* UpdateUserDifferentNamesById => @Jonas: vorher: ApplyChangesToUser()
+	* saves role changes
+	* @params string $lastname the user's lastname
+	* @params string $lastname the user's firstname
+	* @params string $lastname the user's username
+	* @params string $lastname the user's email
+	* @params int $id user's id
+	*/
+	public function UpdateUserDifferentNamesById($lastname, $firstname, $username, $email, $id)
+	{
+			$this->database->ExecutePreparedStatement("updateUserDifferentNamesById", array($lastname, $firstname, $username, $email, $id));
+	}
+	
+	
+	
+	/**
+	* SelectUserByEmail()
+	* @params string $lastname the user's email
+	*/
+	public function SelectUserByEmail($email)
+	{
+			$this->database->ExecutePreparedStatement("selectUserByEmail", array($email));
+	}
 
+	
+	
+	
+	/*Conny => wichtige Funktionen*/
+	/*
+	CheckIfEmailIsCorrect
+	CheckIfUsernameIsCorrect
+	HashPassword
+	DecodePassword
+	*/
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	/* ab hier noch die alten => werden noch überarbeitet*/
 
@@ -283,44 +357,6 @@ public function DoesUserAlreadyExist($username, $email)
 
 
 
-	// speichert alle Informationen der Rolle
-	public function SaveRoleChanges($roleId, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction)
-	{
-		/*Mirjam: Wird noch überarbeitet.
-
-		//Check rolename if exists
-		$result = $mysqli->prepare("SELECT role.rolename FROM Role WHERE rolename = ".$rolename);
-		$result->bind_param('s', $_POST['rolename']);
-		$result->execute();
-
-				if($result != $rolename)
-				{
-					$rolename 						= $_POST['rolename'];
-					$guestbookmanagement  = $_POST['guestbookmanagement'];
-					$usermanagement	  		 = $_POST['usermanagement'];
-					$pagemanagement 		  = $_POST['pagemanagement'];
-					$articlemanagement 	  = $_POST['articlemanagement'];
-					$guestbookusage			  = $_POST['guestbookusage'];
-					$templateconstruction = $_POST['templateconstruction'];
-
-					$stmt = $mysqli->prepare("INSERT INTO role(rolename, guestbookmanagement, usermanagement, pagemanagement, articlemanagement, guestbookusage, templateconstruction) VALUES (?,?,?,?,?,?,?)");
-					$stmt->bind_param("sbbbbbb",
-									 $rolename,
-									 $guestbookmanagement,
-									 $usermanagement,
-									 $pagemanagement,
-									 $articlemanagement,
-									 $guestbookusage,
-									 $templateconstruction);
-					$stmt->execute();
-					$stmt->close();
-
-				}
-				*/
-	}
-
-
-
 	/*Mirjam => ab hier: kommen noch.*/
 
 	// return users as rows
@@ -347,19 +383,7 @@ public function DoesUserAlreadyExist($username, $email)
 		return true/false;
 	}
 
-	// muss die Informationen des Users (angegebene SQL) zurückgeben
-	public function GetUserInformation($userId)
-	{
-		//$sql = "SELECT username, firstname, lastname, email FROM user";
-		//$sql = "SELECT username, firstname, lastname, email, password FROM user";
-	}
-
-	// has to save the changes of the user
-	// Jonas: speichert die angegebenen Werte in den user mit $userId
-	public function ApplyChangesToUser($userId, $userName, $name, $foreName, $email)
-	{
-
-	}
+	
 
 	// has to save the changes for the passwords of the user
 	// Jonas
