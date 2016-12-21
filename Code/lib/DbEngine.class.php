@@ -85,7 +85,7 @@ class DbEngine
 
 	public function RealEscapeString($string)
 	{
-		return $this->conn->mysqli_real_escape_string($string);
+		return $this->conn->real_escape_string($string);
 	}
 
 

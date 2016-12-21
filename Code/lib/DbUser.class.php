@@ -40,10 +40,47 @@ class DbUser
 
 		$this->database->PrepareStatement("registrateUser", $registrate);
 
-/*
+/*		Muster:
 		$deleteUser = "...."
 		$this->database->PrepareStatement("deleteUser", $deleteUser);
 */
+
+		$selectUserById = "SELECT * FROM user WHERE id = ?";
+		$this->database->PrepareStatement("selectUserById", $selectUserById);
+
+		$selectUserByUsername = "SELECT * FROM user WHERE username = ?";
+		$this->database->PrepareStatement("selectUserByUsername", $selectUserByUsername);
+
+		$deleteUserById = "DELETE FROM user WHERE id = ?";
+		$this->database->PrepareStatement("deleteUserById", $deleteUserById);
+
+		$deleteUserByUsername = "DELETE FROM user WHERE username = ?";
+		$this->database->PrepareStatement("deleteUserByUsername", $deleteUserByUsername );
+
+
+		// Role
+		$deleteRole = "DELETE FROM role WHERE id = ?";
+		$this->database->PrepareStatement("deleteRole", $deleteRole);
+
+		$assignaRole = "UPDATE user SET role_id = ? WHERE id = ?";
+		$this->database->PrepareStatement("assignaRole", $assignaRole);
+
+		$newRole = "INSERT INTO role (id, uri, rolename, guestbookmanagement, usermanagement, pagemanagement, 	articlemanagement, 	guestbookusage, templateconstruction)
+				  VALUES (NULL, ?, ?, ?, ?, ? , ? , ?, ?);";
+		$this->database->PrepareStatement("newRole", $newRole);
+
+		$selectRoleById = "SELECT * FROM role WHERE id = ?";
+		$this->database->PrepareStatement("selectRole", $selectRoleById);
+
+		$selectRoleByRolename = "SELECT * FROM role WHERE name = ?";
+		$this->database->PrepareStatement("selectRoleByRolename", $selectRoleByRolename);
+
+	//	$updateRole = "UPDATE role SET " => Mirjam: fuer SaveRoleChanges() => kommt noch!
+	//	$this->database->PrepareStatement("updateRole", $updateRole);
+
+
+
+
 	}
 
 /*Maybe other required function DoesUserAlreadyExist($username, $email)*/
@@ -78,6 +115,118 @@ public function DoesUserAlreadyExist($username, $email)
 		$this->database->ExecutePreparedStatement("registrateUser", array($role_id, $lastname, $firstname, $username, $password, $email, $birthdate));
 	}
 
+
+	/**
+	* deleteUserById()
+	* Delets a particular User
+	* @params int $userId the user's Id
+	*/
+	public function DeleteUserById($userId)
+	{
+		$this->database->ExecutePreparedStatement("deleteUserById", array($userId));
+	}
+
+
+	/**
+	* deleteUserByUsername()
+	* Delets a particular User by a name
+	* @params int $userId the user's Id
+	*/
+	public function DeleteUserByUsername($userId)
+	{
+		$this->database->ExecutePreparedStatement("deleteUserByUsername", array($userId));
+	}
+
+
+	/**
+	* GetUserInformationById()
+	* @params int $userId the id of the user
+	*/
+	public function GetUserInformationById($userId) /*oder:SelectUserById() als anderen Namen?*/
+	{
+			$this->database->ExecutePreparedStatement("selectUserById", array($userId));
+	}
+
+
+	/**
+	* GetUserInformationByUsername()
+	* @params string $username the role's name
+	*/
+	public function GetUserInformationByUsername($username) /*oder:SelectUserByUserName() als anderen Namen?*/
+	{
+			$this->database->ExecutePreparedStatement("selectUserByUsername", array($username));
+	}
+
+
+	/**
+	* DeleteRole()
+	* Delets a particular Role
+	* @params int $roleId the role's Id
+	*/
+	public function DeleteRole($roleId)
+	{
+		$this->database->ExecutePreparedStatement("deleteRole", array($roleId)); // HIER: neu
+	}
+
+
+	/**
+	* AssignRole()
+	* Assigns a chosen role to a particular user
+	* @params int $roleId the role's Id
+	* @params int $userId the user's Id
+	*/
+	public function AssignRole($roleId, $userId)
+	{
+		$this->database->ExecutePreparedStatement("assignaRole", array($roleId, $userId));
+	}
+
+
+	/**
+	* NewRole()
+	* creates a new role
+	* @params int $uri the role's uri
+	* @params string $rolename the name of the role
+	* @params bool $guestbookmanagement
+	* @params bool $usermanagement
+	* @params bool $pagemanagement
+	* @params bool $articlemanagement
+	* @params bool $guestbookusage
+	* @params bool $templateconstruction
+	*/
+	public function NewRole($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction)
+	{
+		 $this->database->ExecutePreparedStatement("newRole", array($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction));
+	}
+
+
+	/**
+	* SelectRoleById()
+	* @params int $roleId the role's Id
+	*/
+	public function SelectRoleById($roleId)  /*oder: GetRoleInfoById() als anderen Namen?*/
+	{
+		$this->database->ExecutePreparedStatement("selectRole", array($roleId));
+	}
+
+
+	/**
+	* SelectRoleByRolename()
+	* Selects a particular Role
+	* @params string $rolename the role's name
+	*/
+	public function SelectRoleByRolename($rolename) /*oder: GetRoleInfoByRolename() als anderen Namen?*/
+	{
+			$this->database->ExecutePreparedStatement("selectRoleByRolename", array($rolename));
+	}
+
+
+
+
+
+	/* ab hier noch die alten => werden noch überarbeitet*/
+
+
+
 	/**
 	* loginUser()
 	* @params string $nameInput the user's username or mail
@@ -92,7 +241,7 @@ public function DoesUserAlreadyExist($username, $email)
 			$nameInput = $this->database->RealEscapeString($nameInput);
 
 			//$stmt = $this->database->ExecuteQuery("SELECT password FROM user WHERE email =".$nameInput." OR username =".$nameInput);
-			$stmt = $this->database->ExecuteQuery("SELECT id FROM user WHERE (email =".$nameInput." OR username =".$nameInput.") AND password = ". $password));
+			$stmt = $this->database->ExecuteQuery("SELECT id FROM user WHERE (email =".$nameInput." OR username =".$nameInput.") AND password = ". $password);
 
 			// Rückgabe prüfen => ist der Datensatz auch wirklich vorhanden? Ist es genau EIN Datensatz, der zurück kommt?
 
@@ -112,23 +261,20 @@ public function DoesUserAlreadyExist($username, $email)
 	}
 
 	//same function than "Ban()"?
+	// Hinweis: Mirjam =>  Datenbankmodell muss morgen nochmals überarbeitet werden => hat aus Wirkung auf diese Funktion.
 	// Jonas: ist das gleiche wie ban, also sperrung
 	public function BanUser($userId)
 	{
 	}
 	//Jonas: ist das gleiche wie deban, also sperrung
+	// Hinweis: Mirjam =>  Datenbankmodell muss morgen nochmals überarbeitet werden => hat aus Wirkung auf diese Funktion.
 		//same function than "Deban()"?
  	public function DebanUser($userId)
 	{
 	}
-	public function DeleteUser($userId)
-	{
-		/* aufbauen wie Registrieren  => siehe oben §deleteUser*/
-		$stmt = $mysqli->prepare("DELETE FROM user WHERE id=".$userId);
-		$stmt->bind_param('i', $_POST['userId']);
-		$stmt->execute();
-		$stmt->close();
-	}
+
+
+	// ???
 	//Jonas: muss einen neuen user erzeugen und die id von diesem zurückgeben
 	public function CreateUser()
 	{
@@ -136,30 +282,12 @@ public function DoesUserAlreadyExist($username, $email)
 	}
 
 
-	// assignes an existing role to an existing user (user-object given from User.class)
-	// neue blanke Rolle erstellen und die id davon zurückgeben
-	public function NewRole($roleId)
-	{
-		return $roleId;
-	}
-	// Rolle zuweisen muss ich erst noch einbringen
-	public function AssignRole($roleId, $userId)
-	{
-		$stmt = $mysqli->prepare("UPDATE User SET role_id = ? WHERE user.id =".$userId);
-		$stmt->bind_param("i", $_POST[$roleId]);
-		$stmt->execute();
-		$stmt->close();
-		return $roleId;
-	}
-
-	public function GetRoleInfo($roleId)
-	{
-		// alle Werte von role zurückgeben
-	}
 
 	// speichert alle Informationen der Rolle
 	public function SaveRoleChanges($roleId, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction)
 	{
+		/*Mirjam: Wird noch überarbeitet.
+
 		//Check rolename if exists
 		$result = $mysqli->prepare("SELECT role.rolename FROM Role WHERE rolename = ".$rolename);
 		$result->bind_param('s', $_POST['rolename']);
@@ -188,23 +316,19 @@ public function DoesUserAlreadyExist($username, $email)
 					$stmt->close();
 
 				}
+				*/
 	}
-	// Jonas:
-	// Rolle mit roleId löschen
-	public function DeleteRole($roleId)
-	{
-		$stmt = $mysqli->prepare("DELETE FROM role WHERE id=".$roleId);
-		$stmt->bind_param('i', $_POST['roleID']);
-		$stmt->execute();
-		$stmt->close();
-	}
+
+
+
+	/*Mirjam => ab hier: kommen noch.*/
 
 	// return users as rows
 	//Jonas:
 	// muss alle user mit den angegebenen Werten bevorzugt als rows zurückgeben zur Auflistung in der Tabelle
 	public function GetUsers()
 	{
-		$sql = "SELECT id, role_id, lastname, firstname, username, password, email FROM user";
+		//$sql = "SELECT id, role_id, lastname, firstname, username, password, email FROM user";
 		// $db->query($sql) as $row)
 		return;
 	}
@@ -213,7 +337,7 @@ public function DoesUserAlreadyExist($username, $email)
 	// Jonas: muss alle roles mit den angegebenen Werten bevorzugt als rows zurückgeben zur Auflistung in der Tabelle
 	public function GetRoles()
 	{
-		$sql = "SELECT id, name FROM role";
+		//$sql = "SELECT id, name FROM role";
 		return;
 	}
 
@@ -226,7 +350,8 @@ public function DoesUserAlreadyExist($username, $email)
 	// muss die Informationen des Users (angegebene SQL) zurückgeben
 	public function GetUserInformation($userId)
 	{
-		$sql = "SELECT username, firstname, lastname, email FROM user";
+		//$sql = "SELECT username, firstname, lastname, email FROM user";
+		//$sql = "SELECT username, firstname, lastname, email, password FROM user";
 	}
 
 	// has to save the changes of the user
@@ -245,11 +370,7 @@ public function DoesUserAlreadyExist($username, $email)
 			// check if password correct --> change of password with newPassword else no change
 	}
 
-	// Jonas// Holt die userInformation mit den aufgelisteten Werten des users mit userId zur Anzeige im Editiermodus des Users
-	public function GetUserInformation($userId)
-	{
-		$sql = "SELECT username, firstname, lastname, email, password FROM user";
-	}
+
 }
 
 ?>
