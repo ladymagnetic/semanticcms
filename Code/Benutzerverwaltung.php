@@ -90,10 +90,10 @@ else if (isset($_POST['saveRoleChanges'])) {
     $dbUser.SaveRoleChanges($roleId, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction);
 }
 
-printHead("Benutzerverwaltung");
+BackendComponentPrinter::printHead("Benutzerverwaltung");
 /* menue */
 /* dynamisch erzeugt je nach Rechten */
-BackendComponentPrinter::printSidebar($config['cms_db']['dbuser']);
+BackendComponentPrinter::printSidebar(array());// userpermissions
 
 echo
 "<section id='main'>
