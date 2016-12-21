@@ -89,25 +89,14 @@ else if (isset($_POST['saveRoleChanges'])) {
     $dbUser.SaveRoleChanges($roleId, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction);
 }
 
-/* ------------------------------------------------------ wird durch Header Methode ersetzt --------------------------------------------------- */
-    echo "<!DOCTYPE html>
-    <html>
-    <head>
-    <meta content='de' http-equiv='Content-Language'>
-    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
-    <title>Benutzerverwaltung</title>
-    <link rel='stylesheet' href='css/backend.css'>
-    <link rel='stylesheet' href='css/font-awesome/css/font-awesome.min.css'>
-    </head>
-    <body>";
-/* ------------------------------------------------------ wird durch Header Methode ersetzt --------------------------------------------------- */
+printHead("Benutzerverwaltung");
 
 
 /* menue */
 /* dynamisch erzeugt je nach Rechten */
 require_once 'lib/BackendComponentPrinter.class.php';
 
-BackendComponentPrinter::printSidebar(array()/*Parameter fehlen noch -> Rechte des gerade eingeloggten Nutzers*/);
+BackendComponentPrinter::printSidebar($config['cms_db']['dbuser']);
 
 echo
 "<section id='main'>
@@ -197,25 +186,13 @@ echo
 
 function EditUser($userId)
 {
-/* ------------------------------------------------------ wird durch Header Methode ersetzt --------------------------------------------------- */
-    echo "<!DOCTYPE html>
-    <html>
-    <head>
-    <meta content='de' http-equiv='Content-Language'>
-    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
-    <title>Benutzerverwaltung</title>
-    <link rel='stylesheet' href='css/backend.css'>
-    <link rel='stylesheet' href='css/font-awesome/css/font-awesome.min.css'>
-    </head>
-    <body>";
-/* ------------------------------------------------------ wird durch Header Methode ersetzt --------------------------------------------------- */
-
+printHead("Benutzerverwaltung");
 
 /* menue */
 /* dynamisch erzeugt je nach Rechten */
 require_once 'lib/BackendComponentPrinter.class.php';
 
-BackendComponentPrinter::printSidebar(array()/*Parameter fehlen noch -> Rechte des gerade eingeloggten Nutzers*/);
+BackendComponentPrinter::printSidebar($config['cms_db']['dbuser']);
     echo
     "<section id='main'>
     <h1>Kontodaten bearbeiten</h1>
@@ -258,25 +235,13 @@ BackendComponentPrinter::printSidebar(array()/*Parameter fehlen noch -> Rechte d
 }
 function EditRole($roleId)
 {
-/* ------------------------------------------------------ wird durch Header Methode ersetzt --------------------------------------------------- */
-    echo "<!DOCTYPE html>
-    <html>
-    <head>
-    <meta content='de' http-equiv='Content-Language'>
-    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
-    <title>Benutzerverwaltung</title>
-    <link rel='stylesheet' href='css/backend.css'>
-    <link rel='stylesheet' href='css/font-awesome/css/font-awesome.min.css'>
-    </head>
-    <body>";
-/* ------------------------------------------------------ wird durch Header Methode ersetzt --------------------------------------------------- */
-
+printHead("Benutzerverwaltung");
 
 /* menue */
 /* dynamisch erzeugt je nach Rechten */
 require_once 'lib/BackendComponentPrinter.class.php';
 
-BackendComponentPrinter::printSidebar(array()/*Parameter fehlen noch -> Rechte des gerade eingeloggten Nutzers*/);
+BackendComponentPrinter::printSidebar($config['cms_db']['dbuser']);
     
     echo
     "<section id='main'>
