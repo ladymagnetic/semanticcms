@@ -238,13 +238,13 @@ function EditUser($userId)
             <input id="userName" name="userName" type="text" value='".$userRow['username']."'>";
     echo
             "<label for="name">Name</label>
-            <input id="name" name="name" type="text" value='".$userRow['username']."'>";
+            <input id="name" name="name" type="text" value='".$userRow['lastname']."'>";
     echo    
             "<label for="foreName">Vorname</label>
-            <input id="foreName" name="foreName" type="text" value='".$userRow['username']."'>";
+            <input id="foreName" name="foreName" type="text" value='".$userRow['firstname']."'>";
     echo
             "<label for="email">Email</label>
-            <input id="email" name="email" type="text" value='".$userRow['username']."'>";
+            <input id="email" name="email" type="text" value='".$userRow['email']."'>";
     echo
             "<input id="userId" name="userId" type="hidden" value='".$userId."'>".
             "<input id="applyChanges" name="applyChanges" type="button" value="Änderungen übernehmen">";
