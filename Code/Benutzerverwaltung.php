@@ -4,6 +4,7 @@ require_once 'lib/DbEngine.class.php';
 require_once 'lib/BackendComponentPrinter.class.php';
 require_once 'config/config.php';
 require_once 'lib/DbUser.class.php';
+require_once 'lib/BackendComponentPrinter.class.php';
 
 /* use namespace(s) */
 use SemanticCms\config;
@@ -90,12 +91,8 @@ else if (isset($_POST['saveRoleChanges'])) {
 }
 
 printHead("Benutzerverwaltung");
-
-
 /* menue */
 /* dynamisch erzeugt je nach Rechten */
-require_once 'lib/BackendComponentPrinter.class.php';
-
 BackendComponentPrinter::printSidebar($config['cms_db']['dbuser']);
 
 echo

@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html>
 
-printHead("Benutzerverwaltung");
-
 <body>
-<!-- menue -->
-<!-- dynamisch erzeugt je nach Rechten -->
 <?php
 require_once 'lib/BackendComponentPrinter.class.php';
 use SemanticCms\ComponentPrinter\BackendComponentPrinter;
+printHead("Inhaltsverwaltung");
+/* menue */
+/* dynamisch erzeugt je nach Rechten */
 
 BackendComponentPrinter::printSidebar(array()/*Parameter fehlen noch -> Rechte des gerade eingeloggten Nutzers*/);
 ?>
