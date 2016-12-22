@@ -118,16 +118,16 @@ echo
         </tr>";
             // foreach user in database print
             $userRows = $dbUser->SelectAllUsers();
-            $roleRows = $dbUser->SelectAllUsers();
+            $roleRows = $dbUser->SelectAllRoles();
             while ($row = $dbUser->FetchArray($userRows))
             {
                 echo 
-                "<tr>".$row['firstname']." ".$row['lastname']."<td>";
+                "<tr><td>".$row['firstname']." ".$row['lastname']."</td>";
 
                 // if user is banned/debanned
-                /*
-                $debanned = $dbUser->IsUserBanned($row['id']);
-                if ($debanned)
+                //$banned = $dbUser->IsUserBanned($row['id']);
+                $banned = false;
+                if ($banned)
                 {
                     echo "<td>
                     <form method='post' action='Usermanagement.php'>
@@ -139,7 +139,6 @@ echo
                     <form method='post' action='Usermanagement.php'>
                     <input id='ban' name='ban' type='submit' value='sperren'>";
                 }
-                */
                 echo
                     "<input id='userId' name='userId' type='hidden' value='".$row['id']."'></form></td>";
                 echo 
@@ -155,8 +154,6 @@ echo
                     }
                 echo
                     "<input id='userId' name='userId' type='hidden' value='".$row['id']."'></select></label></form></td>";
-                echo
-                    "<td>".$row['role_id']."</td>";
                 echo
                     "<td><form method='post' action='Usermanagement.php'>"
                     ."<input id='details' name='details' type='submit' value='Details'><input id='delete' name='delete' type='submit' value='löschen'>"
@@ -206,7 +203,7 @@ BackendComponentPrinter::PrintSidebar(array());// PrintSidebar($_SESSION["permis
     echo
     "<section id='main'>
     <h1>Kontodaten bearbeiten</h1>
-        <form method='post' action='../lib/BackendComponentPrinter.class.php'>";
+        <form method='post' action='Usermanagement.php'>";
     $dbUser = new DbUser();
     $userRow = $dbUser->SelectUserById($userId);
     echo
@@ -294,7 +291,7 @@ BackendComponentPrinter::PrintSidebar(array());// PrintSidebar($_SESSION["permis
     echo
     "<section id='main'>
     <h1>Neuer Benutzer</h1>
-        <form method='post' action='../lib/BackendComponentPrinter.class.php'>";
+        <form method='post' action='Usermanagement.php'>";
     echo
             "<label for='userName'>Benutzername</label>
             <input id='userName' name='userName' type='text'>";
