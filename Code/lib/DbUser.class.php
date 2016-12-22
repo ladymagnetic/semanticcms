@@ -173,7 +173,7 @@ function check_date($date,$format,$sep)
 
 							var_dump($result); // TESTEN! => und dann die Abfrage evtl. anpassen.
 
-							if($result==true && $this->database->GetResultCount($result) == 1)
+							if($result==true)
 							{
 									return true;
 							}
@@ -203,7 +203,7 @@ function check_date($date,$format,$sep)
 
 		//var_dump($result); // TESTEN! => und dann die Abfrage evtl. anpassen.
 
-		if($result==true && $this->database->GetResultCount($result) == 1)
+		if($result==true)
 		{
 				return true;
 		}
@@ -223,7 +223,7 @@ function check_date($date,$format,$sep)
 	{
 		$result = $this->database->ExecutePreparedStatement("deleteUserByUsername", array($userId));
 
-		if($result==true && $this->database->GetResultCount($result) == 1)
+		if($result==true)
 		{
 				return true;
 		}
@@ -263,7 +263,7 @@ function check_date($date,$format,$sep)
 	{
 		$result = $this->database->ExecutePreparedStatement("deleteRole", array($roleId)); // HIER: neu
 
-		if($result==true && $this->database->GetResultCount($result) == 1)
+		if($result==true)
 		{
 				return true;
 		}
@@ -284,7 +284,7 @@ function check_date($date,$format,$sep)
 	{
 		$result = $this->database->ExecutePreparedStatement("assignaRole", array($roleId, $userId));
 
-		if($result==true && $this->database->GetResultCount($result) == 1)
+		if($result==true)
 		{
 				return true;
 		}
@@ -310,7 +310,7 @@ function check_date($date,$format,$sep)
 	public function NewRole($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction)
 	{
 		 $result = $this->database->ExecutePreparedStatement("newRole", array($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction));
-		 if($result==true && $this->database->GetResultCount($result) == 1)
+		 if($result==true)
 		 {
 		 		return true;
 		 }
@@ -358,7 +358,7 @@ function check_date($date,$format,$sep)
 	{
 			$result = $this->database->ExecutePreparedStatement("updateRoleById", array($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $id));
 
-			if($result==true && $this->database->GetResultCount($result) == 1)
+			if($result==true)
 			{
 					return true;
 			}
@@ -382,7 +382,7 @@ function check_date($date,$format,$sep)
 	{
 			$result = $this->database->ExecutePreparedStatement("updateUserDifferentNamesById", array($lastname, $firstname, $username, $email, $id));
 
-			if($result==true && $this->database->GetResultCount($result) == 1)
+			if($result==true)
 			{
 					return true;
 			}
@@ -474,7 +474,7 @@ function check_date($date,$format,$sep)
 
 			// Rückgabe prüfen => ist der Datensatz auch wirklich vorhanden? Ist es genau EIN Datensatz, der zurück kommt?
 			// Quellcode dafür ist implementiert, ich habs hier mal als Beispiel auch umgesetzt
-			if($result==true && $this->database->GetResultCount($result) == 1)
+			if($result==true)
 			{
 				echo "hallo ich bin richtig";	// Dran denken das zu entfernen wenn nicht mehr gebraucht
 				return true;
