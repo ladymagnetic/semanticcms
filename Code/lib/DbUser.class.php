@@ -90,7 +90,7 @@ class DbUser
 		//$selectUserByUsernameOrEmail = "SELECT * FROM user WHERE ( username = ? OR email = ? )";
 		//$this->database->PrepareStatement("selectUserByUsernameOrEmail ", $selectUserByUsernameOrEmail );
 
-		
+
 		$selectAllUsers = "SELECT * FROM user";
 		$this->database->PrepareStatement("selectAllUsers", $selectAllUsers);
 
@@ -119,6 +119,31 @@ public function DoesUserAlreadyExist($username, $email)
 
 
 
+
+
+public function CheckIfValidEmail($email)
+{
+	return ( filter_var( $email, FILTER_VALIDATE_EMAIL ) !== false )? true : false;
+}
+
+/* eventuell für die Prüfung des Datums beim Registrieren eines User
+http://www.selfphp.de/kochbuch/kochbuch.php?code=17
+function check_date($date,$format,$sep)
+{
+
+    $pos1    = strpos($format, 'd');
+    $pos2    = strpos($format, 'm');
+    $pos3    = strpos($format, 'Y');
+
+    $check    = explode($sep,$date);
+
+    return checkdate($check[$pos2],$check[$pos1],$check[$pos3]);
+
+}
+*/
+
+
+
 	/**
 	* registrateUser()
 	* @params string $username the user's username
@@ -130,15 +155,41 @@ public function DoesUserAlreadyExist($username, $email)
 	*/
 	public function RegistrateUser($role_id, $lastname, $firstname, $username, $password, $email, $birthdate)
 	{
-
 		/*
 		INSERT INTO user VALUES (NULL, 2, "Muster", "Johanna", "jojo20", "password1234" , "j.m@web.de" , NOW(), "1996-08-16");
+		INSERT INTO user VALUES (NULL, 2, "Muster", "Johanna", "jojo20", "password1234" , "j.m@web.de" , NOW(), "19960816")
 		*/
 
+		if(CheckIfValidEmail($email) == true)
+		{
+					if(CheckIfValidEmail($username) == false)
+					{
+							$lastname= $this->database->RealEscapeString($lastname);
+							$firstname= $this->database->RealEscapeString($firstname);
+							$username= $this->database->RealEscapeString($username);
+							$password= $this->database->RealEscapeString($password);
 
-		/*Prüfungen der Eingaben => Benutzername, Email-Adresse, Ist das ein Datum?,  ect.*/
-		$this->database->ExecutePreparedStatement("registrateUser", array($role_id, $lastname, $firstname, $username, $password, $email, $birthdate));
+							$result = $this->database->ExecutePreparedStatement("registrateUser", array(2, $lastname, $firstname, $username, $password, $email, $birthdate));
+
+							var_dump($result); // TESTEN! => und dann die Abfrage evtl. anpassen.
+
+							if($result==true && $this->database->GetResultCount($result) == 1)
+							{
+									return true;
+							}
+							else
+							{
+								 return false;
+							}
+					}
+			}
+			else
+			{
+				echo "Ungültige E-Mail-Adresse."
+				return false;
+			}
 	}
+
 
 
 	/**
@@ -148,7 +199,18 @@ public function DoesUserAlreadyExist($username, $email)
 	*/
 	public function DeleteUserById($userId)
 	{
-		$this->database->ExecutePreparedStatement("deleteUserById", array($userId));
+		$result = $this->database->ExecutePreparedStatement("deleteUserById", array($userId));
+
+		//var_dump($result); // TESTEN! => und dann die Abfrage evtl. anpassen.
+
+		if($result==true && $this->database->GetResultCount($result) == 1)
+		{
+				return true;
+		}
+		else
+		{
+			 return false;
+		}
 	}
 
 
@@ -159,7 +221,16 @@ public function DoesUserAlreadyExist($username, $email)
 	*/
 	public function DeleteUserByUsername($userId)
 	{
-		$this->database->ExecutePreparedStatement("deleteUserByUsername", array($userId));
+		$result = $this->database->ExecutePreparedStatement("deleteUserByUsername", array($userId));
+
+		if($result==true && $this->database->GetResultCount($result) == 1)
+		{
+				return true;
+		}
+		else
+		{
+			 return false;
+		}
 	}
 
 
@@ -169,7 +240,7 @@ public function DoesUserAlreadyExist($username, $email)
 	*/
 	public function GetUserInformationById($userId) /*oder:SelectUserById() als anderen Namen?*/
 	{
-			$this->database->ExecutePreparedStatement("selectUserById", array($userId));
+			return $this->database->ExecutePreparedStatement("selectUserById", array($userId));
 	}
 
 
@@ -179,7 +250,7 @@ public function DoesUserAlreadyExist($username, $email)
 	*/
 	public function GetUserInformationByUsername($username) /*oder:SelectUserByUserName() als anderen Namen?*/
 	{
-			$this->database->ExecutePreparedStatement("selectUserByUsername", array($username));
+		 return	$this->database->ExecutePreparedStatement("selectUserByUsername", array($username));
 	}
 
 
@@ -190,7 +261,16 @@ public function DoesUserAlreadyExist($username, $email)
 	*/
 	public function DeleteRole($roleId)
 	{
-		$this->database->ExecutePreparedStatement("deleteRole", array($roleId)); // HIER: neu
+		$result = $this->database->ExecutePreparedStatement("deleteRole", array($roleId)); // HIER: neu
+
+		if($result==true && $this->database->GetResultCount($result) == 1)
+		{
+				return true;
+		}
+		else
+		{
+			 return false;
+		}
 	}
 
 
@@ -202,7 +282,16 @@ public function DoesUserAlreadyExist($username, $email)
 	*/
 	public function AssignRole($roleId, $userId)
 	{
-		$this->database->ExecutePreparedStatement("assignaRole", array($roleId, $userId));
+		$result = $this->database->ExecutePreparedStatement("assignaRole", array($roleId, $userId));
+
+		if($result==true && $this->database->GetResultCount($result) == 1)
+		{
+				return true;
+		}
+		else
+		{
+			 return false;
+		}
 	}
 
 
@@ -220,7 +309,15 @@ public function DoesUserAlreadyExist($username, $email)
 	*/
 	public function NewRole($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction)
 	{
-		 $this->database->ExecutePreparedStatement("newRole", array($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction));
+		 $result = $this->database->ExecutePreparedStatement("newRole", array($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction));
+		 if($result==true && $this->database->GetResultCount($result) == 1)
+		 {
+		 		return true;
+		 }
+		 else
+		 {
+		 	 return false;
+		 }
 	}
 
 
@@ -230,7 +327,7 @@ public function DoesUserAlreadyExist($username, $email)
 	*/
 	public function SelectRoleById($roleId)  /*oder: GetRoleInfoById() als anderen Namen?*/
 	{
-		$this->database->ExecutePreparedStatement("selectRole", array($roleId));
+		return $this->database->ExecutePreparedStatement("selectRole", array($roleId));
 	}
 
 
@@ -241,7 +338,7 @@ public function DoesUserAlreadyExist($username, $email)
 	*/
 	public function SelectRoleByRolename($rolename) /*oder: GetRoleInfoByRolename() als anderen Namen?*/
 	{
-		$this->database->ExecutePreparedStatement("selectRoleByRolename", array($rolename));
+		return $this->database->ExecutePreparedStatement("selectRoleByRolename", array($rolename));
 	}
 
 
@@ -259,10 +356,19 @@ public function DoesUserAlreadyExist($username, $email)
 	*/
 	public function UpdateRoleById($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $id)
 	{
-			$this->database->ExecutePreparedStatement("updateRoleById", array($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $id));
+			$return = $this->database->ExecutePreparedStatement("updateRoleById", array($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $id));
+
+			if($result==true && $this->database->GetResultCount($result) == 1)
+			{
+					return true;
+			}
+			else
+			{
+				 return false;
+			}
 	}
 
-	
+
 	/**
 	* UpdateUserDifferentNamesById => @Jonas: vorher: ApplyChangesToUser()
 	* saves role changes
@@ -274,24 +380,33 @@ public function DoesUserAlreadyExist($username, $email)
 	*/
 	public function UpdateUserDifferentNamesById($lastname, $firstname, $username, $email, $id)
 	{
-			$this->database->ExecutePreparedStatement("updateUserDifferentNamesById", array($lastname, $firstname, $username, $email, $id));
+			$return = $this->database->ExecutePreparedStatement("updateUserDifferentNamesById", array($lastname, $firstname, $username, $email, $id));
+
+			if($result==true && $this->database->GetResultCount($result) == 1)
+			{
+					return true;
+			}
+			else
+			{
+				 return false;
+			}
 	}
-	
-	
-	
+
+
+
 	/**
 	* SelectUserByEmail()
 	* @params string $lastname the user's email
 	*/
 	public function SelectUserByEmail($email)
 	{
-			$this->database->ExecutePreparedStatement("selectUserByEmail", array($email));
+			return $this->database->ExecutePreparedStatement("selectUserByEmail", array($email));
 	}
 
 	/* werden heute noch alle kommentiert*/
-	
-	
-	
+
+
+
 	public function SelectAllUsers()
 	{
 		return $this->database->ExecutePreparedStatement("selectAllUsers", array());
@@ -300,25 +415,18 @@ public function DoesUserAlreadyExist($username, $email)
 
 	public function SelectAllRoles()
 	{
-		$result = $this->database->ExecutePreparedStatement("selectAllRoles", array());
-		$allRoles = $this->database->FetchArray($result);
-		return $allRoles;
-
+		return $this->database->ExecutePreparedStatement("selectAllRoles", array());
 	}
 
 	public function SelectAllArticles()
 	{
-		$result = $this->database->ExecutePreparedStatement("selectAllArticles", array());
-		$allArticles = $this->database->FetchArray($result);
-		return $allArticles;
+		return $this->database->ExecutePreparedStatement("selectAllArticles", array());
 	}
 
 
 	public function SelectAllTemplates()
 	{
-		$result = $this->database->ExecutePreparedStatement("selectAllTemplates", array());
-		$allTemplates = $this->database->FetchArray($result);
-		return $allTemplates;
+		return $this->database->ExecutePreparedStatement("selectAllTemplates", array());
 	}
 
 	public function SelectAllPages()
@@ -327,10 +435,10 @@ public function DoesUserAlreadyExist($username, $email)
 	}
 
 
-	
-	
-	
-	
+
+
+
+
 	/*Conny => wichtige Funktionen*/
 	/*
 	CheckIfEmailIsCorrect
@@ -339,11 +447,11 @@ public function DoesUserAlreadyExist($username, $email)
 	DecodePassword
 	*/
 
-	
-	
-	
-	
-	
+
+
+
+
+
 
 	/* ab hier noch die alten => werden noch überarbeitet*/
 
@@ -360,7 +468,7 @@ public function DoesUserAlreadyExist($username, $email)
 			$nameInput = $this->database->RealEscapeString($nameInput);
 
 			//$stmt = $this->database->ExecuteQuery("SELECT password FROM user WHERE email =".$nameInput." OR username =".$nameInput);
-			
+
 			// Fehlende '' eingefügt -> jetzt gibts auch keine Fehler mehr
 			$result = $this->database->ExecuteQuery("SELECT id FROM user WHERE (email ='".$nameInput."' OR username ='".$nameInput."') AND password = '". $password."'");
 
@@ -424,10 +532,10 @@ public function DoesUserAlreadyExist($username, $email)
 	// Jonas: // checkt ob der user mit der userid gesperrt (gebannt) ist und gibt true oder false zurück
 	public function IsUserBanned($userId)
 	{
-		return true/false;
+		return false;
 	}
 
-	
+
 
 	// has to save the changes for the passwords of the user
 	// Jonas
@@ -437,7 +545,7 @@ public function DoesUserAlreadyExist($username, $email)
 	{
 			// check if password correct --> change of password with newPassword else no change
 	}
-	
+
 	public function FetchArray($result)
 	{
 		return $this->database->FetchArray($result);

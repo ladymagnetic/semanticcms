@@ -24,21 +24,24 @@
 	/* Include(s) */
 	require_once 'lib/DbUser.class.php';
 	require_once 'config/config.php';
-	
+
 	/* use namespace(s) */
 	use SemanticCms\DatabaseAbstraction\DbUser;
 	use SemanticCms\config;
-	
+
 	// eigentlich das hier
-	// $database = new DbUser($config['cms_db']['dbhost'],$config['cms_db']['dbuser'],$config['cms_db']['dbpass'],$config['cms_db']['database']);
-	$database = new DbUser($config['cms_db']['dbhost'],$config['cms_db']['dbuser'],$config['cms_db']['dbpass'],'cms-projekt_fiktive_testdaten');
+  $database = new DbUser($config['cms_db']['dbhost'],$config['cms_db']['dbuser'],$config['cms_db']['dbpass'],$config['cms_db']['database']);
+		// $database = new DbUser($config['cms_db']['dbhost'],$config['cms_db']['dbuser'],$config['cms_db']['dbpass'],'cms-projekt_fiktive_testdaten');
 	// hier Logik für logIn rein (Funktionsaufruf LoginUser.php)
 	// an Passwort Hash Denken
 	  $nameInput =  $_POST["username"];
 	  $password = $_POST["password"];
 	  $database->LoginUser($nameInput, $password);
-	  
+
 				// Seitenweiterleitung bei erfolgreichem Login
+// Abfragen wegen get und post => beim ersten Mal Absenden
+// weil beim ersten Mal geht es mit GET drauf und erst beim zweiten Mal mit POST => darum muss man den Fehler abfangen!!!
+
 	?>
 	</body>
 </html>
