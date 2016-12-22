@@ -356,7 +356,7 @@ function check_date($date,$format,$sep)
 	*/
 	public function UpdateRoleById($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $id)
 	{
-			$return = $this->database->ExecutePreparedStatement("updateRoleById", array($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $id));
+			$result = $this->database->ExecutePreparedStatement("updateRoleById", array($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $id));
 
 			if($result==true && $this->database->GetResultCount($result) == 1)
 			{
@@ -380,7 +380,7 @@ function check_date($date,$format,$sep)
 	*/
 	public function UpdateUserDifferentNamesById($lastname, $firstname, $username, $email, $id)
 	{
-			$return = $this->database->ExecutePreparedStatement("updateUserDifferentNamesById", array($lastname, $firstname, $username, $email, $id));
+			$result = $this->database->ExecutePreparedStatement("updateUserDifferentNamesById", array($lastname, $firstname, $username, $email, $id));
 
 			if($result==true && $this->database->GetResultCount($result) == 1)
 			{
