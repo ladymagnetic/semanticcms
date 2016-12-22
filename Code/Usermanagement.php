@@ -26,7 +26,7 @@ else if (isset($_POST['ban'])) {
 }
 else if (isset($_POST['details'])) {
     $userId = $_POST['userId'];
-    EditUser($userId);
+    EditUser($userId, $dbUser);
     // has to return because other page
     return;
 }
@@ -35,13 +35,12 @@ else if (isset($_POST['delete'])) {
     $dbUser->DeleteUser($userId);
 }
 else if (isset($_POST['newUser'])) {
-    CreateNewUser();
+    CreateNewUser($dbUser);
     // has to return because other page
     return;
 }
-else if (isset($_POST['newRole'])) {
-    $roleId = $dbUser->NewRole();   
-    EditRole($roleId);
+else if (isset($_POST['newRole'])) {   
+    CreateNewRole($dbUser);
     // has to return because other page
     return;
 }
@@ -52,11 +51,11 @@ else if (isset($_POST['assignRole'])) {
 }
 else if (isset($_POST['deleteRole'])) {
     $roleId = $_POST['roleId'];
-    $dbUser->DeleteRole($roleId);
+    $dbUser->DeleteRole($roleId, $dbUser);
 }
 else if (isset($_POST['roleDetails'])) {
     $roleId = $_POST['roleId'];
-    $dbUser->EditRole($roleId);
+    EditRole($roleId, $dbUser);
     // has to return because other page
     return;
 }
@@ -100,6 +99,18 @@ else if (isset($_POST['saveRoleChanges']))
     $templateconstruction = $_POST['templateconstruction'];
     $dbUser->UpdateRoleById($roleId, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction);
 }
+else if (isset($_POST['createRole'])) 
+{
+    $rolename = $_POST['rolename'];
+    $guestbookmanagement = $_POST['guestbookmanagement'];
+    $usermanagement = $_POST['usermanagement'];
+    $pagemanagement = $_POST['pagemanagement'];
+    $articlemanagement = $_POST['articlemanagement'];
+    $guestbookusage = $_POST['guestbookusage'];
+    $templateconstruction = $_POST['templateconstruction'];
+    $uri = $_POST['uri'];
+    $dbUser->NewRole($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction);
+}
 
 BackendComponentPrinter::PrintHead("Benutzerverwaltung");
 /* menue */
@@ -118,7 +129,6 @@ echo
         </tr>";
             // foreach user in database print
             $userRows = $dbUser->SelectAllUsers();
-            $roleRows = $dbUser->SelectAllRoles();
             while ($row = $dbUser->FetchArray($userRows))
             {
                 echo 
@@ -142,18 +152,19 @@ echo
                 echo
                     "<input id='userId' name='userId' type='hidden' value='".$row['id']."'></form></td>";
                 echo 
-                    "<td><form action='../lib/BackendComponentPrinter.class.php'> <label>Rolle: <select name='assignedRole'>";
+                    "<td><form action='Usermanagement.php'> <label>Rolle: <select name='assignedRole'>";
+                    $roleRows = $dbUser->SelectAllRoles();
                     while ($rolerow = $dbUser->FetchArray($roleRows))
                     {
                         echo "<option id='".row['id']."'";
-                        if ($rolerow['id'] == $row['role'])
+                        if ($rolerow['id'] == $row['role_id'])
                         {
                             echo " selected ";
                         }
                         echo ">".$rolerow['rolename']."</option>";
                     }
                 echo
-                    "<input id='userId' name='userId' type='hidden' value='".$row['id']."'></select></label></form></td>";
+                    "<input id='userId' name='userId' type='hidden' value='".$row['id']."'></select></label><br><br><input type='submit' value='Zuweisen'></form></td>";
                 echo
                     "<td><form method='post' action='Usermanagement.php'>"
                     ."<input id='details' name='details' type='submit' value='Details'><input id='delete' name='delete' type='submit' value='löschen'>"
@@ -166,7 +177,6 @@ echo
     "</table>
     <form method='post' action='Usermanagement.php'>
         <input id='newUser' name='newUser' type='submit' value='Neuer Benutzer'>
-        <input id='userId' name='userId' type='hidden' value='userId'>
     </form>
     <h2>Rollen definieren</h2>
     <table>
@@ -182,42 +192,45 @@ echo
                 echo "<td>";
                 echo $row['rolename'];
                 echo "</td>";
-                echo "<td><form method='post' action='Usermanagement.php'><input id='roleDetails' name='roleDetails' type='submit' value='Details'><input id='deleteRole' name='deleteRole' type='submit' value='Rolle löschen'></form></td>";
-                echo "<input id='roleId' name='roleId' type='hidden' value='".$row['id']."'>";
+                echo "<td><form method='post' action='Usermanagement.php'><input id='roleDetails' name='roleDetails' type='submit' value='Details'><input id='deleteRole' name='deleteRole' type='submit' value='Rolle löschen'>";
+                echo "<input id='roleId' name='roleId' type='hidden' value='".$row['id']."'></form></td>";
                 echo "</tr>";
                 $row = $dbUser->SelectAllRoles();
             }
 echo
-    "</section>
+    "</table>
+    <form method='post' action='Usermanagement.php'>
+        <input id='newRole' name='newRole' type='submit' value='Neue Rolle'>
+    </form>
+    </section>
     </body>
 
     </html>";
 
 
-function EditUser($userId)
+function EditUser($userId, $dbUser)
 {
-BackendComponentPrinter::PrintHead("Benutzerverwaltung");
-/* menue */
-/* dynamisch erzeugt je nach Rechten */
-BackendComponentPrinter::PrintSidebar(array());// PrintSidebar($_SESSION["permissions"]);
+    BackendComponentPrinter::PrintHead("Benutzerverwaltung");
+    /* menue */
+    /* dynamisch erzeugt je nach Rechten */
+    BackendComponentPrinter::PrintSidebar(array());// PrintSidebar($_SESSION["permissions"]);
     echo
     "<section id='main'>
     <h1>Kontodaten bearbeiten</h1>
         <form method='post' action='Usermanagement.php'>";
-    $dbUser = new DbUser();
-    $userRow = $dbUser->SelectUserById($userId);
+    $userRow = $dbUser->FetchArray($dbUser->GetUserInformationById($userId));
     echo
             "<label for='userName'>Benutzername</label>
-            <input id='userName' name='userName' type='text' value='".$userRow['username']."'>";
+            <input id='userName' name='userName' type='text' value='".$userRow['username']."'><br><br>";
     echo
             "<label for='name'>Name</label>
-            <input id='name' name='name' type='text' value='".$userRow['lastname']."'>";
+            <input id='name' name='name' type='text' value='".$userRow['lastname']."'><br><br>";
     echo    
             "<label for='foreName'>Vorname</label>
-            <input id='foreName' name='foreName' type='text' value='".$userRow['firstname']."'>";
+            <input id='foreName' name='foreName' type='text' value='".$userRow['firstname']."'><br><br>";
     echo
             "<label for='email'>Email</label>
-            <input id='email' name='email' type='text' value='".$userRow['email']."'>";
+            <input id='email' name='email' type='text' value='".$userRow['email']."'><br><br>";
     echo
             "<input id='userId' name='userId' type='hidden' value='".$userId."'>".
             "<input id='applyChanges' name='applyChanges' type='submit' value='Änderungen übernehmen'>";
@@ -227,11 +240,11 @@ BackendComponentPrinter::PrintSidebar(array());// PrintSidebar($_SESSION["permis
         <form method='post' action='../lib/BackendComponentPrinter.class.php'>";
         echo
             "<label for='currentPassword'>aktuelles Passwort</label>
-            <input id='currentPassword' name='currentPassword' type='password'>
+            <input id='currentPassword' name='currentPassword' type='password'><br><br>
             <label for='newPassword'>neues Passwort</label>
-            <input id='newPassword' name='newPassword' type='password'>
+            <input id='newPassword' name='newPassword' type='password'><br><br>
             <label for='newPasswordRepeat'>neues Passwort bestätigen</label>
-            <input id='newPasswordRepeat' name='newPasswordRepeat' type='password'>
+            <input id='newPasswordRepeat' name='newPasswordRepeat' type='password'><br><br>
             <input id='userId' name='userId' type='hidden' value='".$userId."'>".
             "<input id='applyPasswordChanges' name='applyPasswordChanges' type='submit' value='Passwort übernehmen'>";
         echo
@@ -241,89 +254,123 @@ BackendComponentPrinter::PrintSidebar(array());// PrintSidebar($_SESSION["permis
 
     </html>";
 }
-function EditRole($roleId)
+function EditRole($roleId, $dbUser)
 {
-
-BackendComponentPrinter::PrintHead("Benutzerverwaltung");
-/* menue */
-/* dynamisch erzeugt je nach Rechten */
-BackendComponentPrinter::PrintSidebar(array());// PrintSidebar($_SESSION["permissions"]);
+    BackendComponentPrinter::PrintHead("Benutzerverwaltung");
+    /* menue */
+    /* dynamisch erzeugt je nach Rechten */
+    BackendComponentPrinter::PrintSidebar(array());// PrintSidebar($_SESSION["permissions"]);
     
     echo
     "<section id='main'>
     <h1>Rolle bearbeiten</h1>";
-    $dbUser = new DbUser();
-    $roleRow = $dbUser->SelectRoleById($roleId);
+    $roleRow = $dbUser->FetchArray($dbUser->SelectRoleById($roleId));
     echo
             "<form method='post' action='Usermanagement.php'>".
             "<input id='userId' name='userId' type='hidden' value='".$roleId."'>".
-            "<label for='roleName'>Benutzername</label>
-            <input id='roleName' name='roleName' type='checkbox' value='".$roleRow['rolename']."'>";
+            "<label for='roleName'>Rollenname</label>
+            <input id='roleName' name='roleName' type='checkbox' value='".$roleRow['rolename']."'><br><br>";
     echo
-            "<label for='uri'>Name</label>
-            <input id='uri' name='uri' type='checkbox' value='".$roleRow['uri']."'>";
+            "<label for='uri'>Uri</label>
+            <input id='uri' name='uri' type='checkbox' value='".$roleRow['uri']."'><br><br>";
     echo    
-            "<label for='guestbookmanagement'>Vorname</label>
-            <input id='guestbookmanagement' name='guestbookmanagement' type='checkbox' value='".$roleRow['guestbookmanagement']."'>";
+            "<label for='guestbookmanagement'>Gästebuch verwalten</label>
+            <input id='guestbookmanagement' name='guestbookmanagement' type='checkbox' value='".$roleRow['guestbookmanagement']."'><br><br>";
     echo
-            "<label for='usermanagement'>Email</label>
-            <input id='usermanagement' name='usermanagement' type='checkbox' value='".$roleRow['usermanagement']."'>";
+            "<label for='usermanagement'>Benutzer verwalten</label>
+            <input id='usermanagement' name='usermanagement' type='checkbox' value='".$roleRow['usermanagement']."'><br><br>";
     echo
-            "<label for='pagemanagement'>Email</label>".
-            "<input id='pagemanagement' name='pagemanagement' type='checkbox' value='".$roleRow['pagemanagement']."'>";
+            "<label for='pagemanagement'>Seiten verwalten</label>".
+            "<input id='pagemanagement' name='pagemanagement' type='checkbox' value='".$roleRow['pagemanagement']."'><br><br>";
     echo
-            "<label for='articlemanagement'>Email</label>".
-            "<input id='articlemanagement' name='articlemanagement' type='checkbox' value='".$roleRow['articlemanagement']."'>";
+            "<label for='articlemanagement'>Artikel verwalten</label>".
+            "<input id='articlemanagement' name='articlemanagement' type='checkbox' value='".$roleRow['articlemanagement']."'><br><br>";
     echo
-            "<label for='guestbookusage'>Email</label>".
-            "<input id='guestbookusage' name='guestbookusage' type='checkbox' value='".$roleRow['guestbookusage']."'>";
+            "<label for='guestbookusage'>Gästebuch nutzen</label>".
+            "<input id='guestbookusage' name='guestbookusage' type='checkbox' value='".$roleRow['guestbookusage']."'><br><br>";
     echo
-            "<label for='templateconstruction'>Email</label>".
-            "<input id='templateconstruction' name='templateconstruction' type='checkbox' value='".$roleRow['templateconstruction']."'>".
+            "<label for='templateconstruction'>Template erstellen</label>".
+            "<input id='templateconstruction' name='templateconstruction' type='checkbox' value='".$roleRow['templateconstruction']."'><br><br>".
             "<input id='saveRoleChanges' name='saveRoleChanges' type='submit' value'Rollenänderung speichern'></form>";
 }
-function CreateNewUser()
+function CreateNewUser($dbUser)
 {
-BackendComponentPrinter::PrintHead("Benutzerverwaltung");
-/* menue */
-/* dynamisch erzeugt je nach Rechten */
-BackendComponentPrinter::PrintSidebar(array());// PrintSidebar($_SESSION["permissions"]);
+    BackendComponentPrinter::PrintHead("Benutzerverwaltung");
+    /* menue */
+    /* dynamisch erzeugt je nach Rechten */
+    BackendComponentPrinter::PrintSidebar(array());// PrintSidebar($_SESSION["permissions"]);
     echo
     "<section id='main'>
     <h1>Neuer Benutzer</h1>
         <form method='post' action='Usermanagement.php'>";
     echo
             "<label for='userName'>Benutzername</label>
-            <input id='userName' name='userName' type='text'>";
+            <input id='userName' name='userName' type='text'><br><br>";
     echo
             "<label for='name'>Name</label>
-            <input id='name' name='name' type='text'>";
+            <input id='name' name='name' type='text'><br><br>";
     echo    
             "<label for='foreName'>Vorname</label>
-            <input id='foreName' name='foreName' type='text'>";
+            <input id='foreName' name='foreName' type='text'><br><br>";
     echo
             "<label for='email'>Email</label>
-            <input id='email' name='email' type='text'>";
+            <input id='email' name='email' type='text'><br><br>";
             "<label for='currentPassword'>aktuelles Passwort</label>
-            <input id='currentPassword' name='currentPassword' type='password'>";
-    $dbUser = new DbUser();
+            <input id='currentPassword' name='currentPassword' type='password'><br><br>";
     echo
             "<label>Rolle: <select name='role'>";
     $roleRows = $dbUser->SelectAllRoles();
     while ($rolerow = $dbUser->FetchArray($roleRows))
     {
         echo "<option id='".row['id']."'";
-        echo ">".$rolerow['rolename']."</option>"; 
-        $rolerow = $dbUser->SelectAllRoles();
+        echo ">".$rolerow['rolename']."</option>";
     }
     echo
-            "</select></label>";
+            "</select></label><br><br>";
     echo
-            "<input type='date' name='birthdate' id='birthdate'>";
+            "<label for='birthdate'>Geburtsdatum</label>
+            <input type='date' name='birthdate' id='birthdate'><br><br>";
     echo
             "<input id='registrateUser' name='registrateUser' type='submit' value='Anwender erstellen'>";
 
     echo
         "</form></section></body></html>";
+}
+function CreateNewRole($dbUser)
+{
+    BackendComponentPrinter::PrintHead("Benutzerverwaltung");
+    /* menue */
+    /* dynamisch erzeugt je nach Rechten */
+    BackendComponentPrinter::PrintSidebar(array());// PrintSidebar($_SESSION["permissions"]);
+    
+    echo
+    "<section id='main'>
+    <h1>Rolle bearbeiten</h1>";
+    echo
+            "<form method='post' action='Usermanagement.php'>".
+            "<label for='roleName'>Rollenname</label>
+            <input id='roleName' name='roleName' type='checkbox'><br><br>";
+    echo
+            "<label for='uri'>Uri</label>
+            <input id='uri' name='uri' type='checkbox'><br><br>";
+    echo    
+            "<label for='guestbookmanagement'>Gästebuch verwalten</label>
+            <input id='guestbookmanagement' name='guestbookmanagement' type='checkbox'><br><br>";
+    echo
+            "<label for='usermanagement'>Benutzer verwalten</label>
+            <input id='usermanagement' name='usermanagement' type='checkbox'><br><br>";
+    echo
+            "<label for='pagemanagement'>Seiten verwalten</label>".
+            "<input id='pagemanagement' name='pagemanagement' type='checkbox'><br><br>";
+    echo
+            "<label for='articlemanagement'>Artikel verwalten</label>".
+            "<input id='articlemanagement' name='articlemanagement' type='checkbox'><br><br>";
+    echo
+            "<label for='guestbookusage'>Gästebuch nutzen</label>".
+            "<input id='guestbookusage' name='guestbookusage' type='checkbox'><br><br>";
+    echo
+            "<label for='templateconstruction'>Template erstellen</label>".
+            "<input id='templateconstruction' name='templateconstruction' type='checkbox'><br><br>".
+            "<input id='createRole' name='createRole' type='submit' value'Rolle erstellen'></form>";
 }
 ?>
