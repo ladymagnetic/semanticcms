@@ -8,7 +8,7 @@
 		/* use namespace(s) */
 		use SemanticCms\ComponentPrinter\BackendComponentPrinter;
 		
-		BackendComponentPrinter::printHead("Beispiel-Seite");
+		BackendComponentPrinter::PrintHead("Beispiel-Seite");
 	?>
 <body>
 	<div> 
@@ -31,7 +31,7 @@
 	// TRELLO-KARTE BEACHTEN!!!! Da steht dann wie wir es genau machen wollen
 	// Setzen: z.B. $_SESSION["permissions"] = Array(Permission::Guestbookusage,Permission::Articlemanagment, Permission::Pagemanagment, Permission::Usermanagment);
 	// Auslesen: z.B. printSidebar($_SESSION["permissions"])											
-	BackendComponentPrinter::printSidebar(Array(Permission::Guestbookusage,
+	BackendComponentPrinter::PrintSidebar(Array(Permission::Guestbookusage,
 												Permission::Articlemanagment, 
 												Permission::Pagemanagment, 
 												Permission::Usermanagment));

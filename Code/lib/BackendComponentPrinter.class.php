@@ -71,7 +71,7 @@ class BackendComponentPrinter
     * corresponding permission.
 	* @params array $permissions The permissions of the currently logged in user.
 	*/
-    public static function printSidebar(array $permissions)
+    public static function PrintSidebar(array $permissions)
     {
         echo
         "<nav id=\"menue\">
@@ -101,7 +101,7 @@ class BackendComponentPrinter
      * @param $title The head title
      * @param $jquery true if jquery used otherwise false
      */
-    public static function printHead($title, $jquery)
+    public static function PrintHead($title, $jquery=false)
     {
         // RDF-Tags oder schema.org oder so mit einfuegen => dazu steht unter Allgemeines/SemanticWeb/ was
          echo
