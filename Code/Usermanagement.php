@@ -89,15 +89,58 @@ else if (isset($_POST['registrateUser']))
 }
 else if (isset($_POST['saveRoleChanges'])) 
 {
-    $roleId = $_POST['roleId'];
-    $rolename = $_POST['rolename'];
-    $guestbookmanagement = $_POST['guestbookmanagement'];
-    $usermanagement = $_POST['usermanagement'];
-    $pagemanagement = $_POST['pagemanagement'];
-    $articlemanagement = $_POST['articlemanagement'];
-    $guestbookusage = $_POST['guestbookusage'];
-    $templateconstruction = $_POST['templateconstruction'];
-    $dbUser->UpdateRoleById($roleId, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction);
+    $id = $_POST['roleId'];
+    $rolename = $_POST['roleName'];
+    $uri = $_POST['uri'];
+    if (isset($_POST['guestbookmanagement']))
+    {
+        $guestbookmanagement = 1;
+    }
+    else 
+    {
+        $guestbookmanagement = 0;
+    }
+    if (isset($_POST['usermanagement']))
+    {
+        $usermanagement = 1;
+    }
+    else 
+    {
+        $usermanagement = 0;
+    }
+    if (isset($_POST['pagemanagement']))
+    {
+        $pagemanagement = 1;
+    }
+    else 
+    {
+        $pagemanagement = 0;
+    }
+    if (isset($_POST['articlemanagement']))
+    {
+        $articlemanagement = 1;
+    }
+    else 
+    {
+        $articlemanagement = 0;
+    }
+    if (isset($_POST['guestbookusage']))
+    {
+        $guestbookusage = 1;
+    }
+    else 
+    {
+        $guestbookusage = 0;
+    }
+    if (isset($_POST['templateconstruction']))
+    {
+        $templateconstruction = 1;
+    }
+    else 
+    {
+        $templateconstruction = 0;
+    }
+    $dbUser->UpdateRoleById($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $id);
 }
 else if (isset($_POST['createRole'])) 
 {
@@ -309,7 +352,7 @@ function EditRole($roleId, $dbUser)
     $roleRow = $dbUser->FetchArray($dbUser->SelectRoleById($roleId));
     echo
             "<form method='post' action='Usermanagement.php'>".
-            "<input id='userId' name='userId' type='hidden' value='".$roleId."'>".
+            "<input id='roleId' name='roleId' type='hidden' value='".$roleId."'>".
             "<label for='roleName'>Rollenname</label>
             <input id='roleName' name='roleName' type='text' value='".$roleRow['rolename']."'><br><br>";
     echo
@@ -393,6 +436,7 @@ function CreateNewUser($dbUser)
     echo
             "<label for='email'>Email</label>
             <input id='email' name='email' type='text'><br><br>";
+    echo
             "<label for='currentPassword'>aktuelles Passwort</label>
             <input id='currentPassword' name='currentPassword' type='password'><br><br>";
     echo
@@ -400,7 +444,7 @@ function CreateNewUser($dbUser)
     $roleRows = $dbUser->SelectAllRoles();
     while ($rolerow = $dbUser->FetchArray($roleRows))
     {
-        echo "<option id='".row['id']."'";
+        echo "<option id='".$rolerow['id']."'";
         echo ">".$rolerow['rolename']."</option>";
     }
     echo
