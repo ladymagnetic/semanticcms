@@ -117,13 +117,15 @@ echo
             <th>Aktion</th>
         </tr>";
             // foreach user in database print
-            $row = $dbUser->SelectAllUsers();
-            while ( $row != null)
-
+            $userRows = $dbUser->SelectAllUsers();
+            $roleRows = $dbUser->SelectAllUsers();
+            while ($row = $dbUser->FetchArray($userRows))
+            {
                 echo 
                 "<tr>".$row['firstname']." ".$row['lastname']."<td>";
 
                 // if user is banned/debanned
+                /*
                 $debanned = $dbUser->IsUserBanned($row['id']);
                 if ($debanned)
                 {
@@ -137,12 +139,12 @@ echo
                     <form method='post' action='Usermanagement.php'>
                     <input id='ban' name='ban' type='submit' value='sperren'>";
                 }
+                */
                 echo
                     "<input id='userId' name='userId' type='hidden' value='".$row['id']."'></form></td>";
                 echo 
                     "<td><form action='../lib/BackendComponentPrinter.class.php'> <label>Rolle: <select name='assignedRole'>";
-                    $rolerow = $dbUser->SelectAllRoles();
-                    while ( $row != null)
+                    while ($rolerow = $dbUser->FetchArray($roleRows))
                     {
                         echo "<option id='".row['id']."'";
                         if ($rolerow['id'] == $row['role'])
@@ -150,7 +152,6 @@ echo
                             echo " selected ";
                         }
                         echo ">".$rolerow['rolename']."</option>";
-                        $rolerow = $dbUser->SelectAllRoles();
                     }
                 echo
                     "<input id='userId' name='userId' type='hidden' value='".$row['id']."'></select></label></form></td>";
@@ -163,7 +164,6 @@ echo
                     ."</form></td>";
                 echo 
                     "</tr>";
-                $row = $dbUser->SelectAllUsers();
             }
 echo
     "</table>
@@ -178,8 +178,8 @@ echo
             <th>Aktion</th>
         </tr>";
             // foreach role in database print
-            $row = $dbUser->SelectAllRoles();
-            while ($row != null)
+            $roleRows = $dbUser->SelectAllRoles();
+            while ($row = $dbUser->FetchArray($roleRows))
             {
                 echo "<tr>";
                 echo "<td>";
@@ -312,8 +312,8 @@ BackendComponentPrinter::PrintSidebar(array());// PrintSidebar($_SESSION["permis
     $dbUser = new DbUser();
     echo
             "<label>Rolle: <select name='role'>";
-    $rolerow = $dbUser->SelectAllRoles();
-    while ($rolerow != null)
+    $roleRows = $dbUser->SelectAllRoles();
+    while ($rolerow = $dbUser->FetchArray($roleRows))
     {
         echo "<option id='".row['id']."'";
         echo ">".$rolerow['rolename']."</option>"; 
