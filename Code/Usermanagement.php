@@ -269,28 +269,64 @@ function EditRole($roleId, $dbUser)
             "<form method='post' action='Usermanagement.php'>".
             "<input id='userId' name='userId' type='hidden' value='".$roleId."'>".
             "<label for='roleName'>Rollenname</label>
-            <input id='roleName' name='roleName' type='checkbox' value='".$roleRow['rolename']."'><br><br>";
+            <input id='roleName' name='roleName' type='text' value='".$roleRow['rolename']."'><br><br>";
     echo
             "<label for='uri'>Uri</label>
-            <input id='uri' name='uri' type='checkbox' value='".$roleRow['uri']."'><br><br>";
+            <input id='uri' name='uri' type='text' value='".$roleRow['uri']."'><br><br>";
     echo    
             "<label for='guestbookmanagement'>Gästebuch verwalten</label>
-            <input id='guestbookmanagement' name='guestbookmanagement' type='checkbox' value='".$roleRow['guestbookmanagement']."'><br><br>";
+            <input id='guestbookmanagement' name='guestbookmanagement' type='checkbox'";
+            if (boolval($roleRow['guestbookmanagement']))
+            {
+                echo " checked";
+            }
+            echo
+            " value='".$roleRow['guestbookmanagement']."'><br><br>";
     echo
             "<label for='usermanagement'>Benutzer verwalten</label>
-            <input id='usermanagement' name='usermanagement' type='checkbox' value='".$roleRow['usermanagement']."'><br><br>";
+            <input id='usermanagement' name='usermanagement' type='checkbox'";
+            if (boolval($roleRow['usermanagement']))
+            {
+                echo " checked";
+            }
+            echo
+            " value='".$roleRow['usermanagement']."'><br><br>";
     echo
             "<label for='pagemanagement'>Seiten verwalten</label>".
-            "<input id='pagemanagement' name='pagemanagement' type='checkbox' value='".$roleRow['pagemanagement']."'><br><br>";
+            "<input id='pagemanagement' name='pagemanagement' type='checkbox'";
+            if (boolval($roleRow['pagemanagement']))
+            {
+                echo " checked";
+            }
+            echo
+            " value='".$roleRow['pagemanagement']."'><br><br>";
     echo
             "<label for='articlemanagement'>Artikel verwalten</label>".
-            "<input id='articlemanagement' name='articlemanagement' type='checkbox' value='".$roleRow['articlemanagement']."'><br><br>";
+            "<input id='articlemanagement' name='articlemanagement' type='checkbox'"; 
+            if (boolval($roleRow['articlemanagement']))
+            {
+                echo " checked";
+            }
+            echo
+            " value='".$roleRow['articlemanagement']."'><br><br>";
     echo
             "<label for='guestbookusage'>Gästebuch nutzen</label>".
-            "<input id='guestbookusage' name='guestbookusage' type='checkbox' value='".$roleRow['guestbookusage']."'><br><br>";
+            "<input id='guestbookusage' name='guestbookusage' type='checkbox'";
+            if (boolval($roleRow['guestbookusage']))
+            {
+                echo " checked";
+            }
+            echo
+            " value='".$roleRow['guestbookusage']."'><br><br>";
     echo
             "<label for='templateconstruction'>Template erstellen</label>".
-            "<input id='templateconstruction' name='templateconstruction' type='checkbox' value='".$roleRow['templateconstruction']."'><br><br>".
+            "<input id='templateconstruction' name='templateconstruction' type='checkbox'";
+            if (boolval($roleRow['templateconstruction']))
+            {
+                echo " checked";
+            }
+            echo
+            " value='".$roleRow['templateconstruction']."'><br><br>".
             "<input id='saveRoleChanges' name='saveRoleChanges' type='submit' value'Rollenänderung speichern'></form>";
 }
 function CreateNewUser($dbUser)
@@ -349,7 +385,7 @@ function CreateNewRole($dbUser)
     echo
             "<form method='post' action='Usermanagement.php'>".
             "<label for='roleName'>Rollenname</label>
-            <input id='roleName' name='roleName' type='checkbox'><br><br>";
+            <input id='roleName' name='roleName' type='text'><br><br>";
     echo
             "<label for='uri'>Uri</label>
             <input id='uri' name='uri' type='checkbox'><br><br>";
