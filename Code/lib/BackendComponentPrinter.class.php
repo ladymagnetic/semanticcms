@@ -111,7 +111,7 @@ class BackendComponentPrinter
              <title>'.$title.'</title>
              <link rel="stylesheet" href="media/backend.css">
              <link rel="stylesheet" href="media/font-awesome/css/font-awesome.min.css">';
-		 if($jquery) echo '<script src="media/jquery-3.1.1.slim.min.js"/>';
+		 if($jquery) echo '<script src="media/jquery-3.1.1.slim.min.js"> </script>';
          echo '</head>';
     }
 
