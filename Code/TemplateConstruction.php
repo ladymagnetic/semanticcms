@@ -16,9 +16,25 @@
 <body>
 
   <script>
-    $(".Color").on("click", function(){
+
+    $(function() {
+      $(".Colorpicker").hide();
+      $(".PictureUpload").hide();
+    });
+
+    function onColorPicker()
+    {
       $(".Colorpicker").show();
-    })
+      $(".PictureUpload").hide();
+    }
+
+    function onPictureUpload()
+    {
+      $(".PictureUpload").show();
+      $(".Colorpicker").hide();
+    }
+
+
   </script>
 
 <!-- menue -->
@@ -65,15 +81,22 @@ if(isset($_POST['save'])) {
 
     <label>Hoehe: <input type="number" min="10" max="25" name="Height"><label>%</label></label><br><br>
     <label>Hintergrund:
-      <input class="Color" type="radio" name="Background" value="Color">
-      <label for="Color"> Farbe</label>
-      <!--<div class="Colorpicker" style="display: none">
+      <div class="Color">
+        <input type="radio" name="Background" value="Color" onclick="onColorPicker()">
+        <label for="Color"> Farbe</label>
+      </div>
+      <div class="Colorpicker" >
         <input type="color" name="Backgroundcolor" value="#000000">
       </div>
-      <input type="radio" name="Background" value="Picture">
-      <label for="Picture"> Bild</label>
+      <div class="Picture">
+        <input type="radio" name="Background" value="Picture" onclick="onPictureUpload()">
+        <label for="Picture"> Bild</label>
+      </div>
+      <div class="PictureUpload">
+        <input type="file" name="Backgroundpicture">
+      </div>
 
-    </label><br><br>-->
+    </label><br><br>
     <label>Schriftart:
       <?php
         //BackendComponentPrinter::printFonts();
