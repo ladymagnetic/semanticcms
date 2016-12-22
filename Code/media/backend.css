@@ -1,15 +1,15 @@
 /*----- Body -----*/
-body, html 
+body, html
 {
     margin: 0px;
     padding: 0px;
-    font-family: Arial,Helvetica Neue,Helvetica, sans-serif; 
+    font-family: Arial,Helvetica Neue,Helvetica, sans-serif;
     background-color:floralwhite;
 }
 
 /*----- Menue -----*/
 nav
-{    
+{
   margin: 0;
   padding: 0;
   margin-right: 10px;
@@ -21,7 +21,7 @@ nav
   background-color:darkseagreen;
 }
 
-#logo 
+#logo
 {
     background-image: url('Logo.svg');
     background-size: cover;
@@ -68,7 +68,7 @@ nav
 }
 
 .contentMenue {
-    
+
 }
 
 /*----- Content -----*/
@@ -81,17 +81,17 @@ section#main
 }
 
 /*----- Table -----*/
-table 
+table
 {
     border-collapse:separate;
     width: 100%;
 }
 
-table, th, td 
+table, th, td
 {
 }
 
-th 
+th
 {
     text-align: left;
     padding:15px;
@@ -134,7 +134,7 @@ td {
 }
 
 /*----- Button ----->*/
-input[type=button] 
+input[type=button]
 {
     background-color: #4CAF50;
     border: none;
@@ -146,13 +146,30 @@ input[type=button]
     font-size: 16px;
 }
 
-input[type=button]:hover 
+input[type=button]:hover
+{
+    background-color:darkgreen;
+}
+
+input[type=submit]
+{
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+input[type=submit]:hover 
 {
     background-color:darkgreen;
 }
 
 /*----- font-awesome ----->*/
-.fa.fontawesome 
+.fa.fontawesome
 {
     font-size: 40px;
 }
