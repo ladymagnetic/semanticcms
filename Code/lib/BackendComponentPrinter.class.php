@@ -43,28 +43,6 @@ class BackendComponentPrinter
 	 // echo "</section>";
 	// }
 
-	/**
-	* Start the quarantine table and print table head
-	* BEISPIEL AUCH HIER!!!!!!
-	* @params string $search search result to display
-	*/
-	public static function start_table($search="")
-	{
-		echo "<section id=\"mailtable\">";
-		echo "<p>".$search."</p>";
-		echo "<table id=\"quar_table\"class=\"sortierbar\">
-			<thead>
-				<tr>
-					<th id=\"qcont\" class=\"b_bott sortierbar\">Inhalt</th>
-					<th id=\"qscore\" class=\"b_bott b_left sortierbar\">Score</th>
-					<th id=\"qfrom\" class=\"b_bott b_left sortierbar\">Von</th>
-					<th id=\"qto\" class=\"b_bott b_left sortierbar\">An</th>
-					<th id=\"qsubj\" class=\"b_bott b_left sortierbar\">Betreff</th>
-					<th id=\"qdate\" class=\"b_bott b_left sortierbar\">Datum</th>
-					<th id=\"qfree\" class=\"b_bott b_left\"></th>
-				</tr>
-			</thead>";
-	}
 
 	/**
 	* Prints the sidebar navigation menu. Menu items will not be displayed if the user does not have the
@@ -115,55 +93,84 @@ class BackendComponentPrinter
          echo '</head>';
     }
 
-	// /**
-	// * Prints a table row with the given values to quarantine table
-	// * @params array $values Values to print to the table (Please use the following keys: content, score, from, to, sub, date and id!)
-	// * @result status 0 (error) / 1 (success)
-	// */
-	// public static function print_table_row(array $values)
-	// {
-		// // is $valus an array?
-		// if(!is_array($values)) { return 0; }
-		// // does $values have the key and values[key] is not set to NULL?
-		// if(!(      isset($values['content'])
-			// && isset($values['score'])
-			// && isset($values['from'])
-			// && isset($values['to'])
-			// && isset($values['sub'])
-			// && isset($values['date'])
-			// && isset($values['id'])
-		  // )) { return 0; }
+    /**
+     * Prints the beginning of a table including the header
+     * @param array $headerValues The values of the table header
+     */
+    public static function PrintTableStart(array $headerValues)
+    {
+        echo "<table>
+                <thead>
+                    <tr>";
 
-		// // convert date into day-month-year hour-minute-second format
-		// $date = strftime('%d.%m.%Y %H:%M:%S', $values['date']);
+        foreach ($headerValues as $headerValue) {
+            echo "<th>$headerValue</th>";
+        }
 
-		// // print table row
-		// echo "<tr ".parent::get_content_col_class($values['content'])." >";
-			// echo "<td class=\"b_above\"><a href=\"header.php?id=".$values['id']."\" title=\"Header dieser Email anzeigen.\">".parent::get_content_readable($values['content']). "</a></td>";
-			// echo "<td class=\"b_above b_left\">".$values['score']. "</td>";
-			// echo "<td class=\"b_above b_left\">".htmlspecialchars($values['from']). "</td>";
-			// echo "<td class=\"b_above b_left\">".htmlspecialchars($values['to']). "</td>";
-			// echo "<td class=\"b_above b_left\"><a href=\"header.php?id=".$values['id']."\" title=\"Header dieser Email anzeigen.\">".htmlspecialchars($values['sub']). "</a></td>";
-			// echo "<td class=\"b_above b_left\">".$date."</td>";
-			// echo "<td class=\"b_above b_left\">";
-				// echo "<button class=\"btn\" title=\"Diese E-Mail freigeben.\" form=\"rel\" type=\"submit\" name=\"release\" value=\"".$values['id'].":".$values['to']."\">Freigeben</button>";
-			// echo "</td>";
-		// echo "</tr>";
+        echo    "</tr>
+               </thead>
+               <tbody>";
+    }
 
-		// return 1;
-	// }
+    /**
+     * Prints a row to the table body
+     * @param array $values The values of the table row
+     */
+    public static function PrintTableRow(array $values)
+    {
+        echo "<tr>";
+        foreach ($values as $value) {
+            echo "<td>$value</td>";
+        }
+        echo "</tr>";
+    }
 
-	/**
-	* Ends the table and prints invisible form with given action.
-	* BEISPIEL BITTE WIEDER LÖSCHEN WENN NICHT GEBRAUCHT
-	* @params string $action action to be performed by the <form>
-	*/
-	public static function end_table($action)
-	{
-		echo "</table>";
-		echo "<form id=\"rel\" method=\"post\" action=\"".$action."\"></form>";
-		echo "</section>";
-	}
+    /**
+     * Prints the end of a table
+     */
+    public static function PrintTableEnd()
+    {
+        echo "</tbody>
+            </table>";
+    }
+
+    // /**
+    // * Prints a table row with the given values to quarantine table
+    // * @params array $values Values to print to the table (Please use the following keys: content, score, from, to, sub, date and id!)
+    // * @result status 0 (error) / 1 (success)
+    // */
+    // public static function print_table_row(array $values)
+    // {
+    // // is $valus an array?
+    // if(!is_array($values)) { return 0; }
+    // // does $values have the key and values[key] is not set to NULL?
+    // if(!(      isset($values['content'])
+    // && isset($values['score'])
+    // && isset($values['from'])
+    // && isset($values['to'])
+    // && isset($values['sub'])
+    // && isset($values['date'])
+    // && isset($values['id'])
+    // )) { return 0; }
+
+    // // convert date into day-month-year hour-minute-second format
+    // $date = strftime('%d.%m.%Y %H:%M:%S', $values['date']);
+
+    // // print table row
+    // echo "<tr ".parent::get_content_col_class($values['content'])." >";
+    // echo "<td class=\"b_above\"><a href=\"header.php?id=".$values['id']."\" title=\"Header dieser Email anzeigen.\">".parent::get_content_readable($values['content']). "</a></td>";
+    // echo "<td class=\"b_above b_left\">".$values['score']. "</td>";
+    // echo "<td class=\"b_above b_left\">".htmlspecialchars($values['from']). "</td>";
+    // echo "<td class=\"b_above b_left\">".htmlspecialchars($values['to']). "</td>";
+    // echo "<td class=\"b_above b_left\"><a href=\"header.php?id=".$values['id']."\" title=\"Header dieser Email anzeigen.\">".htmlspecialchars($values['sub']). "</a></td>";
+    // echo "<td class=\"b_above b_left\">".$date."</td>";
+    // echo "<td class=\"b_above b_left\">";
+    // echo "<button class=\"btn\" title=\"Diese E-Mail freigeben.\" form=\"rel\" type=\"submit\" name=\"release\" value=\"".$values['id'].":".$values['to']."\">Freigeben</button>";
+    // echo "</td>";
+    // echo "</tr>";
+
+    // return 1;
+    // }
 
     /**
      * Prints a dropdown list together with a label
