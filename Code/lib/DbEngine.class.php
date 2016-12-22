@@ -74,22 +74,28 @@ class DbEngine
 		$using = "";
 		$counter = 0;
 		
-		foreach($values as $val)
+		if(!empty($values))
 		{
-			// generates a variable name for sql
-			$varname = "@value_".$counter;
-			
-			$set = $varname." = ";			
-			//sets variable in SQL
-			if(is_string($val)) { $set .= "'".$val."'"; }
-			else { $set .= "".$val;}
-			//sets variable in SQL
-			$this->ExecuteQuery("SET ".$set);
-			
-			$using .= " ".$varname." ";
+			// USING necessary
+			$using = " USING ";
+
+			foreach($values as $val)
+			{
+				// generates a variable name for sql
+				$varname = "@value_".$counter;
+				
+				$set = $varname." = ";			
+				//sets variable in SQL
+				if(is_string($val)) { $set .= "'".$val."'"; }
+				else { $set .= "".$val;}
+				//sets variable in SQL
+				$this->ExecuteQuery("SET ".$set);
+				
+				$using .= " ".$varname." ";
+			}
 		}
-			
-		$stmt = "EXECUTE ".$this->RealEscapeString($name)." USING ".$using.";";
+					
+		$stmt = "EXECUTE ".$this->RealEscapeString($name).$using.";";
 		
 		return $this->ExecuteQuery($stmt);
 	}
@@ -155,6 +161,5 @@ class DbEngine
 	{
 		return "DB-Fehler: ". mysqli_error($this->conn);
 	}
-
 }
 ?>

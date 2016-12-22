@@ -294,9 +294,7 @@ public function DoesUserAlreadyExist($username, $email)
 	
 	public function SelectAllUsers()
 	{
-		$result = $this->database->ExecutePreparedStatement("selectAllUsers", array());
-		$allUsers = $this->database->FetchArray($result);
-		return $allUsers;
+		return $this->database->ExecutePreparedStatement("selectAllUsers", array());
 	}
 
 
@@ -325,9 +323,7 @@ public function DoesUserAlreadyExist($username, $email)
 
 	public function SelectAllPages()
 	{
-		$result = $this->database->ExecutePreparedStatement("selectAllPages", array());
-		$allPages = $this->database->FetchArray($result);
-		return $allPages;
+		return $this->database->ExecutePreparedStatement("selectAllPages", array());
 	}
 
 
@@ -440,6 +436,16 @@ public function DoesUserAlreadyExist($username, $email)
 	public function ApplyPasswordChangesToUser($userId, $password, $newPassword, $newPasswordRepeat)
 	{
 			// check if password correct --> change of password with newPassword else no change
+	}
+	
+	public function FetchArray($result)
+	{
+		return $this->database->FetchArray($result);
+	}
+
+	public function GetResultCount($result)
+	{
+		return  $this->database->GetResultCount($result);
 	}
 }
 ?>
