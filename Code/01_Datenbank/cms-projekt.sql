@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 22. Dez 2016 um 21:55
+-- Erstellungszeit: 22. Dez 2016 um 23:04
 -- Server-Version: 10.1.16-MariaDB
 -- PHP-Version: 5.6.24
 
@@ -75,15 +75,15 @@ CREATE TABLE `ban` (
   `user_id` int(11) NOT NULL,
   `reason_id` int(11) NOT NULL,
   `description` text NOT NULL,
-  `begin` datetime NOT NULL,
-  `end` datetime NOT NULL
+  `begindatetime` datetime NOT NULL,
+  `enddatetime` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Daten für Tabelle `ban`
 --
 
-INSERT INTO `ban` (`id`, `user_id`, `reason_id`, `description`, `begin`, `end`) VALUES
+INSERT INTO `ban` (`id`, `user_id`, `reason_id`, `description`, `begindatetime`, `enddatetime`) VALUES
 (1, 3, 5, 'Lästig', '2016-12-22 21:48:50', '2016-12-22 21:48:50'),
 (2, 8, 6, 'Lästig', '2016-12-11 21:48:50', '2016-12-31 21:48:50'),
 (3, 8, 5, 'Sonstiges', '2016-08-16 21:48:50', '2016-12-16 21:48:50'),
