@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 22. Dez 2016 um 12:58
+-- Erstellungszeit: 22. Dez 2016 um 21:55
 -- Server-Version: 10.1.16-MariaDB
 -- PHP-Version: 5.6.24
 
@@ -48,6 +48,22 @@ CREATE TABLE `article` (
   `description` varchar(500) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Daten für Tabelle `article`
+--
+
+INSERT INTO `article` (`id`, `header`, `content`, `date`, `page_id`, `author`, `type`, `public`, `description`) VALUES
+(1, 'Schaufel - eine lange Geschichte', 'Eine Schaufel (ahd. Scuvala; mhd. Schuvel), umgangssprachlich in Nord- und Mitteldeutschland auch Schippe oder Schüppe, im Rheinland auch Schöppe, ist ein Werkzeug zum Aufnehmen und Fortschaffen von Lockermaterialien (beispielsweise Erde, Sand oder Schüttgut). Die Vorläufer der Schaufeln sind die seit dem Neolithikum bekannten Grabstöcke. Diese waren zuerst einfache Stöcke, die aber je nach Einsatzzweck auch ein ausgeschnitztes Blatt oder Schultern aufwiesen. Mit Aufkommen von Metallen wurden zunächst nur die Schnittkanten des Schaufelblattes mit Metall verstärkt, bis schließlich mit zunehmender Verbreitung, vor allem des Eisens, die Schaufelblätter ganz aus Eisen gefertigt wurden. Schaufeln mit eisenverstärktem Holzblatt fanden beim Torfstich noch bis in das 20. Jahrhundert Verwendung.', '2016-12-22', 1, 2, 'Blog', 1, 'Schaufel'),
+(2, 'Besen', 'Bei einem Besen oder Feger handelt es sich um einen Gebrauchsgegenstand zum Zusammenkehren von Schmutz und Unrat von Böden. Man unterscheidet zwischen großen und kleinen Besen für den Haushalt und die Straße und maschinell eingesetzten Besen.\r\nEin großer Besen besteht meist aus einem langen Besenstiel, einem Querholz, dem so genannten Riegel, und den Borsten aus Tierhaaren, Pflanzenfasern oder Kunststoff. Der Rutenbesen oder Reisigbesen (regional auch Riedelbesen) ist eine einfachere Besenform, die früher ggf. von einem Besenbinder hergestellt wurde und recht verbreitet war, besitzt keinen Riegel. Stattdessen wird ein Bündel Reisig oder Stroh mit Schnur oder Draht direkt am hölzernen Stiel befestigt. Bei Verwendung von Birkenzweigen ähnelt der Rutenbesen einer großen Birkenrute mit Holzstiel.', '2016-12-22', 4, 9, 'Blog', 1, 'Besen'),
+(3, 'Hammer', 'Ein Hammer ist ein händisch oder maschinell angetriebenes Werkzeug, das unter Nutzung seiner beschleunigten Masse (meist) schwere Schläge auf Körper ausübt. Bei von Hand geführten Hämmern wird dieser je nach seiner Masse und genutzter Stiellänge nach dem Heben (Ausholen) aus dem Hand-, Ellbogen- oder Schultergelenk – oder bei beidhändigem Halten aus dem Oberkörper – heraus beschleunigt.\r\nDer Hammer gehört in einer stiellosen Variante als Faustkeil (aus bearbeitetem Stein mit einem nachgewiesenen Alter von 1,75 Millionen Jahren) wahrscheinlich zu den ältesten Werkzeugen der Menschheit.', '2016-12-18', 7, 8, 'Blog', 1, 'Hammer'),
+(4, 'Schraubenzieher', 'Ein Hammer ist ein händisch oder maschinell angetriebenes Werkzeug, das unter Nutzung seiner beschleunigten Masse (meist) schwere Schläge auf Körper ausübt. Bei von Hand geführten Hämmern wird dieser je nach seiner Masse und genutzter Stiellänge nach dem Heben (Ausholen) aus dem Hand-, Ellbogen- oder Schultergelenk – oder bei beidhändigem Halten aus dem Oberkörper – heraus beschleunigt.\r\nDer Hammer gehört in einer stiellosen Variante als Faustkeil (aus bearbeitetem Stein mit einem nachgewiesenen Alter von 1,75 Millionen Jahren) wahrscheinlich zu den ältesten Werkzeugen der Menschheit.', '2016-06-13', 7, 9, 'Blog', 1, 'Schraubenzieher'),
+(5, 'Brasilien', 'Brasilien (portugiesisch Brasil, gemäß Lautung des brasilianischen Portugiesisch [b?a?ziu?] Audio-Datei / Hörbeispiel Aussprache?/i) ist der flächen- und bevölkerungsmäßig fünftgrößte Staat der Erde. Es ist das größte und mit über 200 Millionen Einwohnern auch das bevölkerungsreichste Land Südamerikas, von dessen Fläche es 47,3 Prozent einnimmt.[7] Brasilien hat mit jedem südamerikanischen Staat außer Chile und Ecuador eine gemeinsame Grenze.\r\nDie ersten Spuren menschlicher Besiedlung durch Paläo-Indianer reichen mehrere tausend Jahre zurück. Nach der Entdeckung Amerikas und der Aufteilung des südamerikanischen Kontinents durch den Vertrag von Tordesillas wurde Brasilien eine portugiesische Kolonie. Diese mehr als drei Jahrhunderte andauernde Kolonialzeit, in der Einwanderer verschiedenster Herkunft (freiwillig oder gezwungenermaßen) nach Brasilien kamen, trug erheblich zur ethnischen Vielfalt des heutigen Staates bei. Nach der im Jahre 1822 erlangten Unabhängigkeit, auf die eine Zeit der konstitutionellen Monarchie folgte, wurde das Land 1889 als Vereinigte Staaten von Brasilien zu einer Republik. Nach der Zeit der Militärdiktatur von 1964 bis 1985 kehrte das Land zur Demokratie mit einem präsidentiellen Regierungssystem zurück.', '2015-08-03', 9, 4, 'Blog', 1, 'Brasilien'),
+(6, 'Italien', 'Italien (amtlich Italienische Republik; italienisch Repubblica Italiana, Kurzform Italia) ist eine parlamentarische Republik in Südeuropa; seine Hauptstadt ist Rom. Das italienische Staatsgebiet liegt zum größten Teil auf der vom Mittelmeer umschlossenen Apennin­halbinsel und der Po-Ebene sowie im südlichen Gebirgsteil der Alpen. Der Staat grenzt an Frankreich, die Schweiz, Österreich und Slowenien. Die Kleinstaaten Vatikanstadt und San Marino sind vollständig vom italienischen Staatsgebiet umschlossen. Neben den großen Inseln Sizilien und Sardinien sind mehrere Inselgruppen vorgelagert.\r\nItalien ist Gründungsmitglied der Europäischen Wirtschaftsgemeinschaft (EWG), Vorläuferorganisation der heutigen Europäischen Union und des Europarates sowie der Europäischen Gemeinschaft für Kohle und Stahl (EGKS) und der Europäischen Atomgemeinschaft (EURATOM). Das Land ist Mitglied der Vereinten Nationen (UNO), der Organisation für wirtschaftliche Zusammenarbeit und Entwicklung (OECD), der NATO, der G7 und der G20.', '2015-08-22', 8, 5, 'Blog', 1, 'Italien'),
+(7, 'Frankreich', 'Frankreich (amtlich Französische Republik, französisch République française [?e.py.?blik f???.?s?z], Kurzform  Audio-Datei / Hörbeispiel (la) France?/i [f???s]) ist ein demokratischer, interkontinentaler Einheitsstaat in Westeuropa mit Überseeinseln und -gebieten auf mehreren Kontinenten. Metropolitan-Frankreich, d. h. der europäische Teil des Staatsgebietes, erstreckt sich vom Mittelmeer bis zum Ärmelkanal und zur Nordsee sowie vom Rhein bis zum Atlantischen Ozean. Sein Festland wird wegen seiner Landesform als Hexagone (dt: Sechseck) bezeichnet. Frankreich ist flächenmäßig das größte Land der Europäischen Union und verfügt (nach Russland und der Ukraine) über das drittgrößte Staatsgebiet in Europa. Die Métropole Paris ist die Hauptstadt und mit der Île-de-France größter Ballungsraum des Landes, vor Lyon, Marseille, Toulouse und Lille.', '2014-07-16', 4, 6, 'Blog', 0, 'Frankreich'),
+(8, 'München', 'Minga ist die Landeshauptstadt des Freistaates Bayern. Sie ist mit rund 1,5 Millionen Einwohnern die einwohnerstärkste Stadt Bayerns und (nach Berlin und Hamburg) die nach Einwohnern drittgrößte Gemeinde Deutschlands sowie die zwölftgrößte der Europäischen Union. Im Ballungsraum München leben mehr als 2,7 Millionen Menschen;[3] die flächengrößere europäische Metropolregion München umfasst rund 5,7 Millionen Einwohner.\r\nDie Landeshauptstadt ist eine kreisfreie Stadt und ein bayerisches Oberzentrum, zudem Verwaltungssitz des die Stadt umgebenden gleichnamigen Landkreises mit dem Landratsamt München als Verwaltung, des Bezirks Oberbayern und des Regierungsbezirks Oberbayern.', '2013-12-19', 3, 5, 'Blog', 0, 'München'),
+(9, 'Hallo', 'Hallo ist im Deutschen ein mündlicher oder schriftlicher, nicht förmlicher Gruß, insbesondere unter Bekannten oder Freunden. Als Interjektion wird der Ausdruck auch ähnlich dem veralteten Anruf „Heda!“ gebraucht, um auf sich aufmerksam zu machen: „Hallo, ist da jemand?“ Eine weitere Interjektion – „Aber hallo!“ – hat die Bedeutung einer Bekräftigung (etwa: „Da hast du sowas von Recht!“) oder auch eines Widersprechens (etwa: „Da übersiehst du etwas Wesentliches!“). Seit einigen Jahren vermehrt aufgekommen ist der Gebrauch als Frage „Hallo?“ mit abweichender Betonung, um jemanden zur Besinnung zu rufen.\r\nWesentlich für die jeweilige Bedeutung ist die gewählte Betonung, Mimik und Gestik des Sprechenden.\r\nVon dem Ausruf leitet sich die substantivierte, im Gegensatz zu den anderen Formen auf der zweiten Silbe betonte Form „ein Hallo“ ab, die ein (fröhliches) lärmendes Durcheinander bezeichnet („Er wurde mit großem Hallo empfangen.“).', '1993-12-08', 7, 2, 'Blog', 0, 'Hallo - Grußformel'),
+(10, 'Pferd', 'Die Pferde (mittellat. paraveredus abgeleitet von keltisch-spätlat. veredus „Kurierpferd“)[1] (Equus) sind die einzige rezente Gattung der Familie Equidae. Arten anderer Gattungen dieser Familie sind nur als Fossilien erhalten.\r\nZur Gattung Equus gehören die Tiere, die als Pferde, Esel und Zebras bezeichnet werden. Die Abgrenzung der Arten ist bis heute umstritten. Insgesamt werden meist sieben Arten unterschieden, von denen die meisten in ihrem Bestand gefährdet sind. Das Hauspferd und der Hausesel, die domestizierten Formen des Wildpferds respektive des Afrikanischen Esels, spielen als Last- und Reittier eine wichtige Rolle und sind weltweit verbreitet.', '1887-12-08', 6, 3, 'Blog', 0, 'Pferde - Pferdl');
+
 -- --------------------------------------------------------
 
 --
@@ -62,6 +78,22 @@ CREATE TABLE `ban` (
   `begin` datetime NOT NULL,
   `end` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Daten für Tabelle `ban`
+--
+
+INSERT INTO `ban` (`id`, `user_id`, `reason_id`, `description`, `begin`, `end`) VALUES
+(1, 3, 5, 'Lästig', '2016-12-22 21:48:50', '2016-12-22 21:48:50'),
+(2, 8, 6, 'Lästig', '2016-12-11 21:48:50', '2016-12-31 21:48:50'),
+(3, 8, 5, 'Sonstiges', '2016-08-16 21:48:50', '2016-12-16 21:48:50'),
+(4, 8, 5, 'Sonstiges', '2016-12-11 21:48:50', '2016-12-31 21:48:50'),
+(5, 3, 2, 'mehrmaliges Missachtung von Seiten-Regeln', '2016-12-11 21:48:50', '2016-12-31 21:48:50'),
+(6, 4, 6, 'Mehrmalige Falscheingabe des Passwortes - schon wieder', '2016-12-22 21:48:50', '2016-12-22 21:48:50'),
+(7, 13, 4, 'Spam', '2014-02-12 21:48:50', '2017-11-17 21:48:50'),
+(8, 14, 6, 'Mehrmalige Falscheingabe des Passwortes - schon wieder', '2016-08-16 21:48:50', '2018-12-14 21:48:50'),
+(9, 8, 4, 'Spam', '2016-12-11 21:48:50', '2016-12-31 21:48:50'),
+(10, 11, 2, 'Beleidigung der anderen Gäste', '2016-12-11 21:48:50', '3000-12-31 21:48:50');
 
 -- --------------------------------------------------------
 
@@ -98,6 +130,27 @@ CREATE TABLE `lable` (
   `uri` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Daten für Tabelle `lable`
+--
+
+INSERT INTO `lable` (`id`, `lablename`, `uri`) VALUES
+(1, 'Italien', 'Italien.uri'),
+(2, 'Spanien', 'Spanien.uri'),
+(3, 'Portugal', 'Portugal.uri'),
+(4, 'Frankreich', 'Frankreich.uri'),
+(5, 'Belgien', 'Belgien.uri'),
+(6, 'Luxemburg', 'Luxemburg.uri'),
+(7, 'Deutschland', 'Deutschland.uri'),
+(8, 'Dänemark', 'Dänemark.uri'),
+(9, 'Andorra', 'Andorra.uri'),
+(10, 'Polen', 'Polen.uri'),
+(11, 'Schweden', 'Schweden.uri'),
+(12, 'Brasilien', 'Brasilien.uri'),
+(13, 'Bolivien', 'Bolivien.uri'),
+(14, 'Chile', 'Chile.uri'),
+(15, 'Costa Rica', 'CostaRica.uri');
+
 -- --------------------------------------------------------
 
 --
@@ -108,6 +161,22 @@ CREATE TABLE `lable_article` (
   `lable_id` int(11) NOT NULL,
   `article_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Daten für Tabelle `lable_article`
+--
+
+INSERT INTO `lable_article` (`lable_id`, `article_id`) VALUES
+(1, 9),
+(4, 7),
+(4, 8),
+(5, 9),
+(7, 8),
+(8, 7),
+(8, 8),
+(12, 3),
+(14, 3),
+(15, 2);
 
 -- --------------------------------------------------------
 
@@ -120,6 +189,23 @@ CREATE TABLE `lable_user` (
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Daten für Tabelle `lable_user`
+--
+
+INSERT INTO `lable_user` (`lable_id`, `user_id`) VALUES
+(1, 5),
+(2, 9),
+(2, 11),
+(4, 8),
+(6, 13),
+(7, 1),
+(7, 8),
+(12, 5),
+(14, 14),
+(15, 2),
+(15, 5);
+
 -- --------------------------------------------------------
 
 --
@@ -131,6 +217,23 @@ CREATE TABLE `page` (
   `title` varchar(255) NOT NULL,
   `template_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Daten für Tabelle `page`
+--
+
+INSERT INTO `page` (`id`, `title`, `template_id`) VALUES
+(1, 'Reisen', 1),
+(2, 'Fußball', 2),
+(3, 'Witze', 3),
+(4, 'Möbel', 4),
+(5, 'Haus', 6),
+(6, 'Autos', 3),
+(7, 'Katzen', 5),
+(8, 'Pferde', 5),
+(9, 'Zoo', 8),
+(10, 'Bäume', 8),
+(11, 'Pflanzen', 10);
 
 -- --------------------------------------------------------
 
@@ -155,7 +258,6 @@ CREATE TABLE `role` (
 --
 
 INSERT INTO `role` (`id`, `uri`, `rolename`, `guestbookmanagement`, `usermanagement`, `pagemanagement`, `articlemanagement`, `guestbookusage`, `templateconstruction`) VALUES
-(1, 'uri.uri', 'Admin', 1, 1, 1, 1, 1, 1),
 (2, 'uri.uri', 'Gast', 0, 0, 0, 0, 1, 0),
 (3, 'uri.uri', 'Redakteur', 1, 0, 1, 1, 1, 0),
 (4, 'uri.uri', 'Designer', 1, 0, 1, 1, 1, 1);
@@ -171,6 +273,23 @@ CREATE TABLE `searchphrase` (
   `searchphrase` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Daten für Tabelle `searchphrase`
+--
+
+INSERT INTO `searchphrase` (`id`, `searchphrase`) VALUES
+(1, 'Blumen im Garten'),
+(5, 'Eis in Spanien'),
+(6, 'Fahrrad auf der Straße'),
+(11, 'Fasching'),
+(8, 'Flasche Wasser'),
+(7, 'Gurken und Tomaten'),
+(10, 'Ostern'),
+(2, 'Pferde auf der Wiese'),
+(3, 'Sonne auf der Wiese'),
+(9, 'Strand'),
+(4, 'Strand in Brasilien');
+
 -- --------------------------------------------------------
 
 --
@@ -183,6 +302,22 @@ CREATE TABLE `searchphrase_user` (
   `searchdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Daten für Tabelle `searchphrase_user`
+--
+
+INSERT INTO `searchphrase_user` (`user_id`, `searchphrase_id`, `searchdate`) VALUES
+(1, 1, '2016-12-19'),
+(1, 2, '2016-12-22'),
+(1, 5, '2000-03-09'),
+(2, 3, '1990-08-15'),
+(3, 2, '1998-10-22'),
+(4, 10, '1999-01-05'),
+(5, 6, '1992-01-05'),
+(5, 7, '2016-12-22'),
+(9, 7, '2016-12-22'),
+(14, 10, '2000-01-05');
+
 -- --------------------------------------------------------
 
 --
@@ -194,6 +329,22 @@ CREATE TABLE `template` (
   `templatename` varchar(255) NOT NULL,
   `filelink` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Daten für Tabelle `template`
+--
+
+INSERT INTO `template` (`id`, `templatename`, `filelink`) VALUES
+(1, 'Theresa1', 'TheresaOrdner1'),
+(2, 'Theresa2', 'TheresaOrdner2'),
+(3, 'Theresa3', 'TheresaOrdner3'),
+(4, 'Theresa4', 'TheresaOrdner4'),
+(5, 'Theresa5', 'TheresaOrdner5'),
+(6, 'Theresa6', 'TheresaOrdner6'),
+(7, 'Theresa7', 'TheresaOrdner7'),
+(8, 'Theresa8', 'TheresaOrdner8'),
+(9, 'Theresa9', 'TheresaOrdner9'),
+(10, 'Theresa10', 'TheresaOrdner10');
 
 -- --------------------------------------------------------
 
@@ -221,7 +372,18 @@ INSERT INTO `user` (`id`, `role_id`, `lastname`, `firstname`, `username`, `passw
 (1, 1, 'Administrator', 'Admin', 'Admin-Admin', 'PLEASECHANGE', 'admin@e-mail.de', '2016-12-22', '2000-12-12'),
 (2, 2, 'GastNachname', 'GastVorname', 'Gast-Gast', 'PLEASECHANGE', 'gast@e-mail.de', '2016-12-22', '1998-12-12'),
 (3, 3, 'RedakteurNachname', 'RedakteurVorname', 'Redi-Redi', 'PLEASECHANGE', 'Redakteur@e-mail.de', '2016-12-22', '1998-12-25'),
-(4, 4, 'DesignerNachname', 'DesignerVorname', 'Designer-Designer', 'PLEASECHANGE', 'Designer@e-mail.de', '2016-12-22', '2000-12-12');
+(4, 4, 'DesignerNachname', 'DesignerVorname', 'Designer-Designer', 'PLEASECHANGE', 'Designer@e-mail.de', '2016-12-22', '2000-12-12'),
+(5, 4, 'SDesigner', 'Theresa', 'Resi', 'ABC', 'ABC@FGHI.de', '2016-12-22', '2016-04-11'),
+(6, 4, 'ODesigner', 'Cornelia', 'Conny', 'abcdef', 'abderfgi@jgkl.de', '2016-12-22', '2016-09-12'),
+(7, 3, 'GRedakteur', 'Tamara', 'Tami', '345', 'abdfa@wqer.asdf', '2016-12-22', '2016-06-22'),
+(8, 3, 'DRedakteur', 'Mirjam', 'M', '78876', '23@werwerwer.wie', '2016-12-22', '2015-01-14'),
+(9, 4, 'KDesigner', 'Jonas', 'J', 'tzu', 'iuuoi@wewe.com', '2016-12-22', '2013-08-12'),
+(10, 3, 'SRedakteur', 'Dimitrij', 'D', 'wertwert', 'wowowow@hohoh.de', '2016-12-22', '2016-12-11'),
+(11, 4, 'Mustermann', 'Maximilian', 'Maxi', 'Max', 'Max.Mustermann@web.de', '2016-12-22', '2016-06-08'),
+(12, 3, 'MRedakteur', 'Moritz', 'MM', 'Muster', 'Moritz@Muster.com', '2016-12-22', '2016-02-16'),
+(13, 4, 'HeinrichDesigner', 'Hannah', 'Hanni', 'Hanni', 'Hanna.Heinrich@asdbdfag.de', '2016-12-22', '2015-08-19'),
+(14, 3, 'HeinrichRedakteur', 'Nanni', 'N', 'Nanni', 'Nanni.Heinrich@web.asdfaer', '2016-12-22', '2016-12-12'),
+(15, 3, 'Müller', 'Milch', 'Milch', 'Milch', 'Milch.Heinrich@web.asdfaer', '2016-12-22', '2016-12-12');
 
 --
 -- Indizes der exportierten Tabellen
@@ -315,12 +477,12 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT für Tabelle `article`
 --
 ALTER TABLE `article`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT für Tabelle `ban`
 --
 ALTER TABLE `ban`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT für Tabelle `ban_reason`
 --
@@ -330,12 +492,12 @@ ALTER TABLE `ban_reason`
 -- AUTO_INCREMENT für Tabelle `lable`
 --
 ALTER TABLE `lable`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 --
 -- AUTO_INCREMENT für Tabelle `page`
 --
 ALTER TABLE `page`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT für Tabelle `role`
 --
@@ -345,17 +507,17 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT für Tabelle `searchphrase`
 --
 ALTER TABLE `searchphrase`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT für Tabelle `template`
 --
 ALTER TABLE `template`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT für Tabelle `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 --
 -- Constraints der exportierten Tabellen
 --
