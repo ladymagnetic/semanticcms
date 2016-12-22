@@ -32,7 +32,7 @@ else if (isset($_POST['details'])) {
 }
 else if (isset($_POST['delete'])) {
     $userId = $_POST['userId'];
-    $dbUser->DeleteUser($userId);
+    $dbUser->DeleteUserById($userId);
 }
 else if (isset($_POST['newUser'])) {
     CreateNewUser($dbUser);
@@ -102,13 +102,55 @@ else if (isset($_POST['saveRoleChanges']))
 else if (isset($_POST['createRole'])) 
 {
     $rolename = $_POST['rolename'];
-    $guestbookmanagement = $_POST['guestbookmanagement'];
-    $usermanagement = $_POST['usermanagement'];
-    $pagemanagement = $_POST['pagemanagement'];
-    $articlemanagement = $_POST['articlemanagement'];
-    $guestbookusage = $_POST['guestbookusage'];
-    $templateconstruction = $_POST['templateconstruction'];
     $uri = $_POST['uri'];
+    if (isset($_POST['guestbookmanagement']))
+    {
+        $guestbookmanagement = 1;
+    }
+    else 
+    {
+        $guestbookmanagement = 0;
+    }
+    if (isset($_POST['usermanagement']))
+    {
+        $usermanagement = 1;
+    }
+    else 
+    {
+        $usermanagement = 0;
+    }
+    if (isset($_POST['pagemanagement']))
+    {
+        $pagemanagement = 1;
+    }
+    else 
+    {
+        $pagemanagement = 0;
+    }
+    if (isset($_POST['articlemanagement']))
+    {
+        $articlemanagement = 1;
+    }
+    else 
+    {
+        $articlemanagement = 0;
+    }
+    if (isset($_POST['guestbookusage']))
+    {
+        $guestbookusage = 1;
+    }
+    else 
+    {
+        $guestbookusage = 0;
+    }
+    if (isset($_POST['templateconstruction']))
+    {
+        $templateconstruction = 1;
+    }
+    else 
+    {
+        $templateconstruction = 0;
+    }
     $dbUser->NewRole($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction);
 }
 
@@ -237,7 +279,7 @@ function EditUser($userId, $dbUser)
         echo
         "</form>
         <h2>Passwort ändern</h2>
-        <form method='post' action='../lib/BackendComponentPrinter.class.php'>";
+        <form method='post' action='Usermanagement.php'>";
         echo
             "<label for='currentPassword'>aktuelles Passwort</label>
             <input id='currentPassword' name='currentPassword' type='password'><br><br>
@@ -384,29 +426,29 @@ function CreateNewRole($dbUser)
     <h1><i class='fa fa-key fontawesome'></i> Rolle erstellen</h1>";
     echo
             "<form method='post' action='Usermanagement.php'>".
-            "<label for='roleName'>Rollenname</label>
-            <input id='roleName' name='roleName' type='text'><br><br>";
+            "<label for='rolename'>Rollenname</label>
+            <input id='rolename' name='rolename' type='text'><br><br>";
     echo
             "<label for='uri'>Uri</label>
-            <input id='uri' name='uri' type='checkbox'><br><br>";
+            <input id='uri' name='uri' type='text'><br><br>";
     echo    
             "<label for='guestbookmanagement'>Gästebuch verwalten</label>
-            <input id='guestbookmanagement' name='guestbookmanagement' type='checkbox'><br><br>";
+            <input id='guestbookmanagement' name='guestbookmanagement' type='checkbox' value='1'><br><br>";
     echo
             "<label for='usermanagement'>Benutzer verwalten</label>
-            <input id='usermanagement' name='usermanagement' type='checkbox'><br><br>";
+            <input id='usermanagement' name='usermanagement' type='checkbox' value='1'><br><br>";
     echo
             "<label for='pagemanagement'>Seiten verwalten</label>".
-            "<input id='pagemanagement' name='pagemanagement' type='checkbox'><br><br>";
+            "<input id='pagemanagement' name='pagemanagement' type='checkbox' value='1'><br><br>";
     echo
             "<label for='articlemanagement'>Artikel verwalten</label>".
-            "<input id='articlemanagement' name='articlemanagement' type='checkbox'><br><br>";
+            "<input id='articlemanagement' name='articlemanagement' type='checkbox' value='1'><br><br>";
     echo
             "<label for='guestbookusage'>Gästebuch nutzen</label>".
-            "<input id='guestbookusage' name='guestbookusage' type='checkbox'><br><br>";
+            "<input id='guestbookusage' name='guestbookusage' type='checkbox' value='1'><br><br>";
     echo
             "<label for='templateconstruction'>Template erstellen</label>".
-            "<input id='templateconstruction' name='templateconstruction' type='checkbox'><br><br>".
+            "<input id='templateconstruction' name='templateconstruction' type='checkbox' value='1'><br><br>".
             "<input id='createRole' name='createRole' type='submit' value='Rolle erstellen'></form>";
 }
 ?>
