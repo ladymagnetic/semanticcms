@@ -164,5 +164,61 @@ class BackendComponentPrinter
 		echo "<form id=\"rel\" method=\"post\" action=\"".$action."\"></form>";
 		echo "</section>";
 	}
+
+    /**
+     * Prints a dropdown list together with a label
+     * @param $label The corresponding label string
+     * @param $name The name of the dropdown list
+     * @param array $options The options of the dropdown list
+     * @param $size Number of visible options at the same time
+     * @param $selected The default selected option string
+     */
+	public static function PrintDrowpdownList($label, $name, array $options, $size, $selected)
+    {
+        echo "<label>$label
+                <select name='$name\' size='$size'>";
+
+        foreach ($options as $option) {
+            if ($option == $selected) {
+                echo "<option selected='selected'>$option</option>";
+            } else {
+                echo "<option>$option</option>";
+            }
+        }
+
+        echo   "</select>
+             </label>";
+    }
+
+    /**
+     * Prints a dropdown list with selectable fonts as options together with a label
+     * @param $label The corresponding label string
+     * @param $name The name of the dropdown list
+     */
+    public static function PrintFontsDropdownList($label, $name)
+    {
+        $fontNames = array(
+            "Arial",
+            "Arial Black",
+            "Comic Sans MS",
+            "Courier New",
+            "Georgia",
+            "Impact",
+            "Lucida Console",
+            "Lucida Sans Unicode",
+            "Palatino Linotype",
+            "Tahoma",
+            "Times New Roman",
+            "Trebuchet MS",
+            "Verdana",
+            "Symbol",
+            "Webdings",
+            "Wingdings",
+            "MS Sans Serif",
+            "MS Serif"
+        );
+
+        self::PrintDrowpdownList($label, $name, $fontNames, 1, $fontNames[0]);
+    }
 }
 ?>
