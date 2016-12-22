@@ -173,3 +173,12 @@ input[type=submit]:hover
 {
     font-size: 40px;
 }
+
+/*----- Forms ----->*/
+label, input {
+  display:inline-block;
+}
+
+label {
+    width:200px;
+}

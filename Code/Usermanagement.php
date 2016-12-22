@@ -178,7 +178,7 @@ echo
     <form method='post' action='Usermanagement.php'>
         <input id='newUser' name='newUser' type='submit' value='Neuer Benutzer'>
     </form>
-    <h2>Rollen definieren</h2>
+    <h2><i class='fa fa-key fontawesome'></i> Rollen definieren</h2>
     <table>
         <tr>
             <th>Rollenname</th>
@@ -216,7 +216,7 @@ function EditUser($userId, $dbUser)
     BackendComponentPrinter::PrintSidebar(array());// PrintSidebar($_SESSION["permissions"]);
     echo
     "<section id='main'>
-    <h1>Kontodaten bearbeiten</h1>
+    <h1><i class='fa fa-user fontawesome'></i> Benutzer bearbeiten</h1>
         <form method='post' action='Usermanagement.php'>";
     $userRow = $dbUser->FetchArray($dbUser->GetUserInformationById($userId));
     echo
@@ -263,7 +263,7 @@ function EditRole($roleId, $dbUser)
     
     echo
     "<section id='main'>
-    <h1>Rolle bearbeiten</h1>";
+    <h1><i class='fa fa-key fontawesome'></i> Rolle bearbeiten</h1>";
     $roleRow = $dbUser->FetchArray($dbUser->SelectRoleById($roleId));
     echo
             "<form method='post' action='Usermanagement.php'>".
@@ -327,7 +327,7 @@ function EditRole($roleId, $dbUser)
             }
             echo
             " value='".$roleRow['templateconstruction']."'><br><br>".
-            "<input id='saveRoleChanges' name='saveRoleChanges' type='submit' value'Rollenänderung speichern'></form>";
+            "<input id='saveRoleChanges' name='saveRoleChanges' type='submit' value='Rollenänderung speichern'></form>";
 }
 function CreateNewUser($dbUser)
 {
@@ -337,7 +337,7 @@ function CreateNewUser($dbUser)
     BackendComponentPrinter::PrintSidebar(array());// PrintSidebar($_SESSION["permissions"]);
     echo
     "<section id='main'>
-    <h1>Neuer Benutzer</h1>
+    <h1><i class='fa fa-user fontawesome'></i> Neuer Benutzer</h1>
         <form method='post' action='Usermanagement.php'>";
     echo
             "<label for='userName'>Benutzername</label>
@@ -381,7 +381,7 @@ function CreateNewRole($dbUser)
     
     echo
     "<section id='main'>
-    <h1>Rolle bearbeiten</h1>";
+    <h1><i class='fa fa-key fontawesome'></i> Rolle erstellen</h1>";
     echo
             "<form method='post' action='Usermanagement.php'>".
             "<label for='roleName'>Rollenname</label>
@@ -407,6 +407,6 @@ function CreateNewRole($dbUser)
     echo
             "<label for='templateconstruction'>Template erstellen</label>".
             "<input id='templateconstruction' name='templateconstruction' type='checkbox'><br><br>".
-            "<input id='createRole' name='createRole' type='submit' value'Rolle erstellen'></form>";
+            "<input id='createRole' name='createRole' type='submit' value='Rolle erstellen'></form>";
 }
 ?>
