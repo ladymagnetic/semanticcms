@@ -68,7 +68,7 @@ else if (isset($_POST['applyChanges']))
     $name = $_POST['name'];
     $foreName = $_POST['foreName'];
     $email = $_POST['email'];
-    $dbUser.ApplyChangesToUser($userId, $userName, $name, $foreName, $email);
+    $dbUser.UpdateUserDifferentNamesById($userId, $userName, $name, $foreName, $email);
 }
 else if (isset($_POST['applyPasswordChanges']))
 {
@@ -87,13 +87,13 @@ else if (isset($_POST['saveRoleChanges'])) {
     $articlemanagement = $_POST['articlemanagement'];
     $guestbookusage = $_POST['guestbookusage'];
     $templateconstruction = $_POST['templateconstruction'];
-    $dbUser.SaveRoleChanges($roleId, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction);
+    $dbUser.UpdateRoleById($roleId, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction);
 }
 
 BackendComponentPrinter::printHead("Benutzerverwaltung");
 /* menue */
 /* dynamisch erzeugt je nach Rechten */
-BackendComponentPrinter::printSidebar(array());// userpermissions
+BackendComponentPrinter::printSidebar(array());// printSidebar($_SESSION["permissions"]);
 
 echo
 "<section id='main'>
@@ -106,8 +106,8 @@ echo
             <th>Aktion</th>
         </tr>";
             // foreach user in database print
-            $userRows = $dbUser.GetUsers();
-            $roleRows = $dbUser.GetRoles();
+            $userRows = $dbUser.SelectAllUsers();
+            $roleRows = $dbUser.SelectAllRoles();
             foreach ($userRows as $row) {
 
                 echo 
@@ -118,13 +118,13 @@ echo
                 if ($debanned)
                 {
                     echo "<td>
-                    <form method='post' action='Benutzerverwaltung.php'>
+                    <form method='post' action='Usermanagement.php'>
                     <input id='deban' name='deban' type='button' value='entsperren'>";
                 }
                 else
                 {
                     echo "<td>
-                    <form method='post' action='Benutzerverwaltung.php'>
+                    <form method='post' action='Usermanagement.php'>
                     <input id='ban' name='ban' type='button' value='sperren'>";
                 }
                 echo
@@ -144,7 +144,7 @@ echo
                 echo
                     "<td>".$row['role_id']."</td>";
                 echo
-                    "<td><form method='post' action='Benutzerverwaltung.php'>"
+                    "<td><form method='post' action='Usermanagement.php'>"
                     ."<input id='details' name='details' type='button' value='Details'><input id='delete' name='delete' type='button' value='löschen'>"
                     ."<input id='userId' name='userId' type='hidden' value='".$row['id']."'>" 
                     ."</form></td>";
@@ -153,7 +153,7 @@ echo
             }
 echo
     "</table>
-    <form method='post' action='Benutzerverwaltung.php'>
+    <form method='post' action='Usermanagement.php'>
         <input id='newUser' name='newUser' type='button' value='Neuer Benutzer'>
         <input id='userId' name='userId' type='hidden' value='userId'>
     </form>
@@ -164,13 +164,13 @@ echo
             <th>Aktion</th>
         </tr>";
             // foreach role in database print
-            $roleRows = $dbUser.GetRoles();
+            $roleRows = $dbUser.SelectAllRoles();
             foreach ($roleRows as $row) {
                 echo "<tr>";
                 echo "<td>";
                 echo $row['rolename'];
                 echo "</td>";
-                echo "<td><form method='post' action='Benutzerverwaltung.php'><input id='roleDetails' name='roleDetails' type='button' value='Details'><input id='deleteRole' name='deleteRole' type='button' value='Rolle löschen'></form></td>";
+                echo "<td><form method='post' action='Usermanagement.php'><input id='roleDetails' name='roleDetails' type='button' value='Details'><input id='deleteRole' name='deleteRole' type='button' value='Rolle löschen'></form></td>";
                 echo "<input id='roleId' name='roleId' type='hidden' value='".$row['id']."'>";
                 echo "</tr>";
             }
@@ -194,7 +194,7 @@ BackendComponentPrinter::printSidebar($config['cms_db']['dbuser']);
     "<section id='main'>
     <h1>Kontodaten bearbeiten</h1>
         <form method='post' action='../lib/BackendComponentPrinter.class.php'>";
-    $userRow = $dbUser.GetUserInformation($userId);
+    $userRow = $dbUser.SelectUserById($userId);
     echo
             "<label for='userName'>Benutzername</label>
             <input id='userName' name='userName' type='text' value='".$userRow['username']."'>";
@@ -243,9 +243,9 @@ BackendComponentPrinter::printSidebar($config['cms_db']['dbuser']);
     echo
     "<section id='main'>
     <h1>Rolle bearbeiten</h1>";
-    $roleRow = $dbUser.GetRoleInfo($roleId);
+    $roleRow = $dbUser.SelectRoleById($roleId);
     echo
-            "<form method='post' action='Benutzerverwaltung.php'>".
+            "<form method='post' action='Usermanagement.php'>".
             "<input id='userId' name='userId' type='hidden' value='".$roleId."'>".
             "<label for='roleName'>Benutzername</label>
             <input id='roleName' name='roleName' type='checkbox' value='".$roleRow['rolename']."'>";
