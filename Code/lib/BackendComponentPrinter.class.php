@@ -99,8 +99,9 @@ class BackendComponentPrinter
     /**
      * Prints the head of the current site
      * @param $title The head title
+     * @param $jquery true if jquery used otherwise false
      */
-    public static function printHead($title)
+    public static function printHead($title, $jquery)
     {
         // RDF-Tags oder schema.org oder so mit einfuegen => dazu steht unter Allgemeines/SemanticWeb/ was
          echo
@@ -108,9 +109,10 @@ class BackendComponentPrinter
              <meta content="de" http-equiv="Content-Language">
              <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
              <title>'.$title.'</title>
-             <link rel="stylesheet" href="css/backend.css">
-             <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">
-         </head>';
+             <link rel="stylesheet" href="media/backend.css">
+             <link rel="stylesheet" href="media/font-awesome/css/font-awesome.min.css">';
+		 if($jquery) echo '<script src="media/jquery-3.1.1.slim.min.js"/>';
+         echo '</head>';
     }
 
 	// /**
