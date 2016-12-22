@@ -185,7 +185,7 @@ function check_date($date,$format,$sep)
 			}
 			else
 			{
-				echo "Ungültige E-Mail-Adresse."
+				echo "Ungültige E-Mail-Adresse.";
 				return false;
 			}
 	}
