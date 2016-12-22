@@ -90,8 +90,21 @@ class DbUser
 		//$selectUserByUsernameOrEmail = "SELECT * FROM user WHERE ( username = ? OR email = ? )";
 		//$this->database->PrepareStatement("selectUserByUsernameOrEmail ", $selectUserByUsernameOrEmail );
 
+		
+		$selectAllUsers = "SELECT * FROM user";
+		$this->database->PrepareStatement("selectAllUsers", $selectAllUsers);
 
+		$selectAllRoles = "SELECT * FROM role";
+		$this->database->PrepareStatement("selectAllRoles", $selectAllRoles);
 
+		$selectAllArticles = "SELECT * FROM article";
+		$this->database->PrepareStatement("selectAllArticles", $selectAllArticles);
+
+		$selectAllTemplates = "SELECT * FROM template";
+		$this->database->PrepareStatement("selectAllTemplates", $selectAllTemplates);
+
+		$selectAllPages = "SELECT * FROM page";
+		$this->database->PrepareStatement("selectAllPages", $selectAllPages);
 
 	}
 
@@ -275,6 +288,50 @@ public function DoesUserAlreadyExist($username, $email)
 			$this->database->ExecutePreparedStatement("selectUserByEmail", array($email));
 	}
 
+	/* werden heute noch alle kommentiert*/
+	
+	
+	
+	public function SelectAllUsers()
+	{
+		$result = $this->database->ExecutePreparedStatement("selectAllUsers", array());
+		$allUsers = $this->database->FetchArray($result);
+		return $allUsers;
+	}
+
+
+	public function SelectAllRoles()
+	{
+		$result = $this->database->ExecutePreparedStatement("selectAllRoles", array());
+		$allRoles = $this->database->FetchArray($result);
+		return $allRoles;
+
+	}
+
+	public function SelectAllArticles()
+	{
+		$result = $this->database->ExecutePreparedStatement("selectAllArticles", array());
+		$allArticles = $this->database->FetchArray($result);
+		return $allArticles;
+	}
+
+
+	public function SelectAllTemplates()
+	{
+		$result = $this->database->ExecutePreparedStatement("selectAllTemplates", array());
+		$allTemplates = $this->database->FetchArray($result);
+		return $allTemplates;
+	}
+
+	public function SelectAllPages()
+	{
+		$result = $this->database->ExecutePreparedStatement("selectAllPages", array());
+		$allPages = $this->database->FetchArray($result);
+		return $allPages;
+	}
+
+
+	
 	
 	
 	
@@ -286,11 +343,6 @@ public function DoesUserAlreadyExist($username, $email)
 	DecodePassword
 	*/
 
-	
-	
-	
-	
-	
 	
 	
 	
