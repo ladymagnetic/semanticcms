@@ -713,16 +713,10 @@ function check_date($date,$format,$sep)
 
 		// Rückgabe prüfen => ist der Datensatz auch wirklich vorhanden? Ist es genau EIN Datensatz, der zurück kommt?
 		// Quellcode dafür ist implementiert, ich habs hier mal als Beispiel auch umgesetzt
-		if($result==true)
-		{
-			echo "hallo ich bin richtig";	// Dran denken das zu entfernen wenn nicht mehr gebraucht
-			return true;
-		}
+		if($result==true && $this->database->GetResultCount($result) == 1)
+		{ return true; }
 		else
-		{
-			echo "hallo ich bin falsch";	// Dran denken das zu entfernen wenn nicht mehr gebraucht
-			return false;
-		}
+		{ return false;	}
 	}
 
 	 

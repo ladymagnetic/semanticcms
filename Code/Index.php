@@ -1,24 +1,25 @@
+<?php
+// Start the session
+session_start();
+session_regenerate_id();
+?>
 <!DOCTYPE html>
-<html>
-	<!-- fuer head wird es wahrscheinlich ebenfalls eine Methode geben: printHead(titel?), diese dann ggf. nutzen -->
-	<head>
-		<meta content="de" http-equiv="Content-Language">
-		<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-		<title>Login</title>
-		<link rel="stylesheet" href="css/backend.css">
-		<link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">
-	</head>
-
+<html vocab="https://schema.org/" typeof="WebPage" lang="de">
+	<?php
+		require_once 'lib/BackendComponentPrinter.class.php';
+		use SemanticCms\ComponentPrinter\BackendComponentPrinter;
+		BackendComponentPrinter::PrintHead("Login");
+	?>
 	<body>
-	<section id="login">
+	<main id="login">
 	<h1>Login</h1>
-	<form method="post" action="Login.php">
+	<form method="post" action="Index.php">
 		<input id="username" name="username" type="text">
 		<input id="password" name="password" type="password">
-		<button id="ok" name="action" value="ok"> OK </button>
+		<button id="ok" name="action" value="login"> OK </button>
 		<button id="forgotPassword" name="action" value="forgotPassword"> Passwort vergessen</button>
 	</form>
-	</section>
+	</main>
 
 	<?php
 	/* Include(s) */
@@ -28,20 +29,39 @@
 	/* use namespace(s) */
 	use SemanticCms\DatabaseAbstraction\DbUser;
 	use SemanticCms\config;
-
-	// eigentlich das hier
-  $database = new DbUser($config['cms_db']['dbhost'],$config['cms_db']['dbuser'],$config['cms_db']['dbpass'],$config['cms_db']['database']);
-		// $database = new DbUser($config['cms_db']['dbhost'],$config['cms_db']['dbuser'],$config['cms_db']['dbpass'],'cms-projekt_fiktive_testdaten');
-	// hier Logik für logIn rein (Funktionsaufruf LoginUser.php)
-	// an Passwort Hash Denken
-	  $nameInput =  $_POST["username"];
-	  $password = $_POST["password"];
-	  $database->LoginUser($nameInput, $password);
-
-				// Seitenweiterleitung bei erfolgreichem Login
-// Abfragen wegen get und post => beim ersten Mal Absenden
-// weil beim ersten Mal geht es mit GET drauf und erst beim zweiten Mal mit POST => darum muss man den Fehler abfangen!!!
-
+	
+	if($_SERVER['REQUEST_METHOD']=='POST')
+	{
+		// Login-Versuch
+		if($_POST['action'] == "login")
+		{
+			$database = new DbUser($config['cms_db']['dbhost'],$config['cms_db']['dbuser'],$config['cms_db']['dbpass'],$config['cms_db']['database']);
+			
+			// Pruefung mit if(isset($_POST['...'])) einbauen (ist username/password tatsächlich gesetzt)
+			
+			$nameInput =  $_POST["username"];
+			$password = $_POST["password"];
+			
+			// an Passwort Hash Denken
+			
+			$login = $database->LoginUser($nameInput, $password);	
+						
+			if($login)
+			{
+				// set username and permissions
+				$_SESSION['username'] = $nameInput;
+				//$_SESSION['permissions'] = $database->GetUserPermissions($nameInput); // noch zu implementieren
+				
+				// Seitenweiterleitung
+				header("Location: start.php");
+			}
+		}
+		// else if (/* Abfrage für password vergessen*/)
+		// {}
+		// else { /* Fehler */}
+	}
+	else 
+	{	/* GET - falls hier was gemacht werden soll */	}
 	?>
 	</body>
 </html>
