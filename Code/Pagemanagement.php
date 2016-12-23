@@ -5,11 +5,17 @@
 <?php
 require_once 'lib/BackendComponentPrinter.class.php';
 use SemanticCms\ComponentPrinter\BackendComponentPrinter;
-printHead("Seitenverwaltung");
+
+require_once 'lib/Permission.enum.php';
+use SemanticCms\Model\Permission;
+BackendComponentPrinter::printHead("Seitenverwaltung");
 /* menue */
 /* dynamisch erzeugt je nach Rechten */
-
-BackendComponentPrinter::printSidebar(array()/*Parameter fehlen noch -> Rechte des gerade eingeloggten Nutzers*/);
+//Rechte des gerade eingeloggten Nutzers --> todo
+BackendComponentPrinter::printSidebar(Array(Permission::Guestbookusage,
+    Permission::Articlemanagment,
+    Permission::Pagemanagment,
+    Permission::Usermanagment));
 ?>
 <section id="main">
     <h1><i class="fa fa-file-text fontawesome"></i> Seitenverwaltung</h1>
