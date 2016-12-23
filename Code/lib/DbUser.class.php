@@ -113,6 +113,32 @@ class DbUser
 		$debanUserViaBanId = "UPDATE ban SET  enddatetime = NOW() WHERE id = ?";
 		$this->database->PrepareStatement("debanUserViaBanId", $debanUserViaBanId);
 		
+		
+		
+		$selectAllBan_Reason = "SELECT * FROM ban_reason";
+		$this->database->PrepareStatement("selectAllBan_Reason", $selectAllBan_Reason);
+
+		$selectAllBan= "SELECT * FROM ban";
+		$this->database->PrepareStatement("selectAllBan", $selectAllBan);
+
+		$insertBan_Reason = "INSERT INTO ban_reason (id, reason) VALUES (NULL, ?)";
+		$this->database->PrepareStatement("insertBan_Reason", $insertBan_Reason);
+
+		$selectBanByUserid = "SELECT * FROM ban where user_id = ? ";
+		$this->database->PrepareStatement("selectBanByUserid", $selectBanByUserid);
+
+	    $selectAllBansFromAUserByUsername = "SELECT * FROM ban INNER JOIN  user ON  ban.user_id = user.id WHERE username = ?";
+		$this->database->PrepareStatement("selectAllBansFromAUserByUsername", $selectAllBansFromAUserByUsername);
+
+		$selectAllUsersWhichAreBannedNow = "SELECT * FROM ban INNER JOIN user ON ban.user_id = user.id WHERE ban.enddatetime > now()";
+		$this->database->PrepareStatement("selectAllUsersWhichAreBannedNow", $selectAllUsersWhichAreBannedNow);
+
+/*noch nicht eintragen => in Arbeit*/
+		//$selectAllUsersWhoAreBannedNowForASpecialReasonById() = "SELECT * FROM ban INNER JOIN user ON ban.user_id = user.id WHERE ( ban.enddatetime > now() AND ban.reason_id = ? )";
+		//$this->database->PrepareStatement("selectAllUsersWhoAreBannedNowForASpecialReasonById", $selectAllUsersWhoAreBannedNowForASpecialReasonById);
+		// SELECT * FROM ban INNER JOIN user ON ban.user_id = user.id WHERE ( ban.enddatetime > now() AND ban.reason_id = 2)
+		
+		
 
 	}
 
@@ -473,12 +499,10 @@ function check_date($date,$format,$sep)
 
 		if($result==true)
 		{
-			echo "User ist gerade gesperrt";
 			return true;
 		}
 		else
 		{
-			echo "User ist nicht gesperrt.";
 			return false;
 		}
 	}
@@ -552,8 +576,106 @@ function check_date($date,$format,$sep)
 	}
 	
 	
-	
+	/**
+	*  SelectBanByUserid()
+	* select a special Ban by an user's id
+	* @params int $id the users's id
+	*/
+	public function SelectBanByUserid($user_id)
+	{
+		return $this->database->ExecutePreparedStatement("selectBanByUserid", array($user_id));
+	}
 
+	
+	/**
+	*  InsertBan_Reason()
+	* creates a new  ban_reason
+	* @params string $reason the reason of a ban_reason
+	*/	
+	public function InsertBan_Reason($reason)
+	{
+		$reason = $this->database->RealEscapeString($reason);
+		$result = $this->database->ExecutePreparedStatement("insertBan_Reason", array($reason));
+
+		//var_dump($result);
+
+		if($result==true)
+		{
+				return true;
+		}
+		else
+		{
+			 return false;
+		}
+	}
+	
+	
+	/**
+	*  SelectAllBan()
+	*/	
+	public function SelectAllBan()
+	{
+		return $this->database->ExecutePreparedStatement("selectAllBan", array());
+	}
+
+	
+	/**
+	*  SelectAllBan_Reason()
+	*/
+	public function SelectAllBan_Reason()
+	{
+		return $this->database->ExecutePreparedStatement("selectAllBan_Reason", array());
+	}
+	
+	
+	/**
+	* SelectAllBansFromAUserByUsername($username)
+	* @params string $username the user's username
+	*/
+	public function SelectAllBansFromAUserByUsername($username)
+	{
+		// Beispiel: SELECT * FROM ban INNER JOIN user ON ban.user_id = user.id WHERE username = 'M'
+		return $this->database->ExecutePreparedStatement("selectAllBansFromAUserByUsername", array($username));
+	}
+	
+	
+	
+	/**
+	* SelectAllUsersWhichAreBannedNow ()
+	*/
+	public function SelectAllUsersWhichAreBannedNow()
+	{
+		return $this->database->ExecutePreparedStatement("selectAllUsersWhichAreBannedNow", array());
+	}
+
+	
+	
+	
+	/**
+	* SelectAllUsersWhoAreBannedNowForASpecialReasonByReason()
+	* @params string $reason the ban_reasons's reason
+	*/	
+	public function SelectAllUsersWhoAreBannedNowForASpecialReasonByReason($reason)
+	{
+	return $this->database->ExecuteQuery("SELECT * FROM user INNER JOIN  ban ON  user.id = ban.user_id INNER JOIN ban_reason ON ban.reason_id = ban_reason.id WHERE ( ban.enddatetime > now() AND ban_reason.reason = '". $password."')");
+	}
+	
+	
+	
+	
+	/** => wird noch überarbeitet
+	* SelectAllUsersWhoAreBannedNowForASpecialReasonById()
+	* @params int $reason_id the ban's reason_id
+	
+	public function SelectAllUsersWhoAreBannedNowForASpecialReasonById($reason_id)
+	{
+		return $this->database->ExecutePreparedStatement("selectAllUsersWhoAreBannedNowForASpecialReasonById", array($reason_id));
+	}
+	*/
+	
+	
+	
+	
 
 
 	/*Conny => wichtige Funktionen*/
