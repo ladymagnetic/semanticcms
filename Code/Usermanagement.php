@@ -231,35 +231,39 @@ echo
                 "<tr><td>".$row['firstname']." ".$row['lastname']."</td>";
 
                 //if user is banned/debanned
-                //$banned = $dbUser->IsUserBannedId($row['id']);
                 $bannedUsers = $dbUser->SelectAllUsersWhichAreBannedNow();
                 $banned = false;
                 while ($bannedUser = $dbUser->FetchArray($bannedUsers))
                 {
                     if ($bannedUser['id'] == $row['id'])
                     {
-                        $banned = true;
-                    }
-                }
-                if ($banned)
-                {
-                    $reason = "";
-                    $banRow = $dbUser->FetchArray($dbUser->SelectBanByUserid($row['id']));
-                    $reasonRows = $dbUser->SelectAllBan_Reason();
-                    while ($reasonRow = $dbUser->FetchArray($reasonRows))
-                    {
-                        if ($reasonRow['id'] == $banRow['reason_id'])
+                        if (!$banned)
                         {
-                            $reason = $reasonRow['reason'];
+                            echo "<td>";
+                        }
+                        $banned = true;
+                        $reason = "";
+                        $banRow = $dbUser->FetchArray($dbUser->SelectBanByUserid($row['id']));
+                        $reasonRows = $dbUser->SelectAllBan_Reason();
+                        while ($reasonRow = $dbUser->FetchArray($reasonRows))
+                        {
+                            if ($reasonRow['id'] == $banRow['reason_id'])
+                            {
+                                $reason = $reasonRow['reason'];
+                            }
+                        }
+                        echo
+                        "<form method='post' action='Usermanagement.php'>
+                        <input id='banId' name='banId' type='hidden' value='".$banRow['id']."'>".
+                        "<p>".$reason."<p>".
+                        "<input id='deban' name='deban' type='submit' value='entsperren'>";
+                        if ($banned)
+                        {
+                            echo "<br>";
                         }
                     }
-                    echo "<td>
-                    <form method='post' action='Usermanagement.php'>
-                    <input id='banId' name='banId' type='hidden' value='".$banRow['id']."'>".
-                    "<input id='reason' name='reason' type='text' readonly value='".$reason."'><br><br>".
-                    "<input id='deban' name='deban' type='submit' value='entsperren'>";
                 }
-                else
+                if (!$banned)
                 {
                     echo "<td>".
                     "<form method='post' action='Usermanagement.php'>
