@@ -522,7 +522,7 @@ function BanUser($userId, $dbUser)
             "<label for='reasonId'>Reason Id</label>".
             "<input id='reasonId' name='reasonId' type='text'><br><br>";
     echo
-            "<label for='description'>Gästebuch nutzen</label>".
+            "<label for='description'>Beschreibung</label>".
             "<input id='description' name='description' type='text'><br><br>";
     echo
             "<label for='begindatetime'>Startdatum</label>".
