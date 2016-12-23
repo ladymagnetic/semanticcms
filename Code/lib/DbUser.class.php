@@ -110,7 +110,7 @@ class DbUser
 		$insertBanViaUserId = "INSERT INTO ban (id, user_id, reason_id, description, begindatetime, enddatetime) VALUES (NULL, ?, ?, ?, ?, ?)";
 		$this->database->PrepareStatement("insertBanViaUserId", $insertBanViaUserId);
 
-		$debanUserViaBanId = "UPDATE ban SET  enddatetime = NOW() WHERE id = ?)";
+		$debanUserViaBanId = "UPDATE ban SET  enddatetime = NOW() WHERE id = ?";
 		$this->database->PrepareStatement("debanUserViaBanId", $debanUserViaBanId);
 		
 
@@ -469,7 +469,7 @@ function check_date($date,$format,$sep)
 	{
 		//zum Testen in Xampp: SELECT * FROM `ban` INNER JOIN user ON ban.user_id = user.id WHERE (user.id = 8 AND ban.end > now())
 		$userId= $this->database->RealEscapeString($userId);
-		$result = $this->database->ExecuteQuery("SELECT * FROM ban INNER JOIN user ON ban.user_id = user.id WHERE ( user.id =".$userId." AND ban.end > now()");
+		$result = $this->database->ExecuteQuery("SELECT * FROM ban INNER JOIN user ON ban.user_id = user.id WHERE ( user.id =".$userId." AND ban.end > now() )");
 
 		if($result==true)
 		{
@@ -492,7 +492,7 @@ function check_date($date,$format,$sep)
 	public function IsUserBannedUsername($username)
 	{
 		$username = $this->database->RealEscapeString($username);
-		$result = $this->database->ExecuteQuery("SELECT * FROM ban INNER JOIN user ON ban.user_id = user.id WHERE ( user.username ='".$username."' AND ban.end > now()");
+		$result = $this->database->ExecuteQuery("SELECT * FROM ban INNER JOIN user ON ban.user_id = user.id WHERE ( user.username ='".$username."' AND ban.end > now() )");
 
 		if($result==true)
 		{
@@ -519,7 +519,7 @@ function check_date($date,$format,$sep)
 	{
 	// Datum überprüfen
 		$description = $this->database->RealEscapeString($description);
-		$result = $this->database->ExecuteQuery("insertBanViaUserId", array($user_id, $reason_id, $description, $begindatetime, $enddatetime);
+		$result = $this->database->ExecuteQuery("insertBanViaUserId", array($user_id, $reason_id, $description, $begindatetime, $enddatetime));
 
 		if($result==true)
 		{
@@ -539,7 +539,7 @@ function check_date($date,$format,$sep)
 	*/		
 	public function DebanUserViaBanId($id)
 	{
-		$result = $this->database->ExecuteQuery("debanUserViaBanId", array($id);
+		$result = $this->database->ExecuteQuery("debanUserViaBanId", array($id));
 
 		if($result==true)
 		{
