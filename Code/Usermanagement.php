@@ -103,108 +103,14 @@ else if (isset($_POST['saveRoleChanges']))
     $id = $_POST['roleId'];
     $rolename = $_POST['roleName'];
     $uri = $_POST['uri'];
-    if (isset($_POST['guestbookmanagement']))
-    {
-        $guestbookmanagement = 1;
-    }
-    else 
-    {
-        $guestbookmanagement = 0;
-    }
-    if (isset($_POST['usermanagement']))
-    {
-        $usermanagement = 1;
-    }
-    else 
-    {
-        $usermanagement = 0;
-    }
-    if (isset($_POST['pagemanagement']))
-    {
-        $pagemanagement = 1;
-    }
-    else 
-    {
-        $pagemanagement = 0;
-    }
-    if (isset($_POST['articlemanagement']))
-    {
-        $articlemanagement = 1;
-    }
-    else 
-    {
-        $articlemanagement = 0;
-    }
-    if (isset($_POST['guestbookusage']))
-    {
-        $guestbookusage = 1;
-    }
-    else 
-    {
-        $guestbookusage = 0;
-    }
-    if (isset($_POST['templateconstruction']))
-    {
-        $templateconstruction = 1;
-    }
-    else 
-    {
-        $templateconstruction = 0;
-    }
+    SetPermissionsFromForm($guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction);
     $dbUser->UpdateRoleById($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $id);
 }
 else if (isset($_POST['createRole'])) 
 {
     $rolename = $_POST['rolename'];
     $uri = $_POST['uri'];
-    if (isset($_POST['guestbookmanagement']))
-    {
-        $guestbookmanagement = 1;
-    }
-    else 
-    {
-        $guestbookmanagement = 0;
-    }
-    if (isset($_POST['usermanagement']))
-    {
-        $usermanagement = 1;
-    }
-    else 
-    {
-        $usermanagement = 0;
-    }
-    if (isset($_POST['pagemanagement']))
-    {
-        $pagemanagement = 1;
-    }
-    else 
-    {
-        $pagemanagement = 0;
-    }
-    if (isset($_POST['articlemanagement']))
-    {
-        $articlemanagement = 1;
-    }
-    else 
-    {
-        $articlemanagement = 0;
-    }
-    if (isset($_POST['guestbookusage']))
-    {
-        $guestbookusage = 1;
-    }
-    else 
-    {
-        $guestbookusage = 0;
-    }
-    if (isset($_POST['templateconstruction']))
-    {
-        $templateconstruction = 1;
-    }
-    else 
-    {
-        $templateconstruction = 0;
-    }
+    SetPermissionsFromForm($guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction);
     $dbUser->NewRole($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction);
 }
 
@@ -217,82 +123,82 @@ echo
 "<section id='main'>
     <h1><i class='fa fa-user fontawesome'></i> Benutzerverwaltung</h1>";
 BackendComponentPrinter::PrintTableStart(array("Benutzer", "entsperren/sperren", "Rolle", "Aktion"));
-            // foreach user in database print
-            $userRows = $dbUser->SelectAllUsers();
-            while ($row = $dbUser->FetchArray($userRows))
-            {
-                echo 
-                "<tr><td>".$row['firstname']." ".$row['lastname']."</td>";
+// foreach user in database print
+$userRows = $dbUser->SelectAllUsers();
+while ($row = $dbUser->FetchArray($userRows))
+{
+    echo 
+    "<tr><td>".$row['firstname']." ".$row['lastname']."</td>";
 
-                //if user is banned/debanned
-                $bannedUsers = $dbUser->SelectAllUsersWhichAreBannedNow();
-                $banned = false;
-                while ($bannedUser = $dbUser->FetchArray($bannedUsers))
-                {
-                    if ($bannedUser['id'] == $row['id'])
-                    {
-                        if (!$banned)
-                        {
-                            echo "<td>";
-                        }
-                        $banned = true;
-                        $reason = "";
-                        $banRow = $dbUser->FetchArray($dbUser->SelectBanByUserid($row['id']));
-                        $reasonRows = $dbUser->SelectAllBan_Reason();
-                        while ($reasonRow = $dbUser->FetchArray($reasonRows))
-                        {
-                            if ($reasonRow['id'] == $banRow['reason_id'])
-                            {
-                                $reason = $reasonRow['reason'];
-                            }
-                        }
-                        echo
-                        "<form method='post' action='Usermanagement.php'>
-                        <input id='banId' name='banId' type='hidden' value='".$banRow['id']."'>".
-                        "<p>".$reason."<p>".
-                        "<input id='deban' name='deban' type='submit' value='entsperren'>";
-                        if ($banned)
-                        {
-                            echo "<br>";
-                        }
-                    }
-                }
-                if (!$banned)
-                {
-                    echo "<td>".
-                    "<form method='post' action='Usermanagement.php'>
-                    <input id='ban' name='ban' type='submit' value='sperren'>";
-                }
-                echo
-                    "<input id='userId' name='userId' type='hidden' value='".$row['id']."'></form></td>";
-                echo 
-                    "<td><form action='Usermanagement.php'> <label>Rolle: <select name='assignedRole'>";
-                    $roleRows = $dbUser->SelectAllRoles();
-                    while ($rolerow = $dbUser->FetchArray($roleRows))
-                    {
-                        echo "<option id='".row['id']."'";
-                        if ($rolerow['id'] == $row['role_id'])
-                        {
-                            echo " selected ";
-                        }
-                        echo ">".$rolerow['rolename']."</option>";
-                    }
-                echo
-                    "<input id='userId' name='userId' type='hidden' value='".$row['id']."'></select></label><br><br><input type='submit' value='Zuweisen'></form></td>";
-                echo
-                    "<td><form method='post' action='Usermanagement.php'>"
-                    ."<input id='details' name='details' type='submit' value='Details'><input id='delete' name='delete' type='submit' value='löschen'>"
-                    ."<input id='userId' name='userId' type='hidden' value='".$row['id']."'>" 
-                    ."</form></td>";
-                echo 
-                    "</tr>";
+    //if user is banned/debanned
+    $bannedUsers = $dbUser->SelectAllUsersWhichAreBannedNow();
+    $banned = false;
+    while ($bannedUser = $dbUser->FetchArray($bannedUsers))
+    {
+        if ($bannedUser['id'] == $row['id'])
+        {
+            if (!$banned)
+            {
+                echo "<td>";
             }
+            $banned = true;
+            $reason = "";
+            $banRow = $dbUser->FetchArray($dbUser->SelectBanByUserid($row['id']));
+            $reasonRows = $dbUser->SelectAllBan_Reason();
+            while ($reasonRow = $dbUser->FetchArray($reasonRows))
+            {
+                if ($reasonRow['id'] == $banRow['reason_id'])
+                {
+                    $reason = $reasonRow['reason'];
+                }
+            }
+            echo
+            "<form method='post' action='Usermanagement.php'>
+            <input id='banId' name='banId' type='hidden' value='".$banRow['id']."'>".
+            "<p>".$reason."<p>".
+            "<input id='deban' name='deban' type='submit' value='entsperren'>";
+            if ($banned)
+            {
+                echo "<br>";
+            }
+        }
+    }
+    if (!$banned)
+    {
+        echo "<td>".
+        "<form method='post' action='Usermanagement.php'>
+        <input id='ban' name='ban' type='submit' value='sperren'>";
+    }
+    echo
+        "<input id='userId' name='userId' type='hidden' value='".$row['id']."'></form></td>";
+    echo 
+        "<td><form action='Usermanagement.php'> <label>Rolle: <select name='assignedRole'>";
+        $roleRows = $dbUser->SelectAllRoles();
+        while ($rolerow = $dbUser->FetchArray($roleRows))
+        {
+            echo "<option id='".row['id']."'";
+            if ($rolerow['id'] == $row['role_id'])
+            {
+                echo " selected ";
+            }
+            echo ">".$rolerow['rolename']."</option>";
+        }
+    echo
+        "<input id='userId' name='userId' type='hidden' value='".$row['id']."'></select></label><br><br><input type='submit' value='Zuweisen'></form></td>";
+    echo
+        "<td><form method='post' action='Usermanagement.php'>"
+        ."<input id='details' name='details' type='submit' value='Details'><input id='delete' name='delete' type='submit' value='löschen'>"
+        ."<input id='userId' name='userId' type='hidden' value='".$row['id']."'>" 
+        ."</form></td>";
+    echo 
+        "</tr>";
+}
 BackendComponentPrinter::PrintTableEnd();
 echo
-    "<form method='post' action='Usermanagement.php'>
-        <input id='newUser' name='newUser' type='submit' value='Neuer Benutzer'>
-    </form>
-    <h2><i class='fa fa-key fontawesome'></i> Rollen definieren</h2>";
+        "<form method='post' action='Usermanagement.php'>
+            <input id='newUser' name='newUser' type='submit' value='Neuer Benutzer'>
+        </form>
+        <h2><i class='fa fa-key fontawesome'></i> Rollen definieren</h2>";
 BackendComponentPrinter::PrintTableStart(array("Rollenname", "Aktion"));
             // foreach role in database print
             $roleRows = $dbUser->SelectAllRoles();
@@ -309,13 +215,13 @@ BackendComponentPrinter::PrintTableStart(array("Rollenname", "Aktion"));
             }
 BackendComponentPrinter::PrintTableEnd();
 echo
-    "<form method='post' action='Usermanagement.php'>
-        <input id='newRole' name='newRole' type='submit' value='Neue Rolle'>
-    </form>
-    </section>
-    </body>
+        "<form method='post' action='Usermanagement.php'>
+            <input id='newRole' name='newRole' type='submit' value='Neue Rolle'>
+        </form>
+        </section>
+        </body>
 
-    </html>";
+        </html>";
 
 
 function EditUser($userId, $dbUser)
@@ -325,9 +231,9 @@ function EditUser($userId, $dbUser)
     /* dynamisch erzeugt je nach Rechten */
     BackendComponentPrinter::PrintSidebar(array());// PrintSidebar($_SESSION["permissions"]);
     echo
-    "<section id='main'>
-    <h1><i class='fa fa-user fontawesome'></i> Benutzer bearbeiten</h1>
-        <form method='post' action='Usermanagement.php'>";
+            "<section id='main'>
+            <h1><i class='fa fa-user fontawesome'></i> Benutzer bearbeiten</h1>
+                <form method='post' action='Usermanagement.php'>";
     $userRow = $dbUser->FetchArray($dbUser->GetUserInformationById($userId));
     echo
             "<label for='userName'>Benutzername</label>
@@ -344,11 +250,11 @@ function EditUser($userId, $dbUser)
     echo
             "<input id='userId' name='userId' type='hidden' value='".$userId."'>".
             "<input id='applyChanges' name='applyChanges' type='submit' value='Änderungen übernehmen'>";
-        echo
-        "</form>
-        <h2>Passwort ändern</h2>
-        <form method='post' action='Usermanagement.php'>";
-        echo
+    echo
+            "</form>
+            <h2>Passwort ändern</h2>
+            <form method='post' action='Usermanagement.php'>";
+    echo
             "<label for='currentPassword'>aktuelles Passwort</label>
             <input id='currentPassword' name='currentPassword' type='password'><br><br>
             <label for='newPassword'>neues Passwort</label>
@@ -357,12 +263,12 @@ function EditUser($userId, $dbUser)
             <input id='newPasswordRepeat' name='newPasswordRepeat' type='password'><br><br>
             <input id='userId' name='userId' type='hidden' value='".$userId."'>".
             "<input id='applyPasswordChanges' name='applyPasswordChanges' type='submit' value='Passwort übernehmen'>";
-        echo
-        "</form>
-    </section>
-    </body>
+    echo
+            "</form>
+            </section>
+            </body>
 
-    </html>";
+            </html>";
 }
 function EditRole($roleId, $dbUser)
 {
@@ -372,8 +278,8 @@ function EditRole($roleId, $dbUser)
     BackendComponentPrinter::PrintSidebar(array());// PrintSidebar($_SESSION["permissions"]);
     
     echo
-    "<section id='main'>
-    <h1><i class='fa fa-key fontawesome'></i> Rolle bearbeiten</h1>";
+            "<section id='main'>
+            <h1><i class='fa fa-key fontawesome'></i> Rolle bearbeiten</h1>";
     $roleRow = $dbUser->FetchArray($dbUser->SelectRoleById($roleId));
     echo
             "<form method='post' action='Usermanagement.php'>".
@@ -446,9 +352,9 @@ function CreateNewUser($dbUser)
     /* dynamisch erzeugt je nach Rechten */
     BackendComponentPrinter::PrintSidebar(array());// PrintSidebar($_SESSION["permissions"]);
     echo
-    "<section id='main'>
-    <h1><i class='fa fa-user fontawesome'></i> Neuer Benutzer</h1>
-        <form method='post' action='Usermanagement.php'>";
+            "<section id='main'>
+            <h1><i class='fa fa-user fontawesome'></i> Neuer Benutzer</h1>
+            <form method='post' action='Usermanagement.php'>";
     echo
             "<label for='userName'>Benutzername</label>
             <input id='userName' name='userName' type='text'><br><br>";
@@ -465,7 +371,8 @@ function CreateNewUser($dbUser)
             "<label for='currentPassword'>aktuelles Passwort</label>
             <input id='currentPassword' name='currentPassword' type='password'><br><br>";
     echo
-            "<label>Rolle: <select name='role'>";
+            "<label for='currentPassword'>Rolle</label>".
+            "<select name='role'>";
     $roleRows = $dbUser->SelectAllRoles();
     while ($rolerow = $dbUser->FetchArray($roleRows))
     {
@@ -473,7 +380,7 @@ function CreateNewUser($dbUser)
         echo ">".$rolerow['rolename']."</option>";
     }
     echo
-            "</select></label><br><br>";
+            "</select><br><br>";
     echo
             "<label for='birthdate'>Geburtsdatum</label>
             <input type='date' name='birthdate' id='birthdate'><br><br>";
@@ -481,7 +388,7 @@ function CreateNewUser($dbUser)
             "<input id='registrateUser' name='registrateUser' type='submit' value='Anwender erstellen'>";
 
     echo
-        "</form></section></body></html>";
+            "</form></section></body></html>";
 }
 function CreateNewRole($dbUser)
 {
@@ -491,8 +398,8 @@ function CreateNewRole($dbUser)
     BackendComponentPrinter::PrintSidebar(array());// PrintSidebar($_SESSION["permissions"]);
     
     echo
-    "<section id='main'>
-    <h1><i class='fa fa-key fontawesome'></i> Rolle erstellen</h1>";
+            "<section id='main'>
+            <h1><i class='fa fa-key fontawesome'></i> Rolle erstellen</h1>";
     echo
             "<form method='post' action='Usermanagement.php'>".
             "<label for='rolename'>Rollenname</label>
@@ -529,8 +436,8 @@ function BanUser($userId, $dbUser)
     BackendComponentPrinter::PrintSidebar(array());// PrintSidebar($_SESSION["permissions"]);
     
     echo
-    "<section id='main'>
-    <h1><i class='fa fa-ban'></i> Sperrung</h1>";
+            "<section id='main'>
+            <h1><i class='fa fa-ban'></i> Sperrung</h1>";
     echo
             "<form method='post' action='Usermanagement.php'>".
             "<input id='userId' name='userId' type='hidden' value='".$userId."'><br><br>";
@@ -556,5 +463,57 @@ function BanUser($userId, $dbUser)
             "<label for='enddatetime'>Enddatum</label>".
             "<input id='enddatetime' name='enddatetime' type='date'><br><br>".
             "<input id='banUser' name='banUser' type='submit' value='Sperrung erstellen'></form>";
+}
+// call by reference --> &
+function SetPermissionsFromForm(&$guestbookmanagement, &$usermanagement, &$pagemanagement, &$articlemanagement, &$guestbookusage, &$templateconstruction)
+{
+    if (isset($_POST['guestbookmanagement']))
+    {
+        $guestbookmanagement = 1;
+    }
+    else 
+    {
+        $guestbookmanagement = 0;
+    }
+    if (isset($_POST['usermanagement']))
+    {
+        $usermanagement = 1;
+    }
+    else 
+    {
+        $usermanagement = 0;
+    }
+    if (isset($_POST['pagemanagement']))
+    {
+        $pagemanagement = 1;
+    }
+    else 
+    {
+        $pagemanagement = 0;
+    }
+    if (isset($_POST['articlemanagement']))
+    {
+        $articlemanagement = 1;
+    }
+    else 
+    {
+        $articlemanagement = 0;
+    }
+    if (isset($_POST['guestbookusage']))
+    {
+        $guestbookusage = 1;
+    }
+    else 
+    {
+        $guestbookusage = 0;
+    }
+    if (isset($_POST['templateconstruction']))
+    {
+        $templateconstruction = 1;
+    }
+    else 
+    {
+        $templateconstruction = 0;
+    }
 }
 ?>
