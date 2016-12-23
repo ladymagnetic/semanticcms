@@ -105,6 +105,14 @@ class DbUser
 
 		$selectAllPages = "SELECT * FROM page";
 		$this->database->PrepareStatement("selectAllPages", $selectAllPages);
+		
+		
+		$insertBanViaUserId = "INSERT INTO ban (id, user_id, reason_id, description, begindatetime, enddatetime) VALUES (NULL, ?, ?, ?, ?, ?)";
+		$this->database->PrepareStatement("insertBanViaUserId", $insertBanViaUserId);
+
+		$debanUserViaBanId = "UPDATE ban SET  enddatetime = NOW() WHERE id = ?)";
+		$this->database->PrepareStatement("debanUserViaBanId", $debanUserViaBanId);
+		
 
 	}
 
@@ -403,32 +411,48 @@ function check_date($date,$format,$sep)
 			return $this->database->ExecutePreparedStatement("selectUserByEmail", array($email));
 	}
 
-	/* werden heute noch alle kommentiert*/
+	
 
-
-
+	/**
+	* SelectAllUsers()
+	*/
 	public function SelectAllUsers()
 	{
 		return $this->database->ExecutePreparedStatement("selectAllUsers", array());
 	}
 
-
+	
+	/**
+	* SelectAllRoles()
+	*/
 	public function SelectAllRoles()
 	{
 		return $this->database->ExecutePreparedStatement("selectAllRoles", array());
 	}
 
+	
+	/**
+	* SelectAllArticles()
+	*/	
 	public function SelectAllArticles()
 	{
 		return $this->database->ExecutePreparedStatement("selectAllArticles", array());
 	}
 
+	
+	/**
+	* SelectAllTemplates()
+	*/
 
 	public function SelectAllTemplates()
 	{
 		return $this->database->ExecutePreparedStatement("selectAllTemplates", array());
 	}
-
+	
+	
+	/**
+	* SelectAllPages()
+	*/
 	public function SelectAllPages()
 	{
 		return $this->database->ExecutePreparedStatement("selectAllPages", array());
@@ -436,6 +460,99 @@ function check_date($date,$format,$sep)
 
 
 
+	/**
+	* IsUserBannedId()
+	* checks via userid if the user is banned
+	* @params int $userId the user's id
+	*/	
+	public function IsUserBannedId($userId)
+	{
+		//zum Testen in Xampp: SELECT * FROM `ban` INNER JOIN user ON ban.user_id = user.id WHERE (user.id = 8 AND ban.end > now())
+		$userId= $this->database->RealEscapeString($userId);
+		$result = $this->database->ExecuteQuery("SELECT * FROM ban INNER JOIN user ON ban.user_id = user.id WHERE ( user.id =".$userId." AND ban.end > now()");
+
+		if($result==true)
+		{
+			echo "User ist gerade gesperrt";
+			return true;
+		}
+		else
+		{
+			echo "User ist nicht gesperrt.";
+			return false;
+		}
+	}
+	
+	
+	/**
+	*  IsUserBannedUsername()
+	* checks via username if the user is banned
+	* @params string $username the user's username
+	*/	
+	public function IsUserBannedUsername($username)
+	{
+		$username = $this->database->RealEscapeString($username);
+		$result = $this->database->ExecuteQuery("SELECT * FROM ban INNER JOIN user ON ban.user_id = user.id WHERE ( user.username ='".$username."' AND ban.end > now()");
+
+		if($result==true)
+		{
+			echo "User ist gerade gesperrt";
+			return true;
+		}
+		else
+		{
+			echo "User ist nicht gesperrt.";
+			return false;
+		}
+	}
+	
+	
+	/**
+	*  InsertBanViaUserId()
+	* @params int $user_id the user's id
+	* @params int $reason_id the banreasons's id
+	* @params string $description the ban's description
+	* @params datetime $begindatetime the ban's begindatetime
+	* @params datetime $enddatetime the ban's enddatetime
+	*/	
+	public function InsertBanViaUserId($user_id, $reason_id, $description, $begindatetime, $enddatetime)
+	{
+	// Datum überprüfen
+		$description = $this->database->RealEscapeString($description);
+		$result = $this->database->ExecuteQuery("insertBanViaUserId", array($user_id, $reason_id, $description, $begindatetime, $enddatetime);
+
+		if($result==true)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+
+	}
+	
+	/**
+	*  DebanUserViaBanId()
+	* checks via username if the user is banned
+	* @params int $id the ban's id
+	*/		
+	public function DebanUserViaBanId($id)
+	{
+		$result = $this->database->ExecuteQuery("debanUserViaBanId", array($id);
+
+		if($result==true)
+		{
+				return true;
+		}
+		else
+		{
+				return false;
+		}
+	}
+	
+	
+	
 
 
 
@@ -465,76 +582,29 @@ function check_date($date,$format,$sep)
 	*/
 	public function LoginUser($nameInput, $password)
 	{
-			$nameInput = $this->database->RealEscapeString($nameInput);
+		$nameInput = $this->database->RealEscapeString($nameInput);
 
-			//$stmt = $this->database->ExecuteQuery("SELECT password FROM user WHERE email =".$nameInput." OR username =".$nameInput);
+		//$stmt = $this->database->ExecuteQuery("SELECT password FROM user WHERE email =".$nameInput." OR username =".$nameInput);
 
-			// Fehlende '' eingefügt -> jetzt gibts auch keine Fehler mehr
-			$result = $this->database->ExecuteQuery("SELECT id FROM user WHERE (email ='".$nameInput."' OR username ='".$nameInput."') AND password = '". $password."'");
+		// Fehlende '' eingefügt -> jetzt gibts auch keine Fehler mehr
+		$result = $this->database->ExecuteQuery("SELECT id FROM user WHERE (email ='".$nameInput."' OR username ='".$nameInput."') AND password = '". $password."'");
 
-			// Rückgabe prüfen => ist der Datensatz auch wirklich vorhanden? Ist es genau EIN Datensatz, der zurück kommt?
-			// Quellcode dafür ist implementiert, ich habs hier mal als Beispiel auch umgesetzt
-			if($result==true)
-			{
-				echo "hallo ich bin richtig";	// Dran denken das zu entfernen wenn nicht mehr gebraucht
-				return true;
-			}
-			else
-			{
-				echo "hallo ich bin falsch";	// Dran denken das zu entfernen wenn nicht mehr gebraucht
-				return false;
-			}
+		// Rückgabe prüfen => ist der Datensatz auch wirklich vorhanden? Ist es genau EIN Datensatz, der zurück kommt?
+		// Quellcode dafür ist implementiert, ich habs hier mal als Beispiel auch umgesetzt
+		if($result==true)
+		{
+			echo "hallo ich bin richtig";	// Dran denken das zu entfernen wenn nicht mehr gebraucht
+			return true;
+		}
+		else
+		{
+			echo "hallo ich bin falsch";	// Dran denken das zu entfernen wenn nicht mehr gebraucht
+			return false;
+		}
 	}
 
-	//same function than "Ban()"?
-	// Hinweis: Mirjam =>  Datenbankmodell muss morgen nochmals überarbeitet werden => hat aus Wirkung auf diese Funktion.
-	// Jonas: ist das gleiche wie ban, also sperrung
-	public function BanUser($userId)
-	{
-	}
-	//Jonas: ist das gleiche wie deban, also sperrung
-	// Hinweis: Mirjam =>  Datenbankmodell muss morgen nochmals überarbeitet werden => hat aus Wirkung auf diese Funktion.
-		//same function than "Deban()"?
- 	public function DebanUser($userId)
-	{
-	}
-
-
-	// ???
-	//Jonas: muss einen neuen user erzeugen und die id von diesem zurückgeben
-	public function CreateUser()
-	{
-		return $userId;
-	}
-
-
-
-	/*Mirjam => ab hier: kommen noch.*/
-
-	// return users as rows
-	//Jonas:
-	// muss alle user mit den angegebenen Werten bevorzugt als rows zurückgeben zur Auflistung in der Tabelle
-	public function GetUsers()
-	{
-		//$sql = "SELECT id, role_id, lastname, firstname, username, password, email FROM user";
-		// $db->query($sql) as $row)
-		return;
-	}
-
-	// return roles as rows
-	// Jonas: muss alle roles mit den angegebenen Werten bevorzugt als rows zurückgeben zur Auflistung in der Tabelle
-	public function GetRoles()
-	{
-		//$sql = "SELECT id, name FROM role";
-		return;
-	}
-
-	// Jonas: // checkt ob der user mit der userid gesperrt (gebannt) ist und gibt true oder false zurück
-	public function IsUserBanned($userId)
-	{
-		return false;
-	}
-
+	 
+	 	 
 
 
 	// has to save the changes for the passwords of the user
