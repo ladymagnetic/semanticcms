@@ -28,6 +28,7 @@ else if (isset($_POST['ban'])) {
 }
 else if (isset($_POST['banUser']))
 {
+    $user_id = $_POST['userId']; 
     $reason_id = $_POST['reasonId']; 
     $description = $_POST['description']; 
     $begindatetime = $_POST['begindatetime'];
