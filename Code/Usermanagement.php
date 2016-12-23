@@ -231,17 +231,38 @@ echo
                 "<tr><td>".$row['firstname']." ".$row['lastname']."</td>";
 
                 //if user is banned/debanned
-                $banned = $dbUser->IsUserBannedId($row['id']);
+                //$banned = $dbUser->IsUserBannedId($row['id']);
+                $bannedUsers = $dbUser->SelectAllUsersWhichAreBannedNow();
+                $banned = false;
+                while ($bannedUser = $dbUser->FetchArray($bannedUsers))
+                {
+                    if ($bannedUser['id'] == $row['id'])
+                    {
+                        $banned = true;
+                    }
+                }
                 if ($banned)
                 {
+                    $reason = "";
+                    $banRow = $dbUser->FetchArray($dbUser->SelectBanByUserid($row['id']));
+                    $reasonRows = $dbUser->SelectAllBan_Reason();
+                    while ($reasonRow = $dbUser->FetchArray($reasonRows))
+                    {
+                        if ($reasonRow['id'] == $banRow['reason_id'])
+                        {
+                            $reason = $reasonRow['reason'];
+                        }
+                    }
                     echo "<td>
                     <form method='post' action='Usermanagement.php'>
-                    <input id='deban' name='deban' type='submit' value='entsperren'>";
+                    <input id='banId' name='banId' type='hidden' value='".$banRow['id']."'>".
+                    "<input id='reason' name='reason' type='text' readonly value='".$reason."'><br><br>".
+                    "<input id='deban' name='deban' type='submit' value='entsperren'>";
                 }
                 else
                 {
-                    echo "<td>
-                    <form method='post' action='Usermanagement.php'>
+                    echo "<td>".
+                    "<form method='post' action='Usermanagement.php'>
                     <input id='ban' name='ban' type='submit' value='sperren'>";
                 }
                 echo
@@ -520,8 +541,18 @@ function BanUser($userId, $dbUser)
             "<form method='post' action='Usermanagement.php'>".
             "<input id='userId' name='userId' type='hidden' value='".$userId."'><br><br>";
     echo
-            "<label for='reasonId'>Reason Id</label>".
-            "<input id='reasonId' name='reasonId' type='text'><br><br>";
+            "<label for='reasonId'>Grund</label>";
+    echo
+
+            "<select name='reasonId'>";
+            $reasonRows = $dbUser->SelectAllBan_Reason();
+            while ($reasonRow = $dbUser->FetchArray($reasonRows))
+            {
+                echo "<option id='".reasonRow['id']."'";
+                echo ">".$reasonRow['reason']."</option>";
+            }
+    echo
+            "</select><br><br>";
     echo
             "<label for='description'>Beschreibung</label>".
             "<input id='description' name='description' type='text'><br><br>";
