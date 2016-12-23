@@ -52,21 +52,21 @@ class BackendComponentPrinter
     public static function PrintSidebar(array $permissions)
     {
         echo
-        "<nav id=\"menue\">
+        "<nav id=\"menue\" vocab='https://schema.org/' typeof='SiteNavigationElement'>
 			<div id=\"logo\" style=\"cursor: pointer;\" onclick=\"window.location='Start.php';\"></div>
 			<ul>";
         // Je nach Rechten bestimmte Menue-Punkte gar nicht erst sichtbar
         if (in_array(Permission::Usermanagment, $permissions)) {
-            echo "<li><a href=\"Usermanagement.php\" title=\"Benutzerverwaltung\"><i class=\"fa fa-user fontawesome\"></i> Benutzerverwaltung</a></li>";
+            echo "<li property='name'><a property='url' href=\"Usermanagement.php\" title=\"Benutzerverwaltung\"><i class=\"fa fa-user fontawesome\"></i> Benutzerverwaltung</a></li>";
         }
         if (in_array(Permission::Pagemanagment, $permissions)) {
-            echo "<li><a href=\"Pagemanagement.php\" title=\"Seitenverwaltung\"><i class=\"fa fa-file-text fontawesome\"></i> Seitenverwaltung</a></li>";
+            echo "<li property='name'><a property='url' href=\"Pagemanagement.php\" title=\"Seitenverwaltung\"><i class=\"fa fa-file-text fontawesome\"></i> Seitenverwaltung</a></li>";
         }
         if (in_array(Permission::Articlemanagment, $permissions)) {
-            echo "<li><a href=\"Articlemanagement.php\" title=\"Inhaltsverwaltung\"><i class=\"fa fa-align-justify fontawesome\"></i> Inhaltsverwaltung</a></li>";
+            echo "<li property='name'><a property='url' href=\"Articlemanagement.php\" title=\"Inhaltsverwaltung\"><i class=\"fa fa-align-justify fontawesome\"></i> Inhaltsverwaltung</a></li>";
         }
         if (in_array(Permission::Templateconstruction, $permissions)) {
-            echo "<li><a href=\"TemplateConstruction.php\" title=\"Templates\"><i class=\"fa fa-paint-brush fontawesome\"></i> Templates</a></li>";
+            echo "<li property='name'><a property='url' href=\"TemplateConstruction.php\" title=\"Templates\"><i class=\"fa fa-paint-brush fontawesome\"></i> Templates</a></li>";
         }
 
         echo
@@ -81,7 +81,8 @@ class BackendComponentPrinter
      */
     public static function PrintHead($title, $jquery=false)
     {
-        // RDF-Tags oder schema.org oder so mit einfuegen => dazu steht unter Allgemeines/SemanticWeb/ was
+         // evtl. auch schema.org tags im head einfügen, wenn sinnvoll
+        // (z.B. 'description', 'datePublished' (eher für die Blog Artikel geeignet)
          echo
             '<!-- head -->
              <head>
