@@ -17,12 +17,22 @@ $dbUser = new DbUser($config['cms_db']['dbhost'], $config['cms_db']['dbuser'], $
 
 // actions dbuser
 if (isset($_POST['deban'])) {
-    $userId = $_POST['userId'];
-    $dbUser->DebanUser($userId);    
+    $banId = $_POST['banId'];
+    $dbUser->DebanUserViaBanId($banId);    
 }
 else if (isset($_POST['ban'])) {
     $userId = $_POST['userId'];
-    $dbUser->BanUser($userId);
+    BanUser($userId, $dbUser);
+    // has to return because other page
+    return;
+}
+else if (isset($_POST['banUser']))
+{
+    $reason_id = $_POST['reasonId']; 
+    $description = $_POST['description']; 
+    $begindatetime = $_POST['begindatetime'];
+    $enddatetime = $_POST['enddatetime'];
+    $dbUser->InsertBanViaUserId($user_id, $reason_id, $description, $begindatetime, $enddatetime);
 }
 else if (isset($_POST['details'])) {
     $userId = $_POST['userId'];
@@ -219,9 +229,8 @@ echo
                 echo 
                 "<tr><td>".$row['firstname']." ".$row['lastname']."</td>";
 
-                // if user is banned/debanned
-                //$banned = $dbUser->IsUserBanned($row['id']);
-                $banned = false;
+                //if user is banned/debanned
+                $banned = $dbUser->IsUserBannedId($row['id']);
                 if ($banned)
                 {
                     echo "<td>
@@ -494,5 +503,32 @@ function CreateNewRole($dbUser)
             "<label for='templateconstruction'>Template erstellen</label>".
             "<input id='templateconstruction' name='templateconstruction' type='checkbox' value='1'><br><br>".
             "<input id='createRole' name='createRole' type='submit' value='Rolle erstellen'></form>";
+}
+
+function BanUser($userId, $dbUser)
+{
+    BackendComponentPrinter::PrintHead("Benutzerverwaltung");
+    /* menue */
+    /* dynamisch erzeugt je nach Rechten */
+    BackendComponentPrinter::PrintSidebar(array());// PrintSidebar($_SESSION["permissions"]);
+    
+    echo
+    "<section id='main'>
+    <h1><i class='fa fa-ban'></i> Sperrung</h1>";
+    echo
+            "<form method='post' action='Usermanagement.php'>".
+            "<input id='userId' name='userId' type='hidden' value='".$userId."'><br><br>";
+    echo
+            "<label for='reasonId'>Reason Id</label>".
+            "<input id='reasonId' name='reasonId' type='text'><br><br>";
+    echo
+            "<label for='description'>Gästebuch nutzen</label>".
+            "<input id='description' name='description' type='text'><br><br>";
+    echo
+            "<label for='begindatetime'>Startdatum</label>".
+            "<input id='begindatetime' name='begindatetime' type='date'><br><br>".
+            "<label for='enddatetime'>Enddatum</label>".
+            "<input id='enddatetime' name='enddatetime' type='date'><br><br>".
+            "<input id='banUser' name='banUser' type='submit' value='Sperrung erstellen'></form>";
 }
 ?>
