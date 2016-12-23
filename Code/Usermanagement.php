@@ -215,14 +215,8 @@ BackendComponentPrinter::PrintSidebar(array());// PrintSidebar($_SESSION["permis
 
 echo
 "<section id='main'>
-    <h1><i class='fa fa-user fontawesome'></i> Benutzerverwaltung</h1>
-    <table>
-        <tr>
-            <th>Benutzer</th>
-            <th>entsperren/sperren</th>
-            <th>Rolle</th>
-            <th>Aktion</th>
-        </tr>";
+    <h1><i class='fa fa-user fontawesome'></i> Benutzerverwaltung</h1>";
+BackendComponentPrinter::PrintTableStart(array("Benutzer", "entsperren/sperren", "Rolle", "Aktion"));
             // foreach user in database print
             $userRows = $dbUser->SelectAllUsers();
             while ($row = $dbUser->FetchArray($userRows))
@@ -293,17 +287,13 @@ echo
                 echo 
                     "</tr>";
             }
+BackendComponentPrinter::PrintTableEnd();
 echo
-    "</table>
-    <form method='post' action='Usermanagement.php'>
+    "<form method='post' action='Usermanagement.php'>
         <input id='newUser' name='newUser' type='submit' value='Neuer Benutzer'>
     </form>
-    <h2><i class='fa fa-key fontawesome'></i> Rollen definieren</h2>
-    <table>
-        <tr>
-            <th>Rollenname</th>
-            <th>Aktion</th>
-        </tr>";
+    <h2><i class='fa fa-key fontawesome'></i> Rollen definieren</h2>";
+BackendComponentPrinter::PrintTableStart(array("Rollenname", "Aktion"));
             // foreach role in database print
             $roleRows = $dbUser->SelectAllRoles();
             while ($row = $dbUser->FetchArray($roleRows))
@@ -317,9 +307,9 @@ echo
                 echo "</tr>";
                 $row = $dbUser->SelectAllRoles();
             }
+BackendComponentPrinter::PrintTableEnd();
 echo
-    "</table>
-    <form method='post' action='Usermanagement.php'>
+    "<form method='post' action='Usermanagement.php'>
         <input id='newRole' name='newRole' type='submit' value='Neue Rolle'>
     </form>
     </section>
