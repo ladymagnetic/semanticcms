@@ -440,6 +440,17 @@ function CreateNewUser($dbUser)
 //BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
 BackendComponentPrinter::PrintSidebar(array());
 /*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert */
+/* Datepicker */
+    echo
+    "
+        <script src='https://code.jquery.com/jquery-1.12.4.js'></script>
+        <script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js'></script>
+        <script>
+        $( function() {
+        $( '#birthdate' ).datepicker({ dateFormat: 'yy-mm-dd' });
+        } );
+        </script>
+    ";
     echo
             "<section id='main'>
             <h1><i class='fa fa-user fontawesome'></i> Neuer Benutzer</h1>
@@ -565,6 +576,18 @@ function BanUser($userId, $dbUser)
 //BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
 BackendComponentPrinter::PrintSidebar(array());
 /*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert */
+/* Datepicker */
+    echo
+    "
+        <script src='https://code.jquery.com/jquery-1.12.4.js'></script>
+        <script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js'></script>
+        <script>
+        $( function() {
+        $( '#begindatetime' ).datepicker({ dateFormat: 'yy-mm-dd' });
+        $( '#enddatetime' ).datepicker({ dateFormat: 'yy-mm-dd' });
+        } );
+        </script>
+    ";
     
     echo
             "<section id='main'>
