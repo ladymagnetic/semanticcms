@@ -122,24 +122,27 @@ BackendComponentPrinter::PrintHead("Benutzerverwaltung");
 /* menue */
 /* dynamisch erzeugt je nach Rechten */
 /* Check if user is logged in */
-if(!isset($_SESSION['username'])) 
-{
-    die($config['error']['noLogin']);  
-}
+/*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert*/
+//if(!isset($_SESSION['username'])) 
+//{
+//    die($config['error']['noLogin']);  
+//}
 /* Check if  permissions are set */
-else if(!isset($_SESSION['permissions']))
-{
-    die($config['error']['permissionNotSet']);  		
-}
+//else if(!isset($_SESSION['permissions']))
+//{
+//    die($config['error']['permissionNotSet']);  		
+//}
 /*  Check if user has the permission the see this page */
 // Nicht vergessen nach dem kopieren die wirklich benötigte permission abzufragen!!
-else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
-{
-    die($config['error']['permissionMissing']);  	  
-}
+//else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
+//{
+//    die($config['error']['permissionMissing']);  	  
+//}
 
 // Printer Beispiel									
-BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
+//BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
+BackendComponentPrinter::PrintSidebar(array());
+/*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert */
 
 echo
 "<section id='main'>
@@ -251,26 +254,29 @@ function EditUser($userId, $dbUser)
 {
     BackendComponentPrinter::PrintHead("Benutzerverwaltung");
     /* menue */
-    /* dynamisch erzeugt je nach Rechten */
-    /* Check if user is logged in */
-    if(!isset($_SESSION['username'])) 
-    {
-        die($config['error']['noLogin']);  
-    }
-    /* Check if  permissions are set */
-    else if(!isset($_SESSION['permissions']))
-    {
-        die($config['error']['permissionNotSet']);  		
-    }
-    /*  Check if user has the permission the see this page */
-    // Nicht vergessen nach dem kopieren die wirklich benötigte permission abzufragen!!
-    else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
-    {
-        die($config['error']['permissionMissing']);  	  
-    }
+/* dynamisch erzeugt je nach Rechten */
+/* Check if user is logged in */
+/*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert*/
+//if(!isset($_SESSION['username'])) 
+//{
+//    die($config['error']['noLogin']);  
+//}
+/* Check if  permissions are set */
+//else if(!isset($_SESSION['permissions']))
+//{
+//    die($config['error']['permissionNotSet']);  		
+//}
+/*  Check if user has the permission the see this page */
+// Nicht vergessen nach dem kopieren die wirklich benötigte permission abzufragen!!
+//else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
+//{
+//    die($config['error']['permissionMissing']);  	  
+//}
 
-    // Printer Beispiel									
-    BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
+// Printer Beispiel									
+//BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
+BackendComponentPrinter::PrintSidebar(array());
+/*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert */
     echo
             "<section id='main'>
             <h1><i class='fa fa-user fontawesome'></i> Benutzer bearbeiten</h1>
@@ -315,26 +321,29 @@ function EditRole($roleId, $dbUser)
 {
     BackendComponentPrinter::PrintHead("Benutzerverwaltung");
     /* menue */
-    /* dynamisch erzeugt je nach Rechten */
-    /* Check if user is logged in */
-    if(!isset($_SESSION['username'])) 
-    {
-        die($config['error']['noLogin']);  
-    }
-    /* Check if  permissions are set */
-    else if(!isset($_SESSION['permissions']))
-    {
-        die($config['error']['permissionNotSet']);  		
-    }
-    /*  Check if user has the permission the see this page */
-    // Nicht vergessen nach dem kopieren die wirklich benötigte permission abzufragen!!
-    else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
-    {
-        die($config['error']['permissionMissing']);  	  
-    }
+/* dynamisch erzeugt je nach Rechten */
+/* Check if user is logged in */
+/*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert*/
+//if(!isset($_SESSION['username'])) 
+//{
+//    die($config['error']['noLogin']);  
+//}
+/* Check if  permissions are set */
+//else if(!isset($_SESSION['permissions']))
+//{
+//    die($config['error']['permissionNotSet']);  		
+//}
+/*  Check if user has the permission the see this page */
+// Nicht vergessen nach dem kopieren die wirklich benötigte permission abzufragen!!
+//else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
+//{
+//    die($config['error']['permissionMissing']);  	  
+//}
 
-    // Printer Beispiel									
-    BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
+// Printer Beispiel									
+//BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
+BackendComponentPrinter::PrintSidebar(array());
+/*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert */
     
     echo
             "<section id='main'>
@@ -408,26 +417,29 @@ function CreateNewUser($dbUser)
 {
     BackendComponentPrinter::PrintHead("Benutzerverwaltung");
     /* menue */
-    /* dynamisch erzeugt je nach Rechten */
-    /* Check if user is logged in */
-    if(!isset($_SESSION['username'])) 
-    {
-        die($config['error']['noLogin']);  
-    }
-    /* Check if  permissions are set */
-    else if(!isset($_SESSION['permissions']))
-    {
-        die($config['error']['permissionNotSet']);  		
-    }
-    /*  Check if user has the permission the see this page */
-    // Nicht vergessen nach dem kopieren die wirklich benötigte permission abzufragen!!
-    else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
-    {
-        die($config['error']['permissionMissing']);  	  
-    }
+/* dynamisch erzeugt je nach Rechten */
+/* Check if user is logged in */
+/*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert*/
+//if(!isset($_SESSION['username'])) 
+//{
+//    die($config['error']['noLogin']);  
+//}
+/* Check if  permissions are set */
+//else if(!isset($_SESSION['permissions']))
+//{
+//    die($config['error']['permissionNotSet']);  		
+//}
+/*  Check if user has the permission the see this page */
+// Nicht vergessen nach dem kopieren die wirklich benötigte permission abzufragen!!
+//else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
+//{
+//    die($config['error']['permissionMissing']);  	  
+//}
 
-    // Printer Beispiel									
-    BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
+// Printer Beispiel									
+//BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
+BackendComponentPrinter::PrintSidebar(array());
+/*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert */
     echo
             "<section id='main'>
             <h1><i class='fa fa-user fontawesome'></i> Neuer Benutzer</h1>
@@ -471,26 +483,29 @@ function CreateNewRole($dbUser)
 {
     BackendComponentPrinter::PrintHead("Benutzerverwaltung");
     /* menue */
-    /* dynamisch erzeugt je nach Rechten */
-    /* Check if user is logged in */
-    if(!isset($_SESSION['username'])) 
-    {
-        die($config['error']['noLogin']);  
-    }
-    /* Check if  permissions are set */
-    else if(!isset($_SESSION['permissions']))
-    {
-        die($config['error']['permissionNotSet']);  		
-    }
-    /*  Check if user has the permission the see this page */
-    // Nicht vergessen nach dem kopieren die wirklich benötigte permission abzufragen!!
-    else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
-    {
-        die($config['error']['permissionMissing']);  	  
-    }
+/* dynamisch erzeugt je nach Rechten */
+/* Check if user is logged in */
+/*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert*/
+//if(!isset($_SESSION['username'])) 
+//{
+//    die($config['error']['noLogin']);  
+//}
+/* Check if  permissions are set */
+//else if(!isset($_SESSION['permissions']))
+//{
+//    die($config['error']['permissionNotSet']);  		
+//}
+/*  Check if user has the permission the see this page */
+// Nicht vergessen nach dem kopieren die wirklich benötigte permission abzufragen!!
+//else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
+//{
+//    die($config['error']['permissionMissing']);  	  
+//}
 
-    // Printer Beispiel									
-    BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
+// Printer Beispiel									
+//BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
+BackendComponentPrinter::PrintSidebar(array());
+/*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert */
     
     echo
             "<section id='main'>
@@ -527,26 +542,29 @@ function BanUser($userId, $dbUser)
 {
     BackendComponentPrinter::PrintHead("Benutzerverwaltung");
     /* menue */
-    /* dynamisch erzeugt je nach Rechten */
-    /* Check if user is logged in */
-    if(!isset($_SESSION['username'])) 
-    {
-        die($config['error']['noLogin']);  
-    }
-    /* Check if  permissions are set */
-    else if(!isset($_SESSION['permissions']))
-    {
-        die($config['error']['permissionNotSet']);  		
-    }
-    /*  Check if user has the permission the see this page */
-    // Nicht vergessen nach dem kopieren die wirklich benötigte permission abzufragen!!
-    else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
-    {
-        die($config['error']['permissionMissing']);  	  
-    }
+/* dynamisch erzeugt je nach Rechten */
+/* Check if user is logged in */
+/*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert*/
+//if(!isset($_SESSION['username'])) 
+//{
+//    die($config['error']['noLogin']);  
+//}
+/* Check if  permissions are set */
+//else if(!isset($_SESSION['permissions']))
+//{
+//    die($config['error']['permissionNotSet']);  		
+//}
+/*  Check if user has the permission the see this page */
+// Nicht vergessen nach dem kopieren die wirklich benötigte permission abzufragen!!
+//else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
+//{
+//    die($config['error']['permissionMissing']);  	  
+//}
 
-    // Printer Beispiel									
-    BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
+// Printer Beispiel									
+//BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
+BackendComponentPrinter::PrintSidebar(array());
+/*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert */
     
     echo
             "<section id='main'>
