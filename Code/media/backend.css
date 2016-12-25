@@ -67,10 +67,6 @@ nav
     background-color: #000;
 }
 
-.contentMenue {
-
-}
-
 /*----- Content -----*/
 section#main
 {
@@ -87,11 +83,7 @@ table
     width: 100%;
 }
 
-table, th, td
-{
-}
-
-th
+th, table.dataTable thead th.sorting_asc, table.dataTable thead th.sorting_asc, table.dataTable thead th.sorting
 {
     text-align: left;
     padding:15px;

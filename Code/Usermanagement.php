@@ -118,7 +118,7 @@ else if (isset($_POST['createRole']))
     $dbUser->NewRole($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction);
 }
 
-BackendComponentPrinter::PrintHead("Benutzerverwaltung");
+BackendComponentPrinter::PrintHead("Benutzerverwaltung", $jquery=true);
 /* menue */
 /* dynamisch erzeugt je nach Rechten */
 /* Check if user is logged in */
@@ -143,6 +143,13 @@ BackendComponentPrinter::PrintHead("Benutzerverwaltung");
 //BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
 BackendComponentPrinter::PrintSidebar(array());
 /*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert */
+/* Datatables */
+echo
+        "<link rel='stylesheet' type='text/css' href='//cdn.datatables.net/1.10.13/css/jquery.dataTables.css'>
+        <script type='text/javascript' charset='utf8' src='//cdn.datatables.net/1.10.13/js/jquery.dataTables.js'></script>".
+        "<script>$(document).ready( function () {
+            $('table').DataTable();
+        } );</script>";
 
 echo
 "<section id='main'>
