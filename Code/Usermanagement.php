@@ -538,10 +538,10 @@ BackendComponentPrinter::PrintSidebar(array());
     echo
             "<form method='post' action='Usermanagement.php'>".
             "<label for='rolename'>Rollenname</label>
-            <input id='rolename' name='rolename' type='text'><br><br>";
+            <input required id='rolename' name='rolename' type='text'><br><br>";
     echo
             "<label for='uri'>Uri</label>
-            <input id='uri' name='uri' type='text'><br><br>";
+            <input required id='uri' name='uri' type='text'><br><br>";
     echo    
             "<label for='guestbookmanagement'>Gästebuch verwalten</label>
             <input id='guestbookmanagement' name='guestbookmanagement' type='checkbox' value='1'><br><br>";
