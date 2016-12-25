@@ -599,8 +599,8 @@ BackendComponentPrinter::PrintSidebar(array());
         <script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js'></script>
         <script>
         $( function() {
-        $( '#begindatetime' ).datepicker({ dateFormat: 'yy-mm-dd H:M:S' });
-        $( '#enddatetime' ).datepicker({ dateFormat: 'yy-mm-dd H:M:S' });
+        $( '#begindatetime' ).datepicker({ dateFormat: 'yy-mm-dd 21:48:50' });
+        $( '#enddatetime' ).datepicker({ dateFormat: 'yy-mm-dd 21:48:50' });
         } );
         </script>
     ";
