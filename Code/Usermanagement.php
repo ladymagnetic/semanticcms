@@ -34,7 +34,6 @@ else if (isset($_POST['banUser']))
 {
     $user_id = $_POST['userId']; 
     $reason_id = $_POST['reasonId']; 
-    $dbUser->FetchArray($dbUser->SelectRoleByRolename($_POST['assignedRole']))['id'];
     $description = $_POST['description']; 
     $begindatetime = $_POST['begindatetime'];
     $enddatetime = $_POST['enddatetime'];
@@ -610,7 +609,7 @@ BackendComponentPrinter::PrintSidebar(array());
             "<section id='main'>
             <h1><i class='fa fa-ban'></i> Sperrung</h1>";
     echo
-            "<form method='get' action='Usermanagement.php'>".
+            "<form method='post' action='Usermanagement.php'>".
             "<input id='userId' name='userId' type='hidden' value='".$userId."'><br><br>";
     echo
             "<label for='reasonId'>Grund</label>";
