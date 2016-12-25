@@ -34,6 +34,7 @@ else if (isset($_POST['banUser']))
 {
     $user_id = $_POST['userId']; 
     $reason_id = $_POST['reasonId']; 
+    $dbUser->FetchArray($dbUser->SelectRoleByRolename($_POST['assignedRole']))['id'];
     $description = $_POST['description']; 
     $begindatetime = $_POST['begindatetime'];
     $enddatetime = $_POST['enddatetime'];
@@ -60,9 +61,9 @@ else if (isset($_POST['newRole'])) {
     return;
 }
 else if (isset($_POST['assignRole'])) {
-    $roleId = $_POST['assignedRole'];
+    $roleId = $dbUser->FetchArray($dbUser->SelectRoleByRolename($_POST['assignedRole']))['id'];
     $userId = $_POST['userId'];
-    $dbUser->AssignRole($roleId, $userId);
+    boolval($dbUser->AssignRole($roleId, $userId));
 }
 else if (isset($_POST['deleteRole'])) {
     $roleId = $_POST['roleId'];
@@ -93,7 +94,7 @@ else if (isset($_POST['applyPasswordChanges']))
 }
 else if (isset($_POST['registrateUser']))
 {
-    $role_id = $_POST['role'];
+    $roleId = $dbUser->FetchArray($dbUser->SelectRoleByRolename($_POST['assignedRole']))['id'];
     $lastname = $_POST['name'];
     $firstname = $_POST['foreName'];
     $username = $_POST['userName'];
@@ -213,12 +214,12 @@ while ($row = $dbUser->FetchArray($userRows))
     $tableRow2 .=
         "<input id='userId' name='userId' type='hidden' value='".$row['id']."'></form>";
     $tableRow3 = 
-        "<form action='Usermanagement.php'> <label>Rolle: <select name='assignedRole'>".
+        "<form action='Usermanagement.php' method='post'> <label>Rolle: <select name='assignedRole'>".
         "<option></option>";
         $roleRows = $dbUser->SelectAllRoles();
         while ($rolerow = $dbUser->FetchArray($roleRows))
         {
-            $tableRow3 .= "<option id='".$row['id']."'";
+            $tableRow3 .= "<option id='".$rolerow['id']."'";
             if ($rolerow['id'] == $row['role_id'])
             {
                 $tableRow3 .= " selected ";
@@ -226,7 +227,7 @@ while ($row = $dbUser->FetchArray($userRows))
             $tableRow3 .= ">".$rolerow['rolename']."</option>";
         }
     $tableRow3 .=
-        "<input id='userId' name='userId' type='hidden' value='".$row['id']."'></select></label><br><br><input type='submit' value='Zuweisen'></form>";
+        "<input id='userId' name='userId' type='hidden' value='".$row['id']."'></select></label><br><br><input id='assignRole' name='assignRole' type='submit' value='Zuweisen'></form>";
     $tableRow4 =
         "<form method='post' action='Usermanagement.php'>"
         ."<input id='details' name='details' type='submit' value='Details'><input id='delete' name='delete' type='submit' value='löschen'>"
@@ -599,8 +600,8 @@ BackendComponentPrinter::PrintSidebar(array());
         <script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js'></script>
         <script>
         $( function() {
-        $( '#begindatetime' ).datepicker({ dateFormat: 'yy-mm-dd' });
-        $( '#enddatetime' ).datepicker({ dateFormat: 'yy-mm-dd' });
+        $( '#begindatetime' ).datepicker({ dateFormat: 'yy-mm-dd H:M:S' });
+        $( '#enddatetime' ).datepicker({ dateFormat: 'yy-mm-dd H:M:S' });
         } );
         </script>
     ";
@@ -609,7 +610,7 @@ BackendComponentPrinter::PrintSidebar(array());
             "<section id='main'>
             <h1><i class='fa fa-ban'></i> Sperrung</h1>";
     echo
-            "<form method='post' action='Usermanagement.php'>".
+            "<form method='get' action='Usermanagement.php'>".
             "<input id='userId' name='userId' type='hidden' value='".$userId."'><br><br>";
     echo
             "<label for='reasonId'>Grund</label>";
@@ -619,7 +620,7 @@ BackendComponentPrinter::PrintSidebar(array());
             $reasonRows = $dbUser->SelectAllBan_Reason();
             while ($reasonRow = $dbUser->FetchArray($reasonRows))
             {
-                echo "<option id='".reasonRow['id']."'";
+                echo "<option id='".$reasonRow['id']."'"."value='".$reasonRow['id']."'";
                 echo ">".$reasonRow['reason']."</option>";
             }
     echo
