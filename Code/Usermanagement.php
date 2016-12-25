@@ -93,7 +93,7 @@ else if (isset($_POST['applyPasswordChanges']))
 }
 else if (isset($_POST['registrateUser']))
 {
-    $roleId = $dbUser->FetchArray($dbUser->SelectRoleByRolename($_POST['assignedRole']))['id'];
+    $role_id = $dbUser->FetchArray($dbUser->SelectRoleByRolename($_POST['assignedRole']))['id'];
     $lastname = $_POST['name'];
     $firstname = $_POST['foreName'];
     $username = $_POST['userName'];
@@ -296,16 +296,16 @@ BackendComponentPrinter::PrintSidebar(array());
     $userRow = $dbUser->FetchArray($dbUser->GetUserInformationById($userId));
     echo
             "<label for='userName'>Benutzername</label>
-            <input id='userName' name='userName' type='text' value='".$userRow['username']."'><br><br>";
+            <input required id='userName' name='userName' type='text' value='".$userRow['username']."'><br><br>";
     echo
             "<label for='name'>Name</label>
-            <input id='name' name='name' type='text' value='".$userRow['lastname']."'><br><br>";
+            <input required id='name' name='name' type='text' value='".$userRow['lastname']."'><br><br>";
     echo    
             "<label for='foreName'>Vorname</label>
-            <input id='foreName' name='foreName' type='text' value='".$userRow['firstname']."'><br><br>";
+            <input required id='foreName' name='foreName' type='text' value='".$userRow['firstname']."'><br><br>";
     echo
             "<label for='email'>Email</label>
-            <input id='email' name='email' type='text' value='".$userRow['email']."'><br><br>";
+            <input required id='email' name='email' type='text' value='".$userRow['email']."'><br><br>";
     echo
             "<input id='userId' name='userId' type='hidden' value='".$userId."'>".
             "<input id='applyChanges' name='applyChanges' type='submit' value='Änderungen übernehmen'>";
@@ -315,11 +315,11 @@ BackendComponentPrinter::PrintSidebar(array());
             <form method='post' action='Usermanagement.php'>";
     echo
             "<label for='currentPassword'>aktuelles Passwort</label>
-            <input id='currentPassword' name='currentPassword' type='password'><br><br>
+            <input required id='currentPassword' name='currentPassword' type='password'><br><br>
             <label for='newPassword'>neues Passwort</label>
-            <input id='newPassword' name='newPassword' type='password'><br><br>
+            <input required id='newPassword' name='newPassword' type='password'><br><br>
             <label for='newPasswordRepeat'>neues Passwort bestätigen</label>
-            <input id='newPasswordRepeat' name='newPasswordRepeat' type='password'><br><br>
+            <input required id='newPasswordRepeat' name='newPasswordRepeat' type='password'><br><br>
             <input id='userId' name='userId' type='hidden' value='".$userId."'>".
             "<input id='applyPasswordChanges' name='applyPasswordChanges' type='submit' value='Passwort übernehmen'>";
     echo
@@ -365,10 +365,10 @@ BackendComponentPrinter::PrintSidebar(array());
             "<form method='post' action='Usermanagement.php'>".
             "<input id='roleId' name='roleId' type='hidden' value='".$roleId."'>".
             "<label for='roleName'>Rollenname</label>
-            <input id='roleName' name='roleName' type='text' value='".$roleRow['rolename']."'><br><br>";
+            <input required id='roleName' name='roleName' type='text' value='".$roleRow['rolename']."'><br><br>";
     echo
             "<label for='uri'>Uri</label>
-            <input id='uri' name='uri' type='text' value='".$roleRow['uri']."'><br><br>";
+            <input required id='uri' name='uri' type='text' value='".$roleRow['uri']."'><br><br>";
     echo    
             "<label for='guestbookmanagement'>Gästebuch verwalten</label>
             <input id='guestbookmanagement' name='guestbookmanagement' type='checkbox'";
@@ -471,22 +471,22 @@ BackendComponentPrinter::PrintSidebar(array());
             <form method='post' action='Usermanagement.php'>";
     echo
             "<label for='userName'>Benutzername</label>
-            <input id='userName' name='userName' type='text'><br><br>";
+            <input required id='userName' name='userName' type='text'><br><br>";
     echo
             "<label for='name'>Name</label>
-            <input id='name' name='name' type='text'><br><br>";
+            <input required id='name' name='name' type='text'><br><br>";
     echo    
             "<label for='foreName'>Vorname</label>
-            <input id='foreName' name='foreName' type='text'><br><br>";
+            <input required id='foreName' name='foreName' type='text'><br><br>";
     echo
             "<label for='email'>Email</label>
-            <input id='email' name='email' type='text'><br><br>";
+            <input required id='email' name='email' type='text'><br><br>";
     echo
-            "<label for='currentPassword'>aktuelles Passwort</label>
-            <input id='currentPassword' name='currentPassword' type='password'><br><br>";
+            "<label for='currentPassword'>Passwort</label>
+            <input required id='currentPassword' name='currentPassword' type='password'><br><br>";
     echo
             "<label for='currentPassword'>Rolle</label>".
-            "<select name='role'>";
+            "<select required name='assignedRole'>";
     $roleRows = $dbUser->SelectAllRoles();
     while ($rolerow = $dbUser->FetchArray($roleRows))
     {
@@ -497,7 +497,7 @@ BackendComponentPrinter::PrintSidebar(array());
             "</select><br><br>";
     echo
             "<label for='birthdate'>Geburtsdatum</label>
-            <input type='text' name='birthdate' id='birthdate'><br><br>";
+            <input required type='text' name='birthdate' id='birthdate'><br><br>";
     echo
             "<input id='registrateUser' name='registrateUser' type='submit' value='Anwender erstellen'>";
 
@@ -615,7 +615,7 @@ BackendComponentPrinter::PrintSidebar(array());
             "<label for='reasonId'>Grund</label>";
     echo
 
-            "<select name='reasonId'>";
+            "<select required name='reasonId'>";
             $reasonRows = $dbUser->SelectAllBan_Reason();
             while ($reasonRow = $dbUser->FetchArray($reasonRows))
             {
@@ -626,12 +626,12 @@ BackendComponentPrinter::PrintSidebar(array());
             "</select><br><br>";
     echo
             "<label for='description'>Beschreibung</label>".
-            "<input id='description' name='description' type='text'><br><br>";
+            "<input id='description' required name='description' type='text'><br><br>";
     echo
             "<label for='begindatetime'>Startdatum</label>".
-            "<input id='begindatetime' name='begindatetime' type='text'><br><br>".
+            "<input id='begindatetime' required name='begindatetime' type='text'><br><br>".
             "<label for='enddatetime'>Enddatum</label>".
-            "<input id='enddatetime' name='enddatetime' type='text'><br><br>".
+            "<input id='enddatetime' required name='enddatetime' type='text'><br><br>".
             "<input id='banUser' name='banUser' type='submit' value='Sperrung erstellen'></form>";
 }
 // call by reference --> &
