@@ -161,26 +161,47 @@ while ($row = $dbUser->FetchArray($userRows))
     {
         if ($bannedUser['id'] == $row['id'])
         {
-            $banned = true;
             $reason = "";
-            $banRow = $dbUser->FetchArray($dbUser->SelectBanByUserid($row['id']));
-            $reasonRows = $dbUser->SelectAllBan_Reason();
-            while ($reasonRow = $dbUser->FetchArray($reasonRows))
+            $banRows = $dbUser->SelectBanByUserid($row['id']);
+            while ($banRow = $dbUser->FetchArray($banRows))
             {
-                if ($reasonRow['id'] == $banRow['reason_id'])
+                $reasonRows = $dbUser->SelectAllBan_Reason();
+                while ($reasonRow = $dbUser->FetchArray($reasonRows))
                 {
-                    $reason = $reasonRow['reason'];
+                    if ($reasonRow['id'] == $banRow['reason_id'])
+                    {
+                        $reason = $reasonRow['reason'];
+                    }
+                }
+                // if banenddate is later than now
+                $todays_date = date("Y-m-d");
+                $exp_date = $banRow['enddatetime'];
+                $today = strtotime($todays_date);
+                $expiration_date = strtotime($exp_date);
+                if ($expiration_date > $today) 
+                {
+                    if (!$banned)
+                    {
+                        $banned = true;
+                        $tableRow2 = 
+                        "<form method='post' action='Usermanagement.php'>
+                        <input id='banId' name='banId' type='hidden' value='".$banRow['id']."'>".
+                        "<p>".$reason."<p>".
+                        "<input id='deban' name='deban' type='submit' value='entsperren'>";
+                        $tableRow2 .=  "<br>";
+                    }
+                    else
+                    {
+                        $tableRow2 .= 
+                        "<form method='post' action='Usermanagement.php'>
+                        <input id='banId' name='banId' type='hidden' value='".$banRow['id']."'>".
+                        "<p>".$reason."<p>".
+                        "<input id='deban' name='deban' type='submit' value='entsperren'>";
+                        $tableRow2 .=  "<br>";
+                    }
                 }
             }
-            $tableRow2 .= 
-            "<form method='post' action='Usermanagement.php'>
-            <input id='banId' name='banId' type='hidden' value='".$banRow['id']."'>".
-            "<p>".$reason."<p>".
-            "<input id='deban' name='deban' type='submit' value='entsperren'>";
-            if ($banned)
-            {
-                $tableRow2 .=  "<br>";
-            }
+            break;
         }
     }
     if (!$banned)
@@ -476,7 +497,7 @@ BackendComponentPrinter::PrintSidebar(array());
             "</select><br><br>";
     echo
             "<label for='birthdate'>Geburtsdatum</label>
-            <input type='date' name='birthdate' id='birthdate'><br><br>";
+            <input type='text' name='birthdate' id='birthdate'><br><br>";
     echo
             "<input id='registrateUser' name='registrateUser' type='submit' value='Anwender erstellen'>";
 
@@ -608,9 +629,9 @@ BackendComponentPrinter::PrintSidebar(array());
             "<input id='description' name='description' type='text'><br><br>";
     echo
             "<label for='begindatetime'>Startdatum</label>".
-            "<input id='begindatetime' name='begindatetime' type='date'><br><br>".
+            "<input id='begindatetime' name='begindatetime' type='text'><br><br>".
             "<label for='enddatetime'>Enddatum</label>".
-            "<input id='enddatetime' name='enddatetime' type='date'><br><br>".
+            "<input id='enddatetime' name='enddatetime' type='text'><br><br>".
             "<input id='banUser' name='banUser' type='submit' value='Sperrung erstellen'></form>";
 }
 // call by reference --> &
