@@ -21,32 +21,32 @@ $dbUser = new DbUser($config['cms_db']['dbhost'], $config['cms_db']['dbuser'], $
 
 // actions dbuser
 if (isset($_POST['deban'])) {
-    $banId = $_POST['banId'];
+    $banId = intval($_POST['banId']);
     $dbUser->DebanUserViaBanId($banId);    
 }
 else if (isset($_POST['ban'])) {
-    $userId = $_POST['userId'];
+    $userId = intval($_POST['userId']);
     BanUser($userId, $dbUser);
     // has to return because other page
     return;
 }
 else if (isset($_POST['banUser']))
 {
-    $user_id = $_POST['userId']; 
-    $reason_id = $_POST['reasonId']; 
+    $user_id = intval($_POST['userId']); 
+    $reason_id = intval($_POST['reasonId']); 
     $description = $_POST['description']; 
     $begindatetime = $_POST['begindatetime'];
     $enddatetime = $_POST['enddatetime'];
     $dbUser->InsertBanViaUserId($user_id, $reason_id, $description, $begindatetime, $enddatetime);
 }
 else if (isset($_POST['details'])) {
-    $userId = $_POST['userId'];
+    $userId = intval($_POST['userId']);
     EditUser($userId, $dbUser);
     // has to return because other page
     return;
 }
 else if (isset($_POST['delete'])) {
-    $userId = $_POST['userId'];
+    $userId = intval($_POST['userId']);
     $dbUser->DeleteUserById($userId);
 }
 else if (isset($_POST['newUser'])) {
@@ -60,23 +60,23 @@ else if (isset($_POST['newRole'])) {
     return;
 }
 else if (isset($_POST['assignRole'])) {
-    $roleId = $dbUser->FetchArray($dbUser->SelectRoleByRolename($_POST['assignedRole']))['id'];
-    $userId = $_POST['userId'];
+    $roleId = intval($dbUser->FetchArray($dbUser->SelectRoleByRolename($_POST['assignedRole']))['id']);
+    $userId = intval($_POST['userId']);
     boolval($dbUser->AssignRole($roleId, $userId));
 }
 else if (isset($_POST['deleteRole'])) {
-    $roleId = $_POST['roleId'];
+    $roleId = intval($_POST['roleId']);
     $dbUser->DeleteRole($roleId, $dbUser);
 }
 else if (isset($_POST['roleDetails'])) {
-    $roleId = $_POST['roleId'];
+    $roleId = intval($_POST['roleId']);
     EditRole($roleId, $dbUser);
     // has to return because other page
     return;
 }
 else if (isset($_POST['applyChanges']))
 {
-    $userId = $_POST['userId'];
+    $userId = intval($_POST['userId']);
     $userName = $_POST['userName'];
     $name = $_POST['name'];
     $foreName = $_POST['foreName'];
@@ -85,7 +85,7 @@ else if (isset($_POST['applyChanges']))
 }
 else if (isset($_POST['applyPasswordChanges']))
 {
-    $userId = $_POST['userId'];
+    $userId = intval($_POST['userId']);
     $password = $_POST['currentPassword'];
     $newPassword = $_POST['newPassword'];
     $newPasswordRepeat = $_POST['newPasswordRepeat'];
@@ -93,7 +93,7 @@ else if (isset($_POST['applyPasswordChanges']))
 }
 else if (isset($_POST['registrateUser']))
 {
-    $role_id = $dbUser->FetchArray($dbUser->SelectRoleByRolename($_POST['assignedRole']))['id'];
+    $role_id = intval($dbUser->FetchArray($dbUser->SelectRoleByRolename($_POST['assignedRole']))['id']);
     $lastname = $_POST['name'];
     $firstname = $_POST['foreName'];
     $username = $_POST['userName'];
@@ -104,7 +104,7 @@ else if (isset($_POST['registrateUser']))
 }
 else if (isset($_POST['saveRoleChanges'])) 
 {
-    $id = $_POST['roleId'];
+    $id = intval($_POST['roleId']);
     $rolename = $_POST['roleName'];
     $uri = $_POST['uri'];
     SetPermissionsFromForm($guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction);
