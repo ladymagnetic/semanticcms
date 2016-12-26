@@ -154,7 +154,7 @@ echo
                     'zeroRecords': 'Nichts gefunden - Entschuldigung',
                     'info': 'Seite _PAGE_ von _PAGES_',
                     'infoEmpty': 'Nichts vorhanden',
-                    'infoFiltered': '(filtered from _MAX_ total records)',
+                    'infoFiltered': '(gefiltert von _MAX_ gesamt)',
                     'search': 'Suche:',
                     'paginate': {
                         'previous': 'Zurück',
