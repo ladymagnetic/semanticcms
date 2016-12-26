@@ -1,21 +1,44 @@
+<?php
+// Start the session
+session_start();
+?>
 <!DOCTYPE html>
 <html>
-
-<body>
 <?php
+/* Include(s) */
 require_once 'lib/BackendComponentPrinter.class.php';
+
+/* use namespace(s) */
 use SemanticCms\ComponentPrinter\BackendComponentPrinter;
 
+BackendComponentPrinter::PrintHead("Seitenverwaltung");
+?>
+<body>
+<?php
+/* Include(s) */
 require_once 'lib/Permission.enum.php';
+require_once 'config/config.php';
+
+/* use namespace(s) */
 use SemanticCms\Model\Permission;
-BackendComponentPrinter::printHead("Seitenverwaltung");
-/* menue */
-/* dynamisch erzeugt je nach Rechten */
-//Rechte des gerade eingeloggten Nutzers --> todo
-BackendComponentPrinter::printSidebar(Array(Permission::Guestbookusage,
-    Permission::Articlemanagment,
-    Permission::Pagemanagment,
-    Permission::Usermanagment));
+
+/* Check if user is logged in */
+if(!isset($_SESSION['username']))
+{
+    die($config['error']['noLogin']);
+}
+/* Check if  permissions are set */
+else if(!isset($_SESSION['permissions']))
+{
+    die($config['error']['permissionNotSet']);
+}
+/*  Check if user has the permission to see this page */
+else if(!in_array(Permission::Pagemanagment, $_SESSION['permissions']))
+{
+    die($config['error']['permissionMissing']);
+}
+
+BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
 ?>
 <section id="main">
     <h1><i class="fa fa-file-text fontawesome"></i> Seitenverwaltung</h1>
