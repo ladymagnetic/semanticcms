@@ -47,11 +47,11 @@ else if (isset($_POST['newArticle'])) {
 // if submit button with name 'applyChanges' is pressed
 else if (isset($_POST['publish']))
 {
-    $pageId = $_POST['pageId']);
-    $header = $_POST['header']);
-    $content = $_POST['summernote']);
-    $date = $_POST['date']);
-    $type = $_POST['type']);
+    $pageId = intval($_POST['pageId']);
+    $header = intval($_POST['header']);
+    $content = $_POST['summernote'];
+    $date = $_POST['date'];
+    $type = $_POST['type'];
     if (isset($_POST['public']))
     {
         $public = 1;
@@ -60,18 +60,18 @@ else if (isset($_POST['publish']))
     {
         $public = 0;
     }
-    $description = $_POST['description']);
+    $description = $_POST['description'];
 
     $dbContent->InsertNewArticleToPage($pageId, $header, $content, $date, $type, $public, $description);
 }
 // if submit button with name 'applyChanges' is pressed
 else if (isset($_POST['updateArticle']))
 {
-    $pageId = $_POST['pageId']);
-    $header = $_POST['header']);
-    $content = $_POST['summernote']);
-    $date = $_POST['date']);
-    $type = $_POST['type']);
+    $pageId = intval($_POST['pageId']);
+    $header = $_POST['header'];
+    $content = $_POST['summernote'];
+    $date = $_POST['date'];
+    $type = $_POST['type'];
     if (isset($_POST['public']))
     {
         $public = 1;
@@ -80,10 +80,10 @@ else if (isset($_POST['updateArticle']))
     {
         $public = 0;
     }
-    $description = $_POST['description']);
-    $articleId = $_POST['articleId']);
+    $description = $_POST['description'];
+    $articleId = intval($_POST['articleId']);
 
-    $dbContent->UpdateArticleToPage($articleId, $pageId, $header, $content, $date, $type, $public, $description)
+    $dbContent->UpdateArticleToPage($articleId, $pageId, $header, $content, $date, $type, $public, $description);
 }
 
 CreateArticleManagement("", $dbcontent);
@@ -128,7 +128,7 @@ function CreateArticleManagement($pageId, $dbcontent)
         $pageSelect .= ">".$pageRow['title']."</option>";
     }
     echo
-        "<input id='selectPage' name='selectPage' type='submit' value='Anzeigen'>"
+        "<input id='selectPage' name='selectPage' type='submit' value='Anzeigen'>";
 
     echo $pageSelect;
     BackendComponentPrinter::PrintTableStart(array("Inhalte", "Veröffentlichungsdatum", "Aktion"));
@@ -143,7 +143,7 @@ function CreateArticleManagement($pageId, $dbcontent)
             $tableRow3 = 
                 "<form method='post' action='Articlemanagement.php'>
                 <input id='delete' name='delete' type='submit' value='Löschen'><input name='edit' type='submit' value='bearbeiten'>".
-                ."<input id='articleId' name='articleId' type='hidden' value='".$articleRow['id']."'></form>";
+                "<input id='articleId' name='articleId' type='hidden' value='".$articleRow['id']."'></form>";
             BackendComponentPrinter::PrintTableRow(array($tableRow1, $tableRow2, $tableRow3));
         }
     }
@@ -271,7 +271,7 @@ function EditArticle($pageId, $articleId, $dbcontent)
                 echo " checked";
             };
             echo
-            ."'>".
+            "'>".
             "<label for='description'>Beschreibung</label>
             <input id='description' name='description' type='text' '".$articleRow['description']."'>
             <input id='updateArticle' name='updateArticle' type='submit' value='Publish'>
