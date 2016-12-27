@@ -20,7 +20,7 @@ SET time_zone = "+00:00";
 -- Datenbank: `cms-projekt`
 --
 DROP DATABASE IF EXISTS`cms-projekt`;
-CREATE DATABASE IF NOT EXISTS `cms-projekt` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+CREATE DATABASE IF NOT EXISTS `cms-projekt` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE `cms-projekt`;
 
 --
@@ -46,7 +46,7 @@ CREATE TABLE `article` (
   `type` varchar(255) NOT NULL,
   `public` tinyint(1) NOT NULL DEFAULT '0',
   `description` varchar(500) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Daten für Tabelle `article`
@@ -77,7 +77,7 @@ CREATE TABLE `ban` (
   `description` text NOT NULL,
   `begindatetime` datetime NOT NULL,
   `enddatetime` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Daten für Tabelle `ban`
@@ -104,7 +104,7 @@ INSERT INTO `ban` (`id`, `user_id`, `reason_id`, `description`, `begindatetime`,
 CREATE TABLE `ban_reason` (
   `id` int(11) NOT NULL,
   `reason` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Daten für Tabelle `ban_reason`
@@ -128,7 +128,7 @@ CREATE TABLE `lable` (
   `id` int(11) NOT NULL,
   `lablename` varchar(255) NOT NULL,
   `uri` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Daten für Tabelle `lable`
@@ -160,7 +160,7 @@ INSERT INTO `lable` (`id`, `lablename`, `uri`) VALUES
 CREATE TABLE `lable_article` (
   `lable_id` int(11) NOT NULL,
   `article_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Daten für Tabelle `lable_article`
@@ -187,7 +187,7 @@ INSERT INTO `lable_article` (`lable_id`, `article_id`) VALUES
 CREATE TABLE `lable_user` (
   `lable_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Daten für Tabelle `lable_user`
@@ -215,25 +215,26 @@ INSERT INTO `lable_user` (`lable_id`, `user_id`) VALUES
 CREATE TABLE `page` (
   `id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
+  `relativeposition` int(11) NOT NULL,
   `template_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Daten für Tabelle `page`
 --
 
-INSERT INTO `page` (`id`, `title`, `template_id`) VALUES
-(1, 'Reisen', 1),
-(2, 'Fußball', 2),
-(3, 'Witze', 3),
-(4, 'Möbel', 4),
-(5, 'Haus', 6),
-(6, 'Autos', 3),
-(7, 'Katzen', 5),
-(8, 'Pferde', 5),
-(9, 'Zoo', 8),
-(10, 'Bäume', 8),
-(11, 'Pflanzen', 10);
+INSERT INTO `page` (`id`, `title`, `relativeposition`, `template_id`) VALUES
+(1, 'Reisen', 5, 1),
+(2, 'Fußball', 7, 2),
+(3, 'Witze', 8, 3),
+(4, 'Möbel', 9, 4),
+(5, 'Haus', 20, 6),
+(6, 'Autos', 30, 3),
+(7, 'Katzen', 17, 5),
+(8, 'Pferde', 13, 5),
+(9, 'Zoo', 2, 8),
+(10, 'Bäume', 12, 8),
+(11, 'Pflanzen', 18, 10);
 
 -- --------------------------------------------------------
 
@@ -251,7 +252,7 @@ CREATE TABLE `role` (
   `articlemanagement` tinyint(1) NOT NULL DEFAULT '0',
   `guestbookusage` tinyint(1) NOT NULL DEFAULT '1',
   `templateconstruction` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Daten für Tabelle `role`
@@ -271,7 +272,7 @@ INSERT INTO `role` (`id`, `uri`, `rolename`, `guestbookmanagement`, `usermanagem
 CREATE TABLE `searchphrase` (
   `id` int(11) NOT NULL,
   `searchphrase` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Daten für Tabelle `searchphrase`
@@ -300,7 +301,7 @@ CREATE TABLE `searchphrase_user` (
   `user_id` int(11) NOT NULL,
   `searchphrase_id` int(11) NOT NULL,
   `searchdate` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Daten für Tabelle `searchphrase_user`
@@ -328,7 +329,7 @@ CREATE TABLE `template` (
   `id` int(11) NOT NULL,
   `templatename` varchar(255) NOT NULL,
   `filelink` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Daten für Tabelle `template`
@@ -362,7 +363,7 @@ CREATE TABLE `user` (
   `email` varchar(255) NOT NULL,
   `registrydate` date NOT NULL,
   `birthdate` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Daten für Tabelle `user`
