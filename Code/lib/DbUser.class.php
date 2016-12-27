@@ -62,10 +62,6 @@ class DbUser
 		$deleteRole = "DELETE FROM role WHERE id = ?";
 		$this->database->PrepareStatement("deleteRole", $deleteRole);
 
-		$newRole = "INSERT INTO role (id, uri, rolename, guestbookmanagement, usermanagement, pagemanagement, 	articlemanagement, 	guestbookusage, templateconstruction)
-				  VALUES (NULL, ?, ?, ?, ?, ? , ? , ?, ?);";
-		$this->database->PrepareStatement("newRole", $newRole);
-
 		$selectRoleById = "SELECT * FROM role WHERE id = ?";
 		$this->database->PrepareStatement("selectRole", $selectRoleById);
 
@@ -323,7 +319,8 @@ function check_date($date,$format,$sep)
 	*/
 	public function NewRole($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction)
 	{
-		 $result = $this->database->ExecutePreparedStatement("newRole", array($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction));
+		$result = $this->database->ExecuteQuery("INSERT INTO role (id, uri, rolename, guestbookmanagement, usermanagement, pagemanagement, articlemanagement, guestbookusage, templateconstruction) VALUES (NULL, '".$uri."', '".$rolename."', ".$guestbookmanagement.", ".$usermanagement.", ".$pagemanagement.", ".$articlemanagement.", ".$guestbookusage.",  ".$templateconstruction.")");
+
 		 if($result==true)
 		 {
 		 		return true;
