@@ -114,29 +114,43 @@ class DbUser
 
 	}
 
-/*Maybe other required function DoesUserAlreadyExist($username, $email)*/
-/*
-public function DoesUserAlreadyExist($username, $email)
+ 
+
+
+
+
+// gibt true zurück wenn email-adresse bereits existiert (User mit dieser E-Mailadresse gibt es schon!).
+public function EmailAlreadyExists($email)
 {
-	if(yes) return true;
-	else return false;
+	$result = $this->database->ExecuteQuery("SELECT * FROM user WHERE email = '".$email."'");
+
+	if($result==true && $this->database->GetResultCount($result) > 0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+
 }
-*/
 
 
 
-
-
-public function CheckIfEmailExists($email)
+public function UsernameAlreadyExists($username)
 {
-	 
+	$result = $this->database->ExecuteQuery("SELECT * FROM user WHERE username = '".$username."'");
+
+	 if($result==true && $this->database->GetResultCount($result) > 0)
+	 {
+		 return true;
+	 }
+	 else
+	 {
+		 return false;
+	 }
 }
 
-
-public function CheckIfUsernameExists($username)
-{
-	 
-}
 
 
 /* eventuell für die Prüfung des Datums beim Registrieren eines User
@@ -166,45 +180,49 @@ function check_date($date,$format,$sep)
 	* @params string $password the user's password
 	* @params string $birthdate the user's birthdate as date formatted string
 	*/
-	public function RegistrateUser($role_id, $lastname, $firstname, $username, $password, $email, $birthdate)
+		public function RegistrateUser($role_id, $lastname, $firstname, $username, $password, $email, $birthdate)
 	{
 		/*
 		INSERT INTO user VALUES (NULL, 2, "Muster", "Johanna", "jojo20", "password1234" , "j.m@web.de" , NOW(), "1996-08-16");
 		INSERT INTO user VALUES (NULL, 2, "Muster", "Johanna", "jojo20", "password1234" , "j.m@web.de" , NOW(), "19960816")
 		*/
 
-		//check if user exists => gibts den User in der DB überhaupt????
-		// check if email exits
 
-	
-
-		if (filter_var($email, FILTER_VALIDATE_EMAIL))
+		if(!($this->EmailAlreadyExists($email)))
 		{
-			if(!filter_var($username, FILTER_VALIDATE_EMAIL))
+			if(!($this->UsernameAlreadyExists($username)))
 			{
-		  $emailErr = "PASST";
-
-			$lastname= $this->database->RealEscapeString($lastname);
-			$firstname= $this->database->RealEscapeString($firstname);
-			$username= $this->database->RealEscapeString($username);
-			$password= $this->database->RealEscapeString($password);
-
-
-			$result = $this->database->ExecuteQuery("INSERT INTO user (id, role_id, lastname, firstname, birthdate, username, password, email, registrydate) VALUES (NULL, ".$role_id.", '".$lastname."', '".$firstname."', '".$birthdate."', '".$username."', '".$password."', '".$email."', NOW())");
-
-				if($result==true)
+				if (filter_var($email, FILTER_VALIDATE_EMAIL))
 				{
-						return true;
+					if(!filter_var($username, FILTER_VALIDATE_EMAIL))
+					{
+				 
+					$lastname= $this->database->RealEscapeString($lastname);
+					$firstname= $this->database->RealEscapeString($firstname);
+					$username= $this->database->RealEscapeString($username);
+					$password= $this->database->RealEscapeString($password);
+
+
+					$result = $this->database->ExecuteQuery("INSERT INTO user (id, role_id, lastname, firstname, birthdate, username, password, email, registrydate) VALUES (NULL, ".$role_id.", '".$lastname."', '".$firstname."', '".$birthdate."', '".$username."', '".$password."', '".$email."', NOW())");
+
+						if($result==true)
+						{
+							return true;
+						}
+						else
+						{
+							return false;
+						}
+					}
 				}
-				else
-				{
-					 return false;
-				}
+				else  return false;
+
 			}
+
 		}
-		else   $emailErr = "PASST NICHT";
-		
+
 	}
+
 
 
 
