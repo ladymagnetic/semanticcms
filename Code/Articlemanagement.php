@@ -15,8 +15,8 @@ use SemanticCms\ComponentPrinter\BackendComponentPrinter;
 use SemanticCms\DatabaseAbstraction\dbcontent;
 use SemanticCms\Model\Permission;
 
-$db = new DbEngine($config['cms_db']['dbhost'],$config['cms_db']['dbcontent'],$config['cms_db']['dbpass'],$config['cms_db']['database']);
-$dbContent = new DbContent($config['cms_db']['dbhost'], $config['cms_db']['dbcontent'], $config['cms_db']['dbpass'], $config['cms_db']['database']);
+$db = new DbEngine($config['cms_db']['dbhost'],$config['cms_db']['dbuser'],$config['cms_db']['dbpass'],$config['cms_db']['database']);
+$dbContent = new DbContent($config['cms_db']['dbhost'], $config['cms_db']['dbuser'], $config['cms_db']['dbpass'], $config['cms_db']['database']);
 
 /*---- Submit Buttons ----*/
 // if submit button with name 'selectPage' is pressed
