@@ -194,7 +194,7 @@ class BackendComponentPrinter
 	public static function PrintDrowpdownList($label, $name, array $options, $size, $selected)
     {
         echo "<label>$label
-                <select name='$name\' size='$size'>";
+                <select name='$name' size='$size'>";
 
         foreach ($options as $option) {
             if ($option == $selected) {
