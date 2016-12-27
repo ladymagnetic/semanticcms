@@ -325,7 +325,7 @@ function EditUser($userId, $dbUser)
 BackendComponentPrinter::PrintSidebar(array());
 /*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert */
     echo
-            "<section id='main'>
+            "<main>
             <h1><i class='fa fa-user fontawesome'></i> Benutzer bearbeiten</h1>
                 <form method='post' action='Usermanagement.php'>";
     $userRow = $dbUser->FetchArray($dbUser->GetUserInformationById($userId));
@@ -359,7 +359,7 @@ BackendComponentPrinter::PrintSidebar(array());
             "<input id='applyPasswordChanges' name='applyPasswordChanges' type='submit' value='Passwort übernehmen'>";
     echo
             "</form>
-            </section>
+            </main>
             </body>
 
             </html>";
@@ -393,7 +393,7 @@ BackendComponentPrinter::PrintSidebar(array());
 /*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert */
     
     echo
-            "<section id='main'>
+            "<main>
             <h1><i class='fa fa-key fontawesome'></i> Rolle bearbeiten</h1>";
     $roleRow = $dbUser->FetchArray($dbUser->SelectRoleById($roleId));
     echo
@@ -501,7 +501,7 @@ BackendComponentPrinter::PrintSidebar(array());
         </script>
     ";
     echo
-            "<section id='main'>
+            "<main>
             <h1><i class='fa fa-user fontawesome'></i> Neuer Benutzer</h1>
             <form method='post' action='Usermanagement.php'>";
     echo
@@ -537,7 +537,7 @@ BackendComponentPrinter::PrintSidebar(array());
             "<input id='registrateUser' name='registrateUser' type='submit' value='Anwender erstellen'>";
 
     echo
-            "</form></section></body></html>";
+            "</form></main></body></html>";
 }
 function CreateNewRole($dbUser)
 {
@@ -568,7 +568,7 @@ BackendComponentPrinter::PrintSidebar(array());
 /*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert */
     
     echo
-            "<section id='main'>
+            "<main>
             <h1><i class='fa fa-key fontawesome'></i> Rolle erstellen</h1>";
     echo
             "<form method='post' action='Usermanagement.php'>".
@@ -641,7 +641,7 @@ BackendComponentPrinter::PrintSidebar(array());
     ";
     
     echo
-            "<section id='main'>
+            "<main>
             <h1><i class='fa fa-ban'></i> Sperrung</h1>";
     echo
             "<form method='post' action='Usermanagement.php'>".
