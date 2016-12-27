@@ -340,7 +340,7 @@ echo
 
 function EditUser($userId, $dbUser)
 {
-    BackendComponentPrinter::PrintHead("Benutzerverwaltung");
+    BackendComponentPrinter::PrintHead("Benutzerverwaltung", $jquery=true);
     /* menue */
 /* dynamisch erzeugt je nach Rechten */
 /* Check if user is logged in */
@@ -364,10 +364,12 @@ function EditUser($userId, $dbUser)
 // Printer Beispiel									
 //BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
 BackendComponentPrinter::PrintSidebar(array());
+/* Datatables */
+BackendComponentPrinter::PrintDatatablesPlugin();
 /*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert */
     echo
             "<main>
-            <h1><i class='fa fa-user fontawesome'></i> Benutzer bearbeiten</h1>
+            <h1><i class='fa fa-user fontawesome'></i> Benutzerdetails</h1>
                 <form method='post' action='Usermanagement.php'>";
     $userRow = $dbUser->FetchArray($dbUser->GetUserInformationById($userId));
     echo
@@ -403,8 +405,26 @@ BackendComponentPrinter::PrintSidebar(array());
             "<input id='userId' name='userId' type='hidden' value='".$userId."'>".
             "<input id='back' name='back' type='submit' value='Zurück'>";
     echo
-            "</form>
-            </main>
+            "</form>";
+    echo
+        "<h1><i class='fa fa-ban'></i> Sperrungen</h1>";
+    BackendComponentPrinter::PrintTableStart(array("Grund", "Beschreibung", "Beginndatum", "Enddatum"));
+    // foreach user in database print
+    $banRows = $dbUser->SelectAllBansFromAUserByUsername($userRow['username']);
+    while ($banRow = $dbUser->FetchArray($banRows))
+    {
+        $reasonRows = $dbUser->SelectAllBan_Reason();
+        while ($reasonRow = $dbUser->FetchArray($reasonRows))
+        {
+            if ($reasonRow['id'] == $banRow['reason_id'])
+            {
+                BackendComponentPrinter::PrintTableRow(array($reasonRow['reason'], $banRow['description'], $banRow['begindatetime'], $banRow['enddatetime']));
+            }
+        }
+    }
+    BackendComponentPrinter::PrintTableEnd();
+    echo
+            "</main>
             </body>
 
             </html>";
