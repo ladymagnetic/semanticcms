@@ -75,6 +75,7 @@ class BackendComponentPrinter
             if (in_array(Permission::Templateconstruction, $permissions)) {
                 echo "<li property='name'><a property='url' href=\"TemplateConstruction.php\" title=\"Templates\"><i class=\"fa fa-paint-brush fontawesome\"></i> Templates</a></li>";
             }
+            echo "<li property='name'><a property='url' href=\"Accountsettings.php\" title=\"Accountsettings\"><i class=\"fa fa-paint-brush fontawesome\"></i> Kontoeinstellungen</a></li>";
             echo "<li property='name'><a property='url' href=\"Logout.php\" title=\"Logout\"><i class=\"fa fa-paint-brush fontawesome\"></i> Logout</a></li>";
 
             echo
