@@ -393,13 +393,20 @@ BackendComponentPrinter::PrintDatatablesPlugin();
             <input readonly type='text' name='registrydate' id='registrydate' value='".$userRow['registrydate']."'><br><br>".
             "<label for='role'>Rolle</label>";
     $roleRows = $dbUser->SelectAllRoles();
+    $roleAssigned = false;
     while ($roleRow = $dbUser->FetchArray($roleRows))
     {
         if ($roleRow['id'] == $userRow['role_id'])
         {
             echo
                 "<input readonly id='role' name='role' type='text' value='".$roleRow['rolename']."'><br><br>";
+            $roleAssigned = true;
         }
+    }
+    if (!$roleAssigned)
+    {
+         echo
+                "<input readonly id='role' name='role' type='text' value='"."keine zugewiesen"."'><br><br>";
     }
     echo
             "<input id='userId' name='userId' type='hidden' value='".$userId."'>".
