@@ -94,11 +94,7 @@ class DbUser
 
 		$selectAllPages = "SELECT * FROM page";
 		$this->database->PrepareStatement("selectAllPages", $selectAllPages);
-		
-		
-		$insertBanViaUserId = "INSERT INTO ban (id, user_id, reason_id, description, begindatetime, enddatetime) VALUES (NULL, ?, ?, ?, ?, ?)";
-		$this->database->PrepareStatement("insertBanViaUserId", $insertBanViaUserId);
-	
+			
 		$selectAllBan_Reason = "SELECT * FROM ban_reason";
 		$this->database->PrepareStatement("selectAllBan_Reason", $selectAllBan_Reason);
 
@@ -527,8 +523,7 @@ function check_date($date,$format,$sep)
 	{
 	// Datum überprüfen
 		$description = $this->database->RealEscapeString($description);
-		$result = $this->database->ExecuteQuery("insertBanViaUserId", array($user_id, $reason_id, $description, $begindatetime, $enddatetime));
-
+		$result = $this->database->ExecuteQuery("INSERT INTO ban (id, user_id, reason_id, description, begindatetime, enddatetime) VALUES (NULL, ".$user_id.", ".$reason_id.", '".$description."', '".$begindatetime."', '".$enddatetime."')");
 		if($result==true)
 		{
 			return true;
