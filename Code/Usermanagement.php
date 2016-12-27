@@ -91,7 +91,7 @@ else if (isset($_POST['applyChanges']))
     $name = $_POST['name'];
     $foreName = $_POST['foreName'];
     $email = $_POST['email'];
-    $dbUser->UpdateUserDifferentNamesById($userId, $userName, $name, $foreName, $email);
+    $dbUser->UpdateUserDifferentNamesById($name, $foreName, $userName, $email, $userId);
 }
 // if submit button with name 'applyPasswordChanges' is pressed
 else if (isset($_POST['applyPasswordChanges']))
