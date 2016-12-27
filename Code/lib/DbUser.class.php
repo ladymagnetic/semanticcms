@@ -35,7 +35,7 @@ class DbUser
 	*/
 	private function PrepareSQL()
 	{
-		
+
 /*		Muster:
 		$deleteUser = "...."
 		$this->database->PrepareStatement("deleteUser", $deleteUser);
@@ -86,7 +86,7 @@ class DbUser
 
 		$selectAllPages = "SELECT * FROM page";
 		$this->database->PrepareStatement("selectAllPages", $selectAllPages);
-			
+
 		$selectAllBan_Reason = "SELECT * FROM ban_reason";
 		$this->database->PrepareStatement("selectAllBan_Reason", $selectAllBan_Reason);
 
@@ -109,12 +109,12 @@ class DbUser
 		//$selectAllUsersWhoAreBannedNowForASpecialReasonById() = "SELECT * FROM ban INNER JOIN user ON ban.user_id = user.id WHERE ( ban.enddatetime > now() AND ban.reason_id = ? )";
 		//$this->database->PrepareStatement("selectAllUsersWhoAreBannedNowForASpecialReasonById", $selectAllUsersWhoAreBannedNowForASpecialReasonById);
 		// SELECT * FROM ban INNER JOIN user ON ban.user_id = user.id WHERE ( ban.enddatetime > now() AND ban.reason_id = 2)
-		
-		
+
+
 
 	}
 
- 
+
 
 
 
@@ -196,7 +196,7 @@ function check_date($date,$format,$sep)
 				{
 					if(!filter_var($username, FILTER_VALIDATE_EMAIL))
 					{
-				 
+
 					$lastname= $this->database->RealEscapeString($lastname);
 					$firstname= $this->database->RealEscapeString($firstname);
 					$username= $this->database->RealEscapeString($username);
@@ -238,7 +238,10 @@ function check_date($date,$format,$sep)
 		//var_dump($result); // TESTEN! => und dann die Abfrage evtl. anpassen.
 
 		if($result==true)
-		{
+		{		// für Log-Tabelle:
+				// Wer wird gelöscht?
+				// Wer hat den Löschvorgang durchgeführt? => Usermanagement is true. => alle diese könnnen User löschen!
+				// eventuell neuen Parameter bei Funktion mitgeben ($userId von der Person, die löscht.)
 				return true;
 		}
 		else
@@ -259,6 +262,10 @@ function check_date($date,$format,$sep)
 
 		if($result==true)
 		{
+				// für Log-Tabelle:
+				// Wer wird gelöscht?
+				// Wer hat den Löschvorgang durchgeführt? => Usermanagement is true. => alle diese könnnen User löschen!
+				// eventuell neuen Parameter bei Funktion mitgeben ($userId von der Person, die löscht.)
 				return true;
 		}
 		else
@@ -299,6 +306,10 @@ function check_date($date,$format,$sep)
 
 		if($result==true)
 		{
+			// für Log-Tabelle:
+				// Welche Rolle wird gelöscht?
+				// Wer hat den Löschvorgang durchgeführt? => Usermanagement is true. => alle diese könnnen Rollen löschen!
+				// eventuell neuen Parameter bei Funktion mitgeben ($userId von der Person, die löscht. => Nur der Admin darf Roles löschen!)
 				return true;
 		}
 		else
@@ -320,6 +331,10 @@ function check_date($date,$format,$sep)
 
 		if($result==true)
 		{
+			// für Log-Tabelle:
+				// Welche Rolle wird zugewiesen?
+				// Wer hat die Zuweisung durchgeführt? => Usermanagement is true. => alle diese könnnen Rollen zuweisen!
+				// eventuell neuen Parameter bei Funktion mitgeben ($userId von der Person, die die Rolle zuweist.)
 				return true;
 		}
 		else
@@ -347,6 +362,8 @@ function check_date($date,$format,$sep)
 
 		 if($result==true)
 		 {
+			 // für Log-Tabelle:
+				 // Welche hat die neue Rolle erstellt?
 		 		return true;
 		 }
 		 else
@@ -392,9 +409,10 @@ function check_date($date,$format,$sep)
 	public function UpdateRoleById($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $id)
 	{
 		$result = $this->database->ExecuteQuery("UPDATE role SET uri ='".$uri."',  rolename ='".$rolename."',  guestbookmanagement ='".$guestbookmanagement."',  usermanagement ='".$usermanagement."', pagemanagement ='".$pagemanagement."', articlemanagement ='".$articlemanagement."', guestbookusage ='".$guestbookusage."' , templateconstruction ='".$templateconstruction."' WHERE id = '". $id."'");
-		
+
 		if($result==true)
 		{
+				// was wurde geändert und WER hat die Änderung durchgeführt??
 				return true;
 		}
 		else
@@ -415,10 +433,11 @@ function check_date($date,$format,$sep)
 	*/
 	public function UpdateUserDifferentNamesById($lastname, $firstname, $username, $email, $userId)
 	{
-			$result = $this->database->ExecuteQuery("UPDATE user SET lastname ='".$lastname."',  firstname ='".$firstname."',  username ='".$username."',  email ='".$email."' WHERE id = '". $userId."'");	
+			$result = $this->database->ExecuteQuery("UPDATE user SET lastname ='".$lastname."',  firstname ='".$firstname."',  username ='".$username."',  email ='".$email."' WHERE id = '". $userId."'");
 
 			if($result==true)
 			{
+					// was wurde geändert und WER hat die Änderung durchgeführt??
 					return true;
 			}
 			else
@@ -438,7 +457,7 @@ function check_date($date,$format,$sep)
 			return $this->database->ExecutePreparedStatement("selectUserByEmail", array($email));
 	}
 
-	
+
 
 	/**
 	* SelectAllUsers()
@@ -448,7 +467,7 @@ function check_date($date,$format,$sep)
 		return $this->database->ExecutePreparedStatement("selectAllUsers", array());
 	}
 
-	
+
 	/**
 	* SelectAllRoles()
 	*/
@@ -457,16 +476,16 @@ function check_date($date,$format,$sep)
 		return $this->database->ExecutePreparedStatement("selectAllRoles", array());
 	}
 
-	
+
 	/**
 	* SelectAllArticles()
-	*/	
+	*/
 	public function SelectAllArticles()
 	{
 		return $this->database->ExecutePreparedStatement("selectAllArticles", array());
 	}
 
-	
+
 	/**
 	* SelectAllTemplates()
 	*/
@@ -475,8 +494,8 @@ function check_date($date,$format,$sep)
 	{
 		return $this->database->ExecutePreparedStatement("selectAllTemplates", array());
 	}
-	
-	
+
+
 	/**
 	* SelectAllPages()
 	*/
@@ -491,7 +510,7 @@ function check_date($date,$format,$sep)
 	* IsUserBannedId()
 	* checks via userid if the user is banned
 	* @params int $userId the user's id
-	*/	
+	*/
 	public function IsUserBannedId($userId)
 	{
 		//zum Testen in Xampp: SELECT * FROM `ban` INNER JOIN user ON ban.user_id = user.id WHERE (user.id = 8 AND ban.end > now())
@@ -507,13 +526,13 @@ function check_date($date,$format,$sep)
 			return false;
 		}
 	}
-	
-	
+
+
 	/**
 	*  IsUserBannedUsername()
 	* checks via username if the user is banned
 	* @params string $username the user's username
-	*/	
+	*/
 	public function IsUserBannedUsername($username)
 	{
 		$username = $this->database->RealEscapeString($username);
@@ -530,8 +549,8 @@ function check_date($date,$format,$sep)
 			return false;
 		}
 	}
-	
-	
+
+
 	/**
 	*  InsertBanViaUserId()
 	* @params int $user_id the user's id
@@ -539,7 +558,7 @@ function check_date($date,$format,$sep)
 	* @params string $description the ban's description
 	* @params datetime $begindatetime the ban's begindatetime
 	* @params datetime $enddatetime the ban's enddatetime
-	*/	
+	*/
 	public function InsertBanViaUserId($user_id, $reason_id, $description, $begindatetime, $enddatetime)
 	{
 	// Datum überprüfen
@@ -547,6 +566,7 @@ function check_date($date,$format,$sep)
 		$result = $this->database->ExecuteQuery("INSERT INTO ban (id, user_id, reason_id, description, begindatetime, enddatetime) VALUES (NULL, ".$user_id.", ".$reason_id.", '".$description."', '".$begindatetime."', '".$enddatetime."')");
 		if($result==true)
 		{
+			// welcher User wurde gebannt und WER hat den Ban erstellt??
 			return true;
 		}
 		else
@@ -555,18 +575,18 @@ function check_date($date,$format,$sep)
 		}
 
 	}
-	
+
 	/**
 	*  DebanUserViaBanId()
 	* checks via username if the user is banned
 	* @params int $id the ban's id
-	*/		
+	*/
 	public function DebanUserViaBanId($id)
 	{
 		$result = $this->database->ExecuteQuery("UPDATE ban SET enddatetime = NOW() WHERE id = ". $id);
 
 		if($result==true)
-		{
+		{		//warum wurde der User gedebannt und wer hat das gemacht?
 				return true;
 		}
 		else
@@ -574,8 +594,8 @@ function check_date($date,$format,$sep)
 				return false;
 		}
 	}
-	
-	
+
+
 	/**
 	*  SelectBanByUserid()
 	* select a special Ban by an user's id
@@ -586,12 +606,12 @@ function check_date($date,$format,$sep)
 		return $this->database->ExecutePreparedStatement("selectBanByUserid", array($user_id));
 	}
 
-	
+
 	/**
 	*  InsertBan_Reason()
 	* creates a new  ban_reason
 	* @params string $reason the reason of a ban_reason
-	*/	
+	*/
 	public function InsertBan_Reason($reason)
 	{
 		$reason = $this->database->RealEscapeString($reason);
@@ -601,6 +621,7 @@ function check_date($date,$format,$sep)
 
 		if($result==true)
 		{
+			  //wer hat den neuen Ban-Grund erstellt? Usermanagement is true. Was ist die neue Ban-Reason`?
 				return true;
 		}
 		else
@@ -608,17 +629,17 @@ function check_date($date,$format,$sep)
 			 return false;
 		}
 	}
-	
-	
+
+
 	/**
 	*  SelectAllBan()
-	*/	
+	*/
 	public function SelectAllBan()
 	{
 		return $this->database->ExecutePreparedStatement("selectAllBan", array());
 	}
 
-	
+
 	/**
 	*  SelectAllBan_Reason()
 	*/
@@ -626,8 +647,8 @@ function check_date($date,$format,$sep)
 	{
 		return $this->database->ExecutePreparedStatement("selectAllBan_Reason", array());
 	}
-	
-	
+
+
 	/**
 	* SelectAllBansFromAUserByUsername($username)
 	* @params string $username the user's username
@@ -637,9 +658,9 @@ function check_date($date,$format,$sep)
 		// Beispiel: SELECT * FROM ban INNER JOIN user ON ban.user_id = user.id WHERE username = 'M'
 		return $this->database->ExecutePreparedStatement("selectAllBansFromAUserByUsername", array($username));
 	}
-	
-	
-	
+
+
+
 	/**
 	* SelectAllUsersWhichAreBannedNow ()
 	*/
@@ -648,40 +669,38 @@ function check_date($date,$format,$sep)
 		return $this->database->ExecutePreparedStatement("selectAllUsersWhichAreBannedNow", array());
 	}
 
-	
-	
-	
+
+
+
 	/**
 	* SelectAllUsersWhoAreBannedNowForASpecialReasonByReason()
 	* @params string $reason the ban_reasons's reason
-	*/	
+	*/
 	public function SelectAllUsersWhoAreBannedNowForASpecialReasonByReason($reason)
 	{
 	return $this->database->ExecuteQuery("SELECT * FROM user INNER JOIN  ban ON  user.id = ban.user_id INNER JOIN ban_reason ON ban.reason_id = ban_reason.id WHERE ( ban.enddatetime > now() AND ban_reason.reason = '". $password."')");
 	}
-	
-	
-	
-	
+
+
+
+
 	/** => wird noch überarbeitet
 	* SelectAllUsersWhoAreBannedNowForASpecialReasonById()
 	* @params int $reason_id the ban's reason_id
-	
+
 	public function SelectAllUsersWhoAreBannedNowForASpecialReasonById($reason_id)
 	{
 		return $this->database->ExecutePreparedStatement("selectAllUsersWhoAreBannedNowForASpecialReasonById", array($reason_id));
 	}
 	*/
-	
-	
-	
-	
+
+
+
+
 
 
 	/*Conny => wichtige Funktionen*/
 	/*
-	CheckIfEmailIsCorrect
-	CheckIfUsernameIsCorrect
 	HashPassword
 	DecodePassword
 	*/
@@ -719,8 +738,8 @@ function check_date($date,$format,$sep)
 		{ return false;	}
 	}
 
-	 
-	 	 
+
+
 
 
 	// has to save the changes for the passwords of the user
