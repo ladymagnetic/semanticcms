@@ -238,5 +238,31 @@ class BackendComponentPrinter
 
         self::PrintDrowpdownList($label, $name, $fontNames, 1, $fontNames[0]);
     }
+
+    /**
+     * Prints the datatables plugin script.
+     */
+    public static function PrintDatatablesPlugin()
+    {
+        echo
+            "<link rel='stylesheet' type='text/css' href='//cdn.datatables.net/1.10.13/css/jquery.dataTables.css'>
+        <script type='text/javascript' charset='utf8' src='//cdn.datatables.net/1.10.13/js/jquery.dataTables.js'></script>".
+            "<script>$(document).ready( function () {
+            $('table').DataTable({
+                'language': {
+                    'lengthMenu': '_MENU_ Werte pro Seite',
+                    'zeroRecords': 'Nichts gefunden - Entschuldigung',
+                    'info': 'Seite _PAGE_ von _PAGES_',
+                    'infoEmpty': 'Nichts vorhanden',
+                    'infoFiltered': '(gefiltert von _MAX_ gesamt)',
+                    'search': 'Suche:',
+                    'paginate': {
+                        'previous': 'Zurück',
+                        'next': 'Weiter',
+                    }
+                }
+            });
+        } );</script>";
+    }
 }
 ?>
