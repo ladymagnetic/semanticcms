@@ -334,7 +334,7 @@ BackendComponentPrinter::PrintSidebar(array());
         <input readonly type='text' name='birthdate' id='birthdate' value='".$userRow['birthdate']."'><br><br>";
     // not editable
     echo
-            "<label for='registrydate'>Geburtsdatum</label>
+            "<label for='registrydate'>Registrierungsdatum</label>
             <input readonly type='text' name='registrydate' id='registrydate' value='".$userRow['registrydate']."'><br><br>".
             "<label for='role'>Rolle</label>";
     $roleRows = $dbUser->SelectAllRoles();
