@@ -3,7 +3,7 @@
 session_start();
 ?>
 <!DOCTYPE html>
-<html>
+<html vocab="https://schema.org/" typeof="WebPage" lang="de">
 <?php
 /* Include(s) */
 require_once 'lib/BackendComponentPrinter.class.php';
@@ -11,7 +11,7 @@ require_once 'lib/BackendComponentPrinter.class.php';
 /* use namespace(s) */
 use SemanticCms\ComponentPrinter\BackendComponentPrinter;
 
-BackendComponentPrinter::PrintHead("Seitenverwaltung");
+BackendComponentPrinter::PrintHead("Seitenverwaltung", $jquery=true);
 ?>
 <body>
 <?php
@@ -22,71 +22,71 @@ require_once 'config/config.php';
 /* use namespace(s) */
 use SemanticCms\Model\Permission;
 
-/* Check if user is logged in */
-if(!isset($_SESSION['username']))
-{
-    die($config['error']['noLogin']);
-}
-/* Check if  permissions are set */
-else if(!isset($_SESSION['permissions']))
-{
-    die($config['error']['permissionNotSet']);
-}
-/*  Check if user has the permission to see this page */
-else if(!in_array(Permission::Pagemanagment, $_SESSION['permissions']))
-{
-    die($config['error']['permissionMissing']);
-}
+// todo: wieder auskommentieren, wenn Login geht
+///* Check if user is logged in */
+//if(!isset($_SESSION['username']))
+//{
+//    die($config['error']['noLogin']);
+//}
+///* Check if  permissions are set */
+//else if(!isset($_SESSION['permissions']))
+//{
+//    die($config['error']['permissionNotSet']);
+//}
+///*  Check if user has the permission to see this page */
+//else if(!in_array(Permission::Pagemanagment, $_SESSION['permissions']))
+//{
+//    die($config['error']['permissionMissing']);
+//}
+//
+//BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
+BackendComponentPrinter::PrintSidebar(array(Permission::Guestbookusage,
+    Permission::Articlemanagment, Permission::Pagemanagment, Permission::Templateconstruction,
+    Permission::Guestbookmanagment, Permission::Usermanagment));
 
-BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
+/* Datatables */
+echo
+    "<link rel='stylesheet' type='text/css' href='//cdn.datatables.net/1.10.13/css/jquery.dataTables.css'>
+        <script type='text/javascript' charset='utf8' src='//cdn.datatables.net/1.10.13/js/jquery.dataTables.js'></script>".
+    "<script>$(document).ready( function () {
+            $('table').DataTable({
+                'language': {
+                    'lengthMenu': '_MENU_ Werte pro Seite',
+                    'zeroRecords': 'Nichts gefunden - Entschuldigung',
+                    'info': 'Seite _PAGE_ von _PAGES_',
+                    'infoEmpty': 'Nichts vorhanden',
+                    'infoFiltered': '(gefiltert von _MAX_ gesamt)',
+                    'search': 'Suche:',
+                    'paginate': {
+                        'previous': 'Zurück',
+                        'next': 'Weiter',
+                    }
+                }
+            });
+        } );</script>";
 ?>
-<section id="main">
+<main>
     <h1><i class="fa fa-file-text fontawesome"></i> Seitenverwaltung</h1>
-    <table>
-        <tr>
-            <th>Seite</th>
-            <th>Template</th>
-            <th>Öffentlich</th>
-            <th>Aktionen</th>
-        </tr>
-        <tr>
-            <td>&nbsp;</td>
-            <td>
-                <form id="template" name="template" action="../lib/BackendComponentPrinter.class.php"> <label>Template: <select name="top5"> <option>Heino</option> <option>Michael Jackson</option> <option>Tom Waits</option> <option>Nina Hagen</option> <option>Marianne Rosenberg</option> </select> </label> </form>
-            </td>
-            <td>
-            <form method="post" action="../lib/BackendComponentPrinter.class.php">
-                <input id="public" name="public" type="checkbox"></form>
-            </td>
-            <td>
-            <form method="post">
-                <input id="editContent" name="editContent" type="button" value="Löschen"><input name="Button2" type="button" value="Inhalte bearbeiten"></form>
-            </td>
-        </tr>
-        <tr>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-        </tr>
-        <tr>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-        </tr>
-        <tr>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-        </tr>
-    </table>
+
+    <?php
+    /* Print Pages table */
+    BackendComponentPrinter::PrintTableStart(array("Seite", "Template", "Öffentlich", "Aktionen", "Menüposition"));
+    $rowValues = array("",
+        "<form id='template' name='template' action='../lib/BackendComponentPrinter.class.php'> <label>Template: <select name='top5'> <option>Layout 1</option> <option>Layout 2</option> <option>Layout 3</option> <option>Layout 4</option> <option>Layout 5</option> </select> </label> </form>",
+        "<form method='post' action='../lib/BackendComponentPrinter.class.php'>
+                <input id='public' name='public' type='checkbox'></form>",
+        "<form method='post'>
+                <input id='editContent' name='editContent' type='button' value='Löschen'><input name='Button2' type='button' value='Inhalte bearbeiten'></form>",
+        "");
+    BackendComponentPrinter::PrintTableRow($rowValues);
+    BackendComponentPrinter::PrintTableEnd();
+    ?>
+
     <form method="post" action="../lib/BackendComponentPrinter.class.php">
         <input id="newPage" name="newPage" type="button" value="Neue Seite">
         <input id="options" name="options" type="button" value="Optionen">
     </form>
-</section>
+</main>
 </body>
 
 </html>
