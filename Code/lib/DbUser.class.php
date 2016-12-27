@@ -545,9 +545,9 @@ function check_date($date,$format,$sep)
 	* checks via username if the user is banned
 	* @params int $id the ban's id
 	*/		
-	public function DebanUserViaBanId($userId)
+	public function DebanUserViaBanId($id)
 	{
-		$result = $this->database->ExecuteQuery("UPDATE user SET enddatetime = NOW() WHERE id = '". $userId."'");
+		$result = $this->database->ExecuteQuery("UPDATE ban SET enddatetime = NOW() WHERE id = ". $id);
 
 		if($result==true)
 		{
