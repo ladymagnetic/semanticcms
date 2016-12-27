@@ -20,7 +20,7 @@ SET time_zone = "+00:00";
 -- Datenbank: `cms-projekt`
 --
 DROP DATABASE IF EXISTS`cms-projekt`;
-CREATE DATABASE IF NOT EXISTS `cms-projekt` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+CREATE DATABASE IF NOT EXISTS `cms-projekt` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE `cms-projekt`;
 
 --
