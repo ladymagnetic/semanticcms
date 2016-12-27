@@ -68,6 +68,7 @@ class BackendComponentPrinter
         if (in_array(Permission::Templateconstruction, $permissions)) {
             echo "<li property='name'><a property='url' href=\"TemplateConstruction.php\" title=\"Templates\"><i class=\"fa fa-paint-brush fontawesome\"></i> Templates</a></li>";
         }
+        echo "<li property='name'><a property='url' href=\"Logout.php\" title=\"Logout\"><i class=\"fa fa-paint-brush fontawesome\"></i> Logout</a></li>";
 
         echo
         "</ul>
@@ -177,7 +178,7 @@ class BackendComponentPrinter
     /**
      * Prints a dropdown list together with a label
      * @param $label The corresponding label string
-     * @param $name The name of the dropdown list
+     * @param $name The name attribute of the dropdown list
      * @param array $options The options of the dropdown list
      * @param $size Number of visible options at the same time
      * @param $selected The default selected option string
@@ -202,7 +203,7 @@ class BackendComponentPrinter
     /**
      * Prints a dropdown list with selectable fonts as options together with a label
      * @param $label The corresponding label string
-     * @param $name The name of the dropdown list
+     * @param $name The name attribute of the dropdown list
      */
     public static function PrintFontsDropdownList($label, $name)
     {
