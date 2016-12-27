@@ -83,25 +83,6 @@ else if (isset($_POST['roleDetails'])) {
     // has to return because other page
     return;
 }
-// if submit button with name 'applyChanges' is pressed
-else if (isset($_POST['applyChanges']))
-{
-    $userId = intval($_POST['userId']);
-    $userName = $_POST['userName'];
-    $name = $_POST['name'];
-    $foreName = $_POST['foreName'];
-    $email = $_POST['email'];
-    $dbUser->UpdateUserDifferentNamesById($name, $foreName, $userName, $email, $userId);
-}
-// if submit button with name 'applyPasswordChanges' is pressed
-else if (isset($_POST['applyPasswordChanges']))
-{
-    $userId = intval($_POST['userId']);
-    $password = $_POST['currentPassword'];
-    $newPassword = $_POST['newPassword'];
-    $newPasswordRepeat = $_POST['newPasswordRepeat'];
-    $dbUser->ApplyPasswordChangesToUser($userId, $password, $newPassword, $newPasswordRepeat);
-}
 // if submit button with name 'registrateUser' is pressed
 else if (isset($_POST['registrateUser']))
 {
@@ -330,32 +311,36 @@ BackendComponentPrinter::PrintSidebar(array());
     $userRow = $dbUser->FetchArray($dbUser->GetUserInformationById($userId));
     echo
             "<label for='userName'>Benutzername</label>
-            <input required id='userName' name='userName' type='text' value='".$userRow['username']."'><br><br>";
+            <input readonly id='userName' name='userName' type='text' value='".$userRow['username']."'><br><br>";
     echo
             "<label for='name'>Name</label>
-            <input required id='name' name='name' type='text' value='".$userRow['lastname']."'><br><br>";
+            <input readonly id='name' name='name' type='text' value='".$userRow['lastname']."'><br><br>";
     echo    
             "<label for='foreName'>Vorname</label>
-            <input required id='foreName' name='foreName' type='text' value='".$userRow['firstname']."'><br><br>";
+            <input readonly id='foreName' name='foreName' type='text' value='".$userRow['firstname']."'><br><br>";
     echo
             "<label for='email'>Email</label>
-            <input required id='email' name='email' type='text' value='".$userRow['email']."'><br><br>";
+            <input readonly id='email' name='email' type='text' value='".$userRow['email']."'><br><br>";
+    echo
+        "<label for='birthdate'>Geburtsdatum</label>
+        <input readonly type='text' name='birthdate' id='birthdate' value='".$userRow['birthdate']."'><br><br>";
+    // not editable
+    echo
+            "<label for='registrydate'>Geburtsdatum</label>
+            <input readonly type='text' name='registrydate' id='registrydate' value='".$userRow['registrydate']."'><br><br>".
+            "<label for='role'>Rolle</label>";
+    $roleRows = $dbUser->SelectAllRoles();
+    while ($roleRow = $dbUser->FetchArray($roleRows))
+    {
+        if ($roleRow['id'] == $userRow['role_id'])
+        {
+            echo
+                "<input readonly id='role' name='role' type='text' value='".$roleRow['rolename']."'><br><br>";
+        }
+    }
     echo
             "<input id='userId' name='userId' type='hidden' value='".$userId."'>".
-            "<input id='applyChanges' name='applyChanges' type='submit' value='Änderungen übernehmen'>";
-    echo
-            "</form>
-            <h2>Passwort ändern</h2>
-            <form method='post' action='Usermanagement.php'>";
-    echo
-            "<label for='currentPassword'>aktuelles Passwort</label>
-            <input required id='currentPassword' name='currentPassword' type='password'><br><br>
-            <label for='newPassword'>neues Passwort</label>
-            <input required id='newPassword' name='newPassword' type='password'><br><br>
-            <label for='newPasswordRepeat'>neues Passwort bestätigen</label>
-            <input required id='newPasswordRepeat' name='newPasswordRepeat' type='password'><br><br>
-            <input id='userId' name='userId' type='hidden' value='".$userId."'>".
-            "<input id='applyPasswordChanges' name='applyPasswordChanges' type='submit' value='Passwort übernehmen'>";
+            "<input id='back' name='back' type='submit' value='Zurück'>";
     echo
             "</form>
             </main>
@@ -519,7 +504,7 @@ BackendComponentPrinter::PrintSidebar(array());
             "<label for='currentPassword'>Passwort</label>
             <input required id='currentPassword' name='currentPassword' type='password'><br><br>";
     echo
-            "<label for='currentPassword'>Rolle</label>".
+            "<label for='assignedRole'>Rolle</label>".
             "<select required name='assignedRole'>";
     $roleRows = $dbUser->SelectAllRoles();
     while ($rolerow = $dbUser->FetchArray($roleRows))
