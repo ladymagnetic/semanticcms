@@ -16,33 +16,37 @@ BackendComponentPrinter::PrintHead("Seitenverwaltung", $jquery=true);
 <body>
 <?php
 /* Include(s) */
+require_once 'lib/DbEngine.class.php';
+require_once 'lib/DbContent.class.php';
 require_once 'lib/Permission.enum.php';
 require_once 'config/config.php';
 
 /* use namespace(s) */
+use SemanticCms\DatabaseAbstraction\DbEngine;
+use SemanticCms\DatabaseAbstraction\DbContent;
 use SemanticCms\Model\Permission;
 
-// todo: wieder auskommentieren, wenn Login geht
-///* Check if user is logged in */
-//if(!isset($_SESSION['username']))
-//{
-//    die($config['error']['noLogin']);
-//}
-///* Check if  permissions are set */
-//else if(!isset($_SESSION['permissions']))
-//{
-//    die($config['error']['permissionNotSet']);
-//}
-///*  Check if user has the permission to see this page */
-//else if(!in_array(Permission::Pagemanagment, $_SESSION['permissions']))
-//{
-//    die($config['error']['permissionMissing']);
-//}
-//
-//BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
-BackendComponentPrinter::PrintSidebar(array(Permission::Guestbookusage,
-    Permission::Articlemanagment, Permission::Pagemanagment, Permission::Templateconstruction,
-    Permission::Guestbookmanagment, Permission::Usermanagment));
+/* Check if user is logged in */
+if(!isset($_SESSION['username']))
+{
+    die($config['error']['noLogin']);
+}
+/* Check if  permissions are set */
+else if(!isset($_SESSION['permissions']))
+{
+    die($config['error']['permissionNotSet']);
+}
+/*  Check if user has the permission to see this page */
+else if(!in_array(Permission::Pagemanagment, $_SESSION['permissions']))
+{
+    die($config['error']['permissionMissing']);
+}
+
+BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
+
+/** Database related objects */
+$db = new DbEngine($config['cms_db']['dbhost'],$config['cms_db']['dbuser'],$config['cms_db']['dbpass'],$config['cms_db']['database']);
+$dbContent = new DbContent($config['cms_db']['dbhost'], $config['cms_db']['dbuser'], $config['cms_db']['dbpass'], $config['cms_db']['database']);
 
 /* Datatables */
 BackendComponentPrinter::PrintDatatablesPlugin();
@@ -51,14 +55,30 @@ BackendComponentPrinter::PrintDatatablesPlugin();
     <h1><i class="fa fa-file-text fontawesome"></i> Seitenverwaltung</h1>
 
     <?php
+    // todo: alte Version entfernen, wenn die neue Version mit der Datenbank geht
     /* Print Pages table */
-    BackendComponentPrinter::PrintTableStart(array("Seite", "Template", "Aktionen", "Menüposition"));
+    /*BackendComponentPrinter::PrintTableStart(array("Seite", "Template", "Aktionen", "Relative Position"));
     $rowValues = array("",
         "<form id='template' name='template' action='../lib/BackendComponentPrinter.class.php'> <label>Template: <select name='top5'> <option>Layout 1</option> <option>Layout 2</option> <option>Layout 3</option> <option>Layout 4</option> <option>Layout 5</option> </select> </label> </form>",
         "<form method='post'>
                 <input id='editContent' name='editContent' type='button' value='Löschen'><input name='Button2' type='button' value='Inhalte bearbeiten'></form>",
         "");
     BackendComponentPrinter::PrintTableRow($rowValues);
+    BackendComponentPrinter::PrintTableEnd();*/
+
+    // neue Version -> todo testen mit neuen datenbank-methoden
+    /* Print Pages table */
+    $pages = $dbContent->GetAllPages();
+    BackendComponentPrinter::PrintTableStart(array("Seite", "Template", "Aktionen", "Relative Position"));
+    while ($page = $dbContent->FetchArray($pages))
+    {
+        $siteTitle = $page['title'];
+        $siteTemplate = $dbContent->GetTemplateByID($page['template_id']);
+        $siteActions = "<span>todo</span>";
+        $siteRelativePosition = $page['relativeposition'];
+
+        BackendComponentPrinter::PrintTableRow(array($siteTitle, $siteTemplate['templatename'], $siteActions, $siteRelativePosition));
+    }
     BackendComponentPrinter::PrintTableEnd();
     ?>
 
