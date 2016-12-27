@@ -445,7 +445,7 @@ ALTER TABLE `lable_user`
 --
 -- Indizes für die Tabelle `log`
 --
-ALTER TABLE `log`
+ALTER TABLE `logtable`
   ADD PRIMARY KEY (`id`);
 
 --
