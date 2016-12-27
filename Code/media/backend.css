@@ -175,3 +175,11 @@ label, input {
 label {
     width:200px;
 }
+
+/*-----  Warning ----->*/
+.warning
+{
+  position: absolute;
+  left: 350px;
+  top: 500px;
+}
