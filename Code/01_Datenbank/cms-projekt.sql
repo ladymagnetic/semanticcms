@@ -443,7 +443,7 @@ ALTER TABLE `lable_user`
   ADD KEY `user_id` (`user_id`);
 
 --
--- Indizes für die Tabelle `log`
+-- Indizes für die Tabelle `logtable`
 --
 ALTER TABLE `logtable`
   ADD PRIMARY KEY (`id`);
@@ -515,9 +515,9 @@ ALTER TABLE `ban_reason`
 ALTER TABLE `lable`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 --
--- AUTO_INCREMENT für Tabelle `log`
+-- AUTO_INCREMENT für Tabelle `logtable`
 --
-ALTER TABLE `log`
+ALTER TABLE `logtable`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT für Tabelle `page`
