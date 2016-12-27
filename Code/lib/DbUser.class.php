@@ -153,6 +153,15 @@ public function UsernameAlreadyExists($username)
 
 
 
+public function InsertNewLog($logUsername, $logRolename, $logDescription)
+{
+	$result = $this->database->ExecuteQuery("INSERT INTO logtable (id, logdate , username, rolename, description) VALUES (NULL, NOW(), '".$logUsername."', '".$logRolename."', '".$logDescription."')");
+}
+
+
+
+
+
 /* eventuell für die Prüfung des Datums beim Registrieren eines User
 http://www.selfphp.de/kochbuch/kochbuch.php?code=17
 function check_date($date,$format,$sep)
@@ -236,13 +245,29 @@ function check_date($date,$format,$sep)
 		$result = $this->database->ExecutePreparedStatement("deleteUserById", array($userId));
 
 		//var_dump($result); // TESTEN! => und dann die Abfrage evtl. anpassen.
+		
+		$nameOfUser = $this->database->ExecuteQuery("SELECT username FROM user WHERE id = ".$userId);
+
+		var_dump($nameOfUser);
 
 		if($result==true)
-		{		// für Log-Tabelle:
-				// Wer wird gelöscht?
-				// Wer hat den Löschvorgang durchgeführt? => Usermanagement is true. => alle diese könnnen User löschen!
-				// eventuell neuen Parameter bei Funktion mitgeben ($userId von der Person, die löscht.)
-				return true;
+		{	// für Log-Tabelle:
+			// Wer wird gelöscht?
+			// Wer hat den Löschvorgang durchgeführt? => Usermanagement is true. => alle diese könnnen User löschen!
+			// eventuell neuen Parameter bei Funktion mitgeben ($userId von der Person, die löscht.)
+			
+			$logUsername = 'Wer ist gerade angemeldet?';
+			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
+			//$logDescription = 'der User: '.$nameOfUser.' wurde gelöscht';
+			$logDescription = 'hier könnte ihre beschreibung stehen';
+
+			$re = $this->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+			echo'Versuch';
+			
+			var_dump($re);
+				
+			return true;
 		}
 		else
 		{
