@@ -135,6 +135,40 @@ else if (isset($_POST['registrateUser']))
         </div";
         return;
     }
+    // check if valid mail
+    else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo
+        /* Bootstrap temporary for nice alert */
+            "<!-- Latest compiled and minified CSS -->
+            <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' integrity='sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u' crossorigin='anonymous'>
+            <!-- Optional theme -->
+            <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css' integrity='sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp' crossorigin='anonymous'>
+            <!-- Latest compiled and minified JavaScript -->
+            <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' integrity='sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa' crossorigin='anonymous'></script>";
+        CreateNewUser($dbUser);
+        echo
+        "<div class='alert alert-danger warning'>
+        <strong>Warnung!</strong> Invalide email.
+        </div";
+        return;
+    }
+    // check if username is only characters, numbers and _
+    if (!preg_match('/^[a-zA-Z0-9_]{1,}$/',$username)) {
+        echo
+        /* Bootstrap temporary for nice alert */
+            "<!-- Latest compiled and minified CSS -->
+            <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' integrity='sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u' crossorigin='anonymous'>
+            <!-- Optional theme -->
+            <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css' integrity='sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp' crossorigin='anonymous'>
+            <!-- Latest compiled and minified JavaScript -->
+            <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' integrity='sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa' crossorigin='anonymous'></script>";
+        CreateNewUser($dbUser);
+        echo
+        "<div class='alert alert-danger warning'>
+        <strong>Warnung!</strong> Der Benutzername darf nur Buchstaben, Zahlen und Unterstriche enthalten.
+        </div";
+        return;
+    }
     else
     {
         $dbUser->RegistrateUser($role_id, $lastname, $firstname, $username, $password, $email, $birthdate);
@@ -511,6 +545,7 @@ BackendComponentPrinter::PrintSidebar(array());
         } );
         </script>
     ";
+
     echo
             "<main>
             <h1><i class='fa fa-user fontawesome'></i> Neuer Benutzer</h1>
