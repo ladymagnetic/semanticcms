@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 22. Dez 2016 um 23:04
+-- Erstellungszeit: 27. Dez 2016 um 14:23
 -- Server-Version: 10.1.16-MariaDB
 -- PHP-Version: 5.6.24
 
@@ -20,7 +20,7 @@ SET time_zone = "+00:00";
 -- Datenbank: `cms-projekt`
 --
 DROP DATABASE IF EXISTS`cms-projekt`;
-CREATE DATABASE IF NOT EXISTS `cms-projekt` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE DATABASE IF NOT EXISTS `cms-projekt` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 USE `cms-projekt`;
 
 --
@@ -205,6 +205,20 @@ INSERT INTO `lable_user` (`lable_id`, `user_id`) VALUES
 (14, 14),
 (15, 2),
 (15, 5);
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `log`
+--
+
+CREATE TABLE `log` (
+  `id` int(11) NOT NULL,
+  `date` date NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `rolename` varchar(255) NOT NULL,
+  `description` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -429,6 +443,12 @@ ALTER TABLE `lable_user`
   ADD KEY `user_id` (`user_id`);
 
 --
+-- Indizes für die Tabelle `log`
+--
+ALTER TABLE `log`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indizes für die Tabelle `page`
 --
 ALTER TABLE `page`
@@ -494,6 +514,11 @@ ALTER TABLE `ban_reason`
 --
 ALTER TABLE `lable`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+--
+-- AUTO_INCREMENT für Tabelle `log`
+--
+ALTER TABLE `log`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT für Tabelle `page`
 --
