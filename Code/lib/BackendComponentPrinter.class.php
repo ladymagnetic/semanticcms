@@ -45,34 +45,42 @@ class BackendComponentPrinter
 
 
 	/**
-	* Prints the sidebar navigation menu. Menu items will not be displayed if the user does not have the
+	* Prints the sidebar navigation menu incl. the start logo. Menu items will not be displayed if the user does not have the
     * corresponding permission.
-	* @params array $permissions The permissions of the currently logged in user.
+	* @params array $permissions The permissions of the currently logged in user. If the array is empty no
+     * menu entries are printed and the start logo is not clickable.
 	*/
     public static function PrintSidebar(array $permissions)
     {
-        echo
-        "<nav id=\"menue\" vocab='https://schema.org/' typeof='SiteNavigationElement'>
+        if (empty($permissions)) {
+            echo
+            "<nav id=\"menue\" typeof='SiteNavigationElement'>
+			<div id=\"logo\"></div>
+			</nav>";
+        } else {
+            echo
+            "<nav id=\"menue\" vocab='https://schema.org/' typeof='SiteNavigationElement'>
 			<div id=\"logo\" style=\"cursor: pointer;\" onclick=\"window.location='Start.php';\"></div>
 			<ul>";
-        // Je nach Rechten bestimmte Menue-Punkte gar nicht erst sichtbar
-        if (in_array(Permission::Usermanagment, $permissions)) {
-            echo "<li property='name'><a property='url' href=\"Usermanagement.php\" title=\"Benutzerverwaltung\"><i class=\"fa fa-user fontawesome\"></i> Benutzerverwaltung</a></li>";
-        }
-        if (in_array(Permission::Pagemanagment, $permissions)) {
-            echo "<li property='name'><a property='url' href=\"Pagemanagement.php\" title=\"Seitenverwaltung\"><i class=\"fa fa-file-text fontawesome\"></i> Seitenverwaltung</a></li>";
-        }
-        if (in_array(Permission::Articlemanagment, $permissions)) {
-            echo "<li property='name'><a property='url' href=\"Articlemanagement.php\" title=\"Inhaltsverwaltung\"><i class=\"fa fa-align-justify fontawesome\"></i> Inhaltsverwaltung</a></li>";
-        }
-        if (in_array(Permission::Templateconstruction, $permissions)) {
-            echo "<li property='name'><a property='url' href=\"TemplateConstruction.php\" title=\"Templates\"><i class=\"fa fa-paint-brush fontawesome\"></i> Templates</a></li>";
-        }
-        echo "<li property='name'><a property='url' href=\"Logout.php\" title=\"Logout\"><i class=\"fa fa-paint-brush fontawesome\"></i> Logout</a></li>";
+            // Je nach Rechten bestimmte Menue-Punkte gar nicht erst sichtbar
+            if (in_array(Permission::Usermanagment, $permissions)) {
+                echo "<li property='name'><a property='url' href=\"Usermanagement.php\" title=\"Benutzerverwaltung\"><i class=\"fa fa-user fontawesome\"></i> Benutzerverwaltung</a></li>";
+            }
+            if (in_array(Permission::Pagemanagment, $permissions)) {
+                echo "<li property='name'><a property='url' href=\"Pagemanagement.php\" title=\"Seitenverwaltung\"><i class=\"fa fa-file-text fontawesome\"></i> Seitenverwaltung</a></li>";
+            }
+            if (in_array(Permission::Articlemanagment, $permissions)) {
+                echo "<li property='name'><a property='url' href=\"Articlemanagement.php\" title=\"Inhaltsverwaltung\"><i class=\"fa fa-align-justify fontawesome\"></i> Inhaltsverwaltung</a></li>";
+            }
+            if (in_array(Permission::Templateconstruction, $permissions)) {
+                echo "<li property='name'><a property='url' href=\"TemplateConstruction.php\" title=\"Templates\"><i class=\"fa fa-paint-brush fontawesome\"></i> Templates</a></li>";
+            }
+            echo "<li property='name'><a property='url' href=\"Logout.php\" title=\"Logout\"><i class=\"fa fa-paint-brush fontawesome\"></i> Logout</a></li>";
 
-        echo
-        "</ul>
-		</nav>";
+            echo
+                "</ul>
+    		</nav>";
+        }
     }
 
     /**
