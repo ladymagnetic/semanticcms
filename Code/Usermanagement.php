@@ -51,6 +51,14 @@ else if (isset($_POST['details'])) {
 // if submit button with name 'delete' is pressed
 else if (isset($_POST['delete'])) {
     $userId = intval($_POST['userId']);
+    ReallyDelete($userId);
+    // has to return because other page
+    return;
+}
+// if submit button with name 'reallydelete' is pressed
+else if (isset($_POST['reallyDelete'])) {
+    $userId = intval($_POST['userId']);
+
     $dbUser->DeleteUserById($userId);
 }
 // if submit button with name 'newUser' is pressed
@@ -167,7 +175,7 @@ BackendComponentPrinter::PrintTableStart(array("Benutzer", "entsperren/sperren",
 $userRows = $dbUser->SelectAllUsers();
 while ($row = $dbUser->FetchArray($userRows))
 {
-    $tableRow1 = $row['firstname']." ".$row['lastname'];
+    $tableRow1 = $row['username']."<br>".$row['firstname']." ".$row['lastname'];
 
     //if user is banned/debanned
     $bannedUsers = $dbUser->SelectAllUsersWhichAreBannedNow();
@@ -580,6 +588,8 @@ BackendComponentPrinter::PrintSidebar(array());
             "<label for='templateconstruction'>Template erstellen</label>".
             "<input id='templateconstruction' name='templateconstruction' type='checkbox' value='1'><br><br>".
             "<input id='createRole' name='createRole' type='submit' value='Rolle erstellen'></form>";
+    echo
+            "</main></body></html>";
 }
 
 function BanUser($userId, $dbUser)
@@ -652,7 +662,51 @@ BackendComponentPrinter::PrintSidebar(array());
             "<label for='enddatetime'>Enddatum</label>".
             "<input id='enddatetime' required name='enddatetime' type='text'><br><br>".
             "<input id='banUser' name='banUser' type='submit' value='Sperrung erstellen'></form>";
+    echo
+            "</main></body></html>";
 }
+
+function ReallyDelete($userId)
+{
+    BackendComponentPrinter::PrintHead("Benutzerverwaltung");
+    /* menue */
+/* dynamisch erzeugt je nach Rechten */
+/* Check if user is logged in */
+/*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert*/
+//if(!isset($_SESSION['username'])) 
+//{
+//    die($config['error']['noLogin']);  
+//}
+/* Check if  permissions are set */
+//else if(!isset($_SESSION['permissions']))
+//{
+//    die($config['error']['permissionNotSet']);  		
+//}
+/*  Check if user has the permission the see this page */
+// Nicht vergessen nach dem kopieren die wirklich benötigte permission abzufragen!!
+//else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
+//{
+//    die($config['error']['permissionMissing']);  	  
+//}
+
+// Printer Beispiel									
+//BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
+BackendComponentPrinter::PrintSidebar(array());
+/*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert */
+    echo
+            "<main><form method='post' action='Usermanagement.php'>".
+            "<input id='userId' name='userId' type='hidden' value='".$userId."'><br><br>".
+            "<p>Möchten Sie wirklich löschen?</p>".
+            "<p><img src='media/Pictures/Gnome-edit-delete.png' height='auto' width='250px'></p>".
+            "<input id='back' name='back' type='submit' value='Zurück'>".
+            "<input id='reallyDelete' name='reallyDelete' type='submit' value='Löschen'>";
+    echo
+            "</form>";
+    echo
+            "</main></body></html>";
+
+}
+
 // call by reference --> &
 function SetPermissionsFromForm(&$guestbookmanagement, &$usermanagement, &$pagemanagement, &$articlemanagement, &$guestbookusage, &$templateconstruction)
 {
