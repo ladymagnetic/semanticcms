@@ -19,29 +19,36 @@ $db = new DbEngine($config['cms_db']['dbhost'],$config['cms_db']['dbuser'],$conf
 $dbUser = new DbUser($config['cms_db']['dbhost'], $config['cms_db']['dbuser'], $config['cms_db']['dbpass'], $config['cms_db']['database']);
 
 /*---- Submit Buttons ----*/
+// if submit button with name 'selectPage' is pressed
+if (isset($_POST['selectPage'])) {
+    $pageId = intval($_POST['pageId']);
+    CreateArticleManagement($pageId);
+    // has to return because other page
+    return;
+}
 // if submit button with name 'edit' is pressed
-if (isset($_POST['edit'])) {
-    $contentId = intval($_POST['contentId']);
-    EditContent($editId, $dbUser);
+else if (isset($_POST['edit'])) {
+    $articleId = intval($_POST['articleId']);
+    EditArticle($articleId, $dbUser);
     // has to return because other page
     return;
 }
 // if submit button with name 'delete' is pressed
 else if (isset($_POST['delete'])) {
-    $contentId = intval($_POST['contentId']);
-    $dbUser->DeleteContentById($contentId);
+    $articleId = intval($_POST['articleId']);
+    $dbUser->DeleteArticleById($articleId);
 }
-// if submit button with name 'newUser' is pressed
-else if (isset($_POST['newContent'])) {
-    CreateNewContent($dbUser);
+// if submit button with name 'newContent' is pressed
+else if (isset($_POST['newArticle'])) {
+    CreateNewArticle($dbUser);
     // has to return because other page
     return;
 }
 // if submit button with name 'assignPage' is pressed
-else if (isset($_POST['assignContentToPage'])) {
-    $pageId = intval($dbUser->FetchArray($dbUser->SelectRoleByRolename($_POST['pageId']))['id']);
-    $contentId = intval($_POST['contentId']);
-    $dbUser->AssignContentToPage($pageId, $contentId);
+else if (isset($_POST['newArticle'])) {
+    $pageId = intval($_POST['pageId']);
+    $articleId = intval($_POST['articleId']);
+    $dbUser->InsertNewArticleToPage($pageId, $articleId);
 }
 // if submit button with name 'applyChanges' is pressed
 else if (isset($_POST['publish']))
@@ -52,32 +59,6 @@ else if (isset($_POST['publish']))
     $foreName = $_POST['foreName'];
     $email = $_POST['email'];
     $dbUser->UpdateUserDifferentNamesById($userId, $userName, $name, $foreName, $email);
-}
-isset
-        edit
-        selectPage
-        publish
-
-// if submit button with name 'registrateUser' is pressed
-else if (isset($_POST['registrateUser']))
-{
-    $role_id = intval($dbUser->FetchArray($dbUser->SelectRoleByRolename($_POST['assignedRole']))['id']);
-    $lastname = $_POST['name'];
-    $firstname = $_POST['foreName'];
-    $username = $_POST['userName'];
-    $password = $_POST['currentPassword'];
-    $email = $_POST['email'];
-    $birthdate = $_POST['birthdate'];
-    $dbUser->RegistrateUser($role_id, $lastname, $firstname, $username, $password, $email, $birthdate);
-}
-// if submit button with name 'saveRoleChanges' is pressed
-else if (isset($_POST['saveRoleChanges'])) 
-{
-    $id = intval($_POST['roleId']);
-    $rolename = $_POST['roleName'];
-    $uri = $_POST['uri'];
-    SetPermissionsFromForm($guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction);
-    $dbUser->UpdateRoleById($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $id);
 }
 
 BackendComponentPrinter::PrintHead("Inhaltsverwaltung", $jquery=true);

@@ -39,7 +39,7 @@ else if (isset($_POST['banUser']))
     $description = $_POST['description']; 
     $begindatetime = $_POST['begindatetime'];
     $enddatetime = $_POST['enddatetime'];
-    $dbUser->InsertBanViaUserId(NULL, $user_id, $reason_id, $description, $begindatetime, $enddatetime);
+    $dbUser->InsertBanViaUserId($user_id, $reason_id, $description, $begindatetime, $enddatetime);
 }
 // if submit button with name 'details' is pressed
 else if (isset($_POST['details'])) {
