@@ -209,12 +209,12 @@ INSERT INTO `lable_user` (`lable_id`, `user_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `log`
+-- Tabellenstruktur für Tabelle `logtable`
 --
 
-CREATE TABLE `log` (
+CREATE TABLE `logtable` (
   `id` int(11) NOT NULL,
-  `date` date NOT NULL,
+  `logdate` date NOT NULL,
   `username` varchar(255) NOT NULL,
   `rolename` varchar(255) NOT NULL,
   `description` text NOT NULL
