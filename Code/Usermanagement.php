@@ -6,7 +6,6 @@ require_once 'lib/DbEngine.class.php';
 require_once 'lib/BackendComponentPrinter.class.php';
 require_once 'config/config.php';
 require_once 'lib/DbUser.class.php';
-require_once 'lib/BackendComponentPrinter.class.php';
 require_once 'lib/Permission.enum.php';
 
 /* use namespace(s) */
@@ -40,7 +39,7 @@ else if (isset($_POST['banUser']))
     $description = $_POST['description']; 
     $begindatetime = $_POST['begindatetime'];
     $enddatetime = $_POST['enddatetime'];
-    $dbUser->InsertBanViaUserId($user_id, $reason_id, $description, $begindatetime, $enddatetime);
+    $dbUser->InsertBanViaUserId(NULL, $user_id, $reason_id, $description, $begindatetime, $enddatetime);
 }
 // if submit button with name 'details' is pressed
 else if (isset($_POST['details'])) {
