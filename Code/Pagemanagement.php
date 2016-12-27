@@ -52,11 +52,9 @@ BackendComponentPrinter::PrintDatatablesPlugin();
 
     <?php
     /* Print Pages table */
-    BackendComponentPrinter::PrintTableStart(array("Seite", "Template", "Öffentlich", "Aktionen", "Menüposition"));
+    BackendComponentPrinter::PrintTableStart(array("Seite", "Template", "Aktionen", "Menüposition"));
     $rowValues = array("",
         "<form id='template' name='template' action='../lib/BackendComponentPrinter.class.php'> <label>Template: <select name='top5'> <option>Layout 1</option> <option>Layout 2</option> <option>Layout 3</option> <option>Layout 4</option> <option>Layout 5</option> </select> </label> </form>",
-        "<form method='post' action='../lib/BackendComponentPrinter.class.php'>
-                <input id='public' name='public' type='checkbox'></form>",
         "<form method='post'>
                 <input id='editContent' name='editContent' type='button' value='Löschen'><input name='Button2' type='button' value='Inhalte bearbeiten'></form>",
         "");
