@@ -12,24 +12,24 @@ require_once 'lib/Permission.enum.php';
 use SemanticCms\config;
 use SemanticCms\DatabaseAbstraction\DbEngine;
 use SemanticCms\ComponentPrinter\BackendComponentPrinter;
-use SemanticCms\DatabaseAbstraction\DbUser;
+use SemanticCms\DatabaseAbstraction\dbcontent;
 use SemanticCms\Model\Permission;
 
-$db = new DbEngine($config['cms_db']['dbhost'],$config['cms_db']['dbuser'],$config['cms_db']['dbpass'],$config['cms_db']['database']);
-$dbContent = new DbContent($config['cms_db']['dbhost'], $config['cms_db']['dbuser'], $config['cms_db']['dbpass'], $config['cms_db']['database']);
+$db = new DbEngine($config['cms_db']['dbhost'],$config['cms_db']['dbcontent'],$config['cms_db']['dbpass'],$config['cms_db']['database']);
+$dbContent = new DbContent($config['cms_db']['dbhost'], $config['cms_db']['dbcontent'], $config['cms_db']['dbpass'], $config['cms_db']['database']);
 
 /*---- Submit Buttons ----*/
 // if submit button with name 'selectPage' is pressed
 if (isset($_POST['selectPage'])) {
     $pageId = intval($_POST['pageId']);
-    CreateArticleManagement($pageId, $dbUser);
+    CreateArticleManagement($pageId, $dbcontent);
     // has to return because other page
     return;
 }
 // if submit button with name 'edit' is pressed
 else if (isset($_POST['edit'])) {
     $articleId = intval($_POST['articleId']);
-    EditArticle($pageId, $articleId, $dbUser);
+    EditArticle($pageId, $articleId, $dbcontent);
     // has to return because other page
     return;
 }
@@ -40,7 +40,7 @@ else if (isset($_POST['delete'])) {
 }
 // if submit button with name 'newContent' is pressed
 else if (isset($_POST['newArticle'])) {
-    CreateNewArticle($pageId, $dbUser);
+    CreateNewArticle($pageId, $dbcontent);
     // has to return because other page
     return;
 }
@@ -86,9 +86,9 @@ else if (isset($_POST['updateArticle']))
     $dbContent->UpdateArticleToPage($articleId, $pageId, $header, $content, $date, $type, $public, $description)
 }
 
-CreateArticleManagement("", $dbUser);
+CreateArticleManagement("", $dbcontent);
 
-function CreateArticleManagement($pageId, $dbUser)
+function CreateArticleManagement($pageId, $dbcontent)
 {
     BackendComponentPrinter::PrintHead("Inhaltsverwaltung", $jquery=true);
     /* menue */
@@ -154,7 +154,7 @@ function CreateArticleManagement($pageId, $dbUser)
     { 
         // foreach content of page in database print
         $userRows = $dbContent->GetAllArticles();
-        while ($articleRow = $dbUser->FetchArray($userRows))
+        while ($articleRow = $dbcontent->FetchArray($userRows))
         {
             $tableRow1 = $articleRow['header'];
             $tableRow2 = $articleRow['date'];
@@ -175,7 +175,7 @@ function CreateArticleManagement($pageId, $dbUser)
             </html>";
 }
 
-function CreateNewArticle($pageId, $dbUser)
+function CreateNewArticle($pageId, $dbcontent)
 {
     BackendComponentPrinter::PrintHead("Inhaltsverwaltung", $jquery=true);
     /* menue */
@@ -236,7 +236,7 @@ function CreateNewArticle($pageId, $dbUser)
         <main></body></html>";
 }
 
-function EditArticle($pageId, $articleId, $dbUser)
+function EditArticle($pageId, $articleId, $dbcontent)
 {
     BackendComponentPrinter::PrintHead("Inhaltsverwaltung", $jquery=true);
     /* menue */
