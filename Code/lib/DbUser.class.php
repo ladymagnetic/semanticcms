@@ -35,11 +35,7 @@ class DbUser
 	*/
 	private function PrepareSQL()
 	{
-		$registrate = "INSERT INTO user (id, role_id, lastname, firstname, username, password, email, registrydate, birthdate)
-				  VALUES (NULL, ?, ?, ?, ?, ? , ? , NOW(), ?);";
-
-		$this->database->PrepareStatement("registrateUser", $registrate);
-
+		
 /*		Muster:
 		$deleteUser = "...."
 		$this->database->PrepareStatement("deleteUser", $deleteUser);
@@ -131,10 +127,17 @@ public function DoesUserAlreadyExist($username, $email)
 
 
 
-public function CheckIfValidEmail($email)
+public function CheckIfEmailExists($email)
 {
-	return ( filter_var( $email, FILTER_VALIDATE_EMAIL ) !== false )? true : false;
+	 
 }
+
+
+public function CheckIfUsernameExists($username)
+{
+	 
+}
+
 
 /* eventuell für die Prüfung des Datums beim Registrieren eines User
 http://www.selfphp.de/kochbuch/kochbuch.php?code=17
@@ -170,34 +173,37 @@ function check_date($date,$format,$sep)
 		INSERT INTO user VALUES (NULL, 2, "Muster", "Johanna", "jojo20", "password1234" , "j.m@web.de" , NOW(), "19960816")
 		*/
 
-		if(CheckIfValidEmail($email) == true)
+		//check if user exists => gibts den User in der DB überhaupt????
+		// check if email exits
+
+	
+
+		if (filter_var($email, FILTER_VALIDATE_EMAIL))
 		{
-					if(CheckIfValidEmail($username) == false)
-					{
-							$lastname= $this->database->RealEscapeString($lastname);
-							$firstname= $this->database->RealEscapeString($firstname);
-							$username= $this->database->RealEscapeString($username);
-							$password= $this->database->RealEscapeString($password);
-
-							$result = $this->database->ExecutePreparedStatement("registrateUser", array(2, $lastname, $firstname, $username, $password, $email, $birthdate));
-
-							var_dump($result); // TESTEN! => und dann die Abfrage evtl. anpassen.
-
-							if($result==true)
-							{
-									return true;
-							}
-							else
-							{
-								 return false;
-							}
-					}
-			}
-			else
+			if(!filter_var($username, FILTER_VALIDATE_EMAIL))
 			{
-				echo "Ungültige E-Mail-Adresse.";
-				return false;
+		  $emailErr = "PASST";
+
+			$lastname= $this->database->RealEscapeString($lastname);
+			$firstname= $this->database->RealEscapeString($firstname);
+			$username= $this->database->RealEscapeString($username);
+			$password= $this->database->RealEscapeString($password);
+
+
+			$result = $this->database->ExecuteQuery("INSERT INTO user (id, role_id, lastname, firstname, birthdate, username, password, email, registrydate) VALUES (NULL, ".$role_id.", '".$lastname."', '".$firstname."', '".$birthdate."', '".$username."', '".$password."', '".$email."', NOW())");
+
+				if($result==true)
+				{
+						return true;
+				}
+				else
+				{
+					 return false;
+				}
 			}
+		}
+		else   $emailErr = "PASST NICHT";
+		
 	}
 
 
