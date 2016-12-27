@@ -35,6 +35,22 @@ class DbContent
 	*/
 	private function PrepareSQL()
 	{
+		// Pages
+		$allPages = "SELECT page.title, page.relativeposition, template.templatename ".
+					"FROM page INNER JOIN template ON page.template_id = template.id ".
+					"ORDER BY page.relativeposition ASC;";
+		
+		$allPagesWithTemplate = "SELECT page.title ".
+								"FROM page INNER JOIN template ON page.template_id = template.id ".
+								"WHERE templatename = ?;";
+								
+		if(!$this->database->PrepareStatement("allPages", $allPages)) die("Abfrage konnte nicht erstellt werden.");				
+		if(!$this->database->PrepareStatement("allPagesWithTemplate", $allPagesWithTemplate)) die("Abfrage konnte nicht erstellt werden.");
+	
+	//	var_dump($this->database->GetLastError());
+		// Article
+
+		
 	}
 	
 	/*
@@ -42,30 +58,21 @@ class DbContent
 	*/
 	public function GetAllPages()
 	{
-		// Alle Seiten aus der Datenbank sortiert nach Relativer Position aufsteigend 
-		
-		// SELECT page.titel, page.relativeposition, template.templatename 
-		// FROM page INNER JOIN template 
-		// ON page.template_id = template.id
-		// ORDER BY page.relativeposition ASCENDING
+		return $this->database->ExecutePreparedStatement("allPages", array());
 	}
 	
 	public function GetAllPagesWithTemplate($templatename)
 	{
-		// Alle Seiten aus der Datenbank, die das Template $templatename verwenden
-
-		// SELECT page.titel 
-		// FROM page INNER JOIN template 
-		// ON page.template_id = template.id
-		// WHERE templatename = ?
+		return $this->database->ExecutePreparedStatement("allPagesWithTemplate", array($templatename));
 	}
 	
-	// braucht man nur intern (?) => private
+	// braucht man nur intern beim Hochzählen (?) => private
 	private function GetHighestRelativeNumber()
 	{
-		// SELECT MAX(relative_position) FROM page
-		$result = $this->database->ExecuteQuery("SELECT MAX(relativeposition) FROM page;");
+		$result = $this->database->ExecuteQuery("SELECT MAX(relativeposition) AS maxpos FROM page;");
+		$num = $this->FetchArray($result);
 		
+		return  intval($num['maxpos']);
 	}
 	
 	public function FetchArray($result)
