@@ -62,9 +62,6 @@ class DbUser
 		$deleteRole = "DELETE FROM role WHERE id = ?";
 		$this->database->PrepareStatement("deleteRole", $deleteRole);
 
-		$assignaRole = "UPDATE user SET role_id = ? WHERE id = ?";
-		$this->database->PrepareStatement("assignaRole", $assignaRole);
-
 		$newRole = "INSERT INTO role (id, uri, rolename, guestbookmanagement, usermanagement, pagemanagement, 	articlemanagement, 	guestbookusage, templateconstruction)
 				  VALUES (NULL, ?, ?, ?, ?, ? , ? , ?, ?);";
 		$this->database->PrepareStatement("newRole", $newRole);
@@ -74,14 +71,6 @@ class DbUser
 
 		$selectRoleByRolename = "SELECT * FROM role WHERE rolename = ?";
 		$this->database->PrepareStatement("selectRoleByRolename", $selectRoleByRolename);
-
-	// => Mirjam: fuer SaveRoleChanges()
-	 	$updateRoleById = "UPDATE role SET uri = ?, rolename = ?, guestbookmanagement = ?, usermanagement = ?, pagemanagement = ?, articlemanagement = ?, guestbookusage = ?, templateconstruction = ?)
-						WHERE id = ?";
-		$this->database->PrepareStatement("updateRoleById", $updateRoleById);
-
-		$updateUserDifferentNamesById= "UPDATE user SET lastname = ?, firstname = ?, username = ?, email= ? WHERE id = ?";
-		$this->database->PrepareStatement("updateUserDifferentNamesById", $updateUserDifferentNamesById);
 
 		$selectUserByEmail = "SELECT * FROM user WHERE email = ?";
 		$this->database->PrepareStatement("selectUserByEmail", $selectUserByEmail);
@@ -109,12 +98,7 @@ class DbUser
 		
 		$insertBanViaUserId = "INSERT INTO ban (id, user_id, reason_id, description, begindatetime, enddatetime) VALUES (NULL, ?, ?, ?, ?, ?)";
 		$this->database->PrepareStatement("insertBanViaUserId", $insertBanViaUserId);
-
-		$debanUserViaBanId = "UPDATE ban SET  enddatetime = NOW() WHERE id = ?";
-		$this->database->PrepareStatement("debanUserViaBanId", $debanUserViaBanId);
-		
-		
-		
+	
 		$selectAllBan_Reason = "SELECT * FROM ban_reason";
 		$this->database->PrepareStatement("selectAllBan_Reason", $selectAllBan_Reason);
 
@@ -316,7 +300,7 @@ function check_date($date,$format,$sep)
 	*/
 	public function AssignRole($roleId, $userId)
 	{
-		$result = $this->database->ExecutePreparedStatement("assignaRole", array($roleId, $userId));
+		$result = $this->database->ExecuteQuery("UPDATE user SET role_id ='".$roleId."' WHERE id = '". $userId."'");
 
 		if($result==true)
 		{
@@ -390,16 +374,16 @@ function check_date($date,$format,$sep)
 	*/
 	public function UpdateRoleById($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $id)
 	{
-			$result = $this->database->ExecutePreparedStatement("updateRoleById", array($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $id));
-
-			if($result==true)
-			{
-					return true;
-			}
-			else
-			{
-				 return false;
-			}
+		$result = $this->database->ExecuteQuery("UPDATE role SET uri ='".$uri."',  rolename ='".$rolename."',  guestbookmanagement ='".$guestbookmanagement."',  usermanagement ='".$usermanagement."', pagemanagement ='".$pagemanagement."', articlemanagement ='".$articlemanagement."', guestbookusage ='".$guestbookusage."' , templateconstruction ='".$templateconstruction."' WHERE id = '". $id."'");
+		
+		if($result==true)
+		{
+				return true;
+		}
+		else
+		{
+			 return false;
+		}
 	}
 
 
@@ -412,9 +396,9 @@ function check_date($date,$format,$sep)
 	* @params string $lastname the user's email
 	* @params int $id user's id
 	*/
-	public function UpdateUserDifferentNamesById($lastname, $firstname, $username, $email, $id)
+	public function UpdateUserDifferentNamesById($lastname, $firstname, $username, $email, $userId)
 	{
-			$result = $this->database->ExecutePreparedStatement("updateUserDifferentNamesById", array($lastname, $firstname, $username, $email, $id));
+			$result = $this->database->ExecuteQuery("UPDATE user SET lastname ='".$lastname."',  firstname ='".$firstname."',  username ='".$username."',  email ='".$email."' WHERE id = '". $userId."'");	
 
 			if($result==true)
 			{
@@ -561,9 +545,9 @@ function check_date($date,$format,$sep)
 	* checks via username if the user is banned
 	* @params int $id the ban's id
 	*/		
-	public function DebanUserViaBanId($id)
+	public function DebanUserViaBanId($userId)
 	{
-		$result = $this->database->ExecuteQuery("debanUserViaBanId", array($id));
+		$result = $this->database->ExecuteQuery("UPDATE user SET enddatetime = NOW() WHERE id = '". $userId."'");
 
 		if($result==true)
 		{
