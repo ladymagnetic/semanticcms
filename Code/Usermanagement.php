@@ -180,7 +180,7 @@ echo
         } );</script>";
 
 echo
-"<section id='main'>
+"<main>
     <h1><i class='fa fa-user fontawesome'></i> Benutzerverwaltung</h1>";
 BackendComponentPrinter::PrintTableStart(array("Benutzer", "entsperren/sperren", "Rolle", "Aktion"));
 // foreach user in database print
@@ -291,7 +291,7 @@ echo
         "<form method='post' action='Usermanagement.php'>
             <input id='newRole' name='newRole' type='submit' value='Neue Rolle'>
         </form>
-        </section>
+        </main>
         </body>
 
         </html>";
