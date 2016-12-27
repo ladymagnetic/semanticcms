@@ -19,17 +19,20 @@ use SemanticCms\Model\Permission;
 $db = new DbEngine($config['cms_db']['dbhost'],$config['cms_db']['dbuser'],$config['cms_db']['dbpass'],$config['cms_db']['database']);
 $dbUser = new DbUser($config['cms_db']['dbhost'], $config['cms_db']['dbuser'], $config['cms_db']['dbpass'], $config['cms_db']['database']);
 
-// actions dbuser
+/*---- Submit Buttons ----*/
+// if submit button with name 'deban' is pressed
 if (isset($_POST['deban'])) {
     $banId = intval($_POST['banId']);
     $dbUser->DebanUserViaBanId($banId);    
 }
+// if submit button with name 'ban' is pressed
 else if (isset($_POST['ban'])) {
     $userId = intval($_POST['userId']);
     BanUser($userId, $dbUser);
     // has to return because other page
     return;
 }
+// if submit button with name 'banUser' is pressed
 else if (isset($_POST['banUser']))
 {
     $user_id = intval($_POST['userId']); 
@@ -39,41 +42,49 @@ else if (isset($_POST['banUser']))
     $enddatetime = $_POST['enddatetime'];
     $dbUser->InsertBanViaUserId($user_id, $reason_id, $description, $begindatetime, $enddatetime);
 }
+// if submit button with name 'details' is pressed
 else if (isset($_POST['details'])) {
     $userId = intval($_POST['userId']);
     EditUser($userId, $dbUser);
     // has to return because other page
     return;
 }
+// if submit button with name 'delete' is pressed
 else if (isset($_POST['delete'])) {
     $userId = intval($_POST['userId']);
     $dbUser->DeleteUserById($userId);
 }
+// if submit button with name 'newUser' is pressed
 else if (isset($_POST['newUser'])) {
     CreateNewUser($dbUser);
     // has to return because other page
     return;
 }
+// if submit button with name 'newRole' is pressed
 else if (isset($_POST['newRole'])) {   
     CreateNewRole($dbUser);
     // has to return because other page
     return;
 }
+// if submit button with name 'assignRole' is pressed
 else if (isset($_POST['assignRole'])) {
     $roleId = intval($dbUser->FetchArray($dbUser->SelectRoleByRolename($_POST['assignedRole']))['id']);
     $userId = intval($_POST['userId']);
-    boolval($dbUser->AssignRole($roleId, $userId));
+    $dbUser->AssignRole($roleId, $userId);
 }
+// if submit button with name 'deleteRole' is pressed
 else if (isset($_POST['deleteRole'])) {
     $roleId = intval($_POST['roleId']);
     $dbUser->DeleteRole($roleId, $dbUser);
 }
+// if submit button with name 'roleDetails' is pressed
 else if (isset($_POST['roleDetails'])) {
     $roleId = intval($_POST['roleId']);
     EditRole($roleId, $dbUser);
     // has to return because other page
     return;
 }
+// if submit button with name 'applyChanges' is pressed
 else if (isset($_POST['applyChanges']))
 {
     $userId = intval($_POST['userId']);
@@ -83,6 +94,7 @@ else if (isset($_POST['applyChanges']))
     $email = $_POST['email'];
     $dbUser->UpdateUserDifferentNamesById($userId, $userName, $name, $foreName, $email);
 }
+// if submit button with name 'applyPasswordChanges' is pressed
 else if (isset($_POST['applyPasswordChanges']))
 {
     $userId = intval($_POST['userId']);
@@ -91,6 +103,7 @@ else if (isset($_POST['applyPasswordChanges']))
     $newPasswordRepeat = $_POST['newPasswordRepeat'];
     $dbUser->ApplyPasswordChangesToUser($userId, $password, $newPassword, $newPasswordRepeat);
 }
+// if submit button with name 'registrateUser' is pressed
 else if (isset($_POST['registrateUser']))
 {
     $role_id = intval($dbUser->FetchArray($dbUser->SelectRoleByRolename($_POST['assignedRole']))['id']);
@@ -102,6 +115,7 @@ else if (isset($_POST['registrateUser']))
     $birthdate = $_POST['birthdate'];
     $dbUser->RegistrateUser($role_id, $lastname, $firstname, $username, $password, $email, $birthdate);
 }
+// if submit button with name 'saveRoleChanges' is pressed
 else if (isset($_POST['saveRoleChanges'])) 
 {
     $id = intval($_POST['roleId']);
@@ -110,6 +124,7 @@ else if (isset($_POST['saveRoleChanges']))
     SetPermissionsFromForm($guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction);
     $dbUser->UpdateRoleById($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $id);
 }
+// if submit button with name 'createRole' is pressed
 else if (isset($_POST['createRole'])) 
 {
     $rolename = $_POST['rolename'];
