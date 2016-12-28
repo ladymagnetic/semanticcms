@@ -21,15 +21,15 @@ $dbContent = new DbContent($config['cms_db']['dbhost'], $config['cms_db']['dbuse
 /*---- Submit Buttons ----*/
 // if submit button with name 'selectPage' is pressed
 if (isset($_POST['selectPage'])) {
-    $pageId = intval($dbContent->FetchArray($dbContent->SelectPageByPagename($_POST['pageName']))['id']);
-    CreateArticleManagement($pageId, $dbContent);
+    $pageName = $_POST['pageName'];
+    CreateArticleManagement($pageName, $dbContent);
     // has to return because other page
     return;
 }
 // if submit button with name 'edit' is pressed
 else if (isset($_POST['edit'])) {
     $articleId = intval($_POST['articleId']);
-    EditArticle($pageId, $articleId, $dbContent);
+    EditArticle($pageName, $articleId, $dbContent);
     // has to return because other page
     return;
 }
@@ -40,25 +40,18 @@ else if (isset($_POST['delete'])) {
 }
 // if submit button with name 'newContent' is pressed
 else if (isset($_POST['newArticle'])) {
-    $pageId = intval($_POST['pageId']);
-    if ($pageId != "")
-    {
-        CreateNewArticle($pageId, $dbContent);
-        // has to return because other page
-        return;
-    }
+    $pageName = intval($_POST['pageName']);
+    CreateNewArticle($pageName, $dbContent);
+    // has to return because other page
+    return;
 }
 // if submit button with name 'applyChanges' is pressed
 else if (isset($_POST['publish']))
 {
-    $pageId = intval($_POST['pageId']);
+    $pageId = intval($dbContent->FetchArray($dbContent->SelectPageByPgename($_POST['pageName']))['id']);
     $header = intval($_POST['header']);
     $content = $_POST['summernote'];
-    $date = $_POST['date'];
-    if ($_POST['date'] == "")
-    {
-        $date = date("Y-m-d M");
-    } 
+    $date = date("Y-m-d");
     $type = $_POST['type'];
     if (isset($_POST['public']))
     {
@@ -75,14 +68,10 @@ else if (isset($_POST['publish']))
 // if submit button with name 'applyChanges' is pressed
 else if (isset($_POST['updateArticle']))
 {
-    $pageId = intval($_POST['pageId']);
+    $pageId = intval($dbContent->FetchArray($dbContent->SelectPageByPgename($_POST['pageName']))['id']);
     $header = $_POST['header'];
     $content = $_POST['summernote'];
-    $date = $_POST['date'];
-    if ($_POST['date'] == "")
-    {
-        $date = date("Y-m-d M");
-    } 
+    $date = date("Y-m-d"); 
     $type = $_POST['type'];
     if (isset($_POST['public']))
     {
@@ -100,7 +89,7 @@ else if (isset($_POST['updateArticle']))
 
 CreateArticleManagement("", $dbContent);
 
-function CreateArticleManagement($pageId, $dbContent)
+function CreateArticleManagement($pageName, $dbContent)
 {
     BackendComponentPrinter::PrintHead("Inhaltsverwaltung", $jquery=true);
     /* menue */
@@ -146,7 +135,7 @@ function CreateArticleManagement($pageId, $dbContent)
     echo
         "</select><input id='selectPage' name='selectPage' type='submit' value='Anzeigen'></form><br><br>";
     BackendComponentPrinter::PrintTableStart(array("Inhalte", "Veröffentlichungsdatum", "Aktion"));
-    if ($pageId != "")
+    if ($pageName != "")
     { 
         // foreach content of page in database print
         $userRows = $dbContent->GetAllArticlesWithDetailedInformation();
@@ -158,14 +147,14 @@ function CreateArticleManagement($pageId, $dbContent)
                 "<form method='post' action='Articlemanagement.php'>
                 <input id='delete' name='delete' type='submit' value='Löschen'><input name='edit' type='submit' value='bearbeiten'>".
                 "<input id='articleId' name='articleId' type='hidden' value='".$articleRow['id']."'>
-                <input id='pageId' name='pageId' type='hidden' value='".$pageId."'></form>";
+                <input id='pageName' name='pageName' type='hidden' value='".$pageName."'></form>";
             BackendComponentPrinter::PrintTableRow(array($tableRow1, $tableRow2, $tableRow3));
         }
     }
     BackendComponentPrinter::PrintTableEnd();
     echo
         "<form method='post' action='Articlemanagement.php'>
-        <input id='pageId' name='pageId' type='hidden' value='".$pageId."'>
+        <input id='pageName' name='pageName' type='hidden' value='".$pageName."'>
         <input id='newArticle' name='newArticle' type='submit' value='Neuer Inhalt'></form>
         </main>
             </body>
@@ -173,7 +162,7 @@ function CreateArticleManagement($pageId, $dbContent)
             </html>";
 }
 
-function CreateNewArticle($pageId, $dbContent)
+function CreateNewArticle($pageName, $dbContent)
 {
     BackendComponentPrinter::PrintHead("Inhaltsverwaltung", $jquery=true);
     /* menue */
@@ -221,9 +210,26 @@ function CreateNewArticle($pageId, $dbContent)
                 });
             </script>
             <label for='date'>Datum</label>
-            <input id='date' name='date' type='text'><br><br>
-            <input id='pageId' name='pageId' type='hidden' value='".$pageId."'>
-            <label for='type'>Typ</label>
+            <input readonly id='date' name='date' type='text' value='".date("Y-m-d")."'><br><br>";
+    $pageSelect = "";
+    $pageRows = $dbContent->GetAllPages();
+    while ($pageRow = $dbContent->FetchArray($pageRows))
+    {
+        $pageSelect .= "<option";
+        if ($pageName == $pageRow['title'])
+        {
+            $pageSelect .= " selected ";
+        }
+        $pageSelect .=
+            "value='".$pageRow['title']."'>".$pageRow['title']."</option>";
+    }
+    echo
+        "<label for='pageName'>Seite</label><select name='pageName'><option></option>";
+    echo $pageSelect;
+    echo
+        "</select><br><br>";
+    echo
+            "<label for='type'>Typ</label>
             <input id='type' name='type' type='text' value=''><br><br>
             <label for='public'>öffentlich</label>
             <input id='public' name='public' type='checkbox' value=''><br><br>
@@ -234,7 +240,7 @@ function CreateNewArticle($pageId, $dbContent)
         <main></body></html>";
 }
 
-function EditArticle($pageId, $articleId, $dbContent)
+function EditArticle($pageName, $articleId, $dbContent)
 {
     BackendComponentPrinter::PrintHead("Inhaltsverwaltung", $jquery=true);
     /* menue */
@@ -276,9 +282,26 @@ function EditArticle($pageId, $articleId, $dbContent)
                 });
             </script>
             <label for='date'>Datum</label>
-            <input id='date' name='date' type='text'><br><br>
-            <input id='pageId' name='pageId' type='hidden' value='".$pageId."'>
-            <label for='type'>Typ</label>
+            <input readonly id='date' name='date' type='text'><br><br>";
+    $pageSelect = "";
+    $pageRows = $dbContent->GetAllPages();
+    while ($pageRow = $dbContent->FetchArray($pageRows))
+    {
+        $pageSelect .= "<option";
+        if ($pageName == $pageRow['title'])
+        {
+            $pageSelect .= " selected ";
+        }
+        $pageSelect .=
+            "value='".$pageRow['title']."'>".$pageRow['title']."</option>";
+    }
+    echo
+        "<label for='pageName'>Seite</label><select name='pageName'><option></option>";
+    echo $pageSelect;
+    echo
+        "</select><br><br>";
+    echo
+            "<label for='type'>Typ</label>
             <input id='type' name='type' type='text' value='".$articleRow['type']."'><br><br>
             <label for='public'>öffentlich</label>
             <input id='public' name='public' type='checkbox'";
