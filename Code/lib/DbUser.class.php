@@ -116,6 +116,80 @@ class DbUser
 
 
 
+	/* --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- für die Startseite: Statistik für Admin --- --- --- --- --- --- --- --- --- */
+	/**
+	* CountUsers()
+	*/
+	public function CountUsers()
+	{
+		$result = $this->database->ExecuteQuery("SELECT COUNT(*) AS AnzahlUser FROM user");
+		var_dump($result);
+		return $result;
+	}
+
+
+	/**
+	* CountRoles()
+	*/
+	public function CountRoles()
+	{
+		$result = $this->database->ExecuteQuery("SELECT COUNT(*) AS AnzahlRoles FROM role");
+		var_dump($result);
+		return $result;
+	}
+
+	
+	/**
+	* CountBans()
+	* macht in der Form nicht unbedingt so viel Sinn. => besser: auf einen bestimmten Zeitraum beziehen
+	*/
+	public function CountBans()
+	{
+		$result = $this->database->ExecuteQuery("SELECT COUNT(*) AS AnzahlBan FROM ban");
+		var_dump($result);
+		return $result;
+	}
+
+
+	/**
+	* CountArticles()
+	*/
+	public function CountArticles()
+	{
+		$result = $this->database->ExecuteQuery("SELECT COUNT(*) AS AnzahlArticle FROM article");
+		var_dump($result);
+		return $result;
+	}
+
+
+	/**
+	* CountPages()
+	*/
+	public function CountPages()
+	{
+		$result = $this->database->ExecuteQuery("SELECT COUNT(*) AS AnzahlPages FROM page");
+		var_dump($result);
+		return $result;
+	}
+
+
+	/**
+	* CountTemplates()
+	*/
+	public function CountTemplates()
+	{
+		$result = $this->database->ExecuteQuery("SELECT COUNT(*) AS AnzahlTemplates FROM template");
+		var_dump($result);
+		return $result;
+	}
+
+	
+	/* --- ENDE --- --- --- --- --- --- --- --- --- --- --- --- --- für die Startseite: Statistik für Admin --- --- --- --- --- --- --- --- ENDE --- */
+	
+	
+		
+	
+	
 
 	/**
 	* EmailAlreadyExists()
