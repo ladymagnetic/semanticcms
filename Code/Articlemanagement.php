@@ -5,14 +5,14 @@ session_start();
 require_once 'lib/DbEngine.class.php';
 require_once 'lib/BackendComponentPrinter.class.php';
 require_once 'config/config.php';
-require_once 'lib/DbContent.class.php';
+require_once 'lib/dbContent.class.php';
 require_once 'lib/Permission.enum.php';
 
 /* use namespace(s) */
 use SemanticCms\config;
 use SemanticCms\DatabaseAbstraction\DbEngine;
 use SemanticCms\ComponentPrinter\BackendComponentPrinter;
-use SemanticCms\DatabaseAbstraction\dbcontent;
+use SemanticCms\DatabaseAbstraction\dbContent;
 use SemanticCms\Model\Permission;
 
 $db = new DbEngine($config['cms_db']['dbhost'],$config['cms_db']['dbuser'],$config['cms_db']['dbpass'],$config['cms_db']['database']);
@@ -21,15 +21,15 @@ $dbContent = new DbContent($config['cms_db']['dbhost'], $config['cms_db']['dbuse
 /*---- Submit Buttons ----*/
 // if submit button with name 'selectPage' is pressed
 if (isset($_POST['selectPage'])) {
-    $pageId = intval($_POST['pageId']);
-    CreateArticleManagement($pageId, $dbcontent);
+    $pageId = intval($dbContent->FetchArray($dbContent->SelectPageByPagename($_POST['pageName']))['id']);
+    CreateArticleManagement($pageId, $dbContent);
     // has to return because other page
     return;
 }
 // if submit button with name 'edit' is pressed
 else if (isset($_POST['edit'])) {
     $articleId = intval($_POST['articleId']);
-    EditArticle($pageId, $articleId, $dbcontent);
+    EditArticle($pageId, $articleId, $dbContent);
     // has to return because other page
     return;
 }
@@ -40,9 +40,13 @@ else if (isset($_POST['delete'])) {
 }
 // if submit button with name 'newContent' is pressed
 else if (isset($_POST['newArticle'])) {
-    CreateNewArticle($pageId, $dbcontent);
-    // has to return because other page
-    return;
+    $pageId = intval($_POST['pageId']);
+    if ($pageId != "")
+    {
+        CreateNewArticle($pageId, $dbContent);
+        // has to return because other page
+        return;
+    }
 }
 // if submit button with name 'applyChanges' is pressed
 else if (isset($_POST['publish']))
@@ -51,6 +55,10 @@ else if (isset($_POST['publish']))
     $header = intval($_POST['header']);
     $content = $_POST['summernote'];
     $date = $_POST['date'];
+    if ($_POST['date'] == "")
+    {
+        $date = date("Y-m-d M");
+    } 
     $type = $_POST['type'];
     if (isset($_POST['public']))
     {
@@ -71,6 +79,10 @@ else if (isset($_POST['updateArticle']))
     $header = $_POST['header'];
     $content = $_POST['summernote'];
     $date = $_POST['date'];
+    if ($_POST['date'] == "")
+    {
+        $date = date("Y-m-d M");
+    } 
     $type = $_POST['type'];
     if (isset($_POST['public']))
     {
@@ -86,9 +98,9 @@ else if (isset($_POST['updateArticle']))
     $dbContent->UpdateArticleToPage($articleId, $pageId, $header, $content, $date, $type, $public, $description);
 }
 
-CreateArticleManagement("", $dbcontent);
+CreateArticleManagement("", $dbContent);
 
-function CreateArticleManagement($pageId, $dbcontent)
+function CreateArticleManagement($pageId, $dbContent)
 {
     BackendComponentPrinter::PrintHead("Inhaltsverwaltung", $jquery=true);
     /* menue */
@@ -121,43 +133,47 @@ function CreateArticleManagement($pageId, $dbcontent)
     echo
     "<main>
         <h1><i class='fa fa-align-justify fontawesome'></i> Inhaltsverwaltung</h1>";
+    $pageSelect = "";
     $pageRows = $dbContent->GetAllPages();
     while ($pageRow = $dbContent->FetchArray($pageRows))
     {
-        $pageSelect = "<option id='".$pageRow['id']."'";
-        $pageSelect .= ">".$pageRow['title']."</option>";
+        $pageSelect .= "<option>".$pageRow['title']."</option>";
     }
     echo
-        "<input id='selectPage' name='selectPage' type='submit' value='Anzeigen'>";
-
+        "<form method='post' action='Articlemanagement.php'>
+        <select name='pageName'><option></option>";
     echo $pageSelect;
+    echo
+        "</select><input id='selectPage' name='selectPage' type='submit' value='Anzeigen'></form><br><br>";
     BackendComponentPrinter::PrintTableStart(array("Inhalte", "Veröffentlichungsdatum", "Aktion"));
     if ($pageId != "")
     { 
         // foreach content of page in database print
-        $userRows = $dbContent->GetAllArticles();
-        while ($articleRow = $dbcontent->FetchArray($userRows))
+        $userRows = $dbContent->GetAllArticlesWithDetailedInformation();
+        while ($articleRow = $dbContent->FetchArray($userRows))
         {
             $tableRow1 = $articleRow['header'];
             $tableRow2 = $articleRow['date'];
             $tableRow3 = 
                 "<form method='post' action='Articlemanagement.php'>
                 <input id='delete' name='delete' type='submit' value='Löschen'><input name='edit' type='submit' value='bearbeiten'>".
-                "<input id='articleId' name='articleId' type='hidden' value='".$articleRow['id']."'></form>";
+                "<input id='articleId' name='articleId' type='hidden' value='".$articleRow['id']."'>
+                <input id='pageId' name='pageId' type='hidden' value='".$pageId."'></form>";
             BackendComponentPrinter::PrintTableRow(array($tableRow1, $tableRow2, $tableRow3));
         }
     }
     BackendComponentPrinter::PrintTableEnd();
     echo
         "<form method='post' action='Articlemanagement.php'>
-        <input id='newContent' name='newArticle' type='submit' value='Neuer Inhalt'></form>
+        <input id='pageId' name='pageId' type='hidden' value='".$pageId."'>
+        <input id='newArticle' name='newArticle' type='submit' value='Neuer Inhalt'></form>
         </main>
             </body>
 
             </html>";
 }
 
-function CreateNewArticle($pageId, $dbcontent)
+function CreateNewArticle($pageId, $dbContent)
 {
     BackendComponentPrinter::PrintHead("Inhaltsverwaltung", $jquery=true);
     /* menue */
@@ -196,29 +212,29 @@ function CreateNewArticle($pageId, $dbcontent)
             <h1>Inhalt erstellen</h1>
             <form method='post' action='ArticleManagement.php'>
             <label for='header'>Überschrift</label>
-            <input id='header' name='header' type='text'>
+            <input id='header' name='header' type='text'><br><br>
             <label for='summernote'>Inhalt</label>
-            <div id='summernote' name='summernote'><p>Hello Summernote</p></div>
+            <div id='summernote' name='summernote'><p>Hello Summernote</p></div><br><br>
             <script>
                 $(document).ready(function() {
                     $('#summernote').summernote();
                 });
             </script>
             <label for='date'>Datum</label>
-            <input id='date' name='date' type='text'>
+            <input id='date' name='date' type='text'><br><br>
             <input id='pageId' name='pageId' type='hidden' value='".$pageId."'>
             <label for='type'>Typ</label>
-            <input id='type' name='type' type='text' value=''>
+            <input id='type' name='type' type='text' value=''><br><br>
             <label for='public'>öffentlich</label>
-            <input id='public' name='public' type='checkbox' value=''>
+            <input id='public' name='public' type='checkbox' value=''><br><br>
             <label for='description'>Beschreibung</label>
-            <input id='description' name='description' type='text' value=''>
+            <input id='description' name='description' type='text' value=''><br><br>
             <input id='publish' name='publish' type='submit' value='Publish'>
             </form>
         <main></body></html>";
 }
 
-function EditArticle($pageId, $articleId, $dbcontent)
+function EditArticle($pageId, $articleId, $dbContent)
 {
     BackendComponentPrinter::PrintHead("Inhaltsverwaltung", $jquery=true);
     /* menue */
@@ -251,19 +267,19 @@ function EditArticle($pageId, $articleId, $dbcontent)
             <h1>Inhalt erstellen</h1>
             <form method='post' action='ArticleManagement.php'>
             <label for='header'>Überschrift</label>
-            <input id='header' name='header' type='text'>
+            <input id='header' name='header' type='text'><br><br>
             <label for='summernote'>Inhalt</label>
-            <div id='summernote' name='summernote'><p>Hello Summernote</p></div>
+            <div id='summernote' name='summernote'><p>Hello Summernote</p></div><br><br>
             <script>
                 $(document).ready(function() {
                     $('#summernote').summernote();
                 });
             </script>
             <label for='date'>Datum</label>
-            <input id='date' name='date' type='text'>
+            <input id='date' name='date' type='text'><br><br>
             <input id='pageId' name='pageId' type='hidden' value='".$pageId."'>
             <label for='type'>Typ</label>
-            <input id='type' name='type' type='text' value='".$articleRow['type']."'>
+            <input id='type' name='type' type='text' value='".$articleRow['type']."'><br><br>
             <label for='public'>öffentlich</label>
             <input id='public' name='public' type='checkbox'";
             if (boolval($articleRow['public']))
@@ -271,9 +287,9 @@ function EditArticle($pageId, $articleId, $dbcontent)
                 echo " checked";
             };
             echo
-            "'>".
+            "'><br><br>".
             "<label for='description'>Beschreibung</label>
-            <input id='description' name='description' type='text' '".$articleRow['description']."'>
+            <input id='description' name='description' type='text' '".$articleRow['description']."'><br><br>
             <input id='updateArticle' name='updateArticle' type='submit' value='Publish'>
             <input id='articleId' name='articleId' type='hidden' value='".$articleId."'>
             </form>
