@@ -40,7 +40,7 @@ CREATE TABLE `article` (
   `id` int(11) NOT NULL,
   `header` varchar(255) NOT NULL,
   `content` text NOT NULL,
-  `date` date NOT NULL,
+  `publicationdate` date NOT NULL,
   `page_id` int(11) NOT NULL,
   `author` int(11) NOT NULL,
   `type` varchar(255) NOT NULL,
@@ -52,7 +52,7 @@ CREATE TABLE `article` (
 -- Daten für Tabelle `article`
 --
 
-INSERT INTO `article` (`id`, `header`, `content`, `date`, `page_id`, `author`, `type`, `public`, `description`) VALUES
+INSERT INTO `article` (`id`, `header`, `content`, `publicationdate`, `page_id`, `author`, `type`, `public`, `description`) VALUES
 (1, 'Schaufel - eine lange Geschichte', 'Eine Schaufel (ahd. Scuvala; mhd. Schuvel), umgangssprachlich in Nord- und Mitteldeutschland auch Schippe oder Schüppe, im Rheinland auch Schöppe, ist ein Werkzeug zum Aufnehmen und Fortschaffen von Lockermaterialien (beispielsweise Erde, Sand oder Schüttgut). Die Vorläufer der Schaufeln sind die seit dem Neolithikum bekannten Grabstöcke. Diese waren zuerst einfache Stöcke, die aber je nach Einsatzzweck auch ein ausgeschnitztes Blatt oder Schultern aufwiesen. Mit Aufkommen von Metallen wurden zunächst nur die Schnittkanten des Schaufelblattes mit Metall verstärkt, bis schließlich mit zunehmender Verbreitung, vor allem des Eisens, die Schaufelblätter ganz aus Eisen gefertigt wurden. Schaufeln mit eisenverstärktem Holzblatt fanden beim Torfstich noch bis in das 20. Jahrhundert Verwendung.', '2016-12-22', 1, 2, 'Blog', 1, 'Schaufel'),
 (2, 'Besen', 'Bei einem Besen oder Feger handelt es sich um einen Gebrauchsgegenstand zum Zusammenkehren von Schmutz und Unrat von Böden. Man unterscheidet zwischen großen und kleinen Besen für den Haushalt und die Straße und maschinell eingesetzten Besen.\r\nEin großer Besen besteht meist aus einem langen Besenstiel, einem Querholz, dem so genannten Riegel, und den Borsten aus Tierhaaren, Pflanzenfasern oder Kunststoff. Der Rutenbesen oder Reisigbesen (regional auch Riedelbesen) ist eine einfachere Besenform, die früher ggf. von einem Besenbinder hergestellt wurde und recht verbreitet war, besitzt keinen Riegel. Stattdessen wird ein Bündel Reisig oder Stroh mit Schnur oder Draht direkt am hölzernen Stiel befestigt. Bei Verwendung von Birkenzweigen ähnelt der Rutenbesen einer großen Birkenrute mit Holzstiel.', '2016-12-22', 4, 9, 'Blog', 1, 'Besen'),
 (3, 'Hammer', 'Ein Hammer ist ein händisch oder maschinell angetriebenes Werkzeug, das unter Nutzung seiner beschleunigten Masse (meist) schwere Schläge auf Körper ausübt. Bei von Hand geführten Hämmern wird dieser je nach seiner Masse und genutzter Stiellänge nach dem Heben (Ausholen) aus dem Hand-, Ellbogen- oder Schultergelenk – oder bei beidhändigem Halten aus dem Oberkörper – heraus beschleunigt.\r\nDer Hammer gehört in einer stiellosen Variante als Faustkeil (aus bearbeitetem Stein mit einem nachgewiesenen Alter von 1,75 Millionen Jahren) wahrscheinlich zu den ältesten Werkzeugen der Menschheit.', '2016-12-18', 7, 8, 'Blog', 1, 'Hammer'),
