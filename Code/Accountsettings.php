@@ -159,7 +159,7 @@ echo
         <input required id='email' name='email' type='text' value='".$userRow['email']."'><br><br>";
 echo
         "<label for='birthdate'>Geburtsdatum</label>
-        <input required type='text' name='birthdate' id='birthdate' value='".$userRow['birthdate']."'><br><br>"
+        <input required type='text' name='birthdate' id='birthdate' value='".$userRow['birthdate']."'><br><br>";
 // not editable
 echo
         "<label for='registrydate'>Registrierungsdatum</label>
