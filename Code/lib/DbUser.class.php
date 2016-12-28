@@ -117,46 +117,59 @@ class DbUser
 
 
 
-
-
-// gibt true zurück wenn email-adresse bereits existiert (User mit dieser E-Mailadresse gibt es schon!).
-public function EmailAlreadyExists($email)
-{
-	$result = $this->database->ExecuteQuery("SELECT * FROM user WHERE email = '".$email."'");
-
-	if($result==true && $this->database->GetResultCount($result) > 0)
+	/**
+	* EmailAlreadyExists()
+	* @params string $email the user's email
+	* checks whether the email adress already exists in database or not
+	*/
+	public function EmailAlreadyExists($email)
 	{
-		return true;
+		$result = $this->database->ExecuteQuery("SELECT * FROM user WHERE email = '".$email."'");
+
+		if($result==true && $this->database->GetResultCount($result) > 0)
+		{
+			return true;	//there is a user with this email adress 
+		}
+		else
+		{
+			return false;
+		}
+
 	}
-	else
+
+
+	/**
+	* UsernameAlreadyExists()
+	* @params string $username the user's name
+	* checks whether the username already exists in database 
+	*/
+	public function UsernameAlreadyExists($username)
 	{
-		return false;
+		$result = $this->database->ExecuteQuery("SELECT * FROM user WHERE username = '".$username."'");
+
+		 if($result==true && $this->database->GetResultCount($result) > 0)
+		 {
+			 return true;	// there is a user with this username
+		 }
+		 else
+		 {
+			 return false;
+		 }
 	}
 
-}
 
 
-
-public function UsernameAlreadyExists($username)
-{
-	$result = $this->database->ExecuteQuery("SELECT * FROM user WHERE username = '".$username."'");
-
-	 if($result==true && $this->database->GetResultCount($result) > 0)
-	 {
-		 return true;
-	 }
-	 else
-	 {
-		 return false;
-	 }
-}
-
-
-
-public function InsertNewLog($logUsername, $logRolename, $logDescription)
-{
-	$result = $this->database->ExecuteQuery("INSERT INTO logtable (id, logdate , username, rolename, description) VALUES (NULL, NOW(), '".$logUsername."', '".$logRolename."', '".$logDescription."')");
-}
+	/**
+	* InsertNewLog()
+	* @params string $logUsername the user who changed something
+	* @params string $logRolename the user's role who changes something
+	* @params string $logDescription describes the things which have been changed until now
+	*  to log all the changes on the database so that the admin can see all important information at a glance
+	*/
+	public function InsertNewLog($logUsername, $logRolename, $logDescription)
+	{
+		$result = $this->database->ExecuteQuery("INSERT INTO logtable (id, logdate , username, rolename, description) VALUES (NULL, NOW(), '".$logUsername."', '".$logRolename."', '".$logDescription."')");
+	}
 
 
 
@@ -183,7 +196,7 @@ function check_date($date,$format,$sep)
 	/**
 	* registrateUser()
 	* @params string $username the user's username
-	* @params string %firstname the user's firstname
+	* @params string $firstname the user's firstname
 	* @params string $lastname the user's lastname
 	* @params string $mail the user's mailaddress
 	* @params string $password the user's password
@@ -246,9 +259,9 @@ function check_date($date,$format,$sep)
 
 		//var_dump($result); // TESTEN! => und dann die Abfrage evtl. anpassen.
 		
-		$nameOfUser = $this->database->ExecuteQuery("SELECT username FROM user WHERE id = ".$userId);
+		$usersName = $this->database->ExecuteQuery("SELECT username FROM user WHERE id = ".$userId);
 
-		var_dump($nameOfUser);
+		var_dump($usersName);
 
 		if($result==true)
 		{	// für Log-Tabelle:
@@ -258,7 +271,7 @@ function check_date($date,$format,$sep)
 			
 			$logUsername = 'Wer ist gerade angemeldet?';
 			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
-			//$logDescription = 'der User: '.$nameOfUser.' wurde gelöscht';
+			//$logDescription = 'der User: '.$usersName.' wurde gelöscht';
 			$logDescription = 'hier könnte ihre beschreibung stehen';
 
 			$re = $this->InsertNewLog($logUsername, $logRolename, $logDescription);
@@ -284,14 +297,29 @@ function check_date($date,$format,$sep)
 	public function DeleteUserByUsername($userId)
 	{
 		$result = $this->database->ExecutePreparedStatement("deleteUserByUsername", array($userId));
+		
+		$usersName = $this->database->ExecuteQuery("SELECT username FROM user WHERE id = ".$userId);
 
 		if($result==true)
 		{
-				// für Log-Tabelle:
-				// Wer wird gelöscht?
-				// Wer hat den Löschvorgang durchgeführt? => Usermanagement is true. => alle diese könnnen User löschen!
-				// eventuell neuen Parameter bei Funktion mitgeben ($userId von der Person, die löscht.)
-				return true;
+			// für Log-Tabelle:
+			// Wer wird gelöscht?
+			// Wer hat den Löschvorgang durchgeführt? => Usermanagement is true. => alle diese könnnen User löschen!
+			// eventuell neuen Parameter bei Funktion mitgeben ($userId von der Person, die löscht.)
+			
+				
+			$logUsername = 'Wer ist gerade angemeldet?';
+			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
+			//$logDescription = 'der User: '.$nameOfUser.' wurde gelöscht';
+			$logDescription = 'Was wurde verändert?';
+
+			$re = $this->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+			echo'Versuch';
+
+			var_dump($re);				
+				
+			return true;
 		}
 		else
 		{
@@ -332,10 +360,10 @@ function check_date($date,$format,$sep)
 		if($result==true)
 		{
 			// für Log-Tabelle:
-				// Welche Rolle wird gelöscht?
-				// Wer hat den Löschvorgang durchgeführt? => Usermanagement is true. => alle diese könnnen Rollen löschen!
-				// eventuell neuen Parameter bei Funktion mitgeben ($userId von der Person, die löscht. => Nur der Admin darf Roles löschen!)
-				return true;
+			// Welche Rolle wird gelöscht?
+			// Wer hat den Löschvorgang durchgeführt? => Usermanagement is true. => alle diese könnnen Rollen löschen!
+			// eventuell neuen Parameter bei Funktion mitgeben ($userId von der Person, die löscht. => Nur der Admin darf Roles löschen!)
+			return true;
 		}
 		else
 		{
@@ -707,6 +735,68 @@ function check_date($date,$format,$sep)
 	}
 
 
+	
+	/**
+	* ApplyPasswordChangesToUser()
+	* @params string $userId the user's id
+	* @params string $password the user's password
+	* @params string $newPassword the user's new password
+	* @params string $newPasswordRepeat the user's the repetition of new password
+	*/	
+	public function ApplyPasswordChangesToUser($userId, $password, $newPassword, $newPasswordRepeat)
+	{
+		//$password = $this->database->RealEscapeString($password);
+
+		echo $userId;
+		$result = $this->database->ExecuteQuery("SELECT password FROM user WHERE id ='".$userId."'");
+
+		var_dump($result);
+		 
+		//echo $result;
+
+		if ($result == $password)
+		{
+			if($newPassword == $newPasswordRepeat)
+			{
+				$changePassword = $this->database->ExecuteQuery("UPDATE user SET password = '.$newPassword.'");
+				return true;
+			}
+			echo 'Unterschiedliche Passwörter!';
+			return false;
+		}
+		else
+		{
+			echo 'Falsches Passwort.';
+			return false;
+		}
+
+	}
+	
+	
+	
+	
+	/**
+	* FetchArray()
+	* @params string $result is the result of an query
+	*/
+	public function FetchArray($result)
+	{
+		return $this->database->FetchArray($result);
+	}
+
+	
+	/**
+	* GetResultCount()
+	* @params string $result
+	*/
+	public function GetResultCount($result)
+	{
+		return  $this->database->GetResultCount($result);
+	}
+	
+	
+	
+	
 
 
 	/** => wird noch überarbeitet
@@ -729,15 +819,6 @@ function check_date($date,$format,$sep)
 	HashPassword
 	DecodePassword
 	*/
-
-
-
-
-
-
-
-	/* ab hier noch die alten => werden noch überarbeitet*/
-
 
 
 	/**
@@ -767,23 +848,6 @@ function check_date($date,$format,$sep)
 
 
 
-	// has to save the changes for the passwords of the user
-	// Jonas
-	// speichert die Passwortänderung
-	// am besten nur, wenn das password mit dem Passwort des Users mit userId übereinstmmt und newPassword == newPasswordRepeat
-	public function ApplyPasswordChangesToUser($userId, $password, $newPassword, $newPasswordRepeat)
-	{
-			// check if password correct --> change of password with newPassword else no change
-	}
 
-	public function FetchArray($result)
-	{
-		return $this->database->FetchArray($result);
-	}
-
-	public function GetResultCount($result)
-	{
-		return  $this->database->GetResultCount($result);
-	}
 }
 ?>
