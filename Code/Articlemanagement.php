@@ -29,6 +29,7 @@ if (isset($_POST['selectPage'])) {
 // if submit button with name 'edit' is pressed
 else if (isset($_POST['edit'])) {
     $articleId = intval($_POST['articleId']);
+    $pageName = $_POST['pageName'];
     EditArticle($pageName, $articleId, $dbContent);
     // has to return because other page
     return;
@@ -137,18 +138,21 @@ function CreateArticleManagement($pageName, $dbContent)
     BackendComponentPrinter::PrintTableStart(array("Inhalte", "Veröffentlichungsdatum", "Aktion"));
     if ($pageName != "")
     { 
-        // foreach content of page in database print
-        $userRows = $dbContent->GetAllArticlesWithDetailedInformation();
-        while ($articleRow = $dbContent->FetchArray($userRows))
+        // foreach aticle of page in database print
+        $articleRows = $dbContent->GetAllArticles(); //GetAllArticlesWithDetailedInformation(); liefert Fehler
+        while ($articleRow = $dbContent->FetchArray($articleRows))
         {
-            $tableRow1 = $articleRow['header'];
-            $tableRow2 = $articleRow['date'];
-            $tableRow3 = 
-                "<form method='post' action='Articlemanagement.php'>
-                <input id='delete' name='delete' type='submit' value='Löschen'><input name='edit' type='submit' value='bearbeiten'>".
-                "<input id='articleId' name='articleId' type='hidden' value='".$articleRow['id']."'>
-                <input id='pageName' name='pageName' type='hidden' value='".$pageName."'></form>";
-            BackendComponentPrinter::PrintTableRow(array($tableRow1, $tableRow2, $tableRow3));
+            //if ($articleRow['title'] == $pageName)
+            //{
+                $tableRow1 = $articleRow['header'];
+                $tableRow2 = $articleRow['date'];
+                $tableRow3 = 
+                    "<form method='post' action='Articlemanagement.php'>
+                    <input id='delete' name='delete' type='submit' value='Löschen'><input name='edit' type='submit' value='bearbeiten'>".
+                    "<input id='articleId' name='articleId' type='hidden' value='".$articleRow['id']."'>
+                    <input id='pageName' name='pageName' type='hidden' value='".$pageName."'></form>";
+                BackendComponentPrinter::PrintTableRow(array($tableRow1, $tableRow2, $tableRow3));
+            //}
         }
     }
     BackendComponentPrinter::PrintTableEnd();
@@ -267,7 +271,7 @@ function EditArticle($pageName, $articleId, $dbContent)
     //BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
     BackendComponentPrinter::PrintSidebar(array());
     /*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert */
-    $articleRow = $dbContent->FetchArray($dbContent->GetArticleInformationById($articleId));
+    $articleRow = $dbContent->FetchArray($dbContent->SelectOneArticleById($articleId));
     echo
         "<main>
             <h1>Inhalt erstellen</h1>
