@@ -71,7 +71,7 @@ else if (isset($_POST['publish']))
 {
     $pageId = intval($dbContent->FetchArray($dbContent->SelectPageByPagename($_POST['pageName']))['id']);
     $header = intval($_POST['header']);
-    $content = $_POST['summernote'];
+    $content = $_POST['content'];
     $date = date("Y-m-d");
     $type = $_POST['type'];
     if (isset($_POST['public']))
@@ -94,7 +94,7 @@ else if (isset($_POST['publish']))
 
     $dbContent->InsertNewArticleToPage($header, $content, $date, $pageId, $author, $type, $public, $description);
     $pageName = $_POST['pageName'];
-    CreateNewArticle($pageName, $dbContent);
+    CreateArticleManagement($pageName, $dbContent);
     // has to return because other page
     return;
 }
@@ -103,7 +103,7 @@ else if (isset($_POST['updateArticle']))
 {
     $pageId = intval($dbContent->FetchArray($dbContent->SelectPageByPagename($_POST['pageName']))['id']);
     $header = $_POST['header'];
-    $content = $_POST['summernote'];
+    $content = $_POST['content'];
     $date = date("Y-m-d"); 
     $type = $_POST['type'];
     if (isset($_POST['public']))
@@ -183,12 +183,27 @@ function CreateArticleManagement($pageName, $dbContent)
     BackendComponentPrinter::PrintTableStart(array("Inhalte", "Veröffentlichungsdatum", "Aktion"));
     if ($pageName != "")
     { 
+        $articleInPage = false;
+    if ($pageName != "")
+    { 
         // foreach aticle of page in database print
-        $articleRows = $dbContent->GetAllArticles(); //GetAllArticlesWithDetailedInformation(); liefert Fehler
+        $articleRows = $dbContent->GetAllArticles();
         while ($articleRow = $dbContent->FetchArray($articleRows))
         {
-            //if ($articleRow['title'] == $pageName)
-            //{
+            $pageRows = $dbContent->GetAllPages();
+            while ($pageRow = $dbContent->FetchArray($pageRows))
+            {
+                if ($articleRow['page_id'] == intval($dbContent->FetchArray($dbContent->SelectPageByPagename($pageName))['id']))
+                {
+                    $articleInPage = true;
+                }
+                else 
+                {
+                    $articleInPage = false;
+                }
+            }
+            if ($articleInPage)
+            {
                 $tableRow1 = $articleRow['header'];
                 $tableRow2 = $articleRow['date'];
                 $tableRow3 = 
@@ -197,8 +212,10 @@ function CreateArticleManagement($pageName, $dbContent)
                     "<input id='articleId' name='articleId' type='hidden' value='".$articleRow['id']."'>
                     <input id='pageName' name='pageName' type='hidden' value='".$pageName."'></form>";
                 BackendComponentPrinter::PrintTableRow(array($tableRow1, $tableRow2, $tableRow3));
-            //}
+            }
         }
+    }
+
     }
     BackendComponentPrinter::PrintTableEnd();
     echo
@@ -252,12 +269,19 @@ function CreateNewArticle($pageName, $dbContent)
             <label for='header'>Überschrift</label>
             <input id='header' name='header' type='text'><br><br>
             <label for='summernote'>Inhalt</label>
-            <div id='summernote' name='summernote'><p>Hello Summernote</p></div><br><br>
+            <div id='summernote' name='summernote'>"."<p>Mein Artikel</p>"."</div><br><br>
             <script>
                 $(document).ready(function() {
-                    $('#summernote').summernote();
+                    $('#summernote').summernote({
+                        callbacks: {
+                            onChange: function(contents, \$editable) {
+                                $('#content').val(contents);
+                            }
+                        }
+                    });
                 });
             </script>
+            <input id='content' name='content' type='hidden' value='<p>Mein Artikel</p>'>
             <label for='date'>Datum</label>
             <input readonly id='date' name='date' type='text' value='".date("Y-m-d")."'><br><br>";
     $pageSelect = "";
@@ -284,10 +308,13 @@ function CreateNewArticle($pageName, $dbContent)
             <input id='public' name='public' type='checkbox' value=''><br><br>
             <label for='description'>Beschreibung</label>
             <input id='description' name='description' type='text' value=''><br><br>
+            <input id='pageName' name='pageName' type='hidden' value='".$pageName."'>
             <input id='publish' name='publish' type='submit' value='Publish'>
             </form>";
     echo
-            "<form method='post' action='Articlemanagement.php'><input id='back' name='back' type='submit' value='Zurück'><form>";
+            "<form method='post' action='Articlemanagement.php'><input id='back' name='back' type='submit' value='Zurück'>
+            <input id='pageName' name='pageName' type='hidden' value='".$pageName."'>
+            <form>";
     echo
             "<main></body></html>";
 }
@@ -337,9 +364,16 @@ function EditArticle($pageName, $articleId, $dbContent)
             <div id='summernote' name='summernote'>".$articleRow['content']."</div><br><br>
             <script>
                 $(document).ready(function() {
-                    $('#summernote').summernote();
+                    $('#summernote').summernote({
+                        callbacks: {
+                            onChange: function(contents, \$editable) {
+                                $('#content').val(contents);
+                            }
+                        }
+                    });
                 });
             </script>
+            <input id='content' name='content' type='hidden' value='".$articleRow['content']."'>
             <label for='date'>Datum</label>
             <input readonly id='date' name='date' type='text' value='".$articleRow['date']."'><br><br>";
     $pageSelect = "";
@@ -372,8 +406,9 @@ function EditArticle($pageName, $articleId, $dbContent)
             "'><br><br>".
             "<label for='description'>Beschreibung</label>
             <input id='description' name='description' type='text' '".$articleRow['description']."'><br><br>
-            <input id='updateArticle' name='updateArticle' type='submit' value='Publish'>
-            <input id='articleId' name='articleId' type='hidden' value='".$articleId."'>
+            <input id='updateArticle' name='updateArticle' type='submit' value='Publish'>".
+            "<input id='pageName' name='pageName' type='hidden' value='".$pageName."'>".
+            "<input id='articleId' name='articleId' type='hidden' value='".$articleId."'>
             </form>";
     echo
             "<form method='post' action='Articlemanagement.php'><input id='back' name='back' type='submit' value='Zurück'>".
