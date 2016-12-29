@@ -7,6 +7,7 @@ require_once 'lib/BackendComponentPrinter.class.php';
 require_once 'config/config.php';
 require_once 'lib/dbContent.class.php';
 require_once 'lib/Permission.enum.php';
+require_once 'lib/DbUser.class.php';
 
 /* use namespace(s) */
 use SemanticCms\config;
@@ -14,6 +15,7 @@ use SemanticCms\DatabaseAbstraction\DbEngine;
 use SemanticCms\ComponentPrinter\BackendComponentPrinter;
 use SemanticCms\DatabaseAbstraction\dbContent;
 use SemanticCms\Model\Permission;
+use SemanticCms\DatabaseAbstraction\DbUser;
 
 $db = new DbEngine($config['cms_db']['dbhost'],$config['cms_db']['dbuser'],$config['cms_db']['dbpass'],$config['cms_db']['database']);
 $dbContent = new DbContent($config['cms_db']['dbhost'], $config['cms_db']['dbuser'], $config['cms_db']['dbpass'], $config['cms_db']['database']);
@@ -85,14 +87,16 @@ else if (isset($_POST['publish']))
     $description = $_POST['description'];
     if(!isset($_SESSION['username'])) 
     {
-        $author = !isset($_SESSION['username']);
+        $dbUser = new DbUser($config['cms_db']['dbhost'], $config['cms_db']['dbuser'], $config['cms_db']['dbpass'], $config['cms_db']['database']);
+        $userRow = $dbUser->FetchArray($dbUser->GetUserInformationByUsername($_SESSION['username']));
+        $authorId = $userRow('id');
     }
     else
     {
-        $author = "";
+        $authorId = 1;
     }
 
-    $dbContent->InsertNewArticleToPage($header, $content, $date, $pageId, $author, $type, $public, $description);
+    $dbContent->InsertNewArticleToPage($header, $content, $date, $pageId, $authorId, $type, $public, $description);
     $pageName = $_POST['pageName'];
     CreateArticleManagement($pageName, $dbContent);
     // has to return because other page
@@ -118,14 +122,16 @@ else if (isset($_POST['updateArticle']))
     $articleId = intval($_POST['articleId']);
     if(!isset($_SESSION['username'])) 
     {
-        $author = !isset($_SESSION['username']);
+        $dbUser = new DbUser($config['cms_db']['dbhost'], $config['cms_db']['dbuser'], $config['cms_db']['dbpass'], $config['cms_db']['database']);
+        $userRow = $dbUser->FetchArray($dbUser->GetUserInformationByUsername($_SESSION['username']));
+        $authorId = $userRow('id');
     }
     else
     {
-        $author = "";
+        $authorId = 1;
     }
 
-    $dbContent->UpdateArticleToPage($articleId, $header, $content, $date, $pageId, $author, $type, $public, $description);
+    $dbContent->UpdateArticleToPage($articleId, $header, $content, $date, $pageId, $authorId, $type, $public, $description);
 }
 
 CreateArticleManagement("", $dbContent);
