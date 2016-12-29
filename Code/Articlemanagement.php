@@ -49,7 +49,7 @@ else if (isset($_POST['newArticle'])) {
 // if submit button with name 'applyChanges' is pressed
 else if (isset($_POST['publish']))
 {
-    $pageId = intval($dbContent->FetchArray($dbContent->SelectPageByPgename($_POST['pageName']))['id']);
+    $pageId = intval($dbContent->FetchArray($dbContent->SelectPageByPagename($_POST['pageName']))['id']);
     $header = intval($_POST['header']);
     $content = $_POST['summernote'];
     $date = date("Y-m-d");
@@ -63,13 +63,21 @@ else if (isset($_POST['publish']))
         $public = 0;
     }
     $description = $_POST['description'];
+    if(!isset($_SESSION['username'])) 
+    {
+        $author = !isset($_SESSION['username']);
+    }
+    else
+    {
+        $author = "";
+    }
 
-    $dbContent->InsertNewArticleToPage($pageId, $header, $content, $date, $type, $public, $description);
+    $dbContent->InsertNewArticleToPage($header, $content, $date, $pageId, $author, $type, $public, $description);
 }
 // if submit button with name 'applyChanges' is pressed
 else if (isset($_POST['updateArticle']))
 {
-    $pageId = intval($dbContent->FetchArray($dbContent->SelectPageByPgename($_POST['pageName']))['id']);
+    $pageId = intval($dbContent->FetchArray($dbContent->SelectPageByPagename($_POST['pageName']))['id']);
     $header = $_POST['header'];
     $content = $_POST['summernote'];
     $date = date("Y-m-d"); 
@@ -84,8 +92,16 @@ else if (isset($_POST['updateArticle']))
     }
     $description = $_POST['description'];
     $articleId = intval($_POST['articleId']);
+    if(!isset($_SESSION['username'])) 
+    {
+        $author = !isset($_SESSION['username']);
+    }
+    else
+    {
+        $author = "";
+    }
 
-    $dbContent->UpdateArticleToPage($articleId, $pageId, $header, $content, $date, $type, $public, $description);
+    $dbContent->UpdateArticleToPage($articleId, $header, $content, $date, $pageId, $author, $type, $public, $description);
 }
 
 CreateArticleManagement("", $dbContent);
