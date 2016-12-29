@@ -409,10 +409,11 @@ BackendComponentPrinter::PrintDatatablesPlugin();
                 "<input readonly id='role' name='role' type='text' value='"."keine zugewiesen"."'><br><br>";
     }
     echo
-            "<input id='userId' name='userId' type='hidden' value='".$userId."'>".
-            "<input id='back' name='back' type='submit' value='Zurück'>";
+            "<input id='userId' name='userId' type='hidden' value='".$userId."'>";
     echo
             "</form>";
+    echo
+            "<form method='post' action='Usermanagement.php'><input id='back' name='back' type='submit' value='Zurück'><form>";
     echo
         "<h1><i class='fa fa-ban'></i> Sperrungen</h1>";
     BackendComponentPrinter::PrintTableStart(array("Grund", "Beschreibung", "Beginndatum", "Enddatum"));
@@ -528,9 +529,16 @@ BackendComponentPrinter::PrintSidebar(array());
             {
                 echo " checked";
             }
-            echo
+    echo
             " value='".$roleRow['templateconstruction']."'><br><br>".
             "<input id='saveRoleChanges' name='saveRoleChanges' type='submit' value='Rollenänderung speichern'></form>";
+    echo
+            "<form method='post' action='Usermanagement.php'><input id='back' name='back' type='submit' value='Zurück'><form>";
+    echo
+            "</main>
+            </body>
+
+            </html>";
 }
 function CreateNewUser($dbUser)
 {
@@ -608,9 +616,12 @@ BackendComponentPrinter::PrintSidebar(array());
             <input required type='text' name='birthdate' id='birthdate'><br><br>";
     echo
             "<input id='registrateUser' name='registrateUser' type='submit' value='Anwender erstellen'>";
-
     echo
-            "</form></main></body></html>";
+            "</form>";
+    echo
+            "<form method='post' action='Usermanagement.php'><input id='back' name='back' type='submit' value='Zurück'><form>";
+    echo
+            "</main></body></html>";
 }
 function CreateNewRole($dbUser)
 {
@@ -669,6 +680,8 @@ BackendComponentPrinter::PrintSidebar(array());
             "<label for='templateconstruction'>Template erstellen</label>".
             "<input id='templateconstruction' name='templateconstruction' type='checkbox' value='1'><br><br>".
             "<input id='createRole' name='createRole' type='submit' value='Rolle erstellen'></form>";
+    echo
+            "<form method='post' action='Usermanagement.php'><input id='back' name='back' type='submit' value='Zurück'><form>";
     echo
             "</main></body></html>";
 }
@@ -744,6 +757,8 @@ BackendComponentPrinter::PrintSidebar(array());
             "<input id='enddatetime' required name='enddatetime' type='text'><br><br>".
             "<input id='banUser' name='banUser' type='submit' value='Sperrung erstellen'></form>";
     echo
+            "<form method='post' action='Usermanagement.php'><input id='back' name='back' type='submit' value='Zurück'><form>";
+    echo
             "</main></body></html>";
 }
 
@@ -779,10 +794,11 @@ BackendComponentPrinter::PrintSidebar(array());
             "<input id='userId' name='userId' type='hidden' value='".$userId."'><br><br>".
             "<p>Möchten Sie wirklich löschen?</p>".
             "<p><img src='media/Pictures/Gnome-edit-delete.png' height='auto' width='250px'></p>".
-            "<input id='back' name='back' type='submit' value='Zurück'>".
             "<input id='reallyDelete' name='reallyDelete' type='submit' value='Löschen'>";
     echo
             "</form>";
+    echo
+            "<form method='post' action='Usermanagement.php'><input id='back' name='back' type='submit' value='Zurück'><form>";
     echo
             "</main></body></html>";
 

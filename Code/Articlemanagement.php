@@ -240,8 +240,11 @@ function CreateNewArticle($pageName, $dbContent)
             <label for='description'>Beschreibung</label>
             <input id='description' name='description' type='text' value=''><br><br>
             <input id='publish' name='publish' type='submit' value='Publish'>
-            </form>
-        <main></body></html>";
+            </form>";
+    echo
+            "<form method='post' action='Articlemanagement.php'><input id='back' name='back' type='submit' value='Zurück'><form>";
+    echo
+            "<main></body></html>";
 }
 
 function EditArticle($pageName, $articleId, $dbContent)
@@ -326,7 +329,10 @@ function EditArticle($pageName, $articleId, $dbContent)
             <input id='description' name='description' type='text' '".$articleRow['description']."'><br><br>
             <input id='updateArticle' name='updateArticle' type='submit' value='Publish'>
             <input id='articleId' name='articleId' type='hidden' value='".$articleId."'>
-            </form>
-        <main></body></html>";
+            </form>";
+    echo
+            "<form method='post' action='Articlemanagement.php'><input id='back' name='back' type='submit' value='Zurück'><form>";
+    echo
+        "<main></body></html>";
 }
 ?>
