@@ -37,7 +37,8 @@ else if (isset($_POST['edit'])) {
 // if submit button with name 'delete' is pressed
 else if (isset($_POST['delete'])) {
     $articleId = intval($_POST['articleId']);
-    ReallyDelete($articleId);
+    $pageName = $_POST['pageName'];
+    ReallyDelete($articleId, $pageName);
     // has to return because other page
     return;
     
@@ -45,17 +46,27 @@ else if (isset($_POST['delete'])) {
 // if submit button with name 'reallydelete' is pressed
 else if (isset($_POST['reallyDelete'])) {
     $articleId = intval($_POST['articleId']);
-
     $dbContent->DeleteArticleById($articleId);
+    $pageName = $_POST['pageName'];
+    CreateArticleManagement($pageName, $dbContent);
+    // has to return because other page
+    return;
 }
-// if submit button with name 'newContent' is pressed
+// if submit button with name 'back' is pressed
+else if (isset($_POST['back'])) {
+    $pageName = $_POST['pageName'];
+    CreateArticleManagement($pageName, $dbContent);
+    // has to return because other page
+    return;
+}
+// if submit button with name 'newArticle' is pressed
 else if (isset($_POST['newArticle'])) {
-    $pageName = intval($_POST['pageName']);
+    $pageName = $_POST['pageName'];
     CreateNewArticle($pageName, $dbContent);
     // has to return because other page
     return;
 }
-// if submit button with name 'applyChanges' is pressed
+// if submit button with name 'publish' is pressed
 else if (isset($_POST['publish']))
 {
     $pageId = intval($dbContent->FetchArray($dbContent->SelectPageByPagename($_POST['pageName']))['id']);
@@ -82,8 +93,12 @@ else if (isset($_POST['publish']))
     }
 
     $dbContent->InsertNewArticleToPage($header, $content, $date, $pageId, $author, $type, $public, $description);
+    $pageName = $_POST['pageName'];
+    CreateNewArticle($pageName, $dbContent);
+    // has to return because other page
+    return;
 }
-// if submit button with name 'applyChanges' is pressed
+// if submit button with name 'updateArticle' is pressed
 else if (isset($_POST['updateArticle']))
 {
     $pageId = intval($dbContent->FetchArray($dbContent->SelectPageByPagename($_POST['pageName']))['id']);
@@ -152,7 +167,12 @@ function CreateArticleManagement($pageName, $dbContent)
     $pageRows = $dbContent->GetAllPages();
     while ($pageRow = $dbContent->FetchArray($pageRows))
     {
-        $pageSelect .= "<option>".$pageRow['title']."</option>";
+        $pageSelect .= "<option";
+        if ($pageName == $pageRow['title'])
+        {
+            $pageSelect .= " selected";
+        }
+        $pageSelect .= ">".$pageRow['title']."</option>";
     }
     echo
         "<form method='post' action='Articlemanagement.php'>
@@ -356,11 +376,13 @@ function EditArticle($pageName, $articleId, $dbContent)
             <input id='articleId' name='articleId' type='hidden' value='".$articleId."'>
             </form>";
     echo
-            "<form method='post' action='Articlemanagement.php'><input id='back' name='back' type='submit' value='Zurück'><form>";
+            "<form method='post' action='Articlemanagement.php'><input id='back' name='back' type='submit' value='Zurück'>".
+            "<input id='pageName' name='pageName' type='hidden' value='".$pageName."'>".
+            "<form>";
     echo
         "<main></body></html>";
 }
-function ReallyDelete($articleId)
+function ReallyDelete($articleId, $pageName)
 {
     BackendComponentPrinter::PrintHead("Inhaltsverwaltung");
     /* menue */
@@ -390,13 +412,16 @@ BackendComponentPrinter::PrintSidebar(array());
     echo
             "<main><form method='post' action='Articlemanagement.php'>".
             "<input id='articleId' name='articleId' type='hidden' value='".$articleId."'><br><br>".
+            "<input id='pageName' name='pageName' type='hidden' value='".$pageName."'>".
             "<p>Möchten Sie wirklich löschen?</p>".
             "<p><img src='media/Pictures/Gnome-edit-delete.png' height='auto' width='250px'></p>".
             "<input id='reallyDelete' name='reallyDelete' type='submit' value='Löschen'>";
     echo
             "</form>";
     echo
-            "<form method='post' action='Articlemanagement.php'><input id='back' name='back' type='submit' value='Zurück'><form>";
+            "<form method='post' action='Articlemanagement.php'><input id='back' name='back' type='submit' value='Zurück'>".
+            "<input id='pageName' name='pageName' type='hidden' value='".$pageName."'>".
+            "<form>";
     echo
             "</main></body></html>";
 
