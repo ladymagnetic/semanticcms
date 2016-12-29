@@ -108,20 +108,7 @@ class DbEngine
 	*/
 	public function ExecuteQuery($query)
 	{
-		$result =  mysqli_query($this->conn, $query);
-		
-		/* ZU DEBUG ZWECKEN!!!
-		echo "</br> result EQ: </br>";
-		var_dump($result);
-		if(!$result)
-		{
-			echo "</br> errorcode: </br>";
-			$error = mysqli_error($this->conn);
-			var_dump($error);
-		}
-		echo "</br> result ende </br>";
-		*/
-		
+		$result =  mysqli_query($this->conn, $query);	
 		return $result;
 	}
 
@@ -160,6 +147,18 @@ class DbEngine
 	public function GetLastError()
 	{
 		return "DB-Fehler: ". mysqli_error($this->conn);
+	}
+	
+	/**
+	* InsertNewLog()
+	* @params string $logUsername the user who changed something
+	* @params string $logRolename the user's role who changes something
+	* @params string $logDescription describes the things which have been changed until now
+	*  to log all the changes on the database so that the admin can see all important information at a glance
+	*/
+	public function InsertNewLog($logUsername, $logRolename, $logDescription)
+	{
+		$result = $this->ExecuteQuery("INSERT INTO logtable (id, logdate , username, rolename, description) VALUES (NULL, NOW(), '".$logUsername."', '".$logRolename."', '".$logDescription."')");
 	}
 }
 ?>

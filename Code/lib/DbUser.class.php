@@ -232,23 +232,6 @@ class DbUser
 	}
 
 
-
-	/**
-	* InsertNewLog()
-	* @params string $logUsername the user who changed something
-	* @params string $logRolename the user's role who changes something
-	* @params string $logDescription describes the things which have been changed until now
-	*  to log all the changes on the database so that the admin can see all important information at a glance
-	*/
-	public function InsertNewLog($logUsername, $logRolename, $logDescription)
-	{
-		$result = $this->database->ExecuteQuery("INSERT INTO logtable (id, logdate , username, rolename, description) VALUES (NULL, NOW(), '".$logUsername."', '".$logRolename."', '".$logDescription."')");
-	}
-
-
-
-
-
 /* eventuell für die Prüfung des Datums beim Registrieren eines User
 http://www.selfphp.de/kochbuch/kochbuch.php?code=17
 function check_date($date,$format,$sep)
@@ -354,7 +337,7 @@ function check_date($date,$format,$sep)
 			//$logDescription = 'der User: '.$usersName.' wurde gelöscht';
 			$logDescription = 'Folgender User wurde gelöscht:';
 
-			$re = $this->InsertNewLog($logUsername, $logRolename, $logDescription);
+			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
 			echo'Versuch';
 			
@@ -393,7 +376,7 @@ function check_date($date,$format,$sep)
 			//$logDescription = 'der User: '.$nameOfUser.' wurde gelöscht';
 			$logDescription = 'Was wurde verändert?';
 
-			$re = $this->InsertNewLog($logUsername, $logRolename, $logDescription);
+			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
 			echo'Versuch';
 
@@ -449,7 +432,7 @@ function check_date($date,$format,$sep)
 			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
 		 	$logDescription = 'hier könnte ihre beschreibung stehen => welche Rolle ($nameOfRole) wurde gerade gelöscht?';
 
-			$re = $this->InsertNewLog($logUsername, $logRolename, $logDescription);
+			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
 			var_dump($re);
 						
@@ -486,7 +469,7 @@ function check_date($date,$format,$sep)
 			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
 		 	$logDescription = 'welche Rolle  ($nameOfRole) wurde gerade welchem Benutzer ($usersName) zugewiesen?';
 
-			$re = $this->InsertNewLog($logUsername, $logRolename, $logDescription);
+			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
 			var_dump($re);
 			
@@ -525,7 +508,7 @@ function check_date($date,$format,$sep)
 			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
 		 	$logDescription = 'Welche neue Rolle wurde gerade angelegt? => $rolename';
 
-			$re = $this->InsertNewLog($logUsername, $logRolename, $logDescription);
+			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
 			var_dump($re);	 
 			 
@@ -583,7 +566,7 @@ function check_date($date,$format,$sep)
 			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
 		 	$logDescription = 'welche Rolle  wurde geändert? => $rolename';
 
-			$re = $this->InsertNewLog($logUsername, $logRolename, $logDescription);
+			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
 			var_dump($re);
 						
@@ -622,7 +605,7 @@ function check_date($date,$format,$sep)
 			$logRolename = 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName';
 		 	$logDescription = 'Änderung der persönlichen Daten.';
 
-			$re = $this->InsertNewLog($logUsername, $logRolename, $logDescription);
+			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
 			var_dump($re);			
 				
@@ -765,7 +748,7 @@ function check_date($date,$format,$sep)
 			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
 		 	$logDescription = 'Folgender User wurde gerade gebannt: $usersName';
 
-			$re = $this->InsertNewLog($logUsername, $logRolename, $logDescription);
+			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 			
 			return true;
 		}
@@ -794,7 +777,7 @@ function check_date($date,$format,$sep)
 			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
 		 	$logDescription = 'Folgender User ist nicht mehr gebannt: $usersName';
 
-			$re = $this->InsertNewLog($logUsername, $logRolename, $logDescription);
+			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 			
 			return true;
 		}
@@ -836,7 +819,7 @@ function check_date($date,$format,$sep)
 			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
 		 	$logDescription = 'Es gibt einen neue Ban-Reason: =>  $reason';
 
-			$re = $this->InsertNewLog($logUsername, $logRolename, $logDescription);
+			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 						  
 			return true;
 		}

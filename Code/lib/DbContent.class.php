@@ -73,22 +73,6 @@ class DbContent
 
 	}
 
-
-	//nochmal weil DbUser nicht included wird. => oder in DBEngine auslagern => noch überlegen.
-	/**
-	* InsertNewLog()
-	* @params string $logUsername the user who changed something
-	* @params string $logRolename the user's role who changes something
-	* @params string $logDescription describes the things which have been changed until now
-	*  to log all the changes on the database so that the admin can see all important information at a glance
-	*/
-	public function InsertNewLog($logUsername, $logRolename, $logDescription)
-	{
-		$result = $this->database->ExecuteQuery("INSERT INTO logtable (id, logdate , username, rolename, description) VALUES (NULL, NOW(), '".$logUsername."', '".$logRolename."', '".$logDescription."')");
-	}
-
-
-
 	/**
 	* GetAllArticles()
 	*/
@@ -126,7 +110,7 @@ class DbContent
 			//$logDescription = 'der User: '.$usersName.' wurde gelöscht';
 			$logDescription = 'Folgender Article wurde gelöscht: => $headerOfArticle';
 
-			$re = $this->InsertNewLog($logUsername, $logRolename, $logDescription);
+			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
 			return true;
 		}
@@ -174,7 +158,7 @@ class DbContent
 			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
 			$logDescription = 'Welcher Articel wurde neu eingefügt? => $header';
 
-			$re = $this->InsertNewLog($logUsername, $logRolename, $logDescription);
+			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
 			var_dump($re);
 
@@ -215,7 +199,7 @@ class DbContent
 			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
 			$logDescription = 'Welcher Articel wurde geändert? => $header';
 
-			$re = $this->InsertNewLog($logUsername, $logRolename, $logDescription);
+			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
 			var_dump($re);
 
