@@ -106,7 +106,7 @@ class DbContent
 
 
 		// => anstatt: GetArticleLabels($id)
-		$selectAllLable_Article = "SELECT * FROM lable_article;"
+		$selectAllLable_Article = "SELECT * FROM lable_article";
 		$this->database->PrepareStatement("selectAllLable_Article", $selectAllLable_Article );
 
 		$selectAllLablesFromAnArticleById = "SELECT * FROM article INNER JOIN lable_article  ON article.id = lable_article.article_id INNER JOIN Lable ON lable_article.lable_id = lable.id WHERE article.id = ?";
