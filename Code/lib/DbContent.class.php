@@ -70,8 +70,8 @@ class DbContent
 
 		$selectOneArticleById = "SELECT * FROM article WHERE id = ?";
 		$this->database->PrepareStatement("selectOneArticleById", $selectOneArticleById);
-		
-		
+
+
 		/* -- neu -- */
 		$selectPageByPagename = "SELECT * FROM page WHERE title = ?";
 		$this->database->PrepareStatement("selectPageByPagename", $selectPageByPagename);
@@ -89,7 +89,7 @@ class DbContent
 		$this->database->PrepareStatement("selectPageIdByPagename", $selectPageIdByPagename);
 
 
-		
+
 		$deletePageById =  "DELETE FROM page WHERE id = ?";
 		$this->database->PrepareStatement("deletePageById", $deletePageById );
 
@@ -101,7 +101,16 @@ class DbContent
 
 		$deleteTemplateByTemplatename =  "DELETE FROM template WHERE templatename = ?";
 		$this->database->PrepareStatement("deleteTemplateByTemplatename", $deleteTemplateByTemplatename );
-		
+
+
+
+
+		// => anstatt: GetArticleLabels($id)
+		$selectAllLable_Article = "SELECT * FROM lable_article;"
+		$this->database->PrepareStatement("selectAllLable_Article", $selectAllLable_Article );
+
+		$selectAllLablesFromAnArticleById = "SELECT * FROM article INNER JOIN lable_article  ON article.id = lable_article.article_id INNER JOIN Lable ON lable_article.lable_id = lable.id WHERE article.id = ?";
+		$this->database->PrepareStatement("selectAllLablesFromAnArticleById", $selectAllLablesFromAnArticleById );
 
 	}
 
@@ -308,13 +317,13 @@ class DbContent
 	{
 		return  $this->database->GetResultCount($result);
 	}
-	
-	
-	
-	
+
+
+
+
 	/* --- NEU --- */
-	
-	
+
+
 	/**
 	* SelectPageByPagename()
 	* @params string $title is the title of the page
@@ -324,8 +333,8 @@ class DbContent
 		return $this->database->ExecutePreparedStatement("selectPageByPagename", array($title));
 	}
 
-	
-	
+
+
 	/**
 	* SelectPageById()
 	* @params int $pageId the id of the page
@@ -335,8 +344,8 @@ class DbContent
 		 return	$this->database->ExecutePreparedStatement("selectPageById", array($pageId));
 	}
 
-	
-	
+
+
 	/**
 	* SelectTemplateByTemplatename()
 	* @params string $templatename is the name of the template
@@ -346,8 +355,8 @@ class DbContent
 		return $this->database->ExecutePreparedStatement("selectTemplateByTemplatename", array($templatename));
 	}
 
-	
-	
+
+
 	/**
 	* SelectTemplateById()
 	* @params int $templateId the id of the template
@@ -357,8 +366,8 @@ class DbContent
 		 return	$this->database->ExecutePreparedStatement("selectTemplateById", array($templateId));
 	}
 
-	
-	
+
+
 	/**
 	* SelectPageIdByPagename()
 	* @params string $title the title of the page
@@ -367,9 +376,9 @@ class DbContent
 	{
 		 return	$this->database->ExecutePreparedStatement("selectPageIdByPagename", array($title));
 	}
-	
-		
-		
+
+
+
 	/**
 	* DeletePageById()
 	* @params int $pageId the id of the page
@@ -396,8 +405,8 @@ class DbContent
 		}
 	}
 
-	
-	
+
+
 	/**
 	* DeletePageByTitle()
 	* @params string $title the title of the page
@@ -423,9 +432,9 @@ class DbContent
 			 return false;
 		}
 	}
-	
-	
-	
+
+
+
 	/**
 	* DeleteTemplateById()
 	* @params int $templateId the id of the template
@@ -452,8 +461,8 @@ class DbContent
 		}
 	}
 
-	
-	
+
+
 	/**
 	* DeleteTemplateByTemplatename()
 	* @params string $templatename the templatename of the template
@@ -480,8 +489,70 @@ class DbContent
 			}
 	}
 
-	
-	
+
+
+
+	/**
+	* PagetitleAlreadyExists()
+	* @params string $title the title of the page
+	* checks whether the title of a page already exists in the database
+	*/
+	public function PagetitleAlreadyExists($title)
+	{
+		$result = $this->database->ExecuteQuery("SELECT * FROM page WHERE title = '".$title."'");
+
+		if($result==true && $this->database->GetResultCount($result) > 0)
+		{
+			return true;	//there is already a page with the same title
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+
+
+	/**
+	* TemplatenameAlreadyExists()
+	* @params string $templatename the templatename of the template
+	* checks whether the templatename of a template already exists in the database
+	*/
+	public function TemplatenameAlreadyExists($templatename)
+	{
+		$result = $this->database->ExecuteQuery("SELECT * FROM template WHERE templatename = '".$templatename."'");
+
+		if($result==true && $this->database->GetResultCount($result) > 0)
+		{
+			return true;	//there is already a templatename with the same title
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+
+		// GetArticleLabels($id)
+	/**
+	* SelectAllLable_Article()
+	*/
+	public function SelectAllLable_Article()
+	{
+		return $this->database->ExecutePreparedStatement("selectAllLable_Article", array());
+	}
+
+
+
+	/**
+	* SelectAllLablesFromAnArticleById()
+	* @params int $articleId the id of the article
+	*/
+	public function SelectAllLablesFromAnArticleById($articleId)
+	{
+		return $this->database->ExecutePreparedStatement("selectAllLablesFromAnArticleById", array());
+	}
+
 }
 
 ?>
