@@ -135,22 +135,23 @@ class DbContent
 
 	/**
 	* InsertNewArticleToPage()
-	* @params int $pageId the id of the article
 	* @params string $header
 	* @params string $content
 	* @params string $publicationdate
+	* @params int $pageId the id of the page the article is published
+	* @params int author the author's id
 	* @params string $type
 	* @params int $public
 	* @params string $description
 	*/
-	public function InsertNewArticleToPage($pageId, $header, $content, $publicationdate, $type, $public, $description)
+	public function InsertNewArticleToPage($header, $content, $publicationdate, $pageId, $author, $type, $public, $description)
 	{
 		$header = $this->database->RealEscapeString($header);
 		$content = $this->database->RealEscapeString($content);
 		$type = $this->database->RealEscapeString($type);
 		$description = $this->database->RealEscapeString($description);
 
-		$result = $this->database->ExecuteQuery("INSERT INTO article (id, header, content, publicationdate, page_id, type, public, description) VALUES (NULL, '".$header."', '".$content."', '".$publicationdate."', ".$pageId.", '".$type."', ".$public.", '".$description."')");
+		$result = $this->database->ExecuteQuery("INSERT INTO article (id, header, content, publicationdate, page_id, author, type, public, description) VALUES (NULL, '".$header."', '".$content."', '".$publicationdate."', ".$pageId.", ".$author.", '".$type."', ".$public.", '".$description."')");
 
 		 if($result==true)
 		 {
@@ -171,27 +172,27 @@ class DbContent
 	}
 
 
-	// Brauchst du den Author absichtlich nicht?
+
 	/**
-	* InsertNewArticleToPage()
+	* UpdateArticleToPage()
 	* @params int $articleId the id of the article
-	* @params int $pageId
 	* @params string $header
 	* @params string $content
 	* @params string $publicationdate
+	* @params int $pageId the id of the page the article is published
 	* @params int $author
 	* @params string $type
 	* @params int $public
 	* @params string $description
 	*/
-	public function	UpdateArticleToPage($articleId, $pageId, $header, $content, $publicationdate, $author, $type, $public, $description)
+	public function	UpdateArticleToPage($articleId, $header, $content, $publicationdate, $pageId, $author, $type, $public, $description)
 	{
 		$header = $this->database->RealEscapeString($header);
 		$content = $this->database->RealEscapeString($content);
 		$type = $this->database->RealEscapeString($type);
 		$description = $this->database->RealEscapeString($description);
 
-		$result = $this->database->ExecuteQuery("UPDATE article SET page_id =".$pageId.", header ='".$header."', content ='".$content."', publicationdate ='".$publicationdate."', author =".$author.",  type ='".$type."', public =".$public.", description = '".$description."'  WHERE id = ". $articleId."");
+		$result = $this->database->ExecuteQuery("UPDATE article SET header ='".$header."', content ='".$content."', publicationdate ='".$publicationdate."', page_id =".$pageId.",  author =".$author.",  type ='".$type."', public =".$public.", description = '".$description."'  WHERE id = ". $articleId."");
 
 		if($result==true)
 		{
