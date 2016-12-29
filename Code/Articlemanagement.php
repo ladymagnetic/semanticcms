@@ -37,6 +37,15 @@ else if (isset($_POST['edit'])) {
 // if submit button with name 'delete' is pressed
 else if (isset($_POST['delete'])) {
     $articleId = intval($_POST['articleId']);
+    ReallyDelete($articleId);
+    // has to return because other page
+    return;
+    
+}
+// if submit button with name 'reallydelete' is pressed
+else if (isset($_POST['reallyDelete'])) {
+    $articleId = intval($_POST['articleId']);
+
     $dbContent->DeleteArticleById($articleId);
 }
 // if submit button with name 'newContent' is pressed
@@ -350,5 +359,46 @@ function EditArticle($pageName, $articleId, $dbContent)
             "<form method='post' action='Articlemanagement.php'><input id='back' name='back' type='submit' value='Zurück'><form>";
     echo
         "<main></body></html>";
+}
+function ReallyDelete($articleId)
+{
+    BackendComponentPrinter::PrintHead("Inhaltsverwaltung");
+    /* menue */
+/* dynamisch erzeugt je nach Rechten */
+/* Check if user is logged in */
+/*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert*/
+//if(!isset($_SESSION['username'])) 
+//{
+//    die($config['error']['noLogin']);  
+//}
+/* Check if  permissions are set */
+//else if(!isset($_SESSION['permissions']))
+//{
+//    die($config['error']['permissionNotSet']);  		
+//}
+/*  Check if user has the permission the see this page */
+// Nicht vergessen nach dem kopieren die wirklich benötigte permission abzufragen!!
+//else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
+//{
+//    die($config['error']['permissionMissing']);  	  
+//}
+
+// Printer Beispiel									
+//BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
+BackendComponentPrinter::PrintSidebar(array());
+/*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert */
+    echo
+            "<main><form method='post' action='Articlemanagement.php'>".
+            "<input id='articleId' name='articleId' type='hidden' value='".$articleId."'><br><br>".
+            "<p>Möchten Sie wirklich löschen?</p>".
+            "<p><img src='media/Pictures/Gnome-edit-delete.png' height='auto' width='250px'></p>".
+            "<input id='reallyDelete' name='reallyDelete' type='submit' value='Löschen'>";
+    echo
+            "</form>";
+    echo
+            "<form method='post' action='Articlemanagement.php'><input id='back' name='back' type='submit' value='Zurück'><form>";
+    echo
+            "</main></body></html>";
+
 }
 ?>

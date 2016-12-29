@@ -82,6 +82,14 @@ else if (isset($_POST['assignRole'])) {
 // if submit button with name 'deleteRole' is pressed
 else if (isset($_POST['deleteRole'])) {
     $roleId = intval($_POST['roleId']);
+    ReallyDeleteRole($roleId);
+    // has to return because other page
+    return;
+}
+// if submit button with name 'reallydelete' is pressed
+else if (isset($_POST['reallyDeleteRole'])) {
+    $roleId = intval($_POST['roleId']);
+
     $dbUser->DeleteRole($roleId, $dbUser);
 }
 // if submit button with name 'roleDetails' is pressed
@@ -795,6 +803,48 @@ BackendComponentPrinter::PrintSidebar(array());
             "<p>Möchten Sie wirklich löschen?</p>".
             "<p><img src='media/Pictures/Gnome-edit-delete.png' height='auto' width='250px'></p>".
             "<input id='reallyDelete' name='reallyDelete' type='submit' value='Löschen'>";
+    echo
+            "</form>";
+    echo
+            "<form method='post' action='Usermanagement.php'><input id='back' name='back' type='submit' value='Zurück'><form>";
+    echo
+            "</main></body></html>";
+
+}
+
+function ReallyDeleteRole($roleId)
+{
+    BackendComponentPrinter::PrintHead("Benutzerverwaltung");
+    /* menue */
+/* dynamisch erzeugt je nach Rechten */
+/* Check if user is logged in */
+/*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert*/
+//if(!isset($_SESSION['username'])) 
+//{
+//    die($config['error']['noLogin']);  
+//}
+/* Check if  permissions are set */
+//else if(!isset($_SESSION['permissions']))
+//{
+//    die($config['error']['permissionNotSet']);  		
+//}
+/*  Check if user has the permission the see this page */
+// Nicht vergessen nach dem kopieren die wirklich benötigte permission abzufragen!!
+//else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
+//{
+//    die($config['error']['permissionMissing']);  	  
+//}
+
+// Printer Beispiel									
+//BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
+BackendComponentPrinter::PrintSidebar(array());
+/*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert */
+    echo
+            "<main><form method='post' action='Usermanagement.php'>".
+            "<input id='roleId' name='roleId' type='hidden' value='".$roleId."'><br><br>".
+            "<p>Möchten Sie wirklich löschen?</p>".
+            "<p><img src='media/Pictures/Gnome-edit-delete.png' height='auto' width='250px'></p>".
+            "<input id='reallyDeleteRole' name='reallyDeleteRole' type='submit' value='Löschen'>";
     echo
             "</form>";
     echo
