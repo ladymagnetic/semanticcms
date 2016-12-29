@@ -110,8 +110,13 @@ class DbUser
 		//$this->database->PrepareStatement("selectAllUsersWhoAreBannedNowForASpecialReasonById", $selectAllUsersWhoAreBannedNowForASpecialReasonById);
 		// SELECT * FROM ban INNER JOIN user ON ban.user_id = user.id WHERE ( ban.enddatetime > now() AND ban.reason_id = 2)
 
+		
+		$getUserPermissionByUsername = "SELECT role.guestbookmanagement, role.usermanagement, role.pagemanagement, role.articlemanagement, role.guestbookusage, role.templateconstruction FROM role INNER JOIN user ON role.id = user.role_id WHERE user.username = ? ";
+		$this->database->PrepareStatement("getUserPermissionByUsername", $getUserPermissionByUsername);
 
-
+		$whichRoleHasASpecialUser = "SELECT user.username, role.rolename FROM user INNER JOIN role ON user.role_id = role.id WHERE user.username = ?";
+		$this->database->PrepareStatement("whichRoleHasASpecialUser", $whichRoleHasASpecialUser);
+		
 	}
 
 
@@ -939,6 +944,60 @@ function check_date($date,$format,$sep)
 	{
 		return  $this->database->GetResultCount($result);
 	}
+	
+	
+	
+	
+	
+	
+	
+	/**
+	*  GetUserPermissionByUsername()
+	* @params string $username the user's username
+	*/
+	public function GetUserPermissionByUsername($username)
+	{
+		return $this->database->ExecutePreparedStatement("getUserPermissionByUsername", array($username));
+	}
+
+	
+
+	/**
+	*  WhichRoleHasASpecialUser()
+	* @params string $username the user's username
+	*/
+	public function WhichRoleHasASpecialUser($username)
+	{
+		return $this->database->ExecutePreparedStatement("whichRoleHasASpecialUser", array($username));
+	}
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
