@@ -357,11 +357,11 @@ function check_date($date,$format,$sep)
 	* Delets a particular User by a name
 	* @params int $userId the user's Id
 	*/
-	public function DeleteUserByUsername($userId)
+	public function DeleteUserByUsername($username)
 	{
-		$result = $this->database->ExecutePreparedStatement("deleteUserByUsername", array($userId));
+		$result = $this->database->ExecutePreparedStatement("deleteUserByUsername", array($username));
 		
-		$usersName = $this->database->ExecuteQuery("SELECT username FROM user WHERE id = ".$userId);
+		//$usersName = $this->database->ExecuteQuery("SELECT username FROM user WHERE id = ".$userId);
 
 		if($result==true)
 		{

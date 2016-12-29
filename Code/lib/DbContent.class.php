@@ -70,6 +70,38 @@ class DbContent
 
 		$selectOneArticleById = "SELECT * FROM article WHERE id = ?";
 		$this->database->PrepareStatement("selectOneArticleById", $selectOneArticleById);
+		
+		
+		/* -- neu -- */
+		$selectPageByPagename = "SELECT * FROM page WHERE title = ?";
+		$this->database->PrepareStatement("selectPageByPagename", $selectPageByPagename);
+
+		$selectPageById = "SELECT * FROM page WHERE id = ?";
+		$this->database->PrepareStatement("selectPageById", $selectPageById);
+
+		$selectTemplateById = "SELECT * FROM template WHERE id = ?";
+		$this->database->PrepareStatement("selectTemplateById", $selectTemplateById);
+
+		$selectTemplateByTemplatename = "SELECT * FROM template WHERE templatename = ?";
+		$this->database->PrepareStatement("selectTemplateById", $selectTemplateByTemplatename);
+
+		$selectPageIdByPagename = "SELECT id FROM page WHERE title = ?";
+		$this->database->PrepareStatement("selectPageIdByPagename", $selectPageIdByPagename);
+
+
+		
+		$deletePageById =  "DELETE FROM page WHERE id = ?";
+		$this->database->PrepareStatement("deletePageById", $deletePageById );
+
+		$deletePageByTitle =  "DELETE FROM page WHERE title = ?";
+		$this->database->PrepareStatement("deletePageByTitle", $deletePageByTitle );
+
+		$deleteTemplateById =  "DELETE FROM template WHERE id = ?";
+		$this->database->PrepareStatement("deleteTemplateById", $deleteTemplateById );
+
+		$deleteTemplateByTemplatename =  "DELETE FROM template WHERE templatename = ?";
+		$this->database->PrepareStatement("deleteTemplateByTemplatename", $deleteTemplateByTemplatename );
+		
 
 	}
 
@@ -276,6 +308,180 @@ class DbContent
 	{
 		return  $this->database->GetResultCount($result);
 	}
+	
+	
+	
+	
+	/* --- NEU --- */
+	
+	
+	/**
+	* SelectPageByPagename()
+	* @params string $title is the title of the page
+	*/
+	public function SelectPageByPagename($title)
+	{
+		return $this->database->ExecutePreparedStatement("selectPageByPagename", array($title));
+	}
+
+	
+	
+	/**
+	* SelectPageById()
+	* @params int $pageId the id of the page
+	*/
+	public function SelectPageById($pageId)
+	{
+		 return	$this->database->ExecutePreparedStatement("selectPageById", array($pageId));
+	}
+
+	
+	
+	/**
+	* SelectTemplateByTemplatename()
+	* @params string $templatename is the name of the template
+	*/
+	public function SelectTemplateByTemplatename($templatename)
+	{
+		return $this->database->ExecutePreparedStatement("selectTemplateByTemplatename", array($templatename));
+	}
+
+	
+	
+	/**
+	* SelectTemplateById()
+	* @params int $templateId the id of the template
+	*/
+	public function SelectTemplateById($templateId)
+	{
+		 return	$this->database->ExecutePreparedStatement("selectTemplateById", array($templateId));
+	}
+
+	
+	
+	/**
+	* SelectPageIdByPagename()
+	* @params string $title the title of the page
+	*/
+	public function SelectPageIdByPagename($title)
+	{
+		 return	$this->database->ExecutePreparedStatement("selectPageIdByPagename", array($title));
+	}
+	
+		
+		
+	/**
+	* DeletePageById()
+	* @params int $pageId the id of the page
+	*/
+	public function DeletePageById($pageId)
+	{
+		$result = $this->database->ExecutePreparedStatement("deletePageById", array($pageId));
+
+		if($result==true)
+		{
+			$logUsername = 'Wer ist gerade angemeldet?';
+			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';		//pagemanegement muss true sein!
+			$logDescription = 'Folgende Page wurde gelöscht:';
+
+			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+			var_dump($re);
+
+			return true;
+		}
+		else
+		{
+			 return false;
+		}
+	}
+
+	
+	
+	/**
+	* DeletePageByTitle()
+	* @params string $title the title of the page
+	*/
+	public function DeletePageByTitle($title)
+	{
+		$result = $this->database->ExecutePreparedStatement("deletePageByTitle", array($title));
+
+		if($result==true)
+		{
+			$logUsername = 'Wer ist gerade angemeldet?';
+			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';		//pagemanegement muss true sein!
+			$logDescription = 'Folgende Page wurde gelöscht:';
+
+			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+			var_dump($re);
+
+			return true;
+		}
+		else
+		{
+			 return false;
+		}
+	}
+	
+	
+	
+	/**
+	* DeleteTemplateById()
+	* @params int $templateId the id of the template
+	*/
+	public function DeleteTemplateById($templateId)
+	{
+		$result = $this->database->ExecutePreparedStatement("deleteTemplateById", array($templateId));
+
+		if($result==true)
+		{
+			$logUsername = 'Wer ist gerade angemeldet?';
+			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';		//pagemanegement muss true sein!
+			$logDescription = 'Folgendes Template wurde gelöscht:';
+
+			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+			var_dump($re);
+
+			return true;
+		}
+		else
+		{
+			 return false;
+		}
+	}
+
+	
+	
+	/**
+	* DeleteTemplateByTemplatename()
+	* @params string $templatename the templatename of the template
+	*/
+	public function DeleteTemplateByTemplatename($templatename)
+	{
+		$result = $this->database->ExecutePreparedStatement("deleteTemplateByTemplatename", array($templatename));
+
+		if($result==true)
+			{
+				$logUsername = 'Wer ist gerade angemeldet?';
+				$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';		//pagemanegement muss true sein!
+				$logDescription = 'Folgendes Template wurde gelöscht:';
+
+				$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+				var_dump($re);
+
+				return true;
+			}
+			else
+			{
+				 return false;
+			}
+	}
+
+	
+	
 }
 
 ?>
