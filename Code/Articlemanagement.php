@@ -187,10 +187,8 @@ function CreateArticleManagement($pageName, $dbContent)
     echo $pageSelect;
     echo
         "</select><input id='selectPage' name='selectPage' type='submit' value='Anzeigen'></form><br><br>";
-    BackendComponentPrinter::PrintTableStart(array("Inhalte", "Veröffentlichungsdatum", "Aktion"));
-    if ($pageName != "")
-    { 
-        $articleInPage = false;
+    BackendComponentPrinter::PrintTableStart(array("Inhalte", "Veröffentlichungsdatum", "Aktion")); 
+    $articleInPage = false;
     if ($pageName != "")
     { 
         // foreach aticle of page in database print
@@ -221,8 +219,6 @@ function CreateArticleManagement($pageName, $dbContent)
                 BackendComponentPrinter::PrintTableRow(array($tableRow1, $tableRow2, $tableRow3));
             }
         }
-    }
-
     }
     BackendComponentPrinter::PrintTableEnd();
     echo
