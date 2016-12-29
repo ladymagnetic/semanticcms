@@ -13,6 +13,12 @@ use SemanticCms\Model\Permission;
 */
 class BackendComponentPrinter
 {
+
+    /* -------- Members --------- */
+    private static $jQueryIsIncluded = false;
+
+    /* -------- Methods --------- */
+
 	/* -------- BEISPIEL METHODEN - BITTE LÖSCHEN WENN NICHT MEHR BENÖTIGT --------- */
 
 	// /**
@@ -88,8 +94,9 @@ class BackendComponentPrinter
      * Prints the head of the current site
      * @param $title The head title
      * @param $jquery true if jquery used otherwise false
+     * @param $jqueryUI true if jquery-ui used otherwise false
      */
-    public static function PrintHead($title, $jquery=false)
+    public function PrintHead($title, $jquery=false, $jqueryUI=false)
     {
          // evtl. auch schema.org tags im head einfügen, wenn sinnvoll
         // (z.B. 'description', 'datePublished' (eher für die Blog Artikel geeignet)
@@ -101,8 +108,18 @@ class BackendComponentPrinter
              <title>'.$title.'</title>
              <link rel="stylesheet" href="media/backend.css">
              <link rel="stylesheet" href="media/font-awesome/css/font-awesome.min.css">';
-		 if($jquery) echo '<script src="media/jquery-3.1.1.min.js"> </script>';
-         echo '</head>';
+        if ($jqueryUI) {
+            $jquery = true; // always include jquery if jquery-ui is included
+        }
+        if($jquery) {
+            echo '<script src="media/jquery-3.1.1.min.js"> </script>';
+            self::$jQueryIsIncluded = true;
+        }
+        if($jqueryUI) {
+            echo '<link rel="stylesheet" href="media/jquery-ui.css">';
+            echo '<script src="media/jquery-ui.min.js"> </script>';
+        }
+        echo '</head>';
     }
 
     /**
@@ -245,9 +262,14 @@ class BackendComponentPrinter
      */
     public static function PrintDatatablesPlugin()
     {
+        if (!self::$jQueryIsIncluded) {
+            // include jquery since datatables depend on it
+            echo "<script src='media/jquery-3.1.1.min.js'> </script>";
+            self::$jQueryIsIncluded = true;
+        }
         echo
             "<link rel='stylesheet' type='text/css' href='//cdn.datatables.net/1.10.13/css/jquery.dataTables.css'>
-        <script type='text/javascript' charset='utf8' src='//cdn.datatables.net/1.10.13/js/jquery.dataTables.js'></script>".
+             <script type='text/javascript' charset='utf8' src='//cdn.datatables.net/1.10.13/js/jquery.dataTables.js'></script>".
             "<script>$(document).ready( function () {
             $('table').DataTable({
                 'language': {
