@@ -553,6 +553,103 @@ class DbContent
 		return $this->database->ExecutePreparedStatement("selectAllLablesFromAnArticleById", array());
 	}
 
+	
+	
+	/**
+	* InsertTemplate()
+	* @params string $templatename the name of the template
+	* @params string $filelink the filelink of the template
+	*/
+	public function InsertTemplate($templatename, $filelink)
+	{
+		if(!($this->TemplatenameAlreadyExists($templatename)))
+		{
+			$templatename = $this->database->RealEscapeString($templatename);
+			$result = $this->database->ExecuteQuery("INSERT INTO template (id, templatename, filelink) VALUES (NULL, '".$templatename."', '".$filelink."' ");
+
+			if($result==true)
+			{
+				$logUsername = 'Wer ist gerade angemeldet? => $username';		// es sollte nicht möglich sein, dass jemand anders da etwas von einer anderen Person ändert.
+				$logRolename = 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName';
+				$logDescription = 'Neues Template erstellt.';
+
+				$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else  return false;
+	}
+
+
+	
+	/**
+	* InsertPage()
+	* @params string $title the title of the template
+	* @params string $templateId the id of the used template
+	*/
+	public function InsertPage($title, $templateId)
+	{
+		if(!($this->PagetitleAlreadyExists($title)))
+		{
+			$title = $this->database->RealEscapeString($title);
+			$result = $this->database->ExecuteQuery("INSERT INTO page (id, title, template_id) VALUES (NULL, '".$title."', ".$templateId." ");
+
+			if($result==true)
+			{
+				$logUsername = 'Wer ist gerade angemeldet? => $username';		// es sollte nicht möglich sein, dass jemand anders da etwas von einer anderen Person ändert.
+				$logRolename = 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName';
+				$logDescription = 'Neue Page erstellt.';
+
+				$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else  return false;
+	}
+
+	
+	
+	/**
+	* InsertLable()
+	* @params string $lablename the name of the lable
+	* @params string $uri the uri of the lable
+	*/	
+	public function InsertLable($lablename, $uri)
+	{
+		$lablename = $this->database->RealEscapeString($lablename);
+		$result = $this->database->ExecuteQuery("INSERT INTO lable (id, lablename, uri) VALUES (NULL, '".$lablename."', '".$uri."' ");
+
+		if($result==true)
+		{
+			$logUsername = 'Wer ist gerade angemeldet? => $username';		// es sollte nicht möglich sein, dass jemand anders da etwas von einer anderen Person ändert.
+			$logRolename = 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName';
+			$logDescription = 'Neues Lable erstellt.';
+
+			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	
+	
+	
+	
+	
 }
 
 ?>
