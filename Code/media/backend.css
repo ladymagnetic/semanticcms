@@ -168,12 +168,18 @@ input[type=submit]:hover
 }
 
 /*----- Forms ----->*/
-label, input {
+label, input 
+{
   display:inline-block;
 }
 
-label {
+label 
+{
     width:200px;
+}
+input[type=text]
+{
+    width:500px; 
 }
 
 /*-----  Warning ----->*/
