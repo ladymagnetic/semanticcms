@@ -271,22 +271,29 @@ function EditArticle($pageName, $articleId, $dbContent)
     //BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
     BackendComponentPrinter::PrintSidebar(array());
     /*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert */
+    /* Summernote */
+    echo 
+        "<link href='http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.css' rel='stylesheet'>
+        <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js'></script> 
+        <script src='http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.js'></script> 
+        <link href='http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.css' rel='stylesheet'>
+        <script src='http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.js'></script>";
     $articleRow = $dbContent->FetchArray($dbContent->SelectOneArticleById($articleId));
     echo
         "<main>
-            <h1>Inhalt erstellen</h1>
+            <h1>Inhalt bearbeiten</h1>
             <form method='post' action='ArticleManagement.php'>
             <label for='header'>Überschrift</label>
-            <input id='header' name='header' type='text'><br><br>
+            <input id='header' name='header' type='text' value='".$articleRow['header']."'><br><br>
             <label for='summernote'>Inhalt</label>
-            <div id='summernote' name='summernote'><p>Hello Summernote</p></div><br><br>
+            <div id='summernote' name='summernote'>".$articleRow['content']."</div><br><br>
             <script>
                 $(document).ready(function() {
                     $('#summernote').summernote();
                 });
             </script>
             <label for='date'>Datum</label>
-            <input readonly id='date' name='date' type='text'><br><br>";
+            <input readonly id='date' name='date' type='text' value='".$articleRow['date']."'><br><br>";
     $pageSelect = "";
     $pageRows = $dbContent->GetAllPages();
     while ($pageRow = $dbContent->FetchArray($pageRows))
