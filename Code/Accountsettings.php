@@ -144,16 +144,13 @@ echo
 $userRow = $dbUser->FetchArray($dbUser->GetUserInformationByUsername($_SESSION['username']));
 echo
         "<label for='userName'>Benutzername</label>
-        <input required id='userName' name='userName' type='text' value='".$userRow['username']."'><br><br>";
+        <input required id='userName' name='userName' type='text' value='".utf8_encode($userRow['username'])."'><br><br>";
 echo
         "<label for='name'>Name</label>
-        <input required id='name' name='name' type='text' value='".$userRow['lastname']."'><br><br>";
+        <input required id='name' name='name' type='text' value='".utf8_encode($userRow['lastname'])."'><br><br>";
 echo    
         "<label for='foreName'>Vorname</label>
-        <input required id='foreName' name='foreName' type='text' value='".$userRow['firstname']."'><br><br>";
-echo
-        "<label for='email'>Email</label>
-        <input required id='email' name='email' type='text' value='".$userRow['email']."'><br><br>";
+        <input required id='foreName' name='foreName' type='text' value='".utf8_encode($userRow['firstname'])."'><br><br>";
 echo
         "<label for='email'>Email</label>
         <input required id='email' name='email' type='text' value='".$userRow['email']."'><br><br>";
@@ -171,7 +168,7 @@ while ($roleRow = $dbUser->FetchArray($roleRows))
     if ($roleRow['id'] == $userRow['role_id'])
     {
         echo
-            "<input readonly id='role' name='role' type='text' value='".$roleRow['rolename']."'><br><br>";
+            "<input readonly id='role' name='role' type='text' value='".utf8_encode($roleRow['rolename'])."'><br><br>";
     }
 }        
 echo

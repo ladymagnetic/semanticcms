@@ -236,7 +236,7 @@ BackendComponentPrinter::PrintTableStart(array("Benutzer", "entsperren/sperren",
 $userRows = $dbUser->SelectAllUsers();
 while ($row = $dbUser->FetchArray($userRows))
 {
-    $tableRow1 = $row['username']."<br>".$row['firstname']." ".$row['lastname'];
+    $tableRow1 = utf8_encode($row['username'])."<br>".utf8_encode($row['firstname'])." ".utf8_encode($row['lastname']);
 
     //if user is banned/debanned
     $bannedUsers = $dbUser->SelectAllUsersWhichAreBannedNow();
@@ -270,7 +270,7 @@ while ($row = $dbUser->FetchArray($userRows))
                         $tableRow2 = 
                         "<form method='post' action='Usermanagement.php'>
                         <input id='banId' name='banId' type='hidden' value='".$banRow['id']."'>".
-                        "<p>".$reason."<p>".
+                        "<p>".utf8_encode($reason)."<p>".
                         "<input id='deban' name='deban' type='submit' value='entsperren'></form>";
                         $tableRow2 .=  "<br>";
                     }
@@ -279,7 +279,7 @@ while ($row = $dbUser->FetchArray($userRows))
                         $tableRow2 .= 
                         "<form method='post' action='Usermanagement.php'>
                         <input id='banId' name='banId' type='hidden' value='".$banRow['id']."'>".
-                        "<p>".$reason."<p>".
+                        "<p>".utf8_encode($reason)."<p>".
                         "<input id='deban' name='deban' type='submit' value='entsperren'></form";
                         $tableRow2 .=  "<br>";
                     }
@@ -307,7 +307,7 @@ while ($row = $dbUser->FetchArray($userRows))
             {
                 $tableRow3 .= " selected ";
             }
-            $tableRow3 .= ">".$rolerow['rolename']."</option>";
+            $tableRow3 .= ">".utf8_encode($rolerow['rolename'])."</option>";
         }
     $tableRow3 .=
         "<input id='userId' name='userId' type='hidden' value='".$row['id']."'></select></label><br><br><input id='assignRole' name='assignRole' type='submit' value='Zuweisen'></form>";
@@ -329,7 +329,7 @@ BackendComponentPrinter::PrintTableStart(array("Rollenname", "Aktion"));
 $roleRows = $dbUser->SelectAllRoles();
 while ($row = $dbUser->FetchArray($roleRows))
 {
-    $tableRow1 =  $row['rolename'];
+    $tableRow1 =  utf8_encode($row['rolename']);
     $tableRow2 = 
         "<form method='post' action='Usermanagement.php'><input id='roleDetails' name='roleDetails' type='submit' value='Details'><input id='deleteRole' name='deleteRole' type='submit' value='Rolle löschen'>".
         "<input id='roleId' name='roleId' type='hidden' value='".$row['id']."'></form>";
@@ -385,16 +385,16 @@ BackendComponentPrinter::PrintDatatablesPlugin();
     $userRow = $dbUser->FetchArray($dbUser->GetUserInformationById($userId));
     echo
             "<label for='userName'>Benutzername</label>
-            <input readonly id='userName' name='userName' type='text' value='".$userRow['username']."'><br><br>";
+            <input readonly id='userName' name='userName' type='text' value='".utf8_encode($userRow['username'])."'><br><br>";
     echo
             "<label for='name'>Name</label>
-            <input readonly id='name' name='name' type='text' value='".$userRow['lastname']."'><br><br>";
+            <input readonly id='name' name='name' type='text' value='".utf8_encode($userRow['lastname'])."'><br><br>";
     echo    
             "<label for='foreName'>Vorname</label>
-            <input readonly id='foreName' name='foreName' type='text' value='".$userRow['firstname']."'><br><br>";
+            <input readonly id='foreName' name='foreName' type='text' value='".utf8_encode($userRow['firstname'])."'><br><br>";
     echo
             "<label for='email'>Email</label>
-            <input readonly id='email' name='email' type='text' value='".$userRow['email']."'><br><br>";
+            <input readonly id='email' name='email' type='text' value='".utf8_encode($userRow['email'])."'><br><br>";
     echo
         "<label for='birthdate'>Geburtsdatum</label>
         <input readonly type='text' name='birthdate' id='birthdate' value='".$userRow['birthdate']."'><br><br>";
@@ -410,7 +410,7 @@ BackendComponentPrinter::PrintDatatablesPlugin();
         if ($roleRow['id'] == $userRow['role_id'])
         {
             echo
-                "<input readonly id='role' name='role' type='text' value='".$roleRow['rolename']."'><br><br>";
+                "<input readonly id='role' name='role' type='text' value='".utf8_encode($roleRow['rolename'])."'><br><br>";
             $roleAssigned = true;
         }
     }
@@ -437,7 +437,7 @@ BackendComponentPrinter::PrintDatatablesPlugin();
         {
             if ($reasonRow['id'] == $banRow['reason_id'])
             {
-                BackendComponentPrinter::PrintTableRow(array($reasonRow['reason'], $banRow['description'], $banRow['begindatetime'], $banRow['enddatetime']));
+                BackendComponentPrinter::PrintTableRow(array(utf8_encode($reasonRow['reason']), utf8_encode($banRow['description']), $banRow['begindatetime'], $banRow['enddatetime']));
             }
         }
     }
@@ -488,10 +488,10 @@ BackendComponentPrinter::PrintSidebar(array());
             "<form method='post' action='Usermanagement.php'>".
             "<input id='roleId' name='roleId' type='hidden' value='".$roleId."'>".
             "<label for='roleName'>Rollenname</label>
-            <input required id='roleName' name='roleName' type='text' value='".$roleRow['rolename']."'><br><br>";
+            <input required id='roleName' name='roleName' type='text' value='".utf8_encode($roleRow['rolename'])."'><br><br>";
     echo
             "<label for='uri'>Uri</label>
-            <input required id='uri' name='uri' type='text' value='".$roleRow['uri']."'><br><br>";
+            <input required id='uri' name='uri' type='text' value='".utf8_encode($roleRow['uri'])."'><br><br>";
     echo    
             "<label for='guestbookmanagement'>Gästebuch verwalten</label>
             <input id='guestbookmanagement' name='guestbookmanagement' type='checkbox'";
@@ -627,7 +627,7 @@ BackendComponentPrinter::PrintSidebar(array());
     while ($rolerow = $dbUser->FetchArray($roleRows))
     {
         echo "<option id='".$rolerow['id']."'";
-        echo ">".$rolerow['rolename']."</option>";
+        echo ">".utf8_encode($rolerow['rolename'])."</option>";
     }
     echo
             "</select><br><br>";
@@ -772,7 +772,7 @@ BackendComponentPrinter::PrintSidebar(array());
             while ($reasonRow = $dbUser->FetchArray($reasonRows))
             {
                 echo "<option id='".$reasonRow['id']."'"."value='".$reasonRow['id']."'";
-                echo ">".$reasonRow['reason']."</option>";
+                echo ">".utf8_encode($reasonRow['reason'])."</option>";
             }
     echo
             "</select><br><br>";

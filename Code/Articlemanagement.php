@@ -24,7 +24,7 @@ $dbUser = new DbUser($config['cms_db']['dbhost'], $config['cms_db']['dbuser'], $
 /*---- Submit Buttons ----*/
 // if submit button with name 'selectPage' is pressed
 if (isset($_POST['selectPage'])) {
-    $pageName = $_POST['pageName'];
+    $pageName = utf8_encode($_POST['pageName']);
     CreateArticleManagement($pageName, $dbContent);
     // has to return because other page
     return;
@@ -32,7 +32,7 @@ if (isset($_POST['selectPage'])) {
 // if submit button with name 'edit' is pressed
 else if (isset($_POST['edit'])) {
     $articleId = intval($_POST['articleId']);
-    $pageName = $_POST['pageName'];
+    $pageName = utf8_encode($_POST['pageName']);
     EditArticle($pageName, $articleId, $dbContent, $dbUser);
     // has to return because other page
     return;
@@ -40,7 +40,7 @@ else if (isset($_POST['edit'])) {
 // if submit button with name 'delete' is pressed
 else if (isset($_POST['delete'])) {
     $articleId = intval($_POST['articleId']);
-    $pageName = $_POST['pageName'];
+    $pageName = utf8_encode($_POST['pageName']);
     ReallyDelete($articleId, $pageName);
     // has to return because other page
     return;
@@ -50,21 +50,21 @@ else if (isset($_POST['delete'])) {
 else if (isset($_POST['reallyDelete'])) {
     $articleId = intval($_POST['articleId']);
     $dbContent->DeleteArticleById($articleId);
-    $pageName = $_POST['pageName'];
+    $pageName = utf8_encode($_POST['pageName']);
     CreateArticleManagement($pageName, $dbContent);
     // has to return because other page
     return;
 }
 // if submit button with name 'back' is pressed
 else if (isset($_POST['back'])) {
-    $pageName = $_POST['pageName'];
+    $pageName = utf8_encode($_POST['pageName']);
     CreateArticleManagement($pageName, $dbContent);
     // has to return because other page
     return;
 }
 // if submit button with name 'newArticle' is pressed
 else if (isset($_POST['newArticle'])) {
-    $pageName = $_POST['pageName'];
+    $pageName = utf8_encode($_POST['pageName']);
     CreateNewArticle($pageName, $dbContent);
     // has to return because other page
     return;
@@ -72,7 +72,7 @@ else if (isset($_POST['newArticle'])) {
 // if submit button with name 'publish' is pressed
 else if (isset($_POST['publish']))
 {
-    $pageId = intval($dbContent->FetchArray($dbContent->SelectPageByPagename($_POST['pageSelect']))['id']);
+    $pageId = intval($dbContent->FetchArray($dbContent->SelectPageByPagename(utf8_encode($_POST['pageSelect'])))['id']);
     $header = $_POST['header'];
     $content = $_POST['content'];
     $date = date("Y-m-d");
@@ -104,7 +104,7 @@ else if (isset($_POST['publish']))
 // if submit button with name 'updateArticle' is pressed
 else if (isset($_POST['updateArticle']))
 {
-    $pageId = intval($dbContent->FetchArray($dbContent->SelectPageByPagename($_POST['pageSelect']))['id']);
+    $pageId = intval($dbContent->FetchArray($dbContent->SelectPageByPagename(utf8_encode($_POST['pageSelect'])))['id']);
     $header = $_POST['header'];
     $content = $_POST['content'];
     $date = date("Y-m-d"); 
@@ -129,7 +129,7 @@ else if (isset($_POST['updateArticle']))
     }
 
     $dbContent->UpdateArticleToPage($articleId, $header, $content, $date, $pageId, $authorId, $type, $public, $description);
-    $pageName = $_POST['pageName'];
+    $pageName = utf8_encode($_POST['pageName']);
     CreateArticleManagement($pageName, $dbContent);
     // has to return because other page
     return;
@@ -179,11 +179,11 @@ function CreateArticleManagement($pageName, $dbContent)
     while ($pageRow = $dbContent->FetchArray($pageRows))
     {
         $pageSelect .= "<option";
-        if ($pageName == $pageRow['title'])
+        if (utf8_encode($pageName) == utf8_encode($pageRow['title']))
         {
             $pageSelect .= " selected";
         }
-        $pageSelect .= ">".$pageRow['title']."</option>";
+        $pageSelect .= ">".utf8_encode($pageRow['title'])."</option>";
     }
     echo
         "<form method='post' action='Articlemanagement.php'>
@@ -202,7 +202,7 @@ function CreateArticleManagement($pageName, $dbContent)
             $pageRows = $dbContent->GetAllPages();
             while ($pageRow = $dbContent->FetchArray($pageRows))
             {
-                if ($articleRow['page_id'] == intval($dbContent->FetchArray($dbContent->SelectPageByPagename($pageName))['id']))
+                if (intval($articleRow['page_id']) == intval($dbContent->FetchArray($dbContent->SelectPageByPagename(utf8_encode($pageName)))['id']))
                 {
                     $articleInPage = true;
                 }
@@ -213,13 +213,13 @@ function CreateArticleManagement($pageName, $dbContent)
             }
             if ($articleInPage)
             {
-                $tableRow1 = $articleRow['header'];
+                $tableRow1 = utf8_encode($articleRow['header']);
                 $tableRow2 = $articleRow['publicationdate'];
                 $tableRow3 = 
                     "<form method='post' action='Articlemanagement.php'>
                     <input id='delete' name='delete' type='submit' value='Löschen'><input name='edit' type='submit' value='bearbeiten'>".
                     "<input id='articleId' name='articleId' type='hidden' value='".$articleRow['id']."'>
-                    <input id='pageName' name='pageName' type='hidden' value='".$pageName."'></form>";
+                    <input id='pageName' name='pageName' type='hidden' value='".utf8_encode($pageName)."'></form>";
                 BackendComponentPrinter::PrintTableRow(array($tableRow1, $tableRow2, $tableRow3));
             }
         }
@@ -227,7 +227,7 @@ function CreateArticleManagement($pageName, $dbContent)
     BackendComponentPrinter::PrintTableEnd();
     echo
         "<form method='post' action='Articlemanagement.php'>
-        <input id='pageName' name='pageName' type='hidden' value='".$pageName."'>
+        <input id='pageName' name='pageName' type='hidden' value='".utf8_encode($pageName)."'>
         <input id='newArticle' name='newArticle' type='submit' value='Neuer Inhalt'></form>
         </main>
             </body>
@@ -300,12 +300,12 @@ function CreateNewArticle($pageName, $dbContent)
     while ($pageRow = $dbContent->FetchArray($pageRows))
     {
         $pageSelect .= "<option";
-        if ($pageName == $pageRow['title'])
+        if (utf8_encode($pageName) == utf8_encode($pageRow['title']))
         {
             $pageSelect .= " selected";
         }
         $pageSelect .=
-            " value='".$pageRow['title']."'>".$pageRow['title']."</option>";
+            " value='".utf8_encode($pageRow['title'])."'>".utf8_encode($pageRow['title'])."</option>";
     }
     echo
         "<label for='pageSelect'>Seite</label><select name='pageSelect'>";
@@ -319,12 +319,12 @@ function CreateNewArticle($pageName, $dbContent)
             <input id='public' name='public' type='checkbox' value=''><br><br>
             <label for='description'>Beschreibung</label>
             <input required id='description' name='description' type='text' value=''><br><br>
-            <input id='pageName' name='pageName' type='hidden' value='".$pageName."'>
+            <input id='pageName' name='pageName' type='hidden' value='".utf8_encode($pageName)."'>
             <input id='publish' name='publish' type='submit' value='Publish'>
             </form>";
     echo
             "<form method='post' action='Articlemanagement.php'><input id='back' name='back' type='submit' value='Zurück'>
-            <input id='pageName' name='pageName' type='hidden' value='".$pageName."'>
+            <input id='pageName' name='pageName' type='hidden' value='".utf8_encode($pageName)."'>
             <form>";
     echo
             "<main></body></html>";
@@ -375,9 +375,9 @@ function EditArticle($pageName, $articleId, $dbContent, $dbUser)
             <h1><i class='fa fa-align-justify fontawesome'></i> Inhalt bearbeiten</h1>
             <form method='post' action='ArticleManagement.php'>
             <label for='header'>Überschrift</label>
-            <input required id='header' name='header' type='text' value='".$articleRow['header']."'><br><br>
+            <input required id='header' name='header' type='text' value='".utf8_encode($articleRow['header'])."'><br><br>
             <label for='summernote'>Inhalt</label>
-            <div id='summernote' name='summernote'>".$articleRow['content']."</div><br><br>
+            <div id='summernote' name='summernote'>".utf8_encode($articleRow['content'])."</div><br><br>
             <script>
                 $(document).ready(function() {
                     $('#summernote').summernote({
@@ -389,22 +389,22 @@ function EditArticle($pageName, $articleId, $dbContent, $dbUser)
                     });
                 });
             </script>
-            <input id='content' name='content' type='hidden' value='".$articleRow['content']."'>
+            <input id='content' name='content' type='hidden' value='".utf8_encode($articleRow['content'])."'>
             <label for='date'>Datum</label>
             <input readonly id='date' name='date' type='text' value='".$articleRow['publicationdate']."'><br><br>".
             "<label for='author'>Author</label>
-            <input readonly id='author' name='author' type='text' value='".$authorName."'><br><br>";
+            <input readonly id='author' name='author' type='text' value='".utf8_encode($authorName)."'><br><br>";
     $pageSelect = "";
     $pageRows = $dbContent->GetAllPages();
     while ($pageRow = $dbContent->FetchArray($pageRows))
     {
         $pageSelect .= "<option";
-        if ($pageName == $pageRow['title'])
+        if (utf8_encode($pageName) == utf8_encode($pageRow['title']))
         {
             $pageSelect .= " selected";
         }
         $pageSelect .=
-            " value='".$pageRow['title']."'>".$pageRow['title']."</option>";
+            " value='".utf8_encode($pageRow['title'])."'>".utf8_encode($pageRow['title'])."</option>";
     }
     echo
         "<label for='pageSelect'>Seite</label><select name='pageSelect'>";
@@ -413,7 +413,7 @@ function EditArticle($pageName, $articleId, $dbContent, $dbUser)
         "</select><br><br>";
     echo
             "<label for='type'>Typ</label>
-            <input required id='type' name='type' type='text' value='".$articleRow['type']."'><br><br>
+            <input required id='type' name='type' type='text' value='".utf8_encode($articleRow['type'])."'><br><br>
             <label for='public'>öffentlich</label>
             <input id='public' name='public' type='checkbox'";
             if (boolval($articleRow['public']))
@@ -423,14 +423,14 @@ function EditArticle($pageName, $articleId, $dbContent, $dbUser)
             echo
             "><br><br>".
             "<label for='description'>Beschreibung</label>
-            <input required id='description' name='description' type='text' value='".$articleRow['description']."'><br><br>
+            <input required id='description' name='description' type='text' value='".utf8_encode($articleRow['description'])."'><br><br>
             <input id='updateArticle' name='updateArticle' type='submit' value='Publish'>".
-            "<input id='pageName' name='pageName' type='hidden' value='".$pageName."'>".
+            "<input id='pageName' name='pageName' type='hidden' value='".utf8_encode($pageName)."'>".
             "<input id='articleId' name='articleId' type='hidden' value='".$articleId."'>
             </form>";
     echo
             "<form method='post' action='Articlemanagement.php'><input id='back' name='back' type='submit' value='Zurück'>".
-            "<input id='pageName' name='pageName' type='hidden' value='".$pageName."'>".
+            "<input id='pageName' name='pageName' type='hidden' value='".utf8_encode($pageName)."'>".
             "<form>";
     echo
         "<main></body></html>";
@@ -470,7 +470,7 @@ BackendComponentPrinter::PrintSidebar(array());
     echo
             "<main><form method='post' action='Articlemanagement.php'>".
             "<input id='articleId' name='articleId' type='hidden' value='".$articleId."'><br><br>".
-            "<input id='pageName' name='pageName' type='hidden' value='".$pageName."'>".
+            "<input id='pageName' name='pageName' type='hidden' value='".utf8_encode($pageName)."'>".
             "<p>Möchten Sie wirklich löschen?</p>".
             "<p><img src='media/Pictures/Gnome-edit-delete.png' height='auto' width='250px'></p>".
             "<input id='reallyDelete' name='reallyDelete' type='submit' value='Löschen'>";
@@ -478,7 +478,7 @@ BackendComponentPrinter::PrintSidebar(array());
             "</form>";
     echo
             "<form method='post' action='Articlemanagement.php'><input id='back' name='back' type='submit' value='Zurück'>".
-            "<input id='pageName' name='pageName' type='hidden' value='".$pageName."'>".
+            "<input id='pageName' name='pageName' type='hidden' value='".utf8_encode($pageName)."'>".
             "<form>";
     echo
             "</main></body></html>";
