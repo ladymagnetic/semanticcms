@@ -174,5 +174,158 @@ class TemplateParser
 			}
 			return $headerArray;
 	}
+
+
+	/**
+	* Gives the Background data of the TemplateName.xml
+	*
+	*/
+	public function GetBackground($TemplateName)
+	{
+
+			$doc = new DOMDocument();
+			$doc->load("templates/".$TemplateName.".xml");
+
+
+  		$backgroundArray;
+			$i=0;
+			while(is_object($backgroundArray = $doc->getElementsByTagName("Background")->item($i)))
+			{
+				foreach($backgroundArray->childNodes as $nodename)
+			  {
+			    $backgroundArray[$nodename->nodeName] = $nodename->nodeValue;
+			  }
+			  $i++;
+			}
+			return $backgroundArray;
+	}
+
+
+	/**
+	* Gives the Menu data of the TemplateName.xml
+	*
+	*/
+	public function GetMenu($TemplateName)
+	{
+
+			$doc = new DOMDocument();
+			$doc->load("templates/".$TemplateName.".xml");
+
+
+  		$menuArray;
+			$i=0;
+			while(is_object($menuArray = $doc->getElementsByTagName("Menu")->item($i)))
+			{
+				foreach($menuArray->childNodes as $nodename)
+			  {
+			    $menuArray[$nodename->nodeName] = $nodename->nodeValue;
+			  }
+			  $i++;
+			}
+			return $menuArray;
+	}
+
+
+	/**
+	* Gives the ArticleContainer data of the TemplateName.xml
+	*
+	*/
+	public function GetArticleContainer($TemplateName)
+	{
+
+			$doc = new DOMDocument();
+			$doc->load("templates/".$TemplateName.".xml");
+
+
+  		$articleContainerArray;
+			$i=0;
+			while(is_object($articleContainerArray = $doc->getElementsByTagName("ArticleContainer")->item($i)))
+			{
+				foreach($articleContainerArray->childNodes as $nodename)
+			  {
+			    $articleContainerArray[$nodename->nodeName] = $nodename->nodeValue;
+			  }
+			  $i++;
+			}
+			return $articleContainerArray;
+	}
+
+
+	/**
+	* Gives the Footer data of the TemplateName.xml
+	*
+	*/
+	public function GetFooter($TemplateName)
+	{
+
+			$doc = new DOMDocument();
+			$doc->load("templates/".$TemplateName.".xml");
+
+
+  		$footerArray;
+			$i=0;
+			while(is_object($footerArray = $doc->getElementsByTagName("Footer")->item($i)))
+			{
+				foreach($footerArray->childNodes as $nodename)
+			  {
+			    $footerArray[$nodename->nodeName] = $nodename->nodeValue;
+			  }
+			  $i++;
+			}
+			return $footerArray;
+	}
+
+
+	/**
+	* Gives the Button data of the TemplateName.xml
+	*
+	*/
+	public function GetButton($TemplateName)
+	{
+
+			$doc = new DOMDocument();
+			$doc->load("templates/".$TemplateName.".xml");
+
+
+  		$buttonArray;
+			$i=0;
+			while(is_object($buttonArray = $doc->getElementsByTagName("Button")->item($i)))
+			{
+				foreach($buttonArray->childNodes as $nodename)
+			  {
+			    $buttonArray[$nodename->nodeName] = $nodename->nodeValue;
+			  }
+			  $i++;
+			}
+			return $buttonArray;
+	}
+
+
+	/**
+	* Gives the PlugIn data of the TemplateName.xml
+	*
+	*/
+	public function GetPlugIn($TemplateName)
+	{
+
+			$doc = new DOMDocument();
+			$doc->load("templates/".$TemplateName.".xml");
+
+
+			$plugInArray;
+			$i=0;
+			while(is_object($plugInArray = $doc->getElementsByTagName("PlugIns")->item($i)))
+			{
+				foreach($plugInArray->childNodes as $nodename)
+				{
+					$plugInArray[$nodename->nodeName] = $nodename->nodeValue;
+				}
+				$i++;
+			}
+			return $plugInArray;
+	}
+
+
+
 }
 ?>
