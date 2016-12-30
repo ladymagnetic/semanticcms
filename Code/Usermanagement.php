@@ -345,7 +345,10 @@ echo
 
         </html>";
 
-
+/**
+* Opens the page for the details of the user
+*
+*/
 function EditUser($userId, $dbUser)
 {
     BackendComponentPrinter::PrintHead("Benutzerverwaltung", $jquery=true);
@@ -445,6 +448,10 @@ BackendComponentPrinter::PrintDatatablesPlugin();
 
             </html>";
 }
+/**
+* Opens the page for editing the role
+*
+*/
 function EditRole($roleId, $dbUser)
 {
     BackendComponentPrinter::PrintHead("Benutzerverwaltung");
@@ -548,6 +555,11 @@ BackendComponentPrinter::PrintSidebar(array());
 
             </html>";
 }
+
+/**
+* Opens the page to create a new user
+*
+*/
 function CreateNewUser($dbUser)
 {
     BackendComponentPrinter::PrintHead("Benutzerverwaltung");
@@ -631,6 +643,11 @@ BackendComponentPrinter::PrintSidebar(array());
     echo
             "</main></body></html>";
 }
+
+/**
+* Opens the page to create a new role
+*
+*/
 function CreateNewRole($dbUser)
 {
     BackendComponentPrinter::PrintHead("Benutzerverwaltung");
@@ -694,6 +711,10 @@ BackendComponentPrinter::PrintSidebar(array());
             "</main></body></html>";
 }
 
+/**
+* Opens the page to ban a new user
+*
+*/
 function BanUser($userId, $dbUser)
 {
     BackendComponentPrinter::PrintHead("Benutzerverwaltung");
@@ -770,6 +791,10 @@ BackendComponentPrinter::PrintSidebar(array());
             "</main></body></html>";
 }
 
+/**
+* Opens the page to decide if raelly delete
+*
+*/
 function ReallyDelete($userId)
 {
     BackendComponentPrinter::PrintHead("Benutzerverwaltung");
@@ -812,6 +837,10 @@ BackendComponentPrinter::PrintSidebar(array());
 
 }
 
+/**
+* Opens the page to decide if really delete role
+*
+*/
 function ReallyDeleteRole($roleId)
 {
     BackendComponentPrinter::PrintHead("Benutzerverwaltung");
@@ -854,7 +883,10 @@ BackendComponentPrinter::PrintSidebar(array());
 
 }
 
-// call by reference --> &
+/**
+* Sets the permissions from the form to variables (call by reference --> &)
+*
+*/
 function SetPermissionsFromForm(&$guestbookmanagement, &$usermanagement, &$pagemanagement, &$articlemanagement, &$guestbookusage, &$templateconstruction)
 {
     if (isset($_POST['guestbookmanagement']))

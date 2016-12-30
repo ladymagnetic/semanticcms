@@ -137,6 +137,10 @@ else if (isset($_POST['updateArticle']))
 
 CreateArticleManagement("", $dbContent);
 
+/**
+* Creates the default article management page
+*
+*/
 function CreateArticleManagement($pageName, $dbContent)
 {
     BackendComponentPrinter::PrintHead("Inhaltsverwaltung", $jquery=true);
@@ -231,6 +235,10 @@ function CreateArticleManagement($pageName, $dbContent)
             </html>";
 }
 
+/**
+* Opens the page to create a new article
+*
+*/
 function CreateNewArticle($pageName, $dbContent)
 {
     BackendComponentPrinter::PrintHead("Inhaltsverwaltung", $jquery=true);
@@ -322,6 +330,10 @@ function CreateNewArticle($pageName, $dbContent)
             "<main></body></html>";
 }
 
+/**
+* Opens the page to edit a article
+*
+*/
 function EditArticle($pageName, $articleId, $dbContent, $dbUser)
 {
     BackendComponentPrinter::PrintHead("Inhaltsverwaltung", $jquery=true);
@@ -423,6 +435,11 @@ function EditArticle($pageName, $articleId, $dbContent, $dbUser)
     echo
         "<main></body></html>";
 }
+
+/**
+* Opens the page to decide if really delete article
+*
+*/
 function ReallyDelete($articleId, $pageName)
 {
     BackendComponentPrinter::PrintHead("Inhaltsverwaltung");
