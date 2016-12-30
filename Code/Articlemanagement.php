@@ -326,6 +326,23 @@ function CreateNewArticle($pageName, $dbContent)
             "<form method='post' action='Articlemanagement.php'><input id='back' name='back' type='submit' value='Zurück'>
             <input id='pageName' name='pageName' type='hidden' value='".$pageName."'>
             <form>";
+    /* ---- Writing Assistant ---- */
+    echo
+    /* ml-lod-live */
+    echo
+            "<link rel='stylesheet' href='media/ml-lodlive/dist/ml-lodlive.all.css'>
+
+            <div id='graph' style='width: 100%; height: 600px;'></div>
+
+            <!-- Would like to remove these deps -->
+            <script src='media/ml-lodlive/dist/ml-lodlive.complete.js'></script>
+
+            <!-- this is now just a customized options object, might make sense to just pass it in as part of init rather then with the constructor -->
+            <script src='media/ml-lodlive/js/profile/profile.example.js'></script>
+            <script>
+            'use strict';
+            jQuery('#graph').lodlive({ profile: ExampleProfile, firstUri: 'http://dbpedia.org/resource/".str_replace(" ", "_", $pageName)."', ignoreBnodes: true }); // 'http://dbpedia.org/resource/Philadelphia_Flyers'
+            </script>";
     echo
             "<main></body></html>";
 }
