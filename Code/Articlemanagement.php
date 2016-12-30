@@ -267,7 +267,7 @@ function CreateNewArticle($pageName, $dbContent)
         <script src='http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.js'></script>";
     echo
         "<main>
-            <h1>Inhalt erstellen</h1>
+            <h1><i class='fa fa-align-justify fontawesome'></i> Inhalt erstellen</h1>
             <form method='post' action='ArticleManagement.php'>
             <label for='header'>Überschrift</label>
             <input required id='header' name='header' type='text'><br><br>
@@ -360,7 +360,7 @@ function EditArticle($pageName, $articleId, $dbContent, $dbUser)
     $authorName = $dbUser->FetchArray($dbUser->GetUserInformationById($articleRow['author']))['username'];
     echo
         "<main>
-            <h1>Inhalt bearbeiten</h1>
+            <h1><i class='fa fa-align-justify fontawesome'></i> Inhalt bearbeiten</h1>
             <form method='post' action='ArticleManagement.php'>
             <label for='header'>Überschrift</label>
             <input required id='header' name='header' type='text' value='".$articleRow['header']."'><br><br>
