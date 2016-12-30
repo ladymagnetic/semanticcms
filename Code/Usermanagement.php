@@ -271,7 +271,7 @@ while ($row = $dbUser->FetchArray($userRows))
                         "<form method='post' action='Usermanagement.php'>
                         <input id='banId' name='banId' type='hidden' value='".$banRow['id']."'>".
                         "<p>".$reason."<p>".
-                        "<input id='deban' name='deban' type='submit' value='entsperren'>";
+                        "<input id='deban' name='deban' type='submit' value='entsperren'></form>";
                         $tableRow2 .=  "<br>";
                     }
                     else
@@ -280,7 +280,7 @@ while ($row = $dbUser->FetchArray($userRows))
                         "<form method='post' action='Usermanagement.php'>
                         <input id='banId' name='banId' type='hidden' value='".$banRow['id']."'>".
                         "<p>".$reason."<p>".
-                        "<input id='deban' name='deban' type='submit' value='entsperren'>";
+                        "<input id='deban' name='deban' type='submit' value='entsperren'></form";
                         $tableRow2 .=  "<br>";
                     }
                 }
