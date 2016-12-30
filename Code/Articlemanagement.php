@@ -328,6 +328,7 @@ function CreateNewArticle($pageName, $dbContent)
             <form>";
     /* ---- Writing Assistant ---- */
     echo
+            "<h1><i class='fa fa-share-alt fontawesome'></i> Semantische Mindmap</h1>";
     /* ml-lod-live */
     echo
             "<link rel='stylesheet' href='media/ml-lodlive/dist/ml-lodlive.all.css'>
