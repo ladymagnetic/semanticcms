@@ -117,6 +117,26 @@ class DbUser
 		$whichRoleHasASpecialUser = "SELECT user.username, role.rolename FROM user INNER JOIN role ON user.role_id = role.id WHERE user.username = ?";
 		$this->database->PrepareStatement("whichRoleHasASpecialUser", $whichRoleHasASpecialUser);
 		
+		
+		$selectAllLogs = "SELECT * FROM logtable ORDER BY logtable.logdate ASC";
+		$this->database->PrepareStatement("selectAllLogs", $selectAllLogs);
+
+		$selectOneLogById = "SELECT * FROM logtable WHERE id = ?";
+		$this->database->PrepareStatement("selectOneLogById", $selectOneLogById);
+
+		$deleteAllLogs = "DELETE FROM logtable";
+		$this->database->PrepareStatement("deleteAllLogs", $deleteAllLogs);
+
+
+	 	$deleteOneLogById = "DELETE FROM logtable WHERE id = ?";
+	 	$this->database->PrepareStatement("deleteOneLogById", $deleteOneLogById);
+
+		$selectAllLogsFromASpecialDateByLogdate = "SELECT * FROM logtable WHERE logdate = ? ORDER BY logdate ASC";
+		$this->database->PrepareStatement("selectAllLogsFromASpecialDateByLogdate", $selectAllLogsFromASpecialDateByLogdate);
+
+		$selectAllLogsFromOneUserByUsername = "SELECT * FROM logtable WHERE logtable.username = ?";
+		$this->database->PrepareStatement("selectAllLogsFromOneUserByUsername", $selectAllLogsFromOneUserByUsername);
+
 	}
 
 
@@ -188,6 +208,100 @@ class DbUser
 		return $result;
 	}
 
+
+	
+	
+	/**
+	* SelectAllLogs()
+	*/
+	public function SelectAllLogs()
+	{
+		return $this->database->ExecutePreparedStatement("selectAllLogs", array());
+	}
+
+
+	/**
+	* SelectOneLogById()
+	* @params int $logtableId the id of the logtable
+	*/
+	public function SelectOneLogById($logtableId)
+	{
+			return $this->database->ExecutePreparedStatement("selectOneLogById", array($logtableId));
+	}
+	
+	
+
+	/**
+	* SelectAllLogsFromOneUserByUsername()
+	* @params string $logtableUsername is the user who changed something => the user who is responsible for the new log in the logtable
+	*/
+	public function SelectAllLogsFromOneUserByUsername($logtableUsername)
+	{
+			return $this->database->ExecutePreparedStatement("selectAllLogsFromOneUserByUsername", array($logtableUsername));
+	}
+
+	
+	
+	/**
+	* SelectAllLogsFromASpecialDateByLogdate()
+	* @params string $logtableLogdate
+	*/
+	public function SelectAllLogsFromASpecialDateByLogdate($logtableLogdate)
+	{
+			return $this->database->ExecutePreparedStatement("selectAllLogsFromASpecialDateByLogdate", array($logtableLogdate));
+	}
+	
+	
+	
+	/**
+	* DeleteAllLogs()
+	*/
+	public function DeleteAllLogs()
+	{
+		$result =  $this->database->ExecutePreparedStatement("deleteAllLogs", array());
+
+		if($result==true)
+		{
+				$logUsername = 'Wer ist gerade angemeldet?';
+				$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
+				//$logDescription = 'der User: '.$usersName.' wurde gelöscht';
+				$logDescription = 'Es wurden alle Logs gelöscht';
+				$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+				return true;
+		}
+		else
+		{
+			 return false;
+		}
+	}
+
+	
+	
+	/**  => @Theresa: bin mir eigentlich fast sicher, dass wir diese nicht brauchen werden weil eigentlich sinnlos aber ich wollte sie dir trotzdem zur Verfügung stellen. VG, Mirjam
+	* DeleteOneLogById() 							
+	* @params int $logtableId the id of the logtable
+ 	*/
+	public function DeleteOneLogById($logtableId)
+	{
+		$result = $this->database->ExecutePreparedStatement("deleteOneLogById", array($logtableId));
+
+		if($result==true)
+		{
+			// Vorausgesetzt man braucht die Funktion ÜBERHAUPT =>
+ 			// hier => InsertNewLog($logUsername, $logRolename, $logDescription); => macht wenig Sinn =>
+			// mit würde bedeuten: Sobald man einen Log in der Logtabelle löscht wird in die Logtabelle eingetragen werden, dass dieser Log gelöscht wurde. :)
+		 	return true;
+		}
+		else
+		{
+			 return false;
+		}
+	}
+
+	
+	
+	
+	
 	
 	/* --- ENDE --- --- --- --- --- --- --- --- --- --- --- --- --- für die Startseite: Statistik für Admin --- --- --- --- --- --- --- --- ENDE --- */
 	
