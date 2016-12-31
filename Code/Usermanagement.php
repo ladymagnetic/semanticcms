@@ -231,7 +231,7 @@ BackendComponentPrinter::PrintDatatablesPlugin();
 
 echo
 "<main>
-    <h1><i class='fa fa-user fontawesome'></i> Benutzerverwaltung</h1>";
+    <h1><i class='fa fa-users fontawesome'></i> Benutzerverwaltung</h1>";
 BackendComponentPrinter::PrintTableStart(array("Benutzer", "entsperren/sperren", "Rolle", "Aktion"));
 // foreach user in database print
 $userRows = $dbUser->SelectAllUsers();
@@ -383,7 +383,7 @@ function EditUser($userId, $dbUser)
     
     echo
             "<main>
-            <h1><i class='fa fa-user fontawesome'></i> Benutzerdetails</h1>
+            <h1><i class='fa fa-users fontawesome'></i> Benutzerdetails</h1>
                 <form method='post' action='Usermanagement.php'>";
     $userRow = $dbUser->FetchArray($dbUser->GetUserInformationById($userId));
     echo
@@ -607,7 +607,7 @@ function CreateNewUser($dbUser)
 
     echo
             "<main>
-            <h1><i class='fa fa-user fontawesome'></i> Neuer Benutzer</h1>
+            <h1><i class='fa fa-users fontawesome'></i> Neuer Benutzer</h1>
             <form method='post' action='Usermanagement.php'>";
     echo
             "<label for='userName'>Benutzername</label>
