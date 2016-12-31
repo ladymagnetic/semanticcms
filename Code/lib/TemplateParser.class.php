@@ -189,9 +189,9 @@ class TemplateParser
 
   		$backgroundArray;
 			$i=0;
-			while(is_object($backgroundArray = $doc->getElementsByTagName("Background")->item($i)))
+			while(is_object($background = $doc->getElementsByTagName("Background")->item($i)))
 			{
-				foreach($backgroundArray->childNodes as $nodename)
+				foreach($background->childNodes as $nodename)
 			  {
 			    $backgroundArray[$nodename->nodeName] = $nodename->nodeValue;
 			  }
@@ -214,9 +214,9 @@ class TemplateParser
 
   		$menuArray;
 			$i=0;
-			while(is_object($menuArray = $doc->getElementsByTagName("Menu")->item($i)))
+			while(is_object($menu = $doc->getElementsByTagName("Menu")->item($i)))
 			{
-				foreach($menuArray->childNodes as $nodename)
+				foreach($menu->childNodes as $nodename)
 			  {
 			    $menuArray[$nodename->nodeName] = $nodename->nodeValue;
 			  }
@@ -239,9 +239,9 @@ class TemplateParser
 
   		$articleContainerArray;
 			$i=0;
-			while(is_object($articleContainerArray = $doc->getElementsByTagName("ArticleContainer")->item($i)))
+			while(is_object($articleContainer = $doc->getElementsByTagName("ArticleContainer")->item($i)))
 			{
-				foreach($articleContainerArray->childNodes as $nodename)
+				foreach($articleContainer->childNodes as $nodename)
 			  {
 			    $articleContainerArray[$nodename->nodeName] = $nodename->nodeValue;
 			  }
@@ -264,9 +264,9 @@ class TemplateParser
 
   		$footerArray;
 			$i=0;
-			while(is_object($footerArray = $doc->getElementsByTagName("Footer")->item($i)))
+			while(is_object($footer = $doc->getElementsByTagName("Footer")->item($i)))
 			{
-				foreach($footerArray->childNodes as $nodename)
+				foreach($footer->childNodes as $nodename)
 			  {
 			    $footerArray[$nodename->nodeName] = $nodename->nodeValue;
 			  }
@@ -289,9 +289,9 @@ class TemplateParser
 
   		$buttonArray;
 			$i=0;
-			while(is_object($buttonArray = $doc->getElementsByTagName("Button")->item($i)))
+			while(is_object($button = $doc->getElementsByTagName("Button")->item($i)))
 			{
-				foreach($buttonArray->childNodes as $nodename)
+				foreach($button->childNodes as $nodename)
 			  {
 			    $buttonArray[$nodename->nodeName] = $nodename->nodeValue;
 			  }
@@ -314,9 +314,9 @@ class TemplateParser
 
 			$plugInArray;
 			$i=0;
-			while(is_object($plugInArray = $doc->getElementsByTagName("PlugIns")->item($i)))
+			while(is_object($plugIn = $doc->getElementsByTagName("PlugIns")->item($i)))
 			{
-				foreach($plugInArray->childNodes as $nodename)
+				foreach($plugIn->childNodes as $nodename)
 				{
 					$plugInArray[$nodename->nodeName] = $nodename->nodeValue;
 				}
