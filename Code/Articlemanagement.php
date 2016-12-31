@@ -73,10 +73,10 @@ else if (isset($_POST['newArticle'])) {
 else if (isset($_POST['publish']))
 {
     $pageId = intval($dbContent->FetchArray($dbContent->SelectPageByPagename(utf8_encode($_POST['pageSelect'])))['id']);
-    $header = $_POST['header'];
-    $content = $_POST['content'];
+    $header = utf8_decode($_POST['header']);
+    $content = utf8_decode($_POST['content']);
     $date = date("Y-m-d");
-    $type = $_POST['type'];
+    $type = utf8_decode($_POST['type']);
     if (isset($_POST['public']))
     {
         $public = 1;
@@ -104,11 +104,11 @@ else if (isset($_POST['publish']))
 // if submit button with name 'updateArticle' is pressed
 else if (isset($_POST['updateArticle']))
 {
-    $pageId = intval($dbContent->FetchArray($dbContent->SelectPageByPagename(utf8_encode($_POST['pageSelect'])))['id']);
-    $header = $_POST['header'];
-    $content = $_POST['content'];
+    $pageId = intval($dbContent->FetchArray($dbContent->SelectPageByPagename(utf8_decode($_POST['pageSelect'])))['id']);
+    $header = utf8_decode($_POST['header']);
+    $content = utf8_decode($_POST['content']);
     $date = date("Y-m-d"); 
-    $type = $_POST['type'];
+    $type = utf8_decode($_POST['type']);
     if (isset($_POST['public']))
     {
         $public = 1;
@@ -117,7 +117,7 @@ else if (isset($_POST['updateArticle']))
     {
         $public = 0;
     }
-    $description = $_POST['description'];
+    $description = utf8_decode($_POST['description']);
     $articleId = intval($_POST['articleId']);
     if(isset($_SESSION['username'])) 
     {

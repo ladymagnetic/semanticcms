@@ -23,10 +23,10 @@ $dbUser = new DbUser($config['cms_db']['dbhost'], $config['cms_db']['dbuser'], $
 if (isset($_POST['applyChanges']))
 {
     $userId = intval($_POST['userId']);
-    $userName = $_POST['userName'];
-    $name = $_POST['name'];
-    $foreName = $_POST['foreName'];
-    $email = $_POST['email'];
+    $userName = utf8_decode($_POST['userName']);
+    $name = utf8_decode($_POST['name']);
+    $foreName = utf8_decode($_POST['foreName']);
+    $email = utf8_decode($_POST['email']);
     if ($dbUser->EmailAlreadyExists($email))
     {
         echo

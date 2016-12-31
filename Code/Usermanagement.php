@@ -36,7 +36,7 @@ else if (isset($_POST['banUser']))
 {
     $user_id = intval($_POST['userId']); 
     $reason_id = intval($_POST['reasonId']); 
-    $description = $_POST['description']; 
+    $description = utf8_decode($_POST['description']); 
     $begindatetime = $_POST['begindatetime'];
     $enddatetime = $_POST['enddatetime'];
     $dbUser->InsertBanViaUserId($user_id, $reason_id, $description, $begindatetime, $enddatetime);
@@ -75,7 +75,7 @@ else if (isset($_POST['newRole'])) {
 }
 // if submit button with name 'assignRole' is pressed
 else if (isset($_POST['assignRole'])) {
-    $roleId = intval($dbUser->FetchArray($dbUser->SelectRoleByRolename($_POST['assignedRole']))['id']);
+    $roleId = intval($dbUser->FetchArray($dbUser->SelectRoleByRolename(utf8_decode($_POST['assignedRole'])))['id']);
     $userId = intval($_POST['userId']);
     $dbUser->AssignRole($roleId, $userId);
 }
@@ -102,12 +102,12 @@ else if (isset($_POST['roleDetails'])) {
 // if submit button with name 'registrateUser' is pressed
 else if (isset($_POST['registrateUser']))
 {
-    $role_id = intval($dbUser->FetchArray($dbUser->SelectRoleByRolename($_POST['assignedRole']))['id']);
-    $lastname = $_POST['name'];
-    $firstname = $_POST['foreName'];
-    $username = $_POST['userName'];
+    $role_id = intval($dbUser->FetchArray($dbUser->SelectRoleByRolename(utf8_decode($_POST['assignedRole'])))['id']);
+    $lastname = utf8_decode($_POST['name']);
+    $firstname = utf8_decode($_POST['foreName']);
+    $username = utf8_decode($_POST['userName']);
     $password = $_POST['currentPassword'];
-    $email = $_POST['email'];
+    $email = utf8_decode($_POST['email']);
     $birthdate = $_POST['birthdate'];
     if ($dbUser->EmailAlreadyExists($email))
     {
@@ -186,16 +186,16 @@ else if (isset($_POST['registrateUser']))
 else if (isset($_POST['saveRoleChanges'])) 
 {
     $id = intval($_POST['roleId']);
-    $rolename = $_POST['roleName'];
-    $uri = $_POST['uri'];
+    $rolename = utf8_decode($_POST['roleName']);
+    $uri = utf8_decode($_POST['uri']);
     SetPermissionsFromForm($guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction);
     $dbUser->UpdateRoleById($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $id);
 }
 // if submit button with name 'createRole' is pressed
 else if (isset($_POST['createRole'])) 
 {
-    $rolename = $_POST['rolename'];
-    $uri = $_POST['uri'];
+    $rolename = utf8_decode($_POST['rolename']);
+    $uri = utf8_decode($_POST['uri']);
     SetPermissionsFromForm($guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction);
     $dbUser->NewRole($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction);
 }
