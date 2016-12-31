@@ -201,23 +201,28 @@ else if (isset($_POST['createRole']))
 }
 
 BackendComponentPrinter::PrintHead("Benutzerverwaltung", $jquery=true);
-/* menue */
+//*----- Permissions ----- */
+    /* Include(s) */
+    require_once 'lib/Permission.enum.php';
+    require_once 'config/config.php';
+    
+    /* ----------------------------------------------------------------------------- Config-Kram vorerst ausgeklammert */
     /* Check if user is logged in */
-    /*----- Permissions ----- */
-    if(!isset($_SESSION['username'])) 
-    {
-        die($config['error']['noLogin']);  
-    }
+    //if(!isset($_SESSION['username'])) 
+    //{
+    //    die($config['error']['noLogin']);  
+    //}
     /* Check if  permissions are set */
-    else if(!isset($_SESSION['permissions']))
-    {
-        die($config['error']['permissionNotSet']);  		
-    }
+    //else if(!isset($_SESSION['permissions']))
+    //{
+    //    die($config['error']['permissionNotSet']);  		
+    //}
     /*  Check if user has the permission the see this page */
-    else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
-    {
-        die($config['error']['permissionMissing']);  	  
-    }								
+    //else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
+    //{
+    //    die($config['error']['permissionMissing']);  	  
+    //}
+    /* ----------------------------------------------------------------------------- Config-Kram vorerst ausgeklammert */		
     BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
     //*----- Permissions End ----- */
 
@@ -348,23 +353,28 @@ echo
 function EditUser($userId, $dbUser)
 {
     BackendComponentPrinter::PrintHead("Benutzerverwaltung", $jquery=true);
-    /* menue */
+    //*----- Permissions ----- */
+    /* Include(s) */
+    require_once 'lib/Permission.enum.php';
+    require_once 'config/config.php';
+    
+    /* ----------------------------------------------------------------------------- Config-Kram vorerst ausgeklammert */
     /* Check if user is logged in */
-    /*----- Permissions ----- */
-    if(!isset($_SESSION['username'])) 
-    {
-        die($config['error']['noLogin']);  
-    }
+    //if(!isset($_SESSION['username'])) 
+    //{
+    //    die($config['error']['noLogin']);  
+    //}
     /* Check if  permissions are set */
-    else if(!isset($_SESSION['permissions']))
-    {
-        die($config['error']['permissionNotSet']);  		
-    }
+    //else if(!isset($_SESSION['permissions']))
+    //{
+    //    die($config['error']['permissionNotSet']);  		
+    //}
     /*  Check if user has the permission the see this page */
-    else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
-    {
-        die($config['error']['permissionMissing']);  	  
-    }								
+    //else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
+    //{
+    //    die($config['error']['permissionMissing']);  	  
+    //}
+    /* ----------------------------------------------------------------------------- Config-Kram vorerst ausgeklammert */		
     BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
     //*----- Permissions End ----- */
     
@@ -445,23 +455,28 @@ function EditUser($userId, $dbUser)
 function EditRole($roleId, $dbUser)
 {
     BackendComponentPrinter::PrintHead("Benutzerverwaltung");
-    /* menue */
+    //*----- Permissions ----- */
+    /* Include(s) */
+    require_once 'lib/Permission.enum.php';
+    require_once 'config/config.php';
+    
+    /* ----------------------------------------------------------------------------- Config-Kram vorerst ausgeklammert */
     /* Check if user is logged in */
-    /*----- Permissions ----- */
-    if(!isset($_SESSION['username'])) 
-    {
-        die($config['error']['noLogin']);  
-    }
+    //if(!isset($_SESSION['username'])) 
+    //{
+    //    die($config['error']['noLogin']);  
+    //}
     /* Check if  permissions are set */
-    else if(!isset($_SESSION['permissions']))
-    {
-        die($config['error']['permissionNotSet']);  		
-    }
+    //else if(!isset($_SESSION['permissions']))
+    //{
+    //    die($config['error']['permissionNotSet']);  		
+    //}
     /*  Check if user has the permission the see this page */
-    else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
-    {
-        die($config['error']['permissionMissing']);  	  
-    }								
+    //else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
+    //{
+    //    die($config['error']['permissionMissing']);  	  
+    //}
+    /* ----------------------------------------------------------------------------- Config-Kram vorerst ausgeklammert */		
     BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
     //*----- Permissions End ----- */
     
@@ -548,23 +563,28 @@ function EditRole($roleId, $dbUser)
 function CreateNewUser($dbUser)
 {
     BackendComponentPrinter::PrintHead("Benutzerverwaltung");
-    /* menue */
+    //*----- Permissions ----- */
+    /* Include(s) */
+    require_once 'lib/Permission.enum.php';
+    require_once 'config/config.php';
+    
+    /* ----------------------------------------------------------------------------- Config-Kram vorerst ausgeklammert */
     /* Check if user is logged in */
-    /*----- Permissions ----- */
-    if(!isset($_SESSION['username'])) 
-    {
-        die($config['error']['noLogin']);  
-    }
+    //if(!isset($_SESSION['username'])) 
+    //{
+    //    die($config['error']['noLogin']);  
+    //}
     /* Check if  permissions are set */
-    else if(!isset($_SESSION['permissions']))
-    {
-        die($config['error']['permissionNotSet']);  		
-    }
+    //else if(!isset($_SESSION['permissions']))
+    //{
+    //    die($config['error']['permissionNotSet']);  		
+    //}
     /*  Check if user has the permission the see this page */
-    else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
-    {
-        die($config['error']['permissionMissing']);  	  
-    }								
+    //else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
+    //{
+    //    die($config['error']['permissionMissing']);  	  
+    //}
+    /* ----------------------------------------------------------------------------- Config-Kram vorerst ausgeklammert */		
     BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
     //*----- Permissions End ----- */
 
@@ -632,23 +652,28 @@ function CreateNewUser($dbUser)
 function CreateNewRole($dbUser)
 {
     BackendComponentPrinter::PrintHead("Benutzerverwaltung");
-    /* menue */
+    //*----- Permissions ----- */
+    /* Include(s) */
+    require_once 'lib/Permission.enum.php';
+    require_once 'config/config.php';
+    
+    /* ----------------------------------------------------------------------------- Config-Kram vorerst ausgeklammert */
     /* Check if user is logged in */
-    /*----- Permissions ----- */
-    if(!isset($_SESSION['username'])) 
-    {
-        die($config['error']['noLogin']);  
-    }
+    //if(!isset($_SESSION['username'])) 
+    //{
+    //    die($config['error']['noLogin']);  
+    //}
     /* Check if  permissions are set */
-    else if(!isset($_SESSION['permissions']))
-    {
-        die($config['error']['permissionNotSet']);  		
-    }
+    //else if(!isset($_SESSION['permissions']))
+    //{
+    //    die($config['error']['permissionNotSet']);  		
+    //}
     /*  Check if user has the permission the see this page */
-    else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
-    {
-        die($config['error']['permissionMissing']);  	  
-    }								
+    //else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
+    //{
+    //    die($config['error']['permissionMissing']);  	  
+    //}
+    /* ----------------------------------------------------------------------------- Config-Kram vorerst ausgeklammert */		
     BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
     //*----- Permissions End ----- */
     
@@ -694,23 +719,28 @@ function CreateNewRole($dbUser)
 function BanUser($userId, $dbUser)
 {
     BackendComponentPrinter::PrintHead("Benutzerverwaltung");
-    /* menue */
+    //*----- Permissions ----- */
+    /* Include(s) */
+    require_once 'lib/Permission.enum.php';
+    require_once 'config/config.php';
+    
+    /* ----------------------------------------------------------------------------- Config-Kram vorerst ausgeklammert */
     /* Check if user is logged in */
-    /*----- Permissions ----- */
-    if(!isset($_SESSION['username'])) 
-    {
-        die($config['error']['noLogin']);  
-    }
+    //if(!isset($_SESSION['username'])) 
+    //{
+    //    die($config['error']['noLogin']);  
+    //}
     /* Check if  permissions are set */
-    else if(!isset($_SESSION['permissions']))
-    {
-        die($config['error']['permissionNotSet']);  		
-    }
+    //else if(!isset($_SESSION['permissions']))
+    //{
+    //    die($config['error']['permissionNotSet']);  		
+    //}
     /*  Check if user has the permission the see this page */
-    else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
-    {
-        die($config['error']['permissionMissing']);  	  
-    }								
+    //else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
+    //{
+    //    die($config['error']['permissionMissing']);  	  
+    //}
+    /* ----------------------------------------------------------------------------- Config-Kram vorerst ausgeklammert */		
     BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
     //*----- Permissions End ----- */
 
@@ -770,23 +800,28 @@ function BanUser($userId, $dbUser)
 function ReallyDelete($userId)
 {
     BackendComponentPrinter::PrintHead("Benutzerverwaltung");
-    /* menue */
+    //*----- Permissions ----- */
+    /* Include(s) */
+    require_once 'lib/Permission.enum.php';
+    require_once 'config/config.php';
+    
+    /* ----------------------------------------------------------------------------- Config-Kram vorerst ausgeklammert */
     /* Check if user is logged in */
-    /*----- Permissions ----- */
-    if(!isset($_SESSION['username'])) 
-    {
-        die($config['error']['noLogin']);  
-    }
+    //if(!isset($_SESSION['username'])) 
+    //{
+    //    die($config['error']['noLogin']);  
+    //}
     /* Check if  permissions are set */
-    else if(!isset($_SESSION['permissions']))
-    {
-        die($config['error']['permissionNotSet']);  		
-    }
+    //else if(!isset($_SESSION['permissions']))
+    //{
+    //    die($config['error']['permissionNotSet']);  		
+    //}
     /*  Check if user has the permission the see this page */
-    else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
-    {
-        die($config['error']['permissionMissing']);  	  
-    }								
+    //else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
+    //{
+    //    die($config['error']['permissionMissing']);  	  
+    //}
+    /* ----------------------------------------------------------------------------- Config-Kram vorerst ausgeklammert */		
     BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
     //*----- Permissions End ----- */
 
@@ -812,26 +847,31 @@ function ReallyDelete($userId)
 function ReallyDeleteRole($roleId)
 {
     BackendComponentPrinter::PrintHead("Benutzerverwaltung");
-    /* menue */
+    //*----- Permissions ----- */
+    /* Include(s) */
+    require_once 'lib/Permission.enum.php';
+    require_once 'config/config.php';
+    
+    /* ----------------------------------------------------------------------------- Config-Kram vorerst ausgeklammert */
     /* Check if user is logged in */
-    /*----- Permissions ----- */
-    if(!isset($_SESSION['username'])) 
-    {
-        die($config['error']['noLogin']);  
-    }
+    //if(!isset($_SESSION['username'])) 
+    //{
+    //    die($config['error']['noLogin']);  
+    //}
     /* Check if  permissions are set */
-    else if(!isset($_SESSION['permissions']))
-    {
-        die($config['error']['permissionNotSet']);  		
-    }
+    //else if(!isset($_SESSION['permissions']))
+    //{
+    //    die($config['error']['permissionNotSet']);  		
+    //}
     /*  Check if user has the permission the see this page */
-    else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
-    {
-        die($config['error']['permissionMissing']);  	  
-    }								
+    //else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
+    //{
+    //    die($config['error']['permissionMissing']);  	  
+    //}
+    /* ----------------------------------------------------------------------------- Config-Kram vorerst ausgeklammert */		
     BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
     //*----- Permissions End ----- */
-    
+
     echo
             "<main><form method='post' action='Usermanagement.php'>".
             "<input id='roleId' name='roleId' type='hidden' value='".$roleId."'><br><br>".

@@ -103,25 +103,30 @@ else if (isset($_POST['applyPasswordChanges']))
 }
 
 BackendComponentPrinter::PrintHead("Konto bearbeiten", $jquery=true);
-/* menue */
-/* Check if user is logged in */
-/*----- Permissions ----- */
-if(!isset($_SESSION['username'])) 
-{
-    die($config['error']['noLogin']);  
-}
-/* Check if  permissions are set */
-else if(!isset($_SESSION['permissions']))
-{
-    die($config['error']['permissionNotSet']);  		
-}
-/*  Check if user has the permission the see this page */
-else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
-{
-    die($config['error']['permissionMissing']);  	  
-}								
-BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
-//*----- Permissions End ----- */
+//*----- Permissions ----- */
+    /* Include(s) */
+    require_once 'lib/Permission.enum.php';
+    require_once 'config/config.php';
+    
+    /* ----------------------------------------------------------------------------- Config-Kram vorerst ausgeklammert */
+    /* Check if user is logged in */
+    //if(!isset($_SESSION['username'])) 
+    //{
+    //    die($config['error']['noLogin']);  
+    //}
+    /* Check if  permissions are set */
+    //else if(!isset($_SESSION['permissions']))
+    //{
+    //    die($config['error']['permissionNotSet']);  		
+    //}
+    /*  Check if user has the permission the see this page */
+    //else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
+    //{
+    //    die($config['error']['permissionMissing']);  	  
+    //}
+    /* ----------------------------------------------------------------------------- Config-Kram vorerst ausgeklammert */		
+    BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
+    //*----- Permissions End ----- */
     
 /* Datepicker */
     echo
