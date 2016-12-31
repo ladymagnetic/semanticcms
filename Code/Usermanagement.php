@@ -378,6 +378,9 @@ function EditUser($userId, $dbUser)
     BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
     //*----- Permissions End ----- */
     
+    /* Datatables */
+    BackendComponentPrinter::PrintDatatablesPlugin();
+    
     echo
             "<main>
             <h1><i class='fa fa-user fontawesome'></i> Benutzerdetails</h1>

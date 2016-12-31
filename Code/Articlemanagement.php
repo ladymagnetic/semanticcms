@@ -267,7 +267,13 @@ function CreateNewArticle($pageName, $dbContent)
     /* ----------------------------------------------------------------------------- Config-Kram vorerst ausgeklammert */		
     BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
     //*----- Permissions End ----- */
-
+    /* specific style because of summernote */
+    echo
+        "<script>
+            $(document).ready(function() {
+                $('ul li a').addClass('contentEditMenue');
+            });
+        </script>";
     /* Summernote */
     echo 
         "<link href='http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.css' rel='stylesheet'>
@@ -381,7 +387,13 @@ function EditArticle($pageName, $articleId, $dbContent, $dbUser)
     /* ----------------------------------------------------------------------------- Config-Kram vorerst ausgeklammert */		
     BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
     //*----- Permissions End ----- */
-
+    /* specific style because of summernote */
+    echo
+        "<script>
+            $(document).ready(function() {
+                $('ul li a').addClass('contentEditMenue');
+            });
+        </script>";
     /* Summernote */
     echo 
         "<link href='http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.css' rel='stylesheet'>

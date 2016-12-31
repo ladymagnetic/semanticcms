@@ -66,7 +66,7 @@ BackendComponentPrinter::PrintHead("Konto bearbeiten", $jquery=true);
     //*----- Permissions End ----- */
 echo
         "<main>
-        <h1><i class='fa fa-user fontawesome'></i> Benutzer bearbeiten</h1>
+        <h1><i class='fa fa-user fontawesome'></i> Kontoeinstellungen</h1>
             <form method='post' action='Accountsettings.php'>";
 $userRow = $dbUser->FetchArray($dbUser->GetUserInformationByUsername($_SESSION['username']));
 echo
