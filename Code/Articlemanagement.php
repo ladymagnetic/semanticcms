@@ -145,29 +145,25 @@ function CreateArticleManagement($pageName, $dbContent)
 {
     BackendComponentPrinter::PrintHead("Inhaltsverwaltung", $jquery=true);
     /* menue */
-    /* dynamisch erzeugt je nach Rechten */
     /* Check if user is logged in */
-    /*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert*/
-    //if(!isset($_SESSION['username'])) 
-    //{
-    //    die($config['error']['noLogin']);  
-    //}
+    /*----- Permissions ----- */
+    if(!isset($_SESSION['username'])) 
+    {
+        die($config['error']['noLogin']);  
+    }
     /* Check if  permissions are set */
-    //else if(!isset($_SESSION['permissions']))
-    //{
-    //    die($config['error']['permissionNotSet']);  		
-    //}
+    else if(!isset($_SESSION['permissions']))
+    {
+        die($config['error']['permissionNotSet']);  		
+    }
     /*  Check if user has the permission the see this page */
-    // Nicht vergessen nach dem kopieren die wirklich benötigte permission abzufragen!!
-    //else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
-    //{
-    //    die($config['error']['permissionMissing']);  	  
-    //}
+    else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
+    {
+        die($config['error']['permissionMissing']);  	  
+    }								
+    BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
+    //*----- Permissions End ----- */
 
-    // Printer Beispiel									
-    //BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
-    BackendComponentPrinter::PrintSidebar(array());
-    /*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert */
     /* Datatables */
     BackendComponentPrinter::PrintDatatablesPlugin();
 
@@ -243,29 +239,25 @@ function CreateNewArticle($pageName, $dbContent)
 {
     BackendComponentPrinter::PrintHead("Inhaltsverwaltung", $jquery=true);
     /* menue */
-    /* dynamisch erzeugt je nach Rechten */
     /* Check if user is logged in */
-    /*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert*/
-    //if(!isset($_SESSION['username'])) 
-    //{
-    //    die($config['error']['noLogin']);  
-    //}
+    /*----- Permissions ----- */
+    if(!isset($_SESSION['username'])) 
+    {
+        die($config['error']['noLogin']);  
+    }
     /* Check if  permissions are set */
-    //else if(!isset($_SESSION['permissions']))
-    //{
-    //    die($config['error']['permissionNotSet']);  		
-    //}
+    else if(!isset($_SESSION['permissions']))
+    {
+        die($config['error']['permissionNotSet']);  		
+    }
     /*  Check if user has the permission the see this page */
-    // Nicht vergessen nach dem kopieren die wirklich benötigte permission abzufragen!!
-    //else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
-    //{
-    //    die($config['error']['permissionMissing']);  	  
-    //}
+    else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
+    {
+        die($config['error']['permissionMissing']);  	  
+    }								
+    BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
+    //*----- Permissions End ----- */
 
-    // Printer Beispiel									
-    //BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
-    BackendComponentPrinter::PrintSidebar(array());
-    /*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert */
     /* Summernote */
     echo 
         "<link href='http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.css' rel='stylesheet'>
@@ -356,29 +348,25 @@ function EditArticle($pageName, $articleId, $dbContent, $dbUser)
 {
     BackendComponentPrinter::PrintHead("Inhaltsverwaltung", $jquery=true);
     /* menue */
-    /* dynamisch erzeugt je nach Rechten */
     /* Check if user is logged in */
-    /*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert*/
-    //if(!isset($_SESSION['username'])) 
-    //{
-    //    die($config['error']['noLogin']);  
-    //}
+    /*----- Permissions ----- */
+    if(!isset($_SESSION['username'])) 
+    {
+        die($config['error']['noLogin']);  
+    }
     /* Check if  permissions are set */
-    //else if(!isset($_SESSION['permissions']))
-    //{
-    //    die($config['error']['permissionNotSet']);  		
-    //}
+    else if(!isset($_SESSION['permissions']))
+    {
+        die($config['error']['permissionNotSet']);  		
+    }
     /*  Check if user has the permission the see this page */
-    // Nicht vergessen nach dem kopieren die wirklich benötigte permission abzufragen!!
-    //else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
-    //{
-    //    die($config['error']['permissionMissing']);  	  
-    //}
+    else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
+    {
+        die($config['error']['permissionMissing']);  	  
+    }								
+    BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
+    //*----- Permissions End ----- */
 
-    // Printer Beispiel									
-    //BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
-    BackendComponentPrinter::PrintSidebar(array());
-    /*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert */
     /* Summernote */
     echo 
         "<link href='http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.css' rel='stylesheet'>
@@ -462,29 +450,25 @@ function ReallyDelete($articleId, $pageName)
 {
     BackendComponentPrinter::PrintHead("Inhaltsverwaltung");
     /* menue */
-/* dynamisch erzeugt je nach Rechten */
-/* Check if user is logged in */
-/*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert*/
-//if(!isset($_SESSION['username'])) 
-//{
-//    die($config['error']['noLogin']);  
-//}
-/* Check if  permissions are set */
-//else if(!isset($_SESSION['permissions']))
-//{
-//    die($config['error']['permissionNotSet']);  		
-//}
-/*  Check if user has the permission the see this page */
-// Nicht vergessen nach dem kopieren die wirklich benötigte permission abzufragen!!
-//else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
-//{
-//    die($config['error']['permissionMissing']);  	  
-//}
-
-// Printer Beispiel									
-//BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
-BackendComponentPrinter::PrintSidebar(array());
-/*--------------------------------------------------------------------------------------- Permissionkram zum testen ausgeklammert */
+    /* Check if user is logged in */
+    /*----- Permissions ----- */
+    if(!isset($_SESSION['username'])) 
+    {
+        die($config['error']['noLogin']);  
+    }
+    /* Check if  permissions are set */
+    else if(!isset($_SESSION['permissions']))
+    {
+        die($config['error']['permissionNotSet']);  		
+    }
+    /*  Check if user has the permission the see this page */
+    else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
+    {
+        die($config['error']['permissionMissing']);  	  
+    }								
+    BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
+    //*----- Permissions End ----- */
+    
     echo
             "<main><form method='post' action='Articlemanagement.php'>".
             "<input id='articleId' name='articleId' type='hidden' value='".$articleId."'><br><br>".

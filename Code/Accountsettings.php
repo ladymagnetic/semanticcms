@@ -104,8 +104,8 @@ else if (isset($_POST['applyPasswordChanges']))
 
 BackendComponentPrinter::PrintHead("Konto bearbeiten", $jquery=true);
 /* menue */
-/* dynamisch erzeugt je nach Rechten */
 /* Check if user is logged in */
+/*----- Permissions ----- */
 if(!isset($_SESSION['username'])) 
 {
     die($config['error']['noLogin']);  
@@ -116,14 +116,13 @@ else if(!isset($_SESSION['permissions']))
     die($config['error']['permissionNotSet']);  		
 }
 /*  Check if user has the permission the see this page */
-// Nicht vergessen nach dem kopieren die wirklich benötigte permission abzufragen!!
 else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
 {
     die($config['error']['permissionMissing']);  	  
-}
-
-// Printer Beispiel									
-//BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
+}								
+BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
+//*----- Permissions End ----- */
+    
 /* Datepicker */
     echo
     "
