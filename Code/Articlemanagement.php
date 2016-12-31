@@ -88,7 +88,7 @@ else if (isset($_POST['publish']))
     $description = $_POST['description'];
     if(isset($_SESSION['username'])) 
     {
-        $authorId = $dbUser->FetchArray($dbUser->GetUserInformationByUsername(isset($_SESSION['username'])))['id'];
+        $authorId = $dbUser->FetchArray($dbUser->GetUserInformationByUsername($_SESSION['username']))['id'];
     }
     else
     {
@@ -121,7 +121,7 @@ else if (isset($_POST['updateArticle']))
     $articleId = intval($_POST['articleId']);
     if(isset($_SESSION['username'])) 
     {
-        $authorId = $dbUser->FetchArray($dbUser->GetUserInformationByUsername(isset($_SESSION['username'])))['id'];
+        $authorId = $dbUser->FetchArray($dbUser->GetUserInformationByUsername($_SESSION['username']))['id'];
     }
     else
     {
