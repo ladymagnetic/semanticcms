@@ -27,70 +27,7 @@ if (isset($_POST['applyChanges']))
     $name = utf8_decode($_POST['name']);
     $foreName = utf8_decode($_POST['foreName']);
     $email = utf8_decode($_POST['email']);
-    if ($dbUser->EmailAlreadyExists($email))
-    {
-        echo
-        /* Bootstrap temporary for nice alert */
-            "<!-- Latest compiled and minified CSS -->
-            <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' integrity='sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u' crossorigin='anonymous'>
-            <!-- Optional theme -->
-            <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css' integrity='sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp' crossorigin='anonymous'>
-            <!-- Latest compiled and minified JavaScript -->
-            <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' integrity='sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa' crossorigin='anonymous'></script>";
-        echo
-        "<div class='alert alert-danger warning'>
-        <strong>Warnung!</strong> Email existiert bereits.
-        </div";
-    }
-    else if ($dbUser->UsernameAlreadyExists($username))
-    {
-        echo
-        /* Bootstrap temporary for nice alert */
-            "<!-- Latest compiled and minified CSS -->
-            <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' integrity='sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u' crossorigin='anonymous'>
-            <!-- Optional theme -->
-            <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css' integrity='sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp' crossorigin='anonymous'>
-            <!-- Latest compiled and minified JavaScript -->
-            <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' integrity='sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa' crossorigin='anonymous'></script>";
-        echo
-        "<div class='alert alert-danger warning'>
-        <strong>Warnung!</strong> Benutzername existiert bereits.
-        </div";
-    }
-    // check if valid mail
-    else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        echo
-        /* Bootstrap temporary for nice alert */
-            "<!-- Latest compiled and minified CSS -->
-            <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' integrity='sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u' crossorigin='anonymous'>
-            <!-- Optional theme -->
-            <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css' integrity='sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp' crossorigin='anonymous'>
-            <!-- Latest compiled and minified JavaScript -->
-            <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' integrity='sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa' crossorigin='anonymous'></script>";
-        echo
-        "<div class='alert alert-danger warning'>
-        <strong>Warnung!</strong> Invalide email.
-        </div";
-    }
-    // check if username is only characters, numbers and _
-    if (!preg_match('/^[a-zA-Z0-9_]{1,}$/',$username)) {
-        echo
-        /* Bootstrap temporary for nice alert */
-            "<!-- Latest compiled and minified CSS -->
-            <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' integrity='sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u' crossorigin='anonymous'>
-            <!-- Optional theme -->
-            <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css' integrity='sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp' crossorigin='anonymous'>
-            <!-- Latest compiled and minified JavaScript -->
-            <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' integrity='sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa' crossorigin='anonymous'></script>";
-        echo
-        "<div class='alert alert-danger warning'>
-        <strong>Warnung!</strong> Der Benutzername darf nur Buchstaben, Zahlen und Unterstriche enthalten.
-        </div";
-    }
-    else
-    {
-        $dbUser->UpdateUserDifferentNamesById($name, $foreName, $userName, $email, $userId);
-    }
+    $dbUser->UpdateUserDifferentNamesById($name, $foreName, $userName, $email, $userId);
 }
 // if submit button with name 'applyPasswordChanges' is pressed
 else if (isset($_POST['applyPasswordChanges']))
@@ -127,24 +64,10 @@ BackendComponentPrinter::PrintHead("Konto bearbeiten", $jquery=true);
     /* ----------------------------------------------------------------------------- Config-Kram vorerst ausgeklammert */		
     BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
     //*----- Permissions End ----- */
-    
-/* Datepicker */
-    echo
-    "
-        <link rel='stylesheet' href='//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css'>
-        <link rel='stylesheet' href='/resources/demos/style.css'>
-        <script src='https://code.jquery.com/jquery-1.12.4.js'></script>
-        <script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js'></script>
-        <script>
-        $( function() {
-        $( '#birthdate' ).datepicker({ dateFormat: 'yy-mm-dd' });
-        } );
-        </script>
-    ";
 echo
         "<main>
         <h1><i class='fa fa-user fontawesome'></i> Benutzer bearbeiten</h1>
-            <form method='post' action='Usermanagement.php'>";
+            <form method='post' action='Accountsettings.php'>";
 $userRow = $dbUser->FetchArray($dbUser->GetUserInformationByUsername($_SESSION['username']));
 echo
         "<label for='userName'>Benutzername</label>
@@ -160,7 +83,7 @@ echo
         <input required id='email' name='email' type='text' value='".$userRow['email']."'><br><br>";
 echo
         "<label for='birthdate'>Geburtsdatum</label>
-        <input required type='text' name='birthdate' id='birthdate' value='".$userRow['birthdate']."'><br><br>";
+        <input readonly type='text' name='birthdate' id='birthdate' value='".$userRow['birthdate']."'><br><br>";
 // not editable
 echo
         "<label for='registrydate'>Registrierungsdatum</label>
