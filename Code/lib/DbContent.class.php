@@ -72,7 +72,7 @@ class DbContent
 		$this->database->PrepareStatement("selectOneArticleById", $selectOneArticleById);
 
 
-		/* -- neu -- */
+		
 		$selectPageByPagename = "SELECT * FROM page WHERE title = ?";
 		$this->database->PrepareStatement("selectPageByPagename", $selectPageByPagename);
 
@@ -321,7 +321,7 @@ class DbContent
 
 
 
-	/* --- NEU --- */
+	
 
 
 	/**
@@ -646,9 +646,171 @@ class DbContent
 	}
 
 	
+	/**********/
+	
+	/**
+	* UpdateLableByUri()
+	* @params string $lablename  
+	* @params string $uri  
+	*/	
+	public function UpdateLableByUri($lablename, $uri)
+	{
+		$result = $this->database->ExecuteQuery("UPDATE lable SET lablename  = '".$lablename."'  WHERE uri  = '".$uri."'" );
+
+		if($result==true)
+		{
+			$logUsername = 'Wer ist gerade angemeldet?';
+			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
+			$logDescription = 'Lable geändert.';
+
+			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	
+	
+	/**
+	* UpdateLableById()
+	* @params int $lableId 	
+	* @params string $lablename  
+	* @params string $uri  
+	*/	
+	public function UpdateLableById($lableId, $lablename, $uri)
+	{
+		$result = $this->database->ExecuteQuery("UPDATE lable SET lablename  ='".$lablename."', uri  = '".$uri."'  WHERE id = ". $lableId);
+
+		if($result==true)
+		{
+			$logUsername = 'Wer ist gerade angemeldet?';
+			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
+			$logDescription = 'Lable geändert.';
+
+			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	
+	
+	/**
+	* UpdatePageByTitle()
+	* @params string $title  
+	* @params int $templateId  
+	*/	
+	public function UpdatePageByTitle($title, $templateId)
+	{
+		$result = $this->database->ExecuteQuery("UPDATE page SET template_id = ".$templateId."  WHERE templatename = '". $templatename."'");
+
+		if($result==true)
+		{		//warum wurde der User gedebannt und wer hat das gemacht?
+
+			$logUsername = 'Wer ist gerade angemeldet?';
+			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
+			$logDescription = 'Das Template mit dem Namen abc wurde geändert.';
+
+			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+			return true;
+		}
+		else
+		{
+				return false;
+		}
+	}
+		
+	
+	
+	/**
+	* UpdatePageById()
+	* @params int $pageId  
+	* @params string $title  
+	* @params int $templateId  
+	*/	
+	public function UpdatePageById($pageId, $title, $templateId)
+	{
+		$result = $this->database->ExecuteQuery("UPDATE page SET title  ='".$title."', template_id  = ".$templateId."  WHERE id = ". $pageId);
+
+		if($result==true)
+		{
+			$logUsername = 'Wer ist gerade angemeldet?';
+			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
+			$logDescription = 'Die Page mit dem Titel abc wurde geändert.';
+
+			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+			return true;
+		}
+		else
+		{
+			 return false;
+		}
+	}
+
+
+	/**
+	* UpdateTemplateByTemplatename()
+	* @params string $templatename  
+	* @params string $filelink  
+	*/		
+	public function UpdateTemplateByTemplatename($templatename, $filelink)
+	{
+		$result = $this->database->ExecuteQuery("UPDATE template SET filelink  ='".$filelink."'  WHERE templatename = '". $templatename."'");
+
+		if($result==true)
+		{		 
+			$logUsername = 'Wer ist gerade angemeldet?';
+			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
+			$logDescription = 'Das Template mit dem Namen abc wurde geändert.';
+
+			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 	
 	
 	
+	/**
+	* UpdateTemplateById()
+	* @params int $templateId
+	* @params string $templatename  
+	* @params string $filelink  
+	*/	
+	public function UpdateTemplateById($templateId, $templatename, $filelink)
+	{
+		$result = $this->database->ExecuteQuery("UPDATE template SET templatename  = '".$templatename."', filelink  ='".$filelink."'  WHERE id = ". $templateId);
+
+		if($result==true)
+		{
+			$logUsername = 'Wer ist gerade angemeldet?';
+			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
+			$logDescription = 'Das Template mit dem Namen abc wurde geändert.';
+
+			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+			return true;
+		}
+		 else
+		{
+			return false;
+		}
+	}
+
 	
 }
 
