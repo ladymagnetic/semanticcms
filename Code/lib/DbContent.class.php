@@ -627,7 +627,7 @@ class DbContent
 	public function InsertLable($lablename, $uri)
 	{
 		$lablename = $this->database->RealEscapeString($lablename);
-		$result = $this->database->ExecuteQuery("INSERT INTO lable (id, lablename, uri) VALUES (NULL, '".$lablename."', '".$uri."' ");
+		$result = $this->database->ExecuteQuery("INSERT INTO lable (id, lablename, uri) VALUES (NULL, '".$lablename."', '".$uri."') ");
 
 		if($result==true)
 		{
@@ -811,6 +811,187 @@ class DbContent
 		}
 	}
 
+	
+	
+	 
+	
+	
+	
+	
+	/**
+	* DeleteLable_ArticleByArticleId()
+	* @params int $articleId the id of the article (foreign key)
+	*/
+	public function DeleteLable_ArticleByArticleId($articleId)
+	{
+		$result = $this->database->ExecuteQuery("DELETE FROM lable_article WHERE article_id = ".$articleId);
+
+		if($result==true)
+		{
+			$logUsername = 'Wer ist gerade angemeldet? => $username';
+			$logRolename = 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName';
+			$logDescription = 'Alle Verbindungen zwischen Lable und Article mit bestimmter article_id gelöscht.';
+
+			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+
+
+
+
+	 /**
+	 * DeleteLable_ArticleByLableId()
+	 * @params int $lableId the id of the lable (foreign key)
+	 */
+	 public function DeleteLable_ArticleByLableId($lableId)
+	 {
+	 	$result = $this->database->ExecuteQuery("DELETE FROM lable_article WHERE lable_id = ".$lableId);
+
+	 	if($result==true)
+	 	{
+	 		$logUsername = 'Wer ist gerade angemeldet? => $username';
+	 		$logRolename = 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName';
+	 		$logDescription = 'Alle Verbindungen zwischen Lable und Article mit bestimmter lable_id gelöscht.';
+
+	 		$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+	 		return true;
+	 	}
+	 	else
+	 	{
+	 		return false;
+	 	}
+	 }
+
+
+ 
+
+
+	/**
+  	* DeleteAllLable_Article()
+  	*/
+  	public function DeleteAllLable_Article()
+  	{
+  		$result = $this->database->ExecuteQuery("DELETE FROM lable_Article");
+
+  		if($result==true)
+  		{
+  			$logUsername = 'Wer ist gerade angemeldet? => $username';
+  			$logRolename = 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName';
+  			$logDescription = 'Keinem Artikel ist ein Lable zugewiesen. ';
+
+  			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+  			return true;
+  		}
+  		else
+  		{
+  			return false;
+  		}
+  	}
+
+
+
+	/**
+ 	* InsertLable_Article()
+ 	* @params int $lableId the id of the lable (foreign key)
+ 	* @params int $articleId the id of the article (foreign key)
+ 	*/
+ 	public function InsertLable_Article($lableId, $articleId)
+ 	{
+ 		$result = $this->database->ExecuteQuery("INSERT INTO lable (lable_id, article_id) VALUES (NULL, ".$lableId.", ".$articleId.")");
+		//$lable = ... SELECT lablename FROM lable WHERE id = ".$lableId."....;
+
+ 		if($result==true)
+ 		{
+ 			$logUsername = 'Wer ist gerade angemeldet? => $username';
+ 			$logRolename = 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName';
+ 			$logDescription = 'einem Article wurden neue Lables hinzugefügt erstellt.';
+
+ 			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+ 			return true;
+ 		}
+ 		else
+ 		{
+ 			return false;
+ 		}
+ 	}
+
+
+ 
+
+	/**
+	* UpdateLable_ArticleByLableId()
+	* @params int $lableId the id of the lable (foreign key)
+	* @params int $articleId the id of the article (foreign key)
+	*/
+	public function UpdateLable_ArticleByLableId($lableId, $articleId)
+	{
+
+		$result = $this->database->ExecuteQuery("UPDATE lable_article SET article_id  = ".$articleId."  WHERE lable_id " = .$lableId);
+
+		//$lable = ... SELECT lablename FROM lable WHERE id = ".$lableId."....;
+
+		if($result==true)
+		{
+			$logUsername = 'Wer ist gerade angemeldet? => $username';
+			$logRolename = 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName';
+			$logDescription = 'Update.';
+
+			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+
+
+	/**
+	* UpdateLable_ArticleByArticleId()
+	* @params int $lableId the id of the lable (foreign key)
+	* @params int $articleId the id of the article (foreign key)
+	*/
+	public function UpdateLable_ArticleByArticleId($lableId, $articleId)
+	{
+
+		$result = $this->database->ExecuteQuery("UPDATE lable_article SET lable_id  = ".$lableId."  WHERE article_id " = .$articleId);
+
+		//$lable = ... SELECT lablename FROM lable WHERE id = ".$lableId."....;
+
+		if($result==true)
+		{
+			$logUsername = 'Wer ist gerade angemeldet? => $username';
+			$logRolename = 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName';
+			$logDescription = 'Update.';
+
+			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+
+	
+	 
+	 
+	
+	
 	
 }
 
