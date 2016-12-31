@@ -33,7 +33,7 @@ session_start();
 		// no special permissions required for startpage beside login
 		BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
 	?>
-<section id="main">
+<main>
     <h1>Startseite</h1>
     <table>
         <tr>
@@ -65,7 +65,7 @@ session_start();
 	{
 	}
 	?>
-</section>
+</main>
 </body>
 
 </html>

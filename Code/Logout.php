@@ -16,6 +16,9 @@ session_destroy();
 	BackendComponentPrinter::PrintHead("Logout");
 ?>
 <body>
+	<?php
+		BackendComponentPrinter::PrintSidebar(array());
+	?>
 	<!-- Main -->
 	<main id="logout">
 	<h1 property="headline"> <i class='fa fa-key fontawesome'></i> Logout</h1>

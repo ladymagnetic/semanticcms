@@ -11,23 +11,28 @@ session_regenerate_id();
 		BackendComponentPrinter::PrintHead("Login");
 	?>
 	<body>
+	<?php
+		BackendComponentPrinter::PrintSidebar(array());
+	?>
 	<main id="login">
 	<h1>Login</h1>
+	
 	<form method="post" action="Index.php">
 		<input id="username" name="username" type="text">
 		<input id="password" name="password" type="password">
 		<button id="ok" name="action" value="login"> OK </button>
 		<button id="forgotPassword" name="action" value="forgotPassword"> Passwort vergessen</button>
 	</form>
-	</main>
 
 	<?php
 	/* Include(s) */
 	require_once 'lib/DbUser.class.php';
+	require_once 'lib/Permission.enum.php';
 	require_once 'config/config.php';
 
 	/* use namespace(s) */
 	use SemanticCms\DatabaseAbstraction\DbUser;
+	use SemanticCms\Model\Permission;
 	use SemanticCms\config;
 	
 	if($_SERVER['REQUEST_METHOD']=='POST')
@@ -49,11 +54,26 @@ session_regenerate_id();
 			if($login)
 			{
 				// set username and permissions
-				$_SESSION['username'] = $nameInput;
-				//$_SESSION['permissions'] = $database->GetUserPermissions($nameInput); // noch zu implementieren
+				$_SESSION['username'] = $nameInput;	// Aufpassen wg. E-Mail
 				
+				$result = $database->GetUserPermissionByUsername($nameInput);
+				$permissions = $database->FetchArray($result);
+							
+				$_SESSION['permissions'] = array();
+				
+				if($permissions["guestbookmanagement"] == 1)	array_push($_SESSION['permissions'],Permission::Guestbookmanagment);
+				if($permissions["usermanagement"] == 1)			array_push($_SESSION['permissions'],Permission::Usermanagment);
+				if($permissions["pagemanagement"] == 1) 		array_push($_SESSION['permissions'],Permission::Pagemanagment);
+				if($permissions["articlemanagement"] == 1) 		array_push($_SESSION['permissions'],Permission::Articlemanagment);
+				if($permissions["templateconstruction"] == 1) 	array_push($_SESSION['permissions'],Permission::Templateconstruction);
+				if($permissions["guestbookusage"] == 1) 		array_push($_SESSION['permissions'],Permission::Guestbookusage);
+						
 				// Seitenweiterleitung
 				header("Location: start.php");
+			}
+			else
+			{
+				echo "<p> Username und/oder Passwort sind falsch. Bitte versuchen Sie es erneut </p>";
 			}
 		}
 		// else if (/* Abfrage für password vergessen*/)
@@ -63,5 +83,6 @@ session_regenerate_id();
 	else 
 	{	/* GET - falls hier was gemacht werden soll */	}
 	?>
+	</main>
 	</body>
 </html>
