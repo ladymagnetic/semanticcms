@@ -72,7 +72,7 @@ class DbContent
 		$this->database->PrepareStatement("selectOneArticleById", $selectOneArticleById);
 
 
-		
+
 		$selectPageByPagename = "SELECT * FROM page WHERE title = ?";
 		$this->database->PrepareStatement("selectPageByPagename", $selectPageByPagename);
 
@@ -83,7 +83,7 @@ class DbContent
 		$this->database->PrepareStatement("selectTemplateById", $selectTemplateById);
 
 		$selectTemplateByTemplatename = "SELECT * FROM template WHERE templatename = ?";
-		$this->database->PrepareStatement("selectTemplateById", $selectTemplateByTemplatename);
+		$this->database->PrepareStatement("selectTemplateByTemplatename", $selectTemplateByTemplatename);
 
 		$selectPageIdByPagename = "SELECT id FROM page WHERE title = ?";
 		$this->database->PrepareStatement("selectPageIdByPagename", $selectPageIdByPagename);
@@ -321,7 +321,7 @@ class DbContent
 
 
 
-	
+
 
 
 	/**
@@ -553,8 +553,8 @@ class DbContent
 		return $this->database->ExecutePreparedStatement("selectAllLablesFromAnArticleById", array());
 	}
 
-	
-	
+
+
 	/**
 	* InsertTemplate()
 	* @params string $templatename the name of the template
@@ -586,7 +586,7 @@ class DbContent
 	}
 
 
-	
+
 	/**
 	* InsertPage()
 	* @params string $title the title of the template
@@ -617,13 +617,13 @@ class DbContent
 		else  return false;
 	}
 
-	
-	
+
+
 	/**
 	* InsertLable()
 	* @params string $lablename the name of the lable
 	* @params string $uri the uri of the lable
-	*/	
+	*/
 	public function InsertLable($lablename, $uri)
 	{
 		$lablename = $this->database->RealEscapeString($lablename);
@@ -645,14 +645,14 @@ class DbContent
 		}
 	}
 
-	
+
 	/**********/
-	
+
 	/**
 	* UpdateLableByUri()
-	* @params string $lablename  
-	* @params string $uri  
-	*/	
+	* @params string $lablename
+	* @params string $uri
+	*/
 	public function UpdateLableByUri($lablename, $uri)
 	{
 		$result = $this->database->ExecuteQuery("UPDATE lable SET lablename  = '".$lablename."'  WHERE uri  = '".$uri."'" );
@@ -673,14 +673,14 @@ class DbContent
 		}
 	}
 
-	
-	
+
+
 	/**
 	* UpdateLableById()
-	* @params int $lableId 	
-	* @params string $lablename  
-	* @params string $uri  
-	*/	
+	* @params int $lableId
+	* @params string $lablename
+	* @params string $uri
+	*/
 	public function UpdateLableById($lableId, $lablename, $uri)
 	{
 		$result = $this->database->ExecuteQuery("UPDATE lable SET lablename  ='".$lablename."', uri  = '".$uri."'  WHERE id = ". $lableId);
@@ -701,13 +701,13 @@ class DbContent
 		}
 	}
 
-	
-	
+
+
 	/**
 	* UpdatePageByTitle()
-	* @params string $title  
-	* @params int $templateId  
-	*/	
+	* @params string $title
+	* @params int $templateId
+	*/
 	public function UpdatePageByTitle($title, $templateId)
 	{
 		$result = $this->database->ExecuteQuery("UPDATE page SET template_id = ".$templateId."  WHERE templatename = '". $templatename."'");
@@ -728,15 +728,15 @@ class DbContent
 				return false;
 		}
 	}
-		
-	
-	
+
+
+
 	/**
 	* UpdatePageById()
-	* @params int $pageId  
-	* @params string $title  
-	* @params int $templateId  
-	*/	
+	* @params int $pageId
+	* @params string $title
+	* @params int $templateId
+	*/
 	public function UpdatePageById($pageId, $title, $templateId)
 	{
 		$result = $this->database->ExecuteQuery("UPDATE page SET title  ='".$title."', template_id  = ".$templateId."  WHERE id = ". $pageId);
@@ -760,15 +760,15 @@ class DbContent
 
 	/**
 	* UpdateTemplateByTemplatename()
-	* @params string $templatename  
-	* @params string $filelink  
-	*/		
+	* @params string $templatename
+	* @params string $filelink
+	*/
 	public function UpdateTemplateByTemplatename($templatename, $filelink)
 	{
 		$result = $this->database->ExecuteQuery("UPDATE template SET filelink  ='".$filelink."'  WHERE templatename = '". $templatename."'");
 
 		if($result==true)
-		{		 
+		{
 			$logUsername = 'Wer ist gerade angemeldet?';
 			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
 			$logDescription = 'Das Template mit dem Namen abc wurde geändert.';
@@ -782,15 +782,15 @@ class DbContent
 			return false;
 		}
 	}
-	
-	
-	
+
+
+
 	/**
 	* UpdateTemplateById()
 	* @params int $templateId
-	* @params string $templatename  
-	* @params string $filelink  
-	*/	
+	* @params string $templatename
+	* @params string $filelink
+	*/
 	public function UpdateTemplateById($templateId, $templatename, $filelink)
 	{
 		$result = $this->database->ExecuteQuery("UPDATE template SET templatename  = '".$templatename."', filelink  ='".$filelink."'  WHERE id = ". $templateId);
@@ -811,13 +811,13 @@ class DbContent
 		}
 	}
 
-	
-	
-	 
-	
-	
-	
-	
+
+
+
+
+
+
+
 	/**
 	* DeleteLable_ArticleByArticleId()
 	* @params int $articleId the id of the article (foreign key)
@@ -871,7 +871,7 @@ class DbContent
 	 }
 
 
- 
+
 
 
 	/**
@@ -926,7 +926,7 @@ class DbContent
  	}
 
 
- 
+
 
 	/**
 	* UpdateLable_ArticleByLableId()
@@ -987,12 +987,12 @@ class DbContent
 	}
 
 
-	
-	 
-	 
-	
-	
-	
+
+
+
+
+
+
 }
 
 ?>
