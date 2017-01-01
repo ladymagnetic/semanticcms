@@ -22,15 +22,8 @@ $dbContent = new DbContent($config['cms_db']['dbhost'], $config['cms_db']['dbuse
 $dbUser = new DbUser($config['cms_db']['dbhost'], $config['cms_db']['dbuser'], $config['cms_db']['dbpass'], $config['cms_db']['database']);
 
 /*---- Submit Buttons ----*/
-// if submit button with name 'selectPage' is pressed
-if (isset($_POST['selectPage'])) {
-    $pageName = $_POST['pageName'];
-    CreateArticleManagement($pageName, $dbContent);
-    // has to return because other page
-    return;
-}
 // if submit button with name 'edit' is pressed
-else if (isset($_POST['edit'])) {
+if (isset($_POST['edit'])) {
     $articleId = intval($_POST['articleId']);
     $pageName = $_POST['pageName'];
     EditArticle($pageName, $articleId, $dbContent, $dbUser);
@@ -50,17 +43,6 @@ else if (isset($_POST['delete'])) {
 else if (isset($_POST['reallyDelete'])) {
     $articleId = intval($_POST['articleId']);
     $dbContent->DeleteArticleById($articleId);
-    $pageName = $_POST['pageName'];
-    CreateArticleManagement($pageName, $dbContent);
-    // has to return because other page
-    return;
-}
-// if submit button with name 'back' is pressed
-else if (isset($_POST['back'])) {
-    $pageName = $_POST['pageName'];
-    CreateArticleManagement($pageName, $dbContent);
-    // has to return because other page
-    return;
 }
 // if submit button with name 'newArticle' is pressed
 else if (isset($_POST['newArticle'])) {
@@ -96,10 +78,6 @@ else if (isset($_POST['publish']))
     }
 
     $dbContent->InsertNewArticleToPage($header, $content, $date, $pageId, $authorId, $type, $public, $description);
-    $pageName = $_POST['pageName'];
-    CreateArticleManagement($pageName, $dbContent);
-    // has to return because other page
-    return;
 }
 // if submit button with name 'updateArticle' is pressed
 else if (isset($_POST['updateArticle']))
@@ -129,112 +107,105 @@ else if (isset($_POST['updateArticle']))
     }
 
     $dbContent->UpdateArticleToPage($articleId, $header, $content, $date, $pageId, $authorId, $type, $public, $description);
-    $pageName = $_POST['pageName'];
-    CreateArticleManagement($pageName, $dbContent);
-    // has to return because other page
-    return;
 }
 
-CreateArticleManagement("", $dbContent);
+BackendComponentPrinter::PrintHead("Inhaltsverwaltung", $jquery=true);
+//*----- Permissions ----- */
+/* Include(s) */
+require_once 'lib/Permission.enum.php';
+require_once 'config/config.php';
 
-/**
-* Creates the default article management page
-*
-*/
-function CreateArticleManagement($pageName, $dbContent)
+/* Check if user is logged in */
+if(!isset($_SESSION['username'])) 
 {
-    BackendComponentPrinter::PrintHead("Inhaltsverwaltung", $jquery=true);
-    //*----- Permissions ----- */
-    /* Include(s) */
-    require_once 'lib/Permission.enum.php';
-    require_once 'config/config.php';
-    
-    /* ----------------------------------------------------------------------------- Config-Kram vorerst ausgeklammert */
-    /* Check if user is logged in */
-    //if(!isset($_SESSION['username'])) 
-    //{
-    //    die($config['error']['noLogin']);  
-    //}
-    /* Check if  permissions are set */
-    //else if(!isset($_SESSION['permissions']))
-    //{
-    //    die($config['error']['permissionNotSet']);  		
-    //}
-    /*  Check if user has the permission the see this page */
-    //else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
-    //{
-    //    die($config['error']['permissionMissing']);  	  
-    //}
-    /* ----------------------------------------------------------------------------- Config-Kram vorerst ausgeklammert */		
-    BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
-    //*----- Permissions End ----- */
-
-    /* Datatables */
-    BackendComponentPrinter::PrintDatatablesPlugin();
-
-    echo
-    "<main>
-        <h1><i class='fa fa-align-justify fontawesome'></i> Inhaltsverwaltung</h1>";
-    $pageSelect = "";
-    $pageRows = $dbContent->GetAllPages();
-    while ($pageRow = $dbContent->FetchArray($pageRows))
-    {
-        $pageSelect .= "<option";
-        if ($pageName == utf8_encode($pageRow['title']))
-        {
-            $pageSelect .= " selected";
-        }
-        $pageSelect .= ">".utf8_encode($pageRow['title'])."</option>";
-    }
-    echo
-        "<form method='post' action='Articlemanagement.php'>
-        <select name='pageName'><option></option>";
-    echo $pageSelect;
-    echo
-        "</select><input id='selectPage' name='selectPage' type='submit' value='Anzeigen'></form><br><br>";
-    BackendComponentPrinter::PrintTableStart(array("Inhalte", "Veröffentlichungsdatum", "Aktion")); 
-    $articleInPage = false;
-    if ($pageName != "")
-    { 
-        // foreach aticle of page in database print
-        $articleRows = $dbContent->GetAllArticles();
-        while ($articleRow = $dbContent->FetchArray($articleRows))
-        {
-            $pageRows = $dbContent->GetAllPages();
-            while ($pageRow = $dbContent->FetchArray($pageRows))
-            {
-                if ($articleRow['page_id'] == $dbContent->FetchArray($dbContent->SelectPageByPagename(utf8_decode($pageName)))['id'])
-                {
-                    $articleInPage = true;
-                }
-                else 
-                {
-                    $articleInPage = false;
-                }
-            }
-            if ($articleInPage)
-            {
-                $tableRow1 = utf8_encode($articleRow['header']);
-                $tableRow2 = $articleRow['publicationdate'];
-                $tableRow3 = 
-                    "<form method='post' action='Articlemanagement.php'>
-                    <input id='delete' name='delete' type='submit' value='Löschen'><input name='edit' type='submit' value='bearbeiten'>".
-                    "<input id='articleId' name='articleId' type='hidden' value='".$articleRow['id']."'>
-                    <input id='pageName' name='pageName' type='hidden' value='".$pageName."'></form>";
-                BackendComponentPrinter::PrintTableRow(array($tableRow1, $tableRow2, $tableRow3));
-            }
-        }
-    }
-    BackendComponentPrinter::PrintTableEnd();
-    echo
-        "<form method='post' action='Articlemanagement.php'>
-        <input id='pageName' name='pageName' type='hidden' value='".$pageName."'>
-        <input id='newArticle' name='newArticle' type='submit' value='Neuer Inhalt'></form>
-        </main>
-            </body>
-
-            </html>";
+    die($config['error']['noLogin']);  
 }
+/* Check if  permissions are set */
+else if(!isset($_SESSION['permissions']))
+{
+    die($config['error']['permissionNotSet']);  		
+}
+/*  Check if user has the permission the see this page */
+else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
+{
+    die($config['error']['permissionMissing']);  	  
+}	
+
+BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
+//*----- Permissions End ----- */
+
+/* Datatables */
+BackendComponentPrinter::PrintDatatablesPlugin();
+if (isset($_POST['pageName']))
+{
+    $pageName = $_POST['pageName'];
+}
+else 
+{
+    $pageName = "";
+}
+echo
+"<main>
+    <h1><i class='fa fa-align-justify fontawesome'></i> Inhaltsverwaltung</h1>";
+$pageSelect = "";
+$pageRows = $dbContent->GetAllPages();
+while ($pageRow = $dbContent->FetchArray($pageRows))
+{
+    $pageSelect .= "<option";
+    if ($pageName == utf8_encode($pageRow['title']))
+    {
+        $pageSelect .= " selected";
+    }
+    $pageSelect .= ">".utf8_encode($pageRow['title'])."</option>";
+}
+echo
+    "<form method='post' action='Articlemanagement.php'>
+    <select name='pageName'><option></option>";
+echo $pageSelect;
+echo
+    "</select><input id='selectPage' name='selectPage' type='submit' value='Anzeigen'></form><br><br>";
+BackendComponentPrinter::PrintTableStart(array("Inhalte", "Veröffentlichungsdatum", "Aktion")); 
+$articleInPage = false;
+if ($pageName != "")
+{ 
+    // foreach aticle of page in database print
+    $articleRows = $dbContent->GetAllArticles();
+    while ($articleRow = $dbContent->FetchArray($articleRows))
+    {
+        $pageRows = $dbContent->GetAllPages();
+        while ($pageRow = $dbContent->FetchArray($pageRows))
+        {
+            if ($articleRow['page_id'] == $dbContent->FetchArray($dbContent->SelectPageByPagename(utf8_decode($pageName)))['id'])
+            {
+                $articleInPage = true;
+            }
+            else 
+            {
+                $articleInPage = false;
+            }
+        }
+        if ($articleInPage)
+        {
+            $tableRow1 = utf8_encode($articleRow['header']);
+            $tableRow2 = $articleRow['publicationdate'];
+            $tableRow3 = 
+                "<form method='post' action='Articlemanagement.php'>
+                <input id='delete' name='delete' type='submit' value='Löschen'><input name='edit' type='submit' value='bearbeiten'>".
+                "<input id='articleId' name='articleId' type='hidden' value='".$articleRow['id']."'>
+                <input id='pageName' name='pageName' type='hidden' value='".$pageName."'></form>";
+            BackendComponentPrinter::PrintTableRow(array($tableRow1, $tableRow2, $tableRow3));
+        }
+    }
+}
+BackendComponentPrinter::PrintTableEnd();
+echo
+    "<form method='post' action='Articlemanagement.php'>
+    <input id='pageName' name='pageName' type='hidden' value='".$pageName."'>
+    <input id='newArticle' name='newArticle' type='submit' value='Neuer Inhalt'></form>
+    </main>
+        </body>
+
+        </html>";
 
 /**
 * Opens the page to create a new article
@@ -247,24 +218,7 @@ function CreateNewArticle($pageName, $dbContent)
     /* Include(s) */
     require_once 'lib/Permission.enum.php';
     require_once 'config/config.php';
-    
-    /* ----------------------------------------------------------------------------- Config-Kram vorerst ausgeklammert */
-    /* Check if user is logged in */
-    //if(!isset($_SESSION['username'])) 
-    //{
-    //    die($config['error']['noLogin']);  
-    //}
-    /* Check if  permissions are set */
-    //else if(!isset($_SESSION['permissions']))
-    //{
-    //    die($config['error']['permissionNotSet']);  		
-    //}
-    /*  Check if user has the permission the see this page */
-    //else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
-    //{
-    //    die($config['error']['permissionMissing']);  	  
-    //}
-    /* ----------------------------------------------------------------------------- Config-Kram vorerst ausgeklammert */		
+    		
     BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
     //*----- Permissions End ----- */
     /* specific style because of summernote */
@@ -367,24 +321,7 @@ function EditArticle($pageName, $articleId, $dbContent, $dbUser)
     /* Include(s) */
     require_once 'lib/Permission.enum.php';
     require_once 'config/config.php';
-    
-    /* ----------------------------------------------------------------------------- Config-Kram vorerst ausgeklammert */
-    /* Check if user is logged in */
-    //if(!isset($_SESSION['username'])) 
-    //{
-    //    die($config['error']['noLogin']);  
-    //}
-    /* Check if  permissions are set */
-    //else if(!isset($_SESSION['permissions']))
-    //{
-    //    die($config['error']['permissionNotSet']);  		
-    //}
-    /*  Check if user has the permission the see this page */
-    //else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
-    //{
-    //    die($config['error']['permissionMissing']);  	  
-    //}
-    /* ----------------------------------------------------------------------------- Config-Kram vorerst ausgeklammert */		
+    	
     BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
     //*----- Permissions End ----- */
     /* specific style because of summernote */
@@ -480,24 +417,7 @@ function ReallyDelete($articleId, $pageName)
     /* Include(s) */
     require_once 'lib/Permission.enum.php';
     require_once 'config/config.php';
-    
-    /* ----------------------------------------------------------------------------- Config-Kram vorerst ausgeklammert */
-    /* Check if user is logged in */
-    //if(!isset($_SESSION['username'])) 
-    //{
-    //    die($config['error']['noLogin']);  
-    //}
-    /* Check if  permissions are set */
-    //else if(!isset($_SESSION['permissions']))
-    //{
-    //    die($config['error']['permissionNotSet']);  		
-    //}
-    /*  Check if user has the permission the see this page */
-    //else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
-    //{
-    //    die($config['error']['permissionMissing']);  	  
-    //}
-    /* ----------------------------------------------------------------------------- Config-Kram vorerst ausgeklammert */		
+    	
     BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
     //*----- Permissions End ----- */
     
