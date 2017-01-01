@@ -72,6 +72,8 @@ class DbContent
 		$this->database->PrepareStatement("selectOneArticleById", $selectOneArticleById);
 
 
+		$selectAllPages = "SELECT * FROM page";
+		$this->database->PrepareStatement("selectAllPages", $selectAllPages);		
 
 		$selectPageByPagename = "SELECT * FROM page WHERE title = ?";
 		$this->database->PrepareStatement("selectPageByPagename", $selectPageByPagename);
@@ -988,6 +990,13 @@ class DbContent
 
 
 
+	/**
+	* SelectAllPages()
+	*/
+	public function SelectAllPages()
+	{
+		return $this->database->ExecutePreparedStatement("selectAllPages", array());
+	}
 
 
 
