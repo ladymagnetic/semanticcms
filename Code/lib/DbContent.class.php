@@ -936,7 +936,7 @@ class DbContent
 	public function UpdateLable_ArticleByLableId($lableId, $articleId)
 	{
 
-		$result = $this->database->ExecuteQuery("UPDATE lable_article SET article_id  = ".$articleId."  WHERE lable_id " = .$lableId);
+		$result = $this->database->ExecuteQuery("UPDATE lable_article SET article_id  = ".$articleId."  WHERE lable_id  = " .$lableId);
 
 		//$lable = ... SELECT lablename FROM lable WHERE id = ".$lableId."....;
 
@@ -966,7 +966,7 @@ class DbContent
 	public function UpdateLable_ArticleByArticleId($lableId, $articleId)
 	{
 
-		$result = $this->database->ExecuteQuery("UPDATE lable_article SET lable_id  = ".$lableId."  WHERE article_id " = .$articleId);
+		$result = $this->database->ExecuteQuery("UPDATE lable_article SET lable_id  = ".$lableId."  WHERE article_id  = " .$articleId);
 
 		//$lable = ... SELECT lablename FROM lable WHERE id = ".$lableId."....;
 
