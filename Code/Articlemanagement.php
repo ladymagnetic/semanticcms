@@ -51,6 +51,13 @@ else if (isset($_POST['newArticle'])) {
     // has to return because other page
     return;
 }
+// if submit button with name 'newArticle' is pressed
+else if (isset($_POST['searchSemanticPageName'])) {
+    $pageName = $_POST['semanticPageName'];
+    CreateNewArticle($pageName, $dbContent);
+    // has to return because other page
+    return;
+}
 // if submit button with name 'publish' is pressed
 else if (isset($_POST['publish']))
 {
@@ -288,9 +295,15 @@ function CreateNewArticle($pageName, $dbContent)
             "<form method='post' action='Articlemanagement.php'><input id='back' name='back' type='submit' value='Zurück'>
             <input id='pageName' name='pageName' type='hidden' value='".$pageName."'>
             <form>";
-    /* ---- Writing Assistant ---- */
+    /* ---- Writing Assistant/ Semantic Mindmap ---- */
     echo
             "<h1><i class='fa fa-share-alt fontawesome'></i> Semantische Mindmap</h1>";
+    // search
+    echo
+            "<form method='post' action='Articlemanagement.php'>
+            <input id='semanticPageName' name='semanticPageName' type='text' value='".$pageName."'>
+            <input id='searchSemanticPageName' name='searchSemanticPageName' type='submit' value='Suchen'>
+            <form><br><br>";
     /* ml-lod-live */
     echo
             "<link rel='stylesheet' href='media/ml-lodlive/dist/ml-lodlive.all.css'>
