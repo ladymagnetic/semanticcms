@@ -55,31 +55,22 @@ BackendComponentPrinter::PrintDatatablesPlugin();
     <h1><i class="fa fa-file-text fontawesome"></i> Seitenverwaltung</h1>
 
     <?php
-    // todo: alte Version entfernen, wenn die neue Version mit der Datenbank geht
     /* Print Pages table */
-    /*BackendComponentPrinter::PrintTableStart(array("Seite", "Template", "Aktionen", "Relative Position"));
-    $rowValues = array("",
-        "<form id='template' name='template' action='../lib/BackendComponentPrinter.class.php'> <label>Template: <select name='top5'> <option>Layout 1</option> <option>Layout 2</option> <option>Layout 3</option> <option>Layout 4</option> <option>Layout 5</option> </select> </label> </form>",
-        "<form method='post'>
-                <input id='editContent' name='editContent' type='button' value='Löschen'><input name='Button2' type='button' value='Inhalte bearbeiten'></form>",
-        "");
-    BackendComponentPrinter::PrintTableRow($rowValues);
-    BackendComponentPrinter::PrintTableEnd();*/
-
-    // neue Version -> todo testen mit neuen datenbank-methoden
-    /* Print Pages table */
-    $pages = $dbContent->GetAllPages();
+    $pages = $dbContent->SelectAllPages();
     BackendComponentPrinter::PrintTableStart(array("Seite", "Template", "Aktionen", "Relative Position"));
     while ($page = $dbContent->FetchArray($pages))
     {
         $siteTitle = $page['title'];
-        $siteTemplate = $dbContent->GetTemplateByID($page['template_id']);
-        $siteActions = "<span>todo</span>";
+        $queryResult = $dbContent->SelectTemplateById($page['template_id']);
+        $siteTemplate = $dbContent->FetchArray($queryResult);
+        $siteActions = "<form method='post'>
+                <input id='editContent' name='editContent' type='button' value='Löschen'><input name='Button2' type='button' value='Inhalte bearbeiten'></form>";
         $siteRelativePosition = $page['relativeposition'];
 
         BackendComponentPrinter::PrintTableRow(array($siteTitle, $siteTemplate['templatename'], $siteActions, $siteRelativePosition));
     }
     BackendComponentPrinter::PrintTableEnd();
+    //echo "debug: nr. of pages: ".$dbContent->GetResultCount($pages);
     ?>
 
     <form method="post" action="../lib/BackendComponentPrinter.class.php">
