@@ -70,7 +70,7 @@ class BackendComponentPrinter
 			<ul>";
             // Je nach Rechten bestimmte Menue-Punkte gar nicht erst sichtbar
             if (in_array(Permission::Usermanagment, $permissions)) {
-                echo "<li property='name'><a property='url' href=\"Usermanagement.php\" title=\"Benutzerverwaltung\"><i class=\"fa fa-user fontawesome\"></i> Benutzerverwaltung</a></li>";
+                echo "<li property='name'><a property='url' href=\"Usermanagement.php\" title=\"Benutzerverwaltung\"><i class=\"fa fa-users fontawesome\"></i> Benutzerverwaltung</a></li>";
             }
             if (in_array(Permission::Pagemanagment, $permissions)) {
                 echo "<li property='name'><a property='url' href=\"Pagemanagement.php\" title=\"Seitenverwaltung\"><i class=\"fa fa-file-text fontawesome\"></i> Seitenverwaltung</a></li>";
@@ -81,8 +81,8 @@ class BackendComponentPrinter
             if (in_array(Permission::Templateconstruction, $permissions)) {
                 echo "<li property='name'><a property='url' href=\"TemplateConstruction.php\" title=\"Templates\"><i class=\"fa fa-paint-brush fontawesome\"></i> Templates</a></li>";
             }
-            echo "<li property='name'><a property='url' href=\"Accountsettings.php\" title=\"Accountsettings\"><i class=\"fa fa-paint-brush fontawesome\"></i> Kontoeinstellungen</a></li>";
-            echo "<li property='name'><a property='url' href=\"Logout.php\" title=\"Logout\"><i class=\"fa fa-paint-brush fontawesome\"></i> Logout</a></li>";
+            echo "<li property='name'><a property='url' href=\"Accountsettings.php\" title=\"Accountsettings\"><i class=\"fa fa-user fontawesome\"></i> Kontoeinstellungen</a></li>";
+            echo "<li property='name'><a property='url' href=\"Logout.php\" title=\"Logout\"><i class=\"fa fa-sign-out fontawesome\"></i> Logout</a></li>";
 
             echo
                 "</ul>
