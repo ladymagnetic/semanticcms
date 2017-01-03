@@ -4,6 +4,10 @@ namespace SemanticCms\FrontendGenerator;
 
 use DOMDocument;
 
+require_once 'lib/DbUser.class.php';
+require_once 'config/config.php';
+use SemanticCms\DatabaseAbstraction\DbUser;
+use SemanticCms\config;
 
 
 /**
@@ -14,6 +18,8 @@ class TemplateParser
 	private $dom;
 	private $root;
 
+
+	$dbUser = new DbUser($config['cms_db']['dbhost'], $config['cms_db']['dbuser'], $config['cms_db']['dbpass'], $config['cms_db']['database']);
 
 	/* ---- Constructor / Destructor ---- */
 	// /**
@@ -148,6 +154,7 @@ class TemplateParser
 		$seventhNode->appendChild($this->dom->createElement("Login", $Login));
 
 		$this->dom->save("templates/".$TemplateName.".xml");
+		$dbUser->NewTemplate($TemplateName, "templates/".$TemplateName.".xml");
 	}
 
 
