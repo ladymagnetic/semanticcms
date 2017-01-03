@@ -23,10 +23,10 @@ $dbUser = new DbUser($config['cms_db']['dbhost'], $config['cms_db']['dbuser'], $
 if (isset($_POST['applyChanges']))
 {
     $userId = intval($_POST['userId']);
-    $userName = utf8_decode($_POST['userName']);
-    $name = utf8_decode($_POST['name']);
-    $foreName = utf8_decode($_POST['foreName']);
-    $email = utf8_decode($_POST['email']);
+    $userName = $_POST['userName'];
+    $name = $_POST['name'];
+    $foreName = $_POST['foreName'];
+    $email = $_POST['email'];
     $dbUser->UpdateUserDifferentNamesById($name, $foreName, $userName, $email, $userId);
 }
 // if submit button with name 'applyPasswordChanges' is pressed
@@ -69,13 +69,13 @@ echo
 $userRow = $dbUser->FetchArray($dbUser->GetUserInformationByUsername($_SESSION['username']));
 echo
         "<label for='userName'>Benutzername</label>
-        <input required id='userName' name='userName' type='text' value='".utf8_encode($userRow['username'])."'><br><br>";
+        <input required id='userName' name='userName' type='text' value='".$userRow['username']."'><br><br>";
 echo
         "<label for='name'>Name</label>
-        <input required id='name' name='name' type='text' value='".utf8_encode($userRow['lastname'])."'><br><br>";
+        <input required id='name' name='name' type='text' value='".$userRow['lastname']."'><br><br>";
 echo    
         "<label for='foreName'>Vorname</label>
-        <input required id='foreName' name='foreName' type='text' value='".utf8_encode($userRow['firstname'])."'><br><br>";
+        <input required id='foreName' name='foreName' type='text' value='".$userRow['firstname']."'><br><br>";
 echo
         "<label for='email'>Email</label>
         <input required id='email' name='email' type='text' value='".$userRow['email']."'><br><br>";
@@ -93,7 +93,7 @@ while ($roleRow = $dbUser->FetchArray($roleRows))
     if ($roleRow['id'] == $userRow['role_id'])
     {
         echo
-            "<input readonly id='role' name='role' type='text' value='".utf8_encode($roleRow['rolename'])."'><br><br>";
+            "<input readonly id='role' name='role' type='text' value='".$roleRow['rolename']."'><br><br>";
     }
 }        
 echo

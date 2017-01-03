@@ -36,7 +36,7 @@ else if (isset($_POST['banUser']))
 {
     $user_id = intval($_POST['userId']); 
     $reason_id = intval($_POST['reasonId']); 
-    $description = utf8_decode($_POST['description']); 
+    $description = $_POST['description']; 
     $begindatetime = $_POST['begindatetime'];
     $enddatetime = $_POST['enddatetime'];
     $dbUser->InsertBanViaUserId($user_id, $reason_id, $description, $begindatetime, $enddatetime);
@@ -75,7 +75,7 @@ else if (isset($_POST['newRole'])) {
 }
 // if submit button with name 'assignRole' is pressed
 else if (isset($_POST['assignRole'])) {
-    $roleId = intval($dbUser->FetchArray($dbUser->SelectRoleByRolename(utf8_decode($_POST['assignedRole'])))['id']);
+    $roleId = intval($dbUser->FetchArray($dbUser->SelectRoleByRolename($_POST['assignedRole']))['id']);
     $userId = intval($_POST['userId']);
     $dbUser->AssignRole($roleId, $userId);
 }
@@ -102,12 +102,12 @@ else if (isset($_POST['roleDetails'])) {
 // if submit button with name 'registrateUser' is pressed
 else if (isset($_POST['registrateUser']))
 {
-    $role_id = intval($dbUser->FetchArray($dbUser->SelectRoleByRolename(utf8_decode($_POST['assignedRole'])))['id']);
-    $lastname = utf8_decode($_POST['name']);
-    $firstname = utf8_decode($_POST['foreName']);
-    $username = utf8_decode($_POST['userName']);
+    $role_id = intval($dbUser->FetchArray($dbUser->SelectRoleByRolename($_POST['assignedRole']))['id']);
+    $lastname = $_POST['name'];
+    $firstname = $_POST['foreName'];
+    $username = $_POST['userName'];
     $password = $_POST['currentPassword'];
-    $email = utf8_decode($_POST['email']);
+    $email = $_POST['email'];
     $birthdate = $_POST['birthdate'];
     if ($dbUser->EmailAlreadyExists($email))
     {
@@ -186,16 +186,16 @@ else if (isset($_POST['registrateUser']))
 else if (isset($_POST['saveRoleChanges'])) 
 {
     $id = intval($_POST['roleId']);
-    $rolename = utf8_decode($_POST['roleName']);
-    $uri = utf8_decode($_POST['uri']);
+    $rolename = $_POST['roleName'];
+    $uri = $_POST['uri'];
     SetPermissionsFromForm($guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction);
     $dbUser->UpdateRoleById($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $id);
 }
 // if submit button with name 'createRole' is pressed
 else if (isset($_POST['createRole'])) 
 {
-    $rolename = utf8_decode($_POST['rolename']);
-    $uri = utf8_decode($_POST['uri']);
+    $rolename = $_POST['rolename'];
+    $uri = $_POST['uri'];
     SetPermissionsFromForm($guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction);
     $dbUser->NewRole($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction);
 }
@@ -236,7 +236,7 @@ BackendComponentPrinter::PrintTableStart(array("Benutzer", "entsperren/sperren",
 $userRows = $dbUser->SelectAllUsers();
 while ($row = $dbUser->FetchArray($userRows))
 {
-    $tableRow1 = utf8_encode($row['username'])."<br>".utf8_encode($row['firstname'])." ".utf8_encode($row['lastname']);
+    $tableRow1 = $row['username']."<br>".$row['firstname']." ".$row['lastname'];
 
     //if user is banned/debanned
     $bannedUsers = $dbUser->SelectAllUsersWhichAreBannedNow();
@@ -270,7 +270,7 @@ while ($row = $dbUser->FetchArray($userRows))
                         $tableRow2 = 
                         "<form method='post' action='Usermanagement.php'>
                         <input id='banId' name='banId' type='hidden' value='".$banRow['id']."'>".
-                        "<p>".utf8_encode($reason)."<p>".
+                        "<p>".$reason."<p>".
                         "<input id='deban' name='deban' type='submit' value='entsperren'></form>";
                         $tableRow2 .=  "<br>";
                     }
@@ -279,7 +279,7 @@ while ($row = $dbUser->FetchArray($userRows))
                         $tableRow2 .= 
                         "<form method='post' action='Usermanagement.php'>
                         <input id='banId' name='banId' type='hidden' value='".$banRow['id']."'>".
-                        "<p>".utf8_encode($reason)."<p>".
+                        "<p>".$reason."<p>".
                         "<input id='deban' name='deban' type='submit' value='entsperren'></form";
                         $tableRow2 .=  "<br>";
                     }
@@ -307,7 +307,7 @@ while ($row = $dbUser->FetchArray($userRows))
             {
                 $tableRow3 .= " selected ";
             }
-            $tableRow3 .= ">".utf8_encode($rolerow['rolename'])."</option>";
+            $tableRow3 .= ">".$rolerow['rolename']."</option>";
         }
     $tableRow3 .=
         "<input id='userId' name='userId' type='hidden' value='".$row['id']."'></select></label><br><br><input id='assignRole' name='assignRole' type='submit' value='Zuweisen'></form>";
@@ -329,7 +329,7 @@ BackendComponentPrinter::PrintTableStart(array("Rollenname", "Aktion"));
 $roleRows = $dbUser->SelectAllRoles();
 while ($row = $dbUser->FetchArray($roleRows))
 {
-    $tableRow1 =  utf8_encode($row['rolename']);
+    $tableRow1 =  $row['rolename'];
     $tableRow2 = 
         "<form method='post' action='Usermanagement.php'><input id='roleDetails' name='roleDetails' type='submit' value='Details'><input id='deleteRole' name='deleteRole' type='submit' value='Rolle löschen'>".
         "<input id='roleId' name='roleId' type='hidden' value='".$row['id']."'></form>";
@@ -370,16 +370,16 @@ function EditUser($userId, $dbUser)
     $userRow = $dbUser->FetchArray($dbUser->GetUserInformationById($userId));
     echo
             "<label for='userName'>Benutzername</label>
-            <input readonly id='userName' name='userName' type='text' value='".utf8_encode($userRow['username'])."'><br><br>";
+            <input readonly id='userName' name='userName' type='text' value='".$userRow['username']."'><br><br>";
     echo
             "<label for='name'>Name</label>
-            <input readonly id='name' name='name' type='text' value='".utf8_encode($userRow['lastname'])."'><br><br>";
+            <input readonly id='name' name='name' type='text' value='".$userRow['lastname']."'><br><br>";
     echo    
             "<label for='foreName'>Vorname</label>
-            <input readonly id='foreName' name='foreName' type='text' value='".utf8_encode($userRow['firstname'])."'><br><br>";
+            <input readonly id='foreName' name='foreName' type='text' value='".$userRow['firstname']."'><br><br>";
     echo
             "<label for='email'>Email</label>
-            <input readonly id='email' name='email' type='text' value='".utf8_encode($userRow['email'])."'><br><br>";
+            <input readonly id='email' name='email' type='text' value='".$userRow['email']."'><br><br>";
     echo
         "<label for='birthdate'>Geburtsdatum</label>
         <input readonly type='text' name='birthdate' id='birthdate' value='".$userRow['birthdate']."'><br><br>";
@@ -395,7 +395,7 @@ function EditUser($userId, $dbUser)
         if ($roleRow['id'] == $userRow['role_id'])
         {
             echo
-                "<input readonly id='role' name='role' type='text' value='".utf8_encode($roleRow['rolename'])."'><br><br>";
+                "<input readonly id='role' name='role' type='text' value='".$roleRow['rolename']."'><br><br>";
             $roleAssigned = true;
         }
     }
@@ -422,7 +422,7 @@ function EditUser($userId, $dbUser)
         {
             if ($reasonRow['id'] == $banRow['reason_id'])
             {
-                BackendComponentPrinter::PrintTableRow(array(utf8_encode($reasonRow['reason']), utf8_encode($banRow['description']), $banRow['begindatetime'], $banRow['enddatetime']));
+                BackendComponentPrinter::PrintTableRow(array($reasonRow['reason'], $banRow['description'], $banRow['begindatetime'], $banRow['enddatetime']));
             }
         }
     }
@@ -456,10 +456,10 @@ function EditRole($roleId, $dbUser)
             "<form method='post' action='Usermanagement.php'>".
             "<input id='roleId' name='roleId' type='hidden' value='".$roleId."'>".
             "<label for='roleName'>Rollenname</label>
-            <input required id='roleName' name='roleName' type='text' value='".utf8_encode($roleRow['rolename'])."'><br><br>";
+            <input required id='roleName' name='roleName' type='text' value='".$roleRow['rolename']."'><br><br>";
     echo
             "<label for='uri'>Uri</label>
-            <input required id='uri' name='uri' type='text' value='".utf8_encode($roleRow['uri'])."'><br><br>";
+            <input required id='uri' name='uri' type='text' value='".$roleRow['uri']."'><br><br>";
     echo    
             "<label for='guestbookmanagement'>Gästebuch verwalten</label>
             <input id='guestbookmanagement' name='guestbookmanagement' type='checkbox'";
@@ -579,7 +579,7 @@ function CreateNewUser($dbUser)
     while ($rolerow = $dbUser->FetchArray($roleRows))
     {
         echo "<option id='".$rolerow['id']."'";
-        echo ">".utf8_encode($rolerow['rolename'])."</option>";
+        echo ">".$rolerow['rolename']."</option>";
     }
     echo
             "</select><br><br>";
@@ -691,7 +691,7 @@ function BanUser($userId, $dbUser)
             while ($reasonRow = $dbUser->FetchArray($reasonRows))
             {
                 echo "<option id='".$reasonRow['id']."'"."value='".$reasonRow['id']."'";
-                echo ">".utf8_encode($reasonRow['reason'])."</option>";
+                echo ">".$reasonRow['reason']."</option>";
             }
     echo
             "</select><br><br>";
