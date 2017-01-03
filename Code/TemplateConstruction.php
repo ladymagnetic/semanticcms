@@ -194,7 +194,7 @@ if(isset($_POST['save'])) {
 
 ?>
 
-  <section id="main">
+  <main>
 		<h1><i class="fa fa-paint-brush fontawesome"></i> Templates</h1>
     <form  action="TemplateConstruction.php" method="post">
     <h2>Header</h2>
@@ -396,6 +396,6 @@ if(isset($_POST['save'])) {
         <input type="text" name="TemplateName">
     <input type="submit" name="save" value="speichern">
     </form>
-	</section>
+	</main>
 </body>
 </html>
