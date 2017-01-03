@@ -114,24 +114,24 @@ use SemanticCms\Model\Permission;
 
 
 /* Check if user is logged in */
-/*if(!isset($_SESSION['username']))
+if(!isset($_SESSION['username']))
 {
   die($config['error']['noLogin']);
 }
 /* Check if  permissions are set */
-/*else if(!isset($_SESSION['permissions']))
+else if(!isset($_SESSION['permissions']))
 {
   die($config['error']['permissionNotSet']);
 }
 /*  Check if user has the permission the see this page */
-/*else if(!in_array(Permission::Templateconstruction, $_SESSION['permissions']))
+else if(!in_array(Permission::Templateconstruction, $_SESSION['permissions']))
 {
   die($config['error']['permissionMissing']);
 }
 
 /* menue */
 /* dynamisch erzeugt je nach Rechten */
-/*BackendComponentPrinter::printSidebar($_SESSION['permissions']);*/
+BackendComponentPrinter::printSidebar($_SESSION['permissions']);
 
 if(isset($_POST['save'])) {
   $templateParser = new TemplateParser();
@@ -194,7 +194,7 @@ if(isset($_POST['save'])) {
 
 ?>
 
-  <section id="main">
+  <main>
 		<h1><i class="fa fa-paint-brush fontawesome"></i> Templates</h1>
     <form  action="TemplateConstruction.php" method="post">
     <h2>Header</h2>
@@ -396,6 +396,6 @@ if(isset($_POST['save'])) {
         <input type="text" name="TemplateName">
     <input type="submit" name="save" value="speichern">
     </form>
-	</section>
+	</main>
 </body>
 </html>
