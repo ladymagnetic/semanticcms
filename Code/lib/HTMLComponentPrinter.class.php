@@ -36,32 +36,58 @@ class HTMLComponentPrinter
 		return $html;
 	}
 	
+	public static function GetPhpStart($technicalPage=false, $login=false)
+	{
+		$php =  "<?php ".
+				" session_start(); ".
+				" require_once 'lib/DbContent.class.php';".
+				" require_once 'config/config.php';".
+				" use SemanticCms\Databaseabstraction\DbContent;".
+				" use SemanticCms\config;".
+				" \$db = new DbContent(\$config['cms_db']['dbhost'], \$config['cms_db']['dbuser'], \$config['cms_db']['dbpass'], \$config['cms_db']['database']);".
+				" ?>";
+		return $php;
+	}
+	
+	/**
+	* GetHeader()
+	* Returns the header-string for a frontend page. A link to an image source is optional.
+	* @return string header string
+	*/
 	public static function GetHeader($title, $imgSource="")
 	{
-		// schema.org fehlt noch
 		$header =	"<header>";
-		
-		if(!empty($imgSource)) $header = $header."<img src=\"media\\\">";
-		
-		$header =	$header."<h1 property=\"name\">".htmlspecialchars($title)."</h1>".
+		if(!empty($imgSource)) $header = $header."<img src=\"media\\".$imgSource."\" property=\"image\">";
+		$header =	$header."<h1 property=\"name\">".utf8_encode(htmlspecialchars($title))."</h1>".
 					"</header>";
 					
 		return $header;
 	}
 	
-	public static function GetMenu(array $PageNames)
+	
+	public static function GetMenu($pageName)
 	{
-		// schema.org fehlt noch
 		$menu =	"<nav typeof=\"SiteNavigationElement\"> <ul>";
-		
-		foreach ($PageNames as $pageName)
-		{
-			$menu = $menu."<li> <a href=\"".$pageName.".php\">".$pageName."</a></li>";
-		}
-		
-		$menu = $menu."</ul></nav>";
+
+		$menu .= "\n<?php ".
+				 " \$result = \$db->GetAllPages(); ".
+				 " while(\$page = \$db->FetchArray(\$result)) { ".
+				 " if(strcmp(\$page[\"title\"],\"".$pageName."\" ) == 0) {".	
+				 " echo '<li> <a id=\"currentPage\" href=\"'.utf8_encode(\$page[\"title\"]).'.php\" itemprop=\"url\">'.utf8_encode(\$page[\"title\"]).'</a></li>'; } ".
+			     " else { echo '<li> <a href=\"'.utf8_encode(\$page[\"title\"]).'.php\" itemprop=\"url\">'.utf8_encode(\$page[\"title\"]).'</a></li>';}".
+				 " } ?>\n";
+				
+		$menu .= "</ul></nav>";
 					
 		return $menu;
+	}
+	
+	public static function GetArticleContainer($pageName)
+	{
+		$article = "<main>";
+		// php code für artikel selbst
+		$article .= " </main>";		
+		return $article;
 	}
 	
 	public static function GetFooter()

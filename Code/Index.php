@@ -18,8 +18,8 @@ session_regenerate_id();
 	<h1>Login</h1>
 	
 	<form method="post" action="Index.php">
-		<input id="username" name="username" type="text">
-		<input id="password" name="password" type="password">
+		<input id="username" name="username" type="text" required="true" placeholder="Username">
+		<input id="password" name="password" type="password" required="true" placeholder="Passwort">
 		<button id="ok" name="action" value="login"> OK </button>
 		<button id="forgotPassword" name="action" value="forgotPassword"> Passwort vergessen</button>
 	</form>
@@ -48,7 +48,7 @@ session_regenerate_id();
 			$password = $_POST["password"];
 			
 			// an Passwort Hash Denken
-			
+			// $hash = $hash('sha512', $password); bzw mit salt: $hash = hash('sha512', $password, $salt);
 			$login = $database->LoginUser($nameInput, $password);	
 						
 			if($login)
