@@ -61,11 +61,11 @@ else if (isset($_POST['searchSemanticPageName'])) {
 // if submit button with name 'publish' is pressed
 else if (isset($_POST['publish']))
 {
-    $pageId = intval($dbContent->FetchArray($dbContent->SelectPageByPagename(utf8_encode($_POST['pageSelect'])))['id']);
-    $header = utf8_decode($_POST['header']);
-    $content = utf8_decode($_POST['content']);
+    $pageId = intval($dbContent->FetchArray($dbContent->SelectPageByPagename($_POST['pageSelect']))['id']);
+    $header = $_POST['header'];
+    $content = $_POST['content'];
     $date = date("Y-m-d");
-    $type = utf8_decode($_POST['type']);
+    $type = $_POST['type'];
     if (isset($_POST['public']))
     {
         $public = 1;
@@ -89,11 +89,11 @@ else if (isset($_POST['publish']))
 // if submit button with name 'updateArticle' is pressed
 else if (isset($_POST['updateArticle']))
 {
-    $pageId = intval($dbContent->FetchArray($dbContent->SelectPageByPagename(utf8_decode($_POST['pageSelect'])))['id']);
-    $header = utf8_decode($_POST['header']);
-    $content = utf8_decode($_POST['content']);
+    $pageId = intval($dbContent->FetchArray($dbContent->SelectPageByPagename($_POST['pageSelect']))['id']);
+    $header = $_POST['header'];
+    $content = $_POST['content'];
     $date = date("Y-m-d"); 
-    $type = utf8_decode($_POST['type']);
+    $type = $_POST['type'];
     if (isset($_POST['public']))
     {
         $public = 1;
@@ -102,7 +102,7 @@ else if (isset($_POST['updateArticle']))
     {
         $public = 0;
     }
-    $description = utf8_decode($_POST['description']);
+    $description = $_POST['description'];
     $articleId = intval($_POST['articleId']);
     if(isset($_SESSION['username'])) 
     {
@@ -159,11 +159,11 @@ $pageRows = $dbContent->GetAllPages();
 while ($pageRow = $dbContent->FetchArray($pageRows))
 {
     $pageSelect .= "<option";
-    if ($pageName == utf8_encode($pageRow['title']))
+    if ($pageName == $pageRow['title'])
     {
         $pageSelect .= " selected";
     }
-    $pageSelect .= ">".utf8_encode($pageRow['title'])."</option>";
+    $pageSelect .= ">".$pageRow['title']."</option>";
 }
 echo
     "<form method='post' action='Articlemanagement.php'>
@@ -182,7 +182,7 @@ if ($pageName != "")
         $pageRows = $dbContent->GetAllPages();
         while ($pageRow = $dbContent->FetchArray($pageRows))
         {
-            if ($articleRow['page_id'] == $dbContent->FetchArray($dbContent->SelectPageByPagename(utf8_decode($pageName)))['id'])
+            if ($articleRow['page_id'] == $dbContent->FetchArray($dbContent->SelectPageByPagename($pageName))['id'])
             {
                 $articleInPage = true;
             }
@@ -193,7 +193,7 @@ if ($pageName != "")
         }
         if ($articleInPage)
         {
-            $tableRow1 = utf8_encode($articleRow['header']);
+            $tableRow1 = $articleRow['header'];
             $tableRow2 = $articleRow['publicationdate'];
             $tableRow3 = 
                 "<form method='post' action='Articlemanagement.php'>
@@ -269,12 +269,12 @@ function CreateNewArticle($pageName, $dbContent)
     while ($pageRow = $dbContent->FetchArray($pageRows))
     {
         $pageSelect .= "<option";
-        if ($pageName == utf8_encode($pageRow['title']))
+        if ($pageName == $pageRow['title'])
         {
             $pageSelect .= " selected";
         }
         $pageSelect .=
-            " value='".utf8_encode($pageRow['title'])."'>".utf8_encode($pageRow['title'])."</option>";
+            " value='".$pageRow['title']."'>".$pageRow['title']."</option>";
     }
     echo
         "<label for='pageSelect'>Seite</label><select name='pageSelect'>";
@@ -358,9 +358,9 @@ function EditArticle($pageName, $articleId, $dbContent, $dbUser)
             <h1><i class='fa fa-align-justify fontawesome'></i> Inhalt bearbeiten</h1>
             <form method='post' action='ArticleManagement.php'>
             <label for='header'>Überschrift</label>
-            <input required id='header' name='header' type='text' value='".utf8_encode($articleRow['header'])."'><br><br>
+            <input required id='header' name='header' type='text' value='".$articleRow['header']."'><br><br>
             <label for='summernote'>Inhalt</label>
-            <div id='summernote' name='summernote'>".utf8_encode($articleRow['content'])."</div><br><br>
+            <div id='summernote' name='summernote'>".$articleRow['content']."</div><br><br>
             <script>
                 $(document).ready(function() {
                     $('#summernote').summernote({
@@ -372,22 +372,22 @@ function EditArticle($pageName, $articleId, $dbContent, $dbUser)
                     });
                 });
             </script>
-            <input id='content' name='content' type='hidden' value='".utf8_encode($articleRow['content'])."'>
+            <input id='content' name='content' type='hidden' value='".$articleRow['content']."'>
             <label for='date'>Datum</label>
             <input readonly id='date' name='date' type='text' value='".$articleRow['publicationdate']."'><br><br>".
             "<label for='author'>Author</label>
-            <input readonly id='author' name='author' type='text' value='".utf8_encode($authorName)."'><br><br>";
+            <input readonly id='author' name='author' type='text' value='".$authorName."'><br><br>";
     $pageSelect = "";
     $pageRows = $dbContent->GetAllPages();
     while ($pageRow = $dbContent->FetchArray($pageRows))
     {
         $pageSelect .= "<option";
-        if ($pageName == utf8_encode($pageRow['title']))
+        if ($pageName == $pageRow['title'])
         {
             $pageSelect .= " selected";
         }
         $pageSelect .=
-            " value='".utf8_encode($pageRow['title'])."'>".utf8_encode($pageRow['title'])."</option>";
+            " value='".$pageRow['title']."'>".$pageRow['title']."</option>";
     }
     echo
         "<label for='pageSelect'>Seite</label><select name='pageSelect'>";
@@ -396,7 +396,7 @@ function EditArticle($pageName, $articleId, $dbContent, $dbUser)
         "</select><br><br>";
     echo
             "<label for='type'>Typ</label>
-            <input required id='type' name='type' type='text' value='".utf8_encode($articleRow['type'])."'><br><br>
+            <input required id='type' name='type' type='text' value='".$articleRow['type']."'><br><br>
             <label for='public'>öffentlich</label>
             <input id='public' name='public' type='checkbox'";
             if (boolval($articleRow['public']))
@@ -406,7 +406,7 @@ function EditArticle($pageName, $articleId, $dbContent, $dbUser)
             echo
             "><br><br>".
             "<label for='description'>Beschreibung</label>
-            <input required id='description' name='description' type='text' value='".utf8_encode($articleRow['description'])."'><br><br>
+            <input required id='description' name='description' type='text' value='".$articleRow['description']."'><br><br>
             <input id='updateArticle' name='updateArticle' type='submit' value='Publish'>".
             "<input id='pageName' name='pageName' type='hidden' value='".$pageName."'>".
             "<input id='articleId' name='articleId' type='hidden' value='".$articleId."'>
