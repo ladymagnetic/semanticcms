@@ -18,12 +18,14 @@ BackendComponentPrinter::PrintHead("Seitenverwaltung", $jquery=true);
 /* Include(s) */
 require_once 'lib/DbEngine.class.php';
 require_once 'lib/DbContent.class.php';
+require_once 'lib/DbUser.class.php';
 require_once 'lib/Permission.enum.php';
 require_once 'config/config.php';
 
 /* use namespace(s) */
 use SemanticCms\DatabaseAbstraction\DbEngine;
 use SemanticCms\DatabaseAbstraction\DbContent;
+use SemanticCms\DatabaseAbstraction\DbUser;
 use SemanticCms\Model\Permission;
 
 /* Check if user is logged in */
@@ -47,6 +49,7 @@ BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
 /** Database related objects */
 $db = new DbEngine($config['cms_db']['dbhost'],$config['cms_db']['dbuser'],$config['cms_db']['dbpass'],$config['cms_db']['database']);
 $dbContent = new DbContent($config['cms_db']['dbhost'], $config['cms_db']['dbuser'], $config['cms_db']['dbpass'], $config['cms_db']['database']);
+$dbUser = new DbUser($config['cms_db']['dbhost'], $config['cms_db']['dbuser'], $config['cms_db']['dbpass'], $config['cms_db']['database']);
 
 /* Datatables */
 BackendComponentPrinter::PrintDatatablesPlugin();
@@ -55,6 +58,34 @@ BackendComponentPrinter::PrintDatatablesPlugin();
     <h1><i class="fa fa-file-text fontawesome"></i> Seitenverwaltung</h1>
 
     <?php
+    /* Begin: React to user actions -------------------------------*/
+    // Submit button with the name 'newPage' was clicked
+    if (isset($_POST['newPage'])) {
+        // Insert a new page
+        $templates = $dbUser->SelectAllTemplates();
+        if ($dbUser->GetResultCount($templates) < 1) {
+            die("Es exististieren keine Templates");
+        } else {
+            // The first template in the array will be the default template
+            $defaultTemplate = $dbUser->FetchArray($templates);
+            // Create a new title
+            $newTitlePrefix = 'Neue Seite';
+            $newTitleSuffix = 0;
+            do {
+                $newTitleSuffix++;
+                $newTitle = $newTitlePrefix.$newTitleSuffix;
+            } while($dbContent->PagetitleAlreadyExists($newTitle));
+
+            $dbContent->InsertPage($newTitle, $defaultTemplate['id']);
+        }
+    }
+    // Submit button with the name 'options' was clicked
+    if (isset($_POST['options'])) {
+        // noch keine Aufgabe
+    }
+
+    /* End: React to user actions -------------------------------*/
+
     /* Print Pages table */
     $pages = $dbContent->SelectAllPages();
     BackendComponentPrinter::PrintTableStart(array("Seite", "Template", "Aktionen", "Relative Position"));
@@ -70,12 +101,11 @@ BackendComponentPrinter::PrintDatatablesPlugin();
         BackendComponentPrinter::PrintTableRow(array($siteTitle, $siteTemplate['templatename'], $siteActions, $siteRelativePosition));
     }
     BackendComponentPrinter::PrintTableEnd();
-    //echo "debug: nr. of pages: ".$dbContent->GetResultCount($pages);
     ?>
 
-    <form method="post" action="../lib/BackendComponentPrinter.class.php">
-        <input id="newPage" name="newPage" type="button" value="Neue Seite">
-        <input id="options" name="options" type="button" value="Optionen">
+    <form method="post" action=''>
+        <input id="newPage" name="newPage" type="submit" value="Neue Seite">
+        <input id="options" name="options" type="submit" value="Optionen">
     </form>
 </main>
 </body>
