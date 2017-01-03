@@ -209,7 +209,7 @@ class BackendComponentPrinter
      * @param $size Number of visible options at the same time
      * @param $selected The default selected option string
      */
-	public static function PrintDrowpdownList($label, $name, array $options, $size, $selected)
+	public static function PrintDropdownList($label, $name, array $options, $size, $selected)
     {
         echo "<label>$label
                 <select name='$name' size='$size'>";
@@ -254,7 +254,7 @@ class BackendComponentPrinter
             "MS Serif"
         );
 
-        self::PrintDrowpdownList($label, $name, $fontNames, 1, $fontNames[0]);
+        self::PrintDropdownList($label, $name, $fontNames, 1, $fontNames[0]);
     }
 
     /**
