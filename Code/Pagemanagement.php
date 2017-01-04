@@ -18,15 +18,14 @@ BackendComponentPrinter::PrintHead("Seitenverwaltung", $jquery=true);
 /* Include(s) */
 require_once 'lib/DbEngine.class.php';
 require_once 'lib/DbContent.class.php';
-require_once 'lib/DbUser.class.php';
 require_once 'lib/Permission.enum.php';
 require_once 'config/config.php';
 
 /* use namespace(s) */
 use SemanticCms\DatabaseAbstraction\DbEngine;
 use SemanticCms\DatabaseAbstraction\DbContent;
-use SemanticCms\DatabaseAbstraction\DbUser;
 use SemanticCms\Model\Permission;
+
 
 /* Check if user is logged in */
 if(!isset($_SESSION['username']))
@@ -49,7 +48,6 @@ BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
 /** Database related objects */
 $db = new DbEngine($config['cms_db']['dbhost'],$config['cms_db']['dbuser'],$config['cms_db']['dbpass'],$config['cms_db']['database']);
 $dbContent = new DbContent($config['cms_db']['dbhost'], $config['cms_db']['dbuser'], $config['cms_db']['dbpass'], $config['cms_db']['database']);
-$dbUser = new DbUser($config['cms_db']['dbhost'], $config['cms_db']['dbuser'], $config['cms_db']['dbpass'], $config['cms_db']['database']);
 
 /* Datatables */
 BackendComponentPrinter::PrintDatatablesPlugin();
@@ -62,12 +60,12 @@ BackendComponentPrinter::PrintDatatablesPlugin();
     // Submit button with the name 'newPage' was clicked
     if (isset($_POST['newPage'])) {
         // Insert a new page
-        $templates = $dbUser->SelectAllTemplates();
-        if ($dbUser->GetResultCount($templates) < 1) {
+        $templates = $dbContent->SelectAllTemplates();
+        if ($dbContent->GetResultCount($templates) < 1) {
             die("Es exististieren keine Templates");
         } else {
             // The first template in the array will be the default template
-            $defaultTemplate = $dbUser->FetchArray($templates);
+            $defaultTemplate = $dbContent->FetchArray($templates);
             // Create a new title
             $newTitlePrefix = 'Neue Seite';
             $newTitleSuffix = 0;
@@ -76,12 +74,18 @@ BackendComponentPrinter::PrintDatatablesPlugin();
                 $newTitle = $newTitlePrefix.$newTitleSuffix;
             } while($dbContent->PagetitleAlreadyExists($newTitle));
 
-            $dbContent->InsertPage($newTitle, $defaultTemplate['id']);
+            $relativePosition = 21; // todo: höchste position aus dbcontent auslesen
+            $dbContent->InsertPage($newTitle, $relativePosition, $defaultTemplate['id']);
         }
     }
     // Submit button with the name 'options' was clicked
     if (isset($_POST['options'])) {
         // noch keine Aufgabe
+    }
+    // Submit button with the name 'deletePage' was clicked
+    if (isset($_POST['deletePage'])) {
+        //$debug->debug('deletePage was clicked');
+        //BackendComponentPrinter::AskIfReallyDelete();
     }
 
     /* End: React to user actions -------------------------------*/
@@ -94,8 +98,9 @@ BackendComponentPrinter::PrintDatatablesPlugin();
         $siteTitle = $page['title'];
         $queryResult = $dbContent->SelectTemplateById($page['template_id']);
         $siteTemplate = $dbContent->FetchArray($queryResult);
-        $siteActions = "<form method='post'>
-                <input id='editContent' name='editContent' type='button' value='Löschen'><input name='Button2' type='button' value='Inhalte bearbeiten'></form>";
+        $siteActions = "<form method='post' action=''>
+                <input id='deletePage' name='deletePage' type='submit' value='Löschen'>
+                <input id='editContent' name='editContent' type='submit' value='Inhalte bearbeiten'></form>";
         $siteRelativePosition = $page['relativeposition'];
 
         BackendComponentPrinter::PrintTableRow(array($siteTitle, $siteTemplate['templatename'], $siteActions, $siteRelativePosition));
