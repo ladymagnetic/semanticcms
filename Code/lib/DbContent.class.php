@@ -592,14 +592,15 @@ class DbContent
 	/**
 	* InsertPage()
 	* @params string $title the title of the template
-	* @params string $templateId the id of the used template
+	* @params int $relativeposition 
+	* @params int $templateId the id of the used template
 	*/
-	public function InsertPage($title, $templateId)
+	public function InsertPage($title, $relativeposition, $templateId)
 	{
 		if(!($this->PagetitleAlreadyExists($title)))
 		{
 			$title = $this->database->RealEscapeString($title);
-			$result = $this->database->ExecuteQuery("INSERT INTO page (id, title, template_id) VALUES (NULL, '".$title."', ".$templateId." ");
+			$result = $this->database->ExecuteQuery("INSERT INTO page (id, title, relativeposition, template_id) VALUES (NULL, '".$title."', ".$relativeposition.", ".$templateId." ");
 
 			if($result==true)
 			{
@@ -708,11 +709,12 @@ class DbContent
 	/**
 	* UpdatePageByTitle()
 	* @params string $title
+	* @params int $relativeposition
 	* @params int $templateId
 	*/
-	public function UpdatePageByTitle($title, $templateId)
+	public function UpdatePageByTitle($title, $relativeposition, $templateId)
 	{
-		$result = $this->database->ExecuteQuery("UPDATE page SET template_id = ".$templateId."  WHERE templatename = '". $templatename."'");
+		$result = $this->database->ExecuteQuery("UPDATE page SET relativeposition = ".$relativeposition.", template_id = ".$templateId." WHERE templatename = '". $templatename."'");
 
 		if($result==true)
 		{		//warum wurde der User gedebannt und wer hat das gemacht?
@@ -737,11 +739,12 @@ class DbContent
 	* UpdatePageById()
 	* @params int $pageId
 	* @params string $title
+	* @params int $relativeposition
 	* @params int $templateId
 	*/
-	public function UpdatePageById($pageId, $title, $templateId)
+	public function UpdatePageById($pageId, $title, $relativeposition, $templateId)
 	{
-		$result = $this->database->ExecuteQuery("UPDATE page SET title  ='".$title."', template_id  = ".$templateId."  WHERE id = ". $pageId);
+		$result = $this->database->ExecuteQuery("UPDATE page SET title  ='".$title."', relativeposition = ".$relativeposition.", template_id  = ".$templateId."  WHERE id = ". $pageId);
 
 		if($result==true)
 		{
