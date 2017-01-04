@@ -617,6 +617,9 @@ class DbContent
 			$title = $this->database->RealEscapeString($title);
 			$result = $this->database->ExecuteQuery("INSERT INTO page (id, title, relativeposition, template_id) VALUES (NULL, '".$title."', ".$relativeposition.", ".$templateId.") ");
 
+			echo 'Bloß zur Info: var_dump hat den Wert:';
+			var_dump($result);
+			
 			if($result==true)
 			{
 				$logUsername = 'Wer ist gerade angemeldet? => $username';		// es sollte nicht möglich sein, dass jemand anders da etwas von einer anderen Person ändert.
