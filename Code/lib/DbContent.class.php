@@ -55,9 +55,6 @@ class DbContent
 
 	/*---- Mirjam ----*/
 
-		$allArticles = "SELECT * FROM article";
-		$this->database->PrepareStatement("allArticles", $allArticles);
-
 		$allArticlesWithDetailedInformation = "SELECT article.header, article.content, article.publicationdate, article.public, user.username, page.title ".
 												"FROM page INNER JOIN article ON page.id = article.page_id INNER JOIN user ON article.author = user.id ".
 												"ORDER BY user.username ASC;";
@@ -114,6 +111,23 @@ class DbContent
 		$selectAllLablesFromAnArticleById = "SELECT * FROM article INNER JOIN lable_article  ON article.id = lable_article.article_id INNER JOIN Lable ON lable_article.lable_id = lable.id WHERE article.id = ?";
 		$this->database->PrepareStatement("selectAllLablesFromAnArticleById", $selectAllLablesFromAnArticleById );
 
+		
+		
+		
+		$allArticles = "SELECT * FROM article";			//Mirjam: Wird noch überprüft, welche davon verwendet wird.
+		$this->database->PrepareStatement("allArticles", $allArticles);
+
+		// aus DBUser
+		
+		$selectAllArticles = "SELECT * FROM article"; 	//Mirjam: Wird noch überprüft, welche davon verwendet wird.
+		$this->database->PrepareStatement("selectAllArticles", $selectAllArticles);
+
+		$selectAllTemplates = "SELECT * FROM template";
+		$this->database->PrepareStatement("selectAllTemplates", $selectAllTemplates);
+
+		
+		
+		
 	}
 
 	/**
@@ -1003,7 +1017,33 @@ class DbContent
 
 
 
+	
+	
+	
+	// aus DBUser
+	/**
+	* SelectAllArticles()
+	*/
+	public function SelectAllArticles()
+	{
+		return $this->database->ExecutePreparedStatement("selectAllArticles", array());
+	}
 
+	
+		/**
+	* SelectAllTemplates()
+	*/
+
+	public function SelectAllTemplates()
+	{
+		return $this->database->ExecutePreparedStatement("selectAllTemplates", array());
+	}
+
+
+	
+	
+	
+	
 
 }
 

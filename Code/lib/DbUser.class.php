@@ -78,14 +78,7 @@ class DbUser
 		$selectAllRoles = "SELECT * FROM role";
 		$this->database->PrepareStatement("selectAllRoles", $selectAllRoles);
 
-		$selectAllArticles = "SELECT * FROM article";
-		$this->database->PrepareStatement("selectAllArticles", $selectAllArticles);
 
-		$selectAllTemplates = "SELECT * FROM template";
-		$this->database->PrepareStatement("selectAllTemplates", $selectAllTemplates);
-
-		$selectAllPages = "SELECT * FROM page";
-		$this->database->PrepareStatement("selectAllPages", $selectAllPages);
 
 		$selectAllBan_Reason = "SELECT * FROM ban_reason";
 		$this->database->PrepareStatement("selectAllBan_Reason", $selectAllBan_Reason);
@@ -99,7 +92,7 @@ class DbUser
 		$selectBanByUserid = "SELECT * FROM ban where user_id = ? ";
 		$this->database->PrepareStatement("selectBanByUserid", $selectBanByUserid);
 
-	    $selectAllBansFromAUserByUsername = "SELECT * FROM ban INNER JOIN  user ON  ban.user_id = user.id WHERE username = ?";
+	  $selectAllBansFromAUserByUsername = "SELECT * FROM ban INNER JOIN  user ON  ban.user_id = user.id WHERE username = ?";
 		$this->database->PrepareStatement("selectAllBansFromAUserByUsername", $selectAllBansFromAUserByUsername);
 
 		$selectAllUsersWhichAreBannedNow = "SELECT * FROM ban INNER JOIN user ON ban.user_id = user.id WHERE ban.enddatetime > now()";
@@ -110,14 +103,14 @@ class DbUser
 		//$this->database->PrepareStatement("selectAllUsersWhoAreBannedNowForASpecialReasonById", $selectAllUsersWhoAreBannedNowForASpecialReasonById);
 		// SELECT * FROM ban INNER JOIN user ON ban.user_id = user.id WHERE ( ban.enddatetime > now() AND ban.reason_id = 2)
 
-		
+
 		$getUserPermissionByUsername = "SELECT role.guestbookmanagement, role.usermanagement, role.pagemanagement, role.articlemanagement, role.guestbookusage, role.templateconstruction FROM role INNER JOIN user ON role.id = user.role_id WHERE user.username = ? ";
 		$this->database->PrepareStatement("getUserPermissionByUsername", $getUserPermissionByUsername);
 
 		$whichRoleHasASpecialUser = "SELECT user.username, role.rolename FROM user INNER JOIN role ON user.role_id = role.id WHERE user.username = ?";
 		$this->database->PrepareStatement("whichRoleHasASpecialUser", $whichRoleHasASpecialUser);
-		
-		
+
+
 		$selectAllLogs = "SELECT * FROM logtable ORDER BY logtable.logdate ASC";
 		$this->database->PrepareStatement("selectAllLogs", $selectAllLogs);
 
@@ -163,7 +156,7 @@ class DbUser
 		return $result;
 	}
 
-	
+
 	/**
 	* CountBans()
 	* macht in der Form nicht unbedingt so viel Sinn. => besser: auf einen bestimmten Zeitraum beziehen
@@ -209,8 +202,8 @@ class DbUser
 	}
 
 
-	
-	
+
+
 	/**
 	* SelectAllLogs()
 	*/
@@ -228,8 +221,8 @@ class DbUser
 	{
 			return $this->database->ExecutePreparedStatement("selectOneLogById", array($logtableId));
 	}
-	
-	
+
+
 
 	/**
 	* SelectAllLogsFromOneUserByUsername()
@@ -240,8 +233,8 @@ class DbUser
 			return $this->database->ExecutePreparedStatement("selectAllLogsFromOneUserByUsername", array($logtableUsername));
 	}
 
-	
-	
+
+
 	/**
 	* SelectAllLogsFromASpecialDateByLogdate()
 	* @params string $logtableLogdate
@@ -250,9 +243,9 @@ class DbUser
 	{
 			return $this->database->ExecutePreparedStatement("selectAllLogsFromASpecialDateByLogdate", array($logtableLogdate));
 	}
-	
-	
-	
+
+
+
 	/**
 	* DeleteAllLogs()
 	*/
@@ -275,10 +268,10 @@ class DbUser
 		}
 	}
 
-	
-	
+
+
 	/**  => @Theresa: bin mir eigentlich fast sicher, dass wir diese nicht brauchen werden weil eigentlich sinnlos aber ich wollte sie dir trotzdem zur Verfügung stellen. VG, Mirjam
-	* DeleteOneLogById() 							
+	* DeleteOneLogById()
 	* @params int $logtableId the id of the logtable
  	*/
 	public function DeleteOneLogById($logtableId)
@@ -298,17 +291,17 @@ class DbUser
 		}
 	}
 
-	
-	
-	
-	
-	
+
+
+
+
+
 	/* --- ENDE --- --- --- --- --- --- --- --- --- --- --- --- --- für die Startseite: Statistik für Admin --- --- --- --- --- --- --- --- ENDE --- */
-	
-	
-		
-	
-	
+
+
+
+
+
 
 	/**
 	* EmailAlreadyExists()
@@ -321,7 +314,7 @@ class DbUser
 
 		if($result==true && $this->database->GetResultCount($result) > 0)
 		{
-			return true;	//there is a user with this email adress 
+			return true;	//there is a user with this email adress
 		}
 		else
 		{
@@ -334,7 +327,7 @@ class DbUser
 	/**
 	* UsernameAlreadyExists()
 	* @params string $username the user's name
-	* checks whether the username already exists in database 
+	* checks whether the username already exists in database
 	*/
 	public function UsernameAlreadyExists($username)
 	{
@@ -436,12 +429,12 @@ function check_date($date,$format,$sep)
 		$usersName = $this->database->ExecuteQuery("SELECT username FROM user WHERE id = ".$userId);
 		$usersRoleId = $this->database->ExecuteQuery("SELECT role_id FROM user WHERE id = ".$userId);
 		//$usersRoleName = $this->database->ExecuteQuery("SELECT rolename FROM role WHERE id = ".$usersRoleId);
-		
+
 		//echo'usersRoleId:';
 		var_dump($usersRoleId);
 		//echo'usersName:';
 		var_dump($usersName);
-		
+
 
 		var_dump($usersName);
 
@@ -450,7 +443,7 @@ function check_date($date,$format,$sep)
 			// Wer wird gelöscht?
 			// Wer hat den Löschvorgang durchgeführt? => Usermanagement is true. => alle diese könnnen User löschen!
 			// eventuell neuen Parameter bei Funktion mitgeben ($userId von der Person, die löscht.)
-			
+
 			$logUsername = 'Wer ist gerade angemeldet?';
 			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
 			//$logDescription = 'der User: '.$usersName.' wurde gelöscht';
@@ -459,9 +452,9 @@ function check_date($date,$format,$sep)
 			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
 			echo'Versuch';
-			
+
 			var_dump($re);
-				
+
 			return true;
 		}
 		else
@@ -472,14 +465,14 @@ function check_date($date,$format,$sep)
 
 
 	/** => Funktion wird nicht verwendet.
-	* deleteUserByUsername() 
+	* deleteUserByUsername()
 	* Delets a particular User by a name
 	* @params int $userId the user's Id
 	*/
 	public function DeleteUserByUsername($username)
 	{
 		$result = $this->database->ExecutePreparedStatement("deleteUserByUsername", array($username));
-		
+
 		//$usersName = $this->database->ExecuteQuery("SELECT username FROM user WHERE id = ".$userId);
 
 		if($result==true)
@@ -488,8 +481,8 @@ function check_date($date,$format,$sep)
 			// Wer wird gelöscht?
 			// Wer hat den Löschvorgang durchgeführt? => Usermanagement is true. => alle diese könnnen User löschen!
 			// eventuell neuen Parameter bei Funktion mitgeben ($userId von der Person, die löscht.)
-			
-				
+
+
 			$logUsername = 'Wer ist gerade angemeldet?';
 			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
 			//$logDescription = 'der User: '.$nameOfUser.' wurde gelöscht';
@@ -499,8 +492,8 @@ function check_date($date,$format,$sep)
 
 			echo'Versuch';
 
-			var_dump($re);				
-				
+			var_dump($re);
+
 			return true;
 		}
 		else
@@ -537,7 +530,7 @@ function check_date($date,$format,$sep)
 	*/
 	public function DeleteRole($roleId)
 	{
-		$result = $this->database->ExecutePreparedStatement("deleteRole", array($roleId));  
+		$result = $this->database->ExecutePreparedStatement("deleteRole", array($roleId));
 		$nameOfRole = $this->database->ExecuteQuery("SELECT rolename FROM role WHERE id = ".$roleId);
 
 		if($result==true)
@@ -546,7 +539,7 @@ function check_date($date,$format,$sep)
 			// Welche Rolle wird gelöscht?
 			// Wer hat den Löschvorgang durchgeführt? => Usermanagement is true. => alle diese könnnen Rollen löschen!
 			// eventuell neuen Parameter bei Funktion mitgeben ($userId von der Person, die löscht. => Nur der Admin darf Roles löschen!)
-			
+
 			$logUsername = 'Wer ist gerade angemeldet?';
 			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
 		 	$logDescription = 'hier könnte ihre beschreibung stehen => welche Rolle ($nameOfRole) wurde gerade gelöscht?';
@@ -554,7 +547,7 @@ function check_date($date,$format,$sep)
 			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
 			var_dump($re);
-						
+
 			return true;
 		}
 		else
@@ -573,7 +566,7 @@ function check_date($date,$format,$sep)
 	public function AssignRole($roleId, $userId)
 	{
 		$result = $this->database->ExecuteQuery("UPDATE user SET role_id ='".$roleId."' WHERE id = '". $userId."'");
-		
+
 		$usersName = $this->database->ExecuteQuery("SELECT username FROM user WHERE id = ".$userId);
 		$nameOfRole = $this->database->ExecuteQuery("SELECT rolename FROM role WHERE id = ".$roleId);
 
@@ -583,7 +576,7 @@ function check_date($date,$format,$sep)
 			// Welche Rolle wird zugewiesen?
 			// Wer hat die Zuweisung durchgeführt? => Usermanagement is true. => alle diese könnnen Rollen zuweisen!
 			// eventuell neuen Parameter bei Funktion mitgeben ($userId von der Person, die die Rolle zuweist.)
-			
+
 			$logUsername = 'Wer ist gerade angemeldet?';
 			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
 		 	$logDescription = 'welche Rolle  ($nameOfRole) wurde gerade welchem Benutzer ($usersName) zugewiesen?';
@@ -591,8 +584,8 @@ function check_date($date,$format,$sep)
 			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
 			var_dump($re);
-			
-			
+
+
 			return true;
 		}
 		else
@@ -622,15 +615,15 @@ function check_date($date,$format,$sep)
 		 {
 			// für Log-Tabelle:
 			 // Welche hat die neue Rolle erstellt?
-			 
+
 			$logUsername = 'Wer ist gerade angemeldet?';
 			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
 		 	$logDescription = 'Welche neue Rolle wurde gerade angelegt? => $rolename';
 
 			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
-			var_dump($re);	 
-			 
+			var_dump($re);
+
 			return true;
 		 }
 		 else
@@ -680,7 +673,7 @@ function check_date($date,$format,$sep)
 		if($result==true)
 		{
 			// was wurde geändert und WER hat die Änderung durchgeführt??
-					
+
 			$logUsername = 'Wer ist gerade angemeldet?';
 			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
 		 	$logDescription = 'welche Rolle  wurde geändert? => $rolename';
@@ -688,7 +681,7 @@ function check_date($date,$format,$sep)
 			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
 			var_dump($re);
-						
+
 			return true;
 		}
 		else
@@ -712,22 +705,22 @@ function check_date($date,$format,$sep)
 		$result = $this->database->ExecuteQuery("UPDATE user SET lastname ='".$lastname."',  firstname ='".$firstname."',  username ='".$username."',  email ='".$email."' WHERE id = '". $userId."'");
 
 		$usersRoleId = $this->database->ExecuteQuery("SELECT role_id FROM user WHERE username = ".$username);
-		
+
 		//$usersRoleName = $this->database->ExecuteQuery("SELECT rolename FROM role WHERE id = ".$usersRoleId);
-		
-		
+
+
 		if($result==true)
 		{
 				// was wurde geändert und WER hat die Änderung durchgeführt??
-			
+
 			$logUsername = 'Wer ist gerade angemeldet? => $username';		// es sollte nicht möglich sein, dass jemand anders da etwas von einer anderen Person ändert.
 			$logRolename = 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName';
 		 	$logDescription = 'Änderung der persönlichen Daten.';
 
 			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
-			var_dump($re);			
-				
+			var_dump($re);
+
 			return true;
 		}
 		else
@@ -767,32 +760,9 @@ function check_date($date,$format,$sep)
 	}
 
 
-	/**
-	* SelectAllArticles()
-	*/
-	public function SelectAllArticles()
-	{
-		return $this->database->ExecutePreparedStatement("selectAllArticles", array());
-	}
 
 
-	/**
-	* SelectAllTemplates()
-	*/
 
-	public function SelectAllTemplates()
-	{
-		return $this->database->ExecutePreparedStatement("selectAllTemplates", array());
-	}
-
-
-	/**
-	* SelectAllPages()
-	*/
-	public function SelectAllPages()
-	{
-		return $this->database->ExecutePreparedStatement("selectAllPages", array());
-	}
 
 
 
@@ -806,7 +776,7 @@ function check_date($date,$format,$sep)
 		//zum Testen in Xampp: SELECT * FROM `ban` INNER JOIN user ON ban.user_id = user.id WHERE (user.id = 8 AND ban.end > now())
 		$userId= $this->database->RealEscapeString($userId);
 		$result = $this->database->ExecuteQuery("SELECT * FROM ban INNER JOIN user ON ban.user_id = user.id WHERE ( user.id =".$userId." AND ban.end > now() )");
-			
+
 		if($result==true)
 		{
 			return true;
@@ -831,7 +801,7 @@ function check_date($date,$format,$sep)
 		if($result==true)
 		{
 			echo "User ist gerade gesperrt";
-						
+
 			return true;
 		}
 		else
@@ -855,20 +825,20 @@ function check_date($date,$format,$sep)
 	// Datum überprüfen
 		$description = $this->database->RealEscapeString($description);
 		$result = $this->database->ExecuteQuery("INSERT INTO ban (id, user_id, reason_id, description, begindatetime, enddatetime) VALUES (NULL, ".$user_id.", ".$reason_id.", '".$description."', '".$begindatetime."', '".$enddatetime."')");
-		
+
 		$usersName = $this->database->ExecuteQuery("SELECT username FROM user WHERE id = ".$user_id);
-		
-		
+
+
 		if($result==true)
 		{
 			// welcher User wurde gebannt und WER hat den Ban erstellt??
-			
+
 			$logUsername = 'Wer ist gerade angemeldet?';
 			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
 		 	$logDescription = 'Folgender User wurde gerade gebannt: $usersName';
 
 			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-			
+
 			return true;
 		}
 		else
@@ -886,18 +856,18 @@ function check_date($date,$format,$sep)
 	public function DebanUserViaBanId($id)
 	{
 		$result = $this->database->ExecuteQuery("UPDATE ban SET enddatetime = NOW() WHERE id = ". $id);
-		
+
 		$usersName = $this->database->ExecuteQuery("SELECT username FROM user INNER JOIN ban ON user.id = ban.user_id WHERE ban.id = ".$id);
 
 		if($result==true)
 		{		//warum wurde der User gedebannt und wer hat das gemacht?
-	
+
 			$logUsername = 'Wer ist gerade angemeldet?';
 			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
 		 	$logDescription = 'Folgender User ist nicht mehr gebannt: $usersName';
 
 			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-			
+
 			return true;
 		}
 		else
@@ -927,19 +897,19 @@ function check_date($date,$format,$sep)
 	{
 		$reason = $this->database->RealEscapeString($reason);
 		$result = $this->database->ExecutePreparedStatement("insertBan_Reason", array($reason));
-		
+
 		//var_dump($result);
 
 		if($result==true)
 		{
 			  //wer hat den neuen Ban-Grund erstellt? Usermanagement is true. Was ist die neue Ban-Reason`?
-			
+
 			$logUsername = 'Wer ist gerade angemeldet?';
 			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
 		 	$logDescription = 'Es gibt einen neue Ban-Reason: =>  $reason';
 
 			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-						  
+
 			return true;
 		}
 		else
@@ -1000,14 +970,14 @@ function check_date($date,$format,$sep)
 	}
 
 
-	
+
 	/**
 	* ApplyPasswordChangesToUser()
 	* @params string $userId the user's id
 	* @params string $password the user's password
 	* @params string $newPassword the user's new password
 	* @params string $newPasswordRepeat the user's the repetition of new password
-	*/	
+	*/
 	public function ApplyPasswordChangesToUser($userId, $password, $newPassword, $newPasswordRepeat)
 	{
 		//$password = $this->database->RealEscapeString($password);
@@ -1016,7 +986,7 @@ function check_date($date,$format,$sep)
 		$result = $this->database->ExecuteQuery("SELECT password FROM user WHERE id ='".$userId."'");
 
 		var_dump($result);
-		 
+
 		//echo $result;
 
 		if ($result == $password)
@@ -1036,10 +1006,10 @@ function check_date($date,$format,$sep)
 		}
 
 	}
-	
-	
-	
-	
+
+
+
+
 	/**
 	* FetchArray()
 	* @params string $result is the result of an query
@@ -1049,7 +1019,7 @@ function check_date($date,$format,$sep)
 		return $this->database->FetchArray($result);
 	}
 
-	
+
 	/**
 	* GetResultCount()
 	* @params string $result
@@ -1058,13 +1028,13 @@ function check_date($date,$format,$sep)
 	{
 		return  $this->database->GetResultCount($result);
 	}
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
 	/**
 	*  GetUserPermissionByUsername()
 	* @params string $username the user's username
@@ -1074,7 +1044,7 @@ function check_date($date,$format,$sep)
 		return $this->database->ExecutePreparedStatement("getUserPermissionByUsername", array($username));
 	}
 
-	
+
 
 	/**
 	*  WhichRoleHasASpecialUser()
@@ -1086,36 +1056,36 @@ function check_date($date,$format,$sep)
 	}
 
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 	/** => wird noch überarbeitet
