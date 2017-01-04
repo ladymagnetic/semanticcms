@@ -287,5 +287,44 @@ class BackendComponentPrinter
             });
         } );</script>";
     }
+
+    /**
+     * Opens the page to let the user decide if a specific item should be deleted.
+     * If the user confirms the deletion, the variable $_POST['reallyDelete'] will
+     * be set on returning to the page $actionPage.
+     * Also, the variable $_POST['$customDataKey'] will contain the value
+     * $customDataValue on return.
+     * @param string $siteTitle The corresponding site title
+     * @param string $actionPage The page to which we should return back
+     * @param string $customDataKey A custom data key which helps identifying the type
+     * of data which should be deleted.
+     * @param string $customDataValue The corresponding value of the custom data
+     */
+    public static function AskIfReallyDelete($siteTitle, $actionPage, $customDataKey,
+            $customDataValue)
+    {
+        BackendComponentPrinter::PrintHead($siteTitle);
+        //*----- Permissions ----- */
+        /* Include(s) */
+        require_once 'lib/Permission.enum.php';
+        require_once 'config/config.php';
+
+        BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
+        //*----- Permissions End ----- */
+
+        echo
+            "<main><form method='post' action='".$actionPage."'>".
+            "<input id='".$customDataKey."' name='".$customDataKey."' type='hidden' value='".$customDataValue."'><br><br>".
+            "<p>Möchten Sie wirklich löschen?</p>".
+            "<p><img src='media/Pictures/Gnome-edit-delete.png' height='auto' width='250px'></p>".
+            "<input id='reallyDelete' name='reallyDelete' type='submit' value='Löschen'>";
+        echo
+        "</form>";
+        echo
+        "<form method='post' action='".$actionPage."'><input id='back' name='back' type='submit' value='Zurück'><form>";
+        echo
+        "</main></body></html>";
+
+    }
 }
 ?>
