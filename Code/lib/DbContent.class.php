@@ -582,7 +582,7 @@ class DbContent
 		if(!($this->TemplatenameAlreadyExists($templatename)))
 		{
 			$templatename = $this->database->RealEscapeString($templatename);
-			$result = $this->database->ExecuteQuery("INSERT INTO template (id, templatename, filelink) VALUES (NULL, '".$templatename."', '".$filelink."' ");
+			$result = $this->database->ExecuteQuery("INSERT INTO template (id, templatename, filelink) VALUES (NULL, '".$templatename."', '".$filelink."') ");
 
 			if($result==true)
 			{
@@ -615,7 +615,7 @@ class DbContent
 		if(!($this->PagetitleAlreadyExists($title)))
 		{
 			$title = $this->database->RealEscapeString($title);
-			$result = $this->database->ExecuteQuery("INSERT INTO page (id, title, relativeposition, template_id) VALUES (NULL, '".$title."', ".$relativeposition.", ".$templateId." ");
+			$result = $this->database->ExecuteQuery("INSERT INTO page (id, title, relativeposition, template_id) VALUES (NULL, '".$title."', ".$relativeposition.", ".$templateId.") ");
 
 			if($result==true)
 			{
