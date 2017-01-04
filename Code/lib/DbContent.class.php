@@ -126,8 +126,9 @@ class DbContent
 		$this->database->PrepareStatement("selectAllTemplates", $selectAllTemplates);
 
 
-
-
+		//neue Funktion
+		$selectAllLable_User = "SELECT * FROM lable_user";
+		$this->database->PrepareStatement("selectAllLable_User", $selectAllLable_User);
 	}
 
 	/**
@@ -925,7 +926,7 @@ class DbContent
  	*/
  	public function InsertLable_Article($lableId, $articleId)
  	{
- 		$result = $this->database->ExecuteQuery("INSERT INTO lable (lable_id, article_id) VALUES (NULL, ".$lableId.", ".$articleId.")");
+ 		$result = $this->database->ExecuteQuery("INSERT INTO lable_article (lable_id, article_id) VALUES (".$lableId.", ".$articleId.")");
 		//$lable = ... SELECT lablename FROM lable WHERE id = ".$lableId."....;
 
  		if($result==true)
@@ -1042,9 +1043,185 @@ class DbContent
 
 
 
+	
+	//neue Funktionen
+	/**
+	* SelectAllLable_User()
+	*/
+	public function SelectAllLable_User()
+	{
+		return $this->database->ExecutePreparedStatement("selectAllLable_User", array());
+	}
+
+	
+
+	/**
+	* DeleteAllLable_User()
+	*/
+	public function DeleteAllLable_User()
+	{
+		$result = $this->database->ExecuteQuery("DELETE FROM lable_user");
+
+		if($result==true)
+		{
+			$logUsername = 'Wer ist gerade angemeldet? => $username';
+			$logRolename = 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName';
+			$logDescription = 'Keinem User ist ein Lable zugewiesen. ';
+
+			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+
+	
+	
+	/**
+	* DeleteLable_UserByArticleId()
+	* @params int $userId the user's id (foreign key)
+	*/
+	public function DeleteLable_UserByArticleId($userId)
+	{
+		$result = $this->database->ExecuteQuery("DELETE FROM lable_user WHERE user_id = ".$userId);
+
+		if($result==true)
+		{
+			$logUsername = 'Wer ist gerade angemeldet? => $username';
+			$logRolename = 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName';
+			$logDescription = 'Alle Verbindungen zwischen Lable und User mit bestimmter userid gelöscht.';
+
+			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	
+	
+	
+	/**
+	* DeleteLable_UserByLableId()
+	* @params int $lableId the id of the lable (foreign key)
+	*/
+	public function DeleteLable_UserByLableId($lableId)
+	{
+		$result = $this->database->ExecuteQuery("DELETE FROM lable_user WHERE lable_id = ".$lableId);
+
+		if($result==true)
+		{
+			$logUsername = 'Wer ist gerade angemeldet? => $username';
+			$logRolename = 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName';
+			$logDescription = 'Alle Verbindungen zwischen Lable und User mit bestimmter lable_id gelöscht.';
+
+			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}	
+	
+	
+	
+	/**
+	* InsertLable_User()
+	* @params int $lableId the id of the lable (foreign key)
+	* @params int $userId the user's id (foreign key)
+	*/
+	public function InsertLable_User($lableId, $userId)
+	{
+		$result = $this->database->ExecuteQuery("INSERT INTO lable_user (lable_id, user_id) VALUES (".$lableId.", ".$userId.")");
+
+		if($result==true)
+		{
+			$logUsername = 'Wer ist gerade angemeldet? => $username';
+			$logRolename = 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName';
+			$logDescription = 'einem User wurden neue Lables hinzugefügt erstellt.';
+
+			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+ 	
+	
+	
+	/**
+	* UpdateLable_UserByLableId()
+	* @params int $lableId the id of the lable (foreign key)
+	* @params int $userId the user's id (foreign key)
+	*/
+	public function UpdateLable_UserByLableId($lableId, $userId)
+	{
+
+		$result = $this->database->ExecuteQuery("UPDATE lable_user SET user_id  = ".$userId."  WHERE lable_id  = " .$lableId);
+
+		//$lable = ... SELECT lablename FROM lable WHERE id = ".$lableId."....;
+
+		if($result==true)
+		{
+			$logUsername = 'Wer ist gerade angemeldet? => $username';
+			$logRolename = 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName';
+			$logDescription = 'Update.';
+
+			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 
 
 
+	/**
+	* UpdateLable_UserByArticleId()
+	* @params int $lableId the id of the lable (foreign key)
+	* @params int $userId the user's id (foreign key)
+	*/
+	public function UpdateLable_UserByArticleId($lableId, $userId)
+	{
+
+		$result = $this->database->ExecuteQuery("UPDATE lable_user SET lable_id  = ".$lableId."  WHERE user_id  = " .$userId);
+
+		//$lable = ... SELECT lablename FROM lable WHERE id = ".$lableId."....;
+
+		if($result==true)
+		{
+			$logUsername = 'Wer ist gerade angemeldet? => $username';
+			$logRolename = 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName';
+			$logDescription = 'Update.';
+
+			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	
+	
 }
 
 ?>
