@@ -69,8 +69,8 @@ class DbContent
 		$this->database->PrepareStatement("selectOneArticleById", $selectOneArticleById);
 
 
-		$selectAllPages = "SELECT * FROM page";
-		$this->database->PrepareStatement("selectAllPages", $selectAllPages);		
+		$selectAllPages = "SELECT * FROM page ORDER BY page.relativeposition ASC";
+		$this->database->PrepareStatement("selectAllPages", $selectAllPages);
 
 		$selectPageByPagename = "SELECT * FROM page WHERE title = ?";
 		$this->database->PrepareStatement("selectPageByPagename", $selectPageByPagename);
@@ -111,23 +111,23 @@ class DbContent
 		$selectAllLablesFromAnArticleById = "SELECT * FROM article INNER JOIN lable_article  ON article.id = lable_article.article_id INNER JOIN Lable ON lable_article.lable_id = lable.id WHERE article.id = ?";
 		$this->database->PrepareStatement("selectAllLablesFromAnArticleById", $selectAllLablesFromAnArticleById );
 
-		
-		
-		
+
+
+
 		$allArticles = "SELECT * FROM article";			//Mirjam: Wird noch überprüft, welche davon verwendet wird.
 		$this->database->PrepareStatement("allArticles", $allArticles);
 
 		// aus DBUser
-		
+
 		$selectAllArticles = "SELECT * FROM article"; 	//Mirjam: Wird noch überprüft, welche davon verwendet wird.
 		$this->database->PrepareStatement("selectAllArticles", $selectAllArticles);
 
 		$selectAllTemplates = "SELECT * FROM template";
 		$this->database->PrepareStatement("selectAllTemplates", $selectAllTemplates);
 
-		
-		
-		
+
+
+
 	}
 
 	/**
@@ -304,7 +304,7 @@ class DbContent
 	* @params string $templatename
 	*/
 	// braucht man nur intern beim Hochzählen (?) => private
-	private function GetHighestRelativeNumber()
+	public function GetHighestRelativeNumber()
 	{
 		$result = $this->database->ExecuteQuery("SELECT MAX(relativeposition) AS maxpos FROM page;");
 		$num = $this->FetchArray($result);
@@ -606,7 +606,7 @@ class DbContent
 	/**
 	* InsertPage()
 	* @params string $title the title of the template
-	* @params int $relativeposition 
+	* @params int $relativeposition
 	* @params int $templateId the id of the used template
 	*/
 	public function InsertPage($title, $relativeposition, $templateId)
@@ -1017,9 +1017,9 @@ class DbContent
 
 
 
-	
-	
-	
+
+
+
 	// aus DBUser
 	/**
 	* SelectAllArticles()
@@ -1029,7 +1029,7 @@ class DbContent
 		return $this->database->ExecutePreparedStatement("selectAllArticles", array());
 	}
 
-	
+
 		/**
 	* SelectAllTemplates()
 	*/
@@ -1040,10 +1040,10 @@ class DbContent
 	}
 
 
-	
-	
-	
-	
+
+
+
+
 
 }
 
