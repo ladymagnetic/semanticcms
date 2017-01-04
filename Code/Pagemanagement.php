@@ -74,7 +74,7 @@ BackendComponentPrinter::PrintDatatablesPlugin();
                 $newTitle = $newTitlePrefix.$newTitleSuffix;
             } while($dbContent->PagetitleAlreadyExists($newTitle));
 
-            $relativePosition = 21; // todo: höchste position aus dbcontent auslesen
+            $relativePosition = $dbContent->GetHighestRelativeNumber()+1;
             $dbContent->InsertPage($newTitle, $relativePosition, $defaultTemplate['id']);
         }
     }
