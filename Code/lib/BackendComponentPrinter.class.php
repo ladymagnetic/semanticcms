@@ -294,6 +294,9 @@ class BackendComponentPrinter
      * be set on returning to the page $actionPage.
      * Also, the variable $_POST['$customDataKey'] will contain the value
      * $customDataValue on return.
+     * NOTE: Since this method prints a whole new page, this method should be called
+     * by a script from top of the page and BEFOFE the occurance of any HTML-tag like <html>,
+     * <head> etc.
      * @param string $siteTitle The corresponding site title
      * @param string $actionPage The page to which we should return back
      * @param string $customDataKey A custom data key which helps identifying the type
