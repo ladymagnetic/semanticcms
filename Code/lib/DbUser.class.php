@@ -141,8 +141,8 @@ class DbUser
 	public function CountUsers()
 	{
 		$result = $this->database->ExecuteQuery("SELECT COUNT(*) AS AnzahlUser FROM user");
-		var_dump($result);
-		return $result;
+		$num = $this->FetchArray($result);
+		return ($num['AnzahlUser']);
 	}
 
 
@@ -152,8 +152,8 @@ class DbUser
 	public function CountRoles()
 	{
 		$result = $this->database->ExecuteQuery("SELECT COUNT(*) AS AnzahlRoles FROM role");
-		var_dump($result);
-		return $result;
+		$num = $this->FetchArray($result);
+		return ($num['AnzahlRoles']);
 	}
 
 
@@ -164,8 +164,8 @@ class DbUser
 	public function CountBans()
 	{
 		$result = $this->database->ExecuteQuery("SELECT COUNT(*) AS AnzahlBan FROM ban");
-		var_dump($result);
-		return $result;
+		$num = $this->FetchArray($result);
+		return ($num['AnzahlBan']);
 	}
 
 
@@ -175,8 +175,8 @@ class DbUser
 	public function CountArticles()
 	{
 		$result = $this->database->ExecuteQuery("SELECT COUNT(*) AS AnzahlArticle FROM article");
-		var_dump($result);
-		return $result;
+		$num = $this->FetchArray($result);
+		return ($num['AnzahlArticle']);
 	}
 
 
@@ -186,8 +186,8 @@ class DbUser
 	public function CountPages()
 	{
 		$result = $this->database->ExecuteQuery("SELECT COUNT(*) AS AnzahlPages FROM page");
-		var_dump($result);
-		return $result;
+		$num = $this->FetchArray($result);
+		return ($num['AnzahlPages']);
 	}
 
 
@@ -197,8 +197,8 @@ class DbUser
 	public function CountTemplates()
 	{
 		$result = $this->database->ExecuteQuery("SELECT COUNT(*) AS AnzahlTemplates FROM template");
-		var_dump($result);
-		return $result;
+		$num = $this->FetchArray($result);
+		return ($num['AnzahlTemplates']);
 	}
 
 
