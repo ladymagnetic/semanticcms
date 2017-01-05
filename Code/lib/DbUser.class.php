@@ -118,14 +118,14 @@ class DbUser
 		$this->database->PrepareStatement("whichRoleHasASpecialUser", $whichRoleHasASpecialUser);
 
 
-		$selectAllLogs = "SELECT * FROM logtable ORDER BY logtable.logdate ASC";
+		$selectAllLogs = "SELECT * FROM logtable ORDER BY logtable.id DESC";
 		$this->database->PrepareStatement("selectAllLogs", $selectAllLogs);
 
 		$selectOneLogById = "SELECT * FROM logtable WHERE id = ?";
 		$this->database->PrepareStatement("selectOneLogById", $selectOneLogById);
 
 
-		$selectAllLogsFromASpecialDateByLogdate = "SELECT * FROM logtable WHERE logdate = ? ORDER BY logdate ASC";
+		$selectAllLogsFromASpecialDateByLogdate = "SELECT * FROM logtable WHERE logdate = ? ORDER BY logtable.id DESC";
 		$this->database->PrepareStatement("selectAllLogsFromASpecialDateByLogdate", $selectAllLogsFromASpecialDateByLogdate);
 
 		$selectAllLogsFromOneUserByUsername = "SELECT * FROM logtable WHERE logtable.username = ?";
