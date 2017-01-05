@@ -280,8 +280,8 @@ CREATE TABLE `role` (
 INSERT INTO `role` (`id`, `uri`, `rolename`, `guestbookmanagement`, `usermanagement`, `pagemanagement`, `articlemanagement`, `guestbookusage`, `templateconstruction`, `databasemanagement`, `backendlogin`) VALUES
 (1, 'uri.uri', 'Admin', 1, 1, 1, 1, 1, 1, 1, 1),
 (2, 'uri.uri', 'Gast', 0, 0, 0, 0, 1, 0, 0, 0),
-(3, 'uri.uri', 'Redakteur', 1, 0, 1, 1, 1, 0, 0, 0),
-(4, 'uri.uri', 'Designer', 1, 0, 1, 1, 1, 1, 0, 0);
+(3, 'uri.uri', 'Redakteur', 1, 0, 1, 1, 1, 0, 1, 1),
+(4, 'uri.uri', 'Designer', 1, 0, 1, 1, 1, 1, 1, 1);
 
 -- --------------------------------------------------------
 
