@@ -23,11 +23,10 @@ $dbUser = new DbUser($config['cms_db']['dbhost'], $config['cms_db']['dbuser'], $
 if (isset($_POST['applyChanges']))
 {
     $userId = intval($_POST['userId']);
-    $userName = $_POST['userName'];
     $name = $_POST['name'];
     $foreName = $_POST['foreName'];
     $email = $_POST['email'];
-    $dbUser->UpdateUserDifferentNamesById($name, $foreName, $userName, $email, $userId);
+    $dbUser->UpdateUserDifferentNamesById($name, $foreName, $email, $userId);
 }
 // if submit button with name 'applyPasswordChanges' is pressed
 else if (isset($_POST['applyPasswordChanges']))
@@ -69,7 +68,7 @@ echo
 $userRow = $dbUser->FetchArray($dbUser->GetUserInformationByUsername($_SESSION['username']));
 echo
         "<label for='userName'>Benutzername</label>
-        <input required id='userName' name='userName' type='text' value='".$userRow['username']."'><br><br>";
+        <input readonly id='userName' name='userName' type='text' value='".$userRow['username']."'><br><br>";
 echo
         "<label for='name'>Name</label>
         <input required id='name' name='name' type='text' value='".$userRow['lastname']."'><br><br>";
