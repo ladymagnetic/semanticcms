@@ -35,7 +35,7 @@ class DbEngine
 		// Create connection
 		$this->conn = mysqli_connect($host, $user, $password, $database)
 			or die("Verbindung zur Datenbank konnte nicht hergestellt werden!(".mysqli_connect_error().")");
-		
+
 		mysqli_set_charset($this->conn, "utf8") or die ("Fehler beim Laden des UTF8-Charaktersets");
 	}
 	/**
@@ -59,7 +59,7 @@ class DbEngine
 	{
 		$stmt = "PREPARE ".$this->RealEscapeString($name)." FROM '".$query."';";
 		$result = $this->ExecuteQuery($stmt);
-		
+
 		if($result === true) { return true;}
 		else  {return false;}
 	}
@@ -75,7 +75,7 @@ class DbEngine
 	{
 		$using = "";
 		$counter = 0;
-		
+
 		if(!empty($values))
 		{
 			// USING necessary
@@ -85,20 +85,20 @@ class DbEngine
 			{
 				// generates a variable name for sql
 				$varname = "@value_".$counter;
-				
-				$set = $varname." = ";			
+
+				$set = $varname." = ";
 				//sets variable in SQL
 				if(is_string($val)) { $set .= "'".$val."'"; }
 				else { $set .= "".$val;}
 				//sets variable in SQL
 				$this->ExecuteQuery("SET ".$set);
-				
+
 				$using .= " ".$varname." ";
 			}
 		}
-					
+
 		$stmt = "EXECUTE ".$this->RealEscapeString($name).$using.";";
-		
+
 		return $this->ExecuteQuery($stmt);
 	}
 
@@ -110,7 +110,7 @@ class DbEngine
 	*/
 	public function ExecuteQuery($query)
 	{
-		$result =  mysqli_query($this->conn, $query);	
+		$result =  mysqli_query($this->conn, $query);
 		return $result;
 	}
 
@@ -140,7 +140,7 @@ class DbEngine
 	{
 		return mysqli_num_rows($result);
 	}
-	
+
 	/**
 	* GetLastError()
 	* Returns last database error
@@ -150,7 +150,7 @@ class DbEngine
 	{
 		return "DB-Fehler: ". mysqli_error($this->conn);
 	}
-	
+
 	/**
 	* InsertNewLog()
 	* @params string $logUsername the user who changed something
@@ -162,5 +162,61 @@ class DbEngine
 	{
 		$result = $this->ExecuteQuery("INSERT INTO logtable (id, logdate , username, rolename, description) VALUES (NULL, NOW(), '".$logUsername."', '".$logRolename."', '".$logDescription."')");
 	}
+
+
+
+
+	/**
+	* DownloadDB()
+	*/
+	public function DownloadDB($dbhost, $dbuser, $dbpwd, 	$dbname)
+		{
+			$storagepath = "01_Datenbank/Backup/";
+
+			$pathToMysqldump = "xampp/mysql/bin/";  // muss noch angepasst werden => !!! => da wo mysqldump.exe liegt.
+
+			$dumpfile = $storagepath .$dbname . "_" . date("Y-m-d_H-i-s") . ".sql";
+
+			passthru("mysqldump --opt --host=$dbhost --user=$dbuser --password=$dbpwd $dbname > $dumpfile");
+
+			//passthru($pathToMysqldump."mysqldump --opt --host=$dbhost --user=$dbuser --password=$dbpwd $dbname > $dumpfile");
+
+			echo "$dumpfile "; passthru("tail -1 $dumpfile");
+		}
+
+
+
+		//@Theresa: Bloß zum Testen, damit du die Standardpasswörter usw. kennst.
+		/**
+		* DownloadDBTest()
+		*/
+		public function DownloadDBTest()
+		{
+			// werden in Funktion DownloadDBTest() als Parameter übergeben
+		  $dbhost = 'localhost';
+		  $dbuser = 'root';
+		  $dbpwd =  '';
+		  $dbname =  'cms-projekt';
+		  $storagepath = "01_Datenbank/Backup/";
+
+		  $pathToMysqldump = "xampp/mysql/bin/";  // muss noch angepasst werden => !!! => da wo mysqldump.exe liegt.
+
+		  $dumpfile = $storagepath .$dbname . "_" . date("Y-m-d_H-i-s") . ".sql";
+
+		  passthru("mysqldump --opt --host=$dbhost --user=$dbuser --password=$dbpwd $dbname > $dumpfile");
+
+		  //passthru($pathToMysqldump."mysqldump --opt --host=$dbhost --user=$dbuser --password=$dbpwd $dbname > $dumpfile");
+
+		  echo "$dumpfile "; passthru("tail -1 $dumpfile");
+		}
+
+
+
+
+
+
+
+
+
 }
 ?>
