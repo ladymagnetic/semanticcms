@@ -130,6 +130,18 @@ class DbContent
 		//neue Funktion
 		$selectAllLable_User = "SELECT * FROM lable_user";
 		$this->database->PrepareStatement("selectAllLable_User", $selectAllLable_User);
+
+
+		//neu
+		$selectAllWebsite = "SELECT * FROM website";
+		$this->database->PrepareStatement("selectAllWebsite", $selectAllWebsite);
+
+		$selectWebsiteById = "SELECT * FROM website WHERE id = ?";
+		$this->database->PrepareStatement("selectWebsiteById", $selectWebsiteById);
+
+		$deleteWebsiteById =  "DELETE FROM website WHERE id = ?";
+		$this->database->PrepareStatement("deleteWebsiteById", $deleteWebsiteById );
+
 	}
 
 	/**
@@ -1156,6 +1168,137 @@ class DbContent
 			return false;
 		}
 	}
+
+
+
+
+
+
+
+
+		/**
+		* SelectAllWebsite()
+		*/
+		public function SelectAllWebsite($templateId)
+		{
+			 return	$this->database->ExecutePreparedStatement("selectAllWebsite", array());
+		}
+
+
+
+		/**
+		* SelectWebsiteById()
+		* @params int $id the id of the website
+		*/
+		public function SelectWebsiteById($id)
+		{
+			 return	$this->database->ExecutePreparedStatement("selectWebsiteById", array($id));
+		}
+
+
+
+		/**
+		* DeleteWebsiteById()
+		* @params int $id the id of the website
+		*/
+		public function DeleteWebsiteById($id)
+		{
+			$logDeletedWebsite = $this->FetchArray($this->SelectWebsiteById($id))['headertitle'];
+			$result = $this->database->ExecutePreparedStatement("deleteWebsiteById", array($id));
+
+			 if($result==true)
+			 {
+				 $logUsername = $_SESSION['username'];
+				 $logRolename = $_SESSION['rolename'];
+				 $logDescription = 'Folgende Website wurde gelöscht: <strong>'.$logDeletedWebsite.'</strong>';
+				 $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+				 return true;
+			 }
+			 else
+			 {
+					return false;
+			 }
+		}
+
+
+
+
+		/**
+		* UpdateWebsiteById()
+		* @params int $websiteId
+		* @params string $headertitle
+		* @params string $contact
+		* @params string $imprint
+		* @params string $privacyinformation
+		* @params string $gtc
+		* @params bool $login
+		* @params bool $guestbook
+		* @params int $template_id
+		*/
+		public function UpdateWebsiteById($websiteId, $headertitle, $contact, $imprint, $privacyinformation, $gtc, $login, $guestbook, $template_id)
+		{
+			$websiteHeadertitleBevoreUpdate = $this->FetchArray($this->SelectWebsiteById($headertitle))['headertitle'];
+			$result = $this->database->ExecuteQuery("UPDATE website SET headertitle  ='".$headertitle."', contact = '".$contact."', imprint  = '".$imprint."',  privacyinformation = '".$privacyinformation."', gtc ='".$gtc."', login = ".$login.", guestbook = ".$guestbook.", template_id = ".$template_id." WHERE id = ". $websiteId);
+
+			if($result==true)
+			{
+				$logUsername = $_SESSION['username'];
+				$logRolename = $_SESSION['rolename'];
+
+				if($websiteHeadertitleBevoreUpdate == $headertitle)
+				{
+					$websiteHeadertitleChanged = $headertitle;
+				}
+				else
+					{
+						$websiteHeadertitleChanged = $websiteHeadertitleBevoreUpdate. '(neue Überschrift: '.$headertitle.')';
+					}
+
+				$logDescription = 'Folgende Website wurde geändert: <br> <strong>'.$websiteHeadertitleChanged;
+
+				$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+
+
+				return true;
+			}
+			else
+			{
+				 return false;
+			}
+		}
+
+
+
+		/**
+		* InsertWebsite()
+		* @params int $websiteId
+		* @params string $headertitle
+		* @params string $contact
+		* @params string $imprint
+		* @params string $privacyinformation
+		* @params string $gtc
+		* @params bool $login
+		* @params bool $guestbook
+		* @params int $template_id
+		*/
+		public function InsertWebsite($websiteId, $headertitle, $contact, $imprint, $privacyinformation, $gtc, $login, $guestbook, $template_id)
+		{
+			$result = $this->database->ExecuteQuery("INSERT INTO website (id, headertitle, contact, imprint, privacyinformation, gtc, login, guestbook, template_id) VALUES (NULL, '".$headertitle."', '".$contact."', '".$imprint."', '".$privacyinformation."', '".$gtc."', ".$login.", ".$guestbook.",  ".$template_id.")");
+
+			 if($result==true)
+			 {
+				$logUsername = $_SESSION['username'];
+				$logRolename = $_SESSION['rolename'];
+				$logDescription = 'Die Website <strong>'.$rolename.'</strong> wurde neu erstellt.';
+				$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+				return true;
+			 }
+			 else
+			 {
+				 return false;
+			 }
+		}
 
 
 
