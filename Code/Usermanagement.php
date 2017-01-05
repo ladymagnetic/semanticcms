@@ -551,7 +551,7 @@ function EditRole($roleId, $dbUser)
 */
 function CreateNewUser($dbUser)
 {
-    BackendComponentPrinter::PrintHead("Benutzerverwaltung");
+    BackendComponentPrinter::PrintHead("Benutzerverwaltung", $jquery=true, $jqueryUI=true);
     //*----- Permissions ----- */
     /* Include(s) */
     require_once 'lib/Permission.enum.php';
@@ -562,11 +562,8 @@ function CreateNewUser($dbUser)
 
     /* Datepicker */
     echo
-    "
-        <link rel='stylesheet' href='//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css'>
+        "<link rel='stylesheet' href='//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css'>
         <link rel='stylesheet' href='/resources/demos/style.css'>
-        <script src='https://code.jquery.com/jquery-1.12.4.js'></script>
-        <script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js'></script>
         <script>
         $( function() {
         $( '#birthdate' ).datepicker({ dateFormat: 'yy-mm-dd' });
@@ -679,7 +676,7 @@ function CreateNewRole($dbUser)
 */
 function BanUser($userId, $dbUser)
 {
-    BackendComponentPrinter::PrintHead("Benutzerverwaltung");
+    BackendComponentPrinter::PrintHead("Benutzerverwaltung", $jquery=true, $jqueryUI=true);
     //*----- Permissions ----- */
     /* Include(s) */
     require_once 'lib/Permission.enum.php';
@@ -690,11 +687,8 @@ function BanUser($userId, $dbUser)
 
     /* Datepicker */
     echo
-    "
-        <link rel='stylesheet' href='//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css'>
+        "<link rel='stylesheet' href='//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css'>
         <link rel='stylesheet' href='/resources/demos/style.css'>
-        <script src='https://code.jquery.com/jquery-1.12.4.js'></script>
-        <script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js'></script>
         <script>
         $( function() {
         $( '#begindatetime' ).datepicker({ dateFormat: 'yy-mm-dd 21:48:50' });
