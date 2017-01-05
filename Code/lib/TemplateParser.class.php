@@ -19,7 +19,7 @@ class TemplateParser
 	private $root;
 
 
-	$dbUser = new DbUser($config['cms_db']['dbhost'], $config['cms_db']['dbuser'], $config['cms_db']['dbpass'], $config['cms_db']['database']);
+	//$dbUser = new DbUser($config['cms_db']['dbhost'], $config['cms_db']['dbuser'], $config['cms_db']['dbpass'], $config['cms_db']['database']);
 
 	/* ---- Constructor / Destructor ---- */
 	// /**
@@ -154,7 +154,7 @@ class TemplateParser
 		$seventhNode->appendChild($this->dom->createElement("Login", $Login));
 
 		$this->dom->save("templates/".$TemplateName.".xml");
-		$dbUser->NewTemplate($TemplateName, "templates/".$TemplateName.".xml");
+		//$dbUser->NewTemplate($TemplateName, "templates/".$TemplateName.".xml");
 	}
 
 
