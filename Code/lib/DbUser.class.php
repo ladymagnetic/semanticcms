@@ -365,7 +365,7 @@ class DbUser
 		if($result==true)
 		{
 			$logUsername = $_SESSION['username'];
-			$logRolename =  $this->FetchArray($this->SelectRolenameByUsername($logUsername))['rolename'];
+			$logRolename = $_SESSION['rolename'];
   		$logDescription = 'Folgender User wurde gelöscht: <strong>'.$logDeletedUser.'</strong>';
 			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 			return true;
@@ -449,7 +449,7 @@ class DbUser
 		if($result==true)
 		{
 			$logUsername = $_SESSION['username'];
-			$logRolename =  $this->FetchArray($this->SelectRolenameByUsername($logUsername))['rolename'];
+			$logRolename = $_SESSION['rolename'];
 		 	$logDescription = 'Folgende Rolle wurde gelöscht: <strong>'.$logDeletedRolename.'</strong>' ;
 
 			$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
@@ -514,8 +514,7 @@ class DbUser
 		 if($result==true)
 		 {
 			$logUsername = $_SESSION['username'];
-			$logRolename =  $this->FetchArray($this->SelectRolenameByUsername($logUsername))['rolename'];
-
+			$logRolename = $_SESSION['rolename'];
 			$logDescription = 'Die Rolle <strong>'.$rolename.'</strong> wurde neu angelegt.';
 			$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 			return true;
@@ -570,7 +569,7 @@ class DbUser
 		if($result==true)
 		{
 			$logUsername = $_SESSION['username'];
-			$logRolename =  $this->FetchArray($this->SelectRolenameByUsername($logUsername))['rolename'];
+			$logRolename = $_SESSION['rolename'];
 
 			if($rolenameBevoreUpdate == $rolename)
 			{
@@ -717,7 +716,7 @@ class DbUser
 			if($reason_id != 6)
 			{
 		 	$logUsername = $_SESSION['username'];
-			$logRolename =  $this->FetchArray($this->SelectRolenameByUsername($logUsername))['rolename'];
+			$logRolename = $_SESSION['rolename'];
 
 			$banReason = $this->FetchArray($this->SelectBan_ReasonById($reason_id))['reason'];
 
