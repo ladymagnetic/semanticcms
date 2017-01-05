@@ -67,6 +67,9 @@ class DbUser
 		$selectUserByEmail = "SELECT * FROM user WHERE email = ?";
 		$this->database->PrepareStatement("selectUserByEmail", $selectUserByEmail);
 
+		$selectRolenameByUsername = "SELECT role.rolename FROM role INNER JOIN user ON role.id = user.role_id WHERE user.username = ? ";
+		$this->database->PrepareStatement("selectRolenameByUsername", $selectRolenameByUsername);
+
 		// => kommt noch:
 		//$selectUserByUsernameOrEmail = "SELECT * FROM user WHERE ( username = ? OR email = ? )";
 		//$this->database->PrepareStatement("selectUserByUsernameOrEmail ", $selectUserByUsernameOrEmail );
@@ -117,12 +120,6 @@ class DbUser
 		$selectOneLogById = "SELECT * FROM logtable WHERE id = ?";
 		$this->database->PrepareStatement("selectOneLogById", $selectOneLogById);
 
-		$deleteAllLogs = "DELETE FROM logtable";
-		$this->database->PrepareStatement("deleteAllLogs", $deleteAllLogs);
-
-
-	 	$deleteOneLogById = "DELETE FROM logtable WHERE id = ?";
-	 	$this->database->PrepareStatement("deleteOneLogById", $deleteOneLogById);
 
 		$selectAllLogsFromASpecialDateByLogdate = "SELECT * FROM logtable WHERE logdate = ? ORDER BY logdate ASC";
 		$this->database->PrepareStatement("selectAllLogsFromASpecialDateByLogdate", $selectAllLogsFromASpecialDateByLogdate);
@@ -248,54 +245,6 @@ class DbUser
 
 
 
-	/**
-	* DeleteAllLogs()
-	*/
-	public function DeleteAllLogs()
-	{
-		$result =  $this->database->ExecutePreparedStatement("deleteAllLogs", array());
-
-		if($result==true)
-		{
-				$logUsername = 'Wer ist gerade angemeldet?';
-				$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
-				//$logDescription = 'der User: '.$usersName.' wurde gelöscht';
-				$logDescription = 'Es wurden alle Logs gelöscht';
-				$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-				return true;
-		}
-		else
-		{
-			 return false;
-		}
-	}
-
-
-
-	/**  => @Theresa: bin mir eigentlich fast sicher, dass wir diese nicht brauchen werden weil eigentlich sinnlos aber ich wollte sie dir trotzdem zur Verfügung stellen. VG, Mirjam
-	* DeleteOneLogById()
-	* @params int $logtableId the id of the logtable
- 	*/
-	public function DeleteOneLogById($logtableId)
-	{
-		$result = $this->database->ExecutePreparedStatement("deleteOneLogById", array($logtableId));
-
-		if($result==true)
-		{
-			// Vorausgesetzt man braucht die Funktion ÜBERHAUPT =>
- 			// hier => InsertNewLog($logUsername, $logRolename, $logDescription); => macht wenig Sinn =>
-			// mit würde bedeuten: Sobald man einen Log in der Logtabelle löscht wird in die Logtabelle eingetragen werden, dass dieser Log gelöscht wurde. :)
-		 	return true;
-		}
-		else
-		{
-			 return false;
-		}
-	}
-
-
-
-
 
 
 	/* --- ENDE --- --- --- --- --- --- --- --- --- --- --- --- --- für die Startseite: Statistik für Admin --- --- --- --- --- --- --- --- ENDE --- */
@@ -346,23 +295,6 @@ class DbUser
 	}
 
 
-/* eventuell für die Prüfung des Datums beim Registrieren eines User
-http://www.selfphp.de/kochbuch/kochbuch.php?code=17
-function check_date($date,$format,$sep)
-{
-
-    $pos1    = strpos($format, 'd');
-    $pos2    = strpos($format, 'm');
-    $pos3    = strpos($format, 'Y');
-
-    $check    = explode($sep,$date);
-
-    return checkdate($check[$pos2],$check[$pos1],$check[$pos3]);
-
-}
-*/
-
-
 
 	/**
 	* registrateUser()
@@ -375,11 +307,6 @@ function check_date($date,$format,$sep)
 	*/
 		public function RegistrateUser($role_id, $lastname, $firstname, $username, $password, $email, $birthdate)
 	{
-		/*
-		INSERT INTO user VALUES (NULL, 2, "Muster", "Johanna", "jojo20", "password1234" , "j.m@web.de" , NOW(), "1996-08-16");
-		INSERT INTO user VALUES (NULL, 2, "Muster", "Johanna", "jojo20", "password1234" , "j.m@web.de" , NOW(), "19960816")
-		*/
-
 
 		if(!($this->EmailAlreadyExists($email)))
 		{
@@ -394,7 +321,6 @@ function check_date($date,$format,$sep)
 					$firstname= $this->database->RealEscapeString($firstname);
 					$username= $this->database->RealEscapeString($username);
 					$password= $this->database->RealEscapeString($password);
-
 
 					$result = $this->database->ExecuteQuery("INSERT INTO user (id, role_id, lastname, firstname, birthdate, username, password, email, registrydate) VALUES (NULL, ".$role_id.", '".$lastname."', '".$firstname."', '".$birthdate."', '".$username."', '".$password."', '".$email."', NOW())");
 
@@ -426,37 +352,18 @@ function check_date($date,$format,$sep)
 	*/
 	public function DeleteUserById($userId)
 	{
+		$logDeletedUser = $this->FetchArray($this->GetUserInformationById($userId))['username'];
 		$result = $this->database->ExecutePreparedStatement("deleteUserById", array($userId));
 
 		$usersName = $this->database->ExecuteQuery("SELECT username FROM user WHERE id = ".$userId);
 		$usersRoleId = $this->database->ExecuteQuery("SELECT role_id FROM user WHERE id = ".$userId);
-		//$usersRoleName = $this->database->ExecuteQuery("SELECT rolename FROM role WHERE id = ".$usersRoleId);
-
-		//echo'usersRoleId:';
-		var_dump($usersRoleId);
-		//echo'usersName:';
-		var_dump($usersName);
-
-
-		var_dump($usersName);
 
 		if($result==true)
-		{	// für Log-Tabelle:
-			// Wer wird gelöscht?
-			// Wer hat den Löschvorgang durchgeführt? => Usermanagement is true. => alle diese könnnen User löschen!
-			// eventuell neuen Parameter bei Funktion mitgeben ($userId von der Person, die löscht.)
-
-			$logUsername = 'Wer ist gerade angemeldet?';
-			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
-			//$logDescription = 'der User: '.$usersName.' wurde gelöscht';
-			$logDescription = 'Folgender User wurde gelöscht:';
-
+		{
+			$logUsername = $_SESSION['username'];
+			$logRolename =  $this->FetchArray($this->SelectRolenameByUsername($logUsername))['rolename'];
+  		$logDescription = 'Folgender User wurde gelöscht: '.$logDeletedUser;
 			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-
-			echo'Versuch';
-
-			var_dump($re);
-
 			return true;
 		}
 		else
@@ -466,12 +373,12 @@ function check_date($date,$format,$sep)
 	}
 
 
-	/** => Funktion wird nicht verwendet.
+	/**
 	* deleteUserByUsername()
 	* Delets a particular User by a name
 	* @params int $userId the user's Id
 	*/
-	public function DeleteUserByUsername($username)
+/*	public function DeleteUserByUsername($username)
 	{
 		$result = $this->database->ExecutePreparedStatement("deleteUserByUsername", array($username));
 
@@ -503,7 +410,7 @@ function check_date($date,$format,$sep)
 			 return false;
 		}
 	}
-
+*/
 
 	/**
 	* GetUserInformationById()
@@ -532,23 +439,16 @@ function check_date($date,$format,$sep)
 	*/
 	public function DeleteRole($roleId)
 	{
+		$logDeletedRolename = $this->FetchArray($this->SelectRoleById($roleId))['rolename'];
 		$result = $this->database->ExecutePreparedStatement("deleteRole", array($roleId));
-		$nameOfRole = $this->database->ExecuteQuery("SELECT rolename FROM role WHERE id = ".$roleId);
 
 		if($result==true)
 		{
-			// für Log-Tabelle:
-			// Welche Rolle wird gelöscht?
-			// Wer hat den Löschvorgang durchgeführt? => Usermanagement is true. => alle diese könnnen Rollen löschen!
-			// eventuell neuen Parameter bei Funktion mitgeben ($userId von der Person, die löscht. => Nur der Admin darf Roles löschen!)
+			$logUsername = $_SESSION['username'];
+			$logRolename =  $this->FetchArray($this->SelectRolenameByUsername($logUsername))['rolename'];
+		 	$logDescription = 'Folgende Rolle wurde gelöscht: '.$logDeletedRolename ;
 
-			$logUsername = 'Wer ist gerade angemeldet?';
-			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
-		 	$logDescription = 'hier könnte ihre beschreibung stehen => welche Rolle ($nameOfRole) wurde gerade gelöscht?';
-
-			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-
-			var_dump($re);
+			$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
 			return true;
 		}
@@ -567,10 +467,10 @@ function check_date($date,$format,$sep)
 	*/
 	public function AssignRole($roleId, $userId)
 	{
+
 		$result = $this->database->ExecuteQuery("UPDATE user SET role_id ='".$roleId."' WHERE id = '". $userId."'");
 
-		$usersName = $this->database->ExecuteQuery("SELECT username FROM user WHERE id = ".$userId);
-		$nameOfRole = $this->database->ExecuteQuery("SELECT rolename FROM role WHERE id = ".$roleId);
+
 
 		if($result==true)
 		{
@@ -579,13 +479,16 @@ function check_date($date,$format,$sep)
 			// Wer hat die Zuweisung durchgeführt? => Usermanagement is true. => alle diese könnnen Rollen zuweisen!
 			// eventuell neuen Parameter bei Funktion mitgeben ($userId von der Person, die die Rolle zuweist.)
 
-			$logUsername = 'Wer ist gerade angemeldet?';
-			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
-		 	$logDescription = 'welche Rolle  ($nameOfRole) wurde gerade welchem Benutzer ($usersName) zugewiesen?';
+			$logUsername = $_SESSION['username'];
+		  $whoIsAssigned	 = $this->FetchArray($this->GetUserInformationById($userId))['username'];
+			$logAssignedRolename = $this->FetchArray($this->SelectRoleById($roleId))['rolename'];
+			$logRolename =  $this->FetchArray($this->SelectRolenameByUsername($logUsername))['rolename'];
 
-			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+		 	$logDescription = 'Dem User '.$whoIsAssigned.' wurde die Rolle '.$logAssignedRolename.' zugewiesen.' ;
 
-			var_dump($re);
+	  	$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+
 
 
 			return true;
@@ -1142,6 +1045,19 @@ function check_date($date,$format,$sep)
 
 
 
+
+
+
+
+
+/**
+* selectRolenameByUsername ()
+* @params string $username the user's username
+*/
+public function SelectRolenameByUsername($username)
+{
+		return $this->database->ExecutePreparedStatement("selectRolenameByUsername ", array($username));
+}
 
 
 }
