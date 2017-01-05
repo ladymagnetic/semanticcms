@@ -152,7 +152,7 @@ else
     $pageName = "";
 }
 echo
-"<main>
+"<body><main>
     <h1><i class='fa fa-align-justify fontawesome'></i> Inhaltsverwaltung</h1>";
 $pageSelect = "";
 $pageRows = $dbContent->GetAllPages();
@@ -243,7 +243,7 @@ function CreateNewArticle($pageName, $dbContent)
         <link href='http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.css' rel='stylesheet'>
         <script src='http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.js'></script>";
     echo
-        "<main>
+        "<body><main>
             <h1><i class='fa fa-align-justify fontawesome'></i> Inhalt erstellen</h1>
             <form method='post' action='ArticleManagement.php'>
             <label for='header'>Überschrift</label>
@@ -320,7 +320,7 @@ function CreateNewArticle($pageName, $dbContent)
             jQuery('#graph').lodlive({ profile: ExampleProfile, firstUri: 'http://dbpedia.org/resource/".str_replace(" ", "_", $pageName)."', ignoreBnodes: true }); // 'http://dbpedia.org/resource/Philadelphia_Flyers'
             </script>";
     echo
-            "<main></body></html>";
+            "</main></body></html>";
 }
 
 /**
@@ -354,7 +354,7 @@ function EditArticle($pageName, $articleId, $dbContent, $dbUser)
     $articleRow = $dbContent->FetchArray($dbContent->SelectOneArticleById($articleId));
     $authorName = $dbUser->FetchArray($dbUser->GetUserInformationById($articleRow['author']))['username'];
     echo
-        "<main>
+        "<body><main>
             <h1><i class='fa fa-align-justify fontawesome'></i> Inhalt bearbeiten</h1>
             <form method='post' action='ArticleManagement.php'>
             <label for='header'>Überschrift</label>
@@ -416,7 +416,7 @@ function EditArticle($pageName, $articleId, $dbContent, $dbUser)
             "<input id='pageName' name='pageName' type='hidden' value='".$pageName."'>".
             "<form>";
     echo
-        "<main></body></html>";
+        "</main></body></html>";
 }
 
 /**
@@ -435,7 +435,7 @@ function ReallyDelete($articleId, $pageName)
     //*----- Permissions End ----- */
     
     echo
-            "<main><form method='post' action='Articlemanagement.php'>".
+            "<body><main><form method='post' action='Articlemanagement.php'>".
             "<input id='articleId' name='articleId' type='hidden' value='".$articleId."'><br><br>".
             "<input id='pageName' name='pageName' type='hidden' value='".$pageName."'>".
             "<p>Möchten Sie wirklich löschen?</p>".

@@ -229,7 +229,7 @@ BackendComponentPrinter::PrintHead("Benutzerverwaltung", $jquery=true);
 BackendComponentPrinter::PrintDatatablesPlugin();
 
 echo
-"<main>
+"<body><main>
     <h1><i class='fa fa-users fontawesome'></i> Benutzerverwaltung</h1>";
 BackendComponentPrinter::PrintTableStart(array("Benutzer", "entsperren/sperren", "Rolle", "Aktion"));
 // foreach user in database print
@@ -364,7 +364,7 @@ function EditUser($userId, $dbUser)
     BackendComponentPrinter::PrintDatatablesPlugin();
     
     echo
-            "<main>
+            "<body><main>
             <h1><i class='fa fa-users fontawesome'></i> Benutzerdetails</h1>
                 <form method='post' action='Usermanagement.php'>";
     $userRow = $dbUser->FetchArray($dbUser->GetUserInformationById($userId));
@@ -449,7 +449,7 @@ function EditRole($roleId, $dbUser)
     //*----- Permissions End ----- */
     
     echo
-            "<main>
+            "<body><main>
             <h1><i class='fa fa-key fontawesome'></i> Rolle bearbeiten</h1>";
     $roleRow = $dbUser->FetchArray($dbUser->SelectRoleById($roleId));
     echo
@@ -554,7 +554,7 @@ function CreateNewUser($dbUser)
     ";
 
     echo
-            "<main>
+            "<body><main>
             <h1><i class='fa fa-users fontawesome'></i> Neuer Benutzer</h1>
             <form method='post' action='Usermanagement.php'>";
     echo
@@ -612,7 +612,7 @@ function CreateNewRole($dbUser)
     //*----- Permissions End ----- */
     
     echo
-            "<main>
+            "<body><main>
             <h1><i class='fa fa-key fontawesome'></i> Rolle erstellen</h1>";
     echo
             "<form method='post' action='Usermanagement.php'>".
@@ -677,7 +677,7 @@ function BanUser($userId, $dbUser)
     ";
     
     echo
-            "<main>
+            "<body><main>
             <h1><i class='fa fa-ban'></i> Sperrung</h1>";
     echo
             "<form method='post' action='Usermanagement.php'>".
@@ -726,7 +726,7 @@ function ReallyDelete($userId)
     //*----- Permissions End ----- */
 
     echo
-            "<main><form method='post' action='Usermanagement.php'>".
+            "<body><main><form method='post' action='Usermanagement.php'>".
             "<input id='userId' name='userId' type='hidden' value='".$userId."'><br><br>".
             "<p>Möchten Sie wirklich löschen?</p>".
             "<p><img src='media/Pictures/Gnome-edit-delete.png' height='auto' width='250px'></p>".
@@ -756,7 +756,7 @@ function ReallyDeleteRole($roleId)
     //*----- Permissions End ----- */
 
     echo
-            "<main><form method='post' action='Usermanagement.php'>".
+            "<body><main><form method='post' action='Usermanagement.php'>".
             "<input id='roleId' name='roleId' type='hidden' value='".$roleId."'><br><br>".
             "<p>Möchten Sie wirklich löschen?</p>".
             "<p><img src='media/Pictures/Gnome-edit-delete.png' height='auto' width='250px'></p>".
