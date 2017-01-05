@@ -57,26 +57,33 @@ session_regenerate_id();
 						
 			if($login)
 			{
-				// set username and permissions
+				// did we get a username or email address?
 				if (filter_var($nameInput, FILTER_VALIDATE_EMAIL)) 
-				{ $_SESSION['username'] = $database->FetchArray($database->SelectUserByEmail($nameInput))['username']; }
-				else 
-				{ $_SESSION['username'] = $nameInput; }
+				{ $nameInput = $database->FetchArray($database->SelectUserByEmail($nameInput))['username']; }
 
-				$result = $database->GetUserPermissionByUsername($_SESSION['username']);
+				$result = $database->GetUserPermissionByUsername($nameInput);
 				$permissions = $database->FetchArray($result);
-							
-				$_SESSION['permissions'] = array();
 				
-				if($permissions["guestbookmanagement"] == 1)	array_push($_SESSION['permissions'],Permission::Guestbookmanagment);
-				if($permissions["usermanagement"] == 1)			array_push($_SESSION['permissions'],Permission::Usermanagment);
-				if($permissions["pagemanagement"] == 1) 		array_push($_SESSION['permissions'],Permission::Pagemanagment);
-				if($permissions["articlemanagement"] == 1) 		array_push($_SESSION['permissions'],Permission::Articlemanagment);
-				if($permissions["templateconstruction"] == 1) 	array_push($_SESSION['permissions'],Permission::Templateconstruction);
-				if($permissions["guestbookusage"] == 1) 		array_push($_SESSION['permissions'],Permission::Guestbookusage);
-						
-				// Seitenweiterleitung
-				header("Location: start.php");
+				// permission for backend?
+				if(!$permissions["backendlogin"]) { die ("<p> Username und/oder Passwort sind falsch. Bitte versuchen Sie es erneut. </p>"); }
+				else
+				{		
+					// set username and permissions
+					$_SESSION['username'] = $nameInput;
+					$_SESSION['permissions'] = array();
+					
+					array_push($_SESSION['permissions'],Permission::Backendlogin);
+					if($permissions["guestbookmanagement"] == 1)	array_push($_SESSION['permissions'],Permission::Guestbookmanagment);
+					if($permissions["usermanagement"] == 1)			array_push($_SESSION['permissions'],Permission::Usermanagment);
+					if($permissions["pagemanagement"] == 1) 		array_push($_SESSION['permissions'],Permission::Pagemanagment);
+					if($permissions["articlemanagement"] == 1) 		array_push($_SESSION['permissions'],Permission::Articlemanagment);
+					if($permissions["templateconstruction"] == 1) 	array_push($_SESSION['permissions'],Permission::Templateconstruction);
+					if($permissions["guestbookusage"] == 1) 		array_push($_SESSION['permissions'],Permission::Guestbookusage);
+					if($permissions["databasemanagement"] == 1) 	array_push($_SESSION['permissions'],Permission::Databasemanagement);
+					
+					// Seitenweiterleitung
+					header("Location: start.php");
+				}
 			}
 			else
 			{

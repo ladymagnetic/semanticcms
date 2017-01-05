@@ -8,10 +8,12 @@ namespace SemanticCms\Model;
 abstract class Permission
 {
 	const Guestbookusage = 0;
-	const Articlemanagment = 1;
-	const Pagemanagment = 2;
-	const Templateconstruction = 3;
-	const Guestbookmanagment = 4;
-	const Usermanagment = 5;
+	const Backendlogin = 1;
+	const Articlemanagment = 2;
+	const Pagemanagment = 3;
+	const Templateconstruction = 4;
+	const Guestbookmanagment = 5;
+	const Usermanagment = 6;
+	const Databasemanagement = 7;
 }
 ?>
