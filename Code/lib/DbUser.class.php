@@ -359,15 +359,12 @@ class DbUser
 		$logDeletedUser = $this->FetchArray($this->GetUserInformationById($userId))['username'];
 		$result = $this->database->ExecutePreparedStatement("deleteUserById", array($userId));
 
-		$usersName = $this->database->ExecuteQuery("SELECT username FROM user WHERE id = ".$userId);
-		$usersRoleId = $this->database->ExecuteQuery("SELECT role_id FROM user WHERE id = ".$userId);
-
 		if($result==true)
 		{
 			$logUsername = $_SESSION['username'];
 			$logRolename = $_SESSION['rolename'];
   		$logDescription = 'Folgender User wurde gelöscht: <strong>'.$logDeletedUser.'</strong>';
-			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+			$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 			return true;
 		}
 		else
