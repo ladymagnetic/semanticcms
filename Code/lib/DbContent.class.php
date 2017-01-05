@@ -158,15 +158,14 @@ class DbContent
 	*/
 	public function DeleteArticleById($articleId)
 	{
-		$result = $this->database->ExecutePreparedStatement("deleteArticleById", array($articleId));
-
 		$headerOfArticle = $this->FetchArray($this->SelectOneArticleById($articleId))['header'];
+		$result = $this->database->ExecutePreparedStatement("deleteArticleById", array($articleId));
 
 		if($result==true)
 		{
 			$logUsername = $_SESSION['username'];
-			$logRolename =  $this->FetchArray($this->SelectRolenameByUsername($logUsername))['rolename'];
-			$logDescription = 'Folgender Article wurde gelöscht: <strong>'.$headerOfArticle.'</strong>';
+			$logRolename = $_SESSION['rolename'];
+			$logDescription = 'Folgender Artikel wurde gelöscht: <br> <strong>'.$headerOfArticle.'</strong>';
 
 			$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
@@ -213,9 +212,9 @@ class DbContent
 
 		 if($result==true)
 		 {
-			$logUsername = 'Wer ist gerade angemeldet?';
-			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
-			$logDescription = 'Welcher Articel wurde neu eingefügt? => $header';
+			$logUsername = $_SESSION['username'];
+ 			$logRolename = $_SESSION['rolename'];
+			$logDescription = 'Folgender Artikel wurde neu eingefügt: <br> <strong>'.$header.'</strong>';
 
 			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
@@ -250,20 +249,28 @@ class DbContent
 		$type = $this->database->RealEscapeString($type);
 		$description = $this->database->RealEscapeString($description);
 
+		$articleheaderBevoreUpdate =  $this->FetchArray($this->SelectOneArticleById($articleId))['header'];
 		$result = $this->database->ExecuteQuery("UPDATE article SET header ='".$header."', content ='".$content."', publicationdate ='".$publicationdate."', page_id =".$pageId.",  author =".$author.",  type ='".$type."', public =".$public.", description = '".$description."'  WHERE id = ". $articleId."");
 
 		if($result==true)
 		{
-			$logUsername = 'Wer ist gerade angemeldet?';
-			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
-			$logDescription = 'Welcher Articel wurde geändert? => $header';
+			$logUsername = $_SESSION['username'];
+			$logRolename = $_SESSION['rolename'];
 
-			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+			if($articleheaderBevoreUpdate == $header)
+			{
+				$articleHeaderChanged = $header;
+			}
+			else
+				{
+					$articleHeaderChanged = $articleheaderBevoreUpdate. '(neuer Artikelheader: '.$header.')';
+				}
 
-			var_dump($re);
+			$logDescription = 'An dem Artikel <strong>'.$articleHeaderChanged.'</strong> wurden Änderugen vorgenommen.';
 
+ 			$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
-			return true;
+ 			return true;
 		}
 		else
 		{
@@ -402,17 +409,16 @@ class DbContent
 	*/
 	public function DeletePageById($pageId)
 	{
+		$pageTitle = $this->FetchArray($this->SelectPageById($pageId))['title'];
 		$result = $this->database->ExecutePreparedStatement("deletePageById", array($pageId));
 
 		if($result==true)
 		{
-			$logUsername = 'Wer ist gerade angemeldet?';
-			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';		//pagemanegement muss true sein!
-			$logDescription = 'Folgende Page wurde gelöscht:';
+			$logUsername = $_SESSION['username'];
+			$logRolename = $_SESSION['rolename'];
+			$logDescription = 'Folgende Seite wurde gelöscht: <br> <strong>'.$pageTitle;
 
-			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-
-			var_dump($re);
+			 $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
 			return true;
 		}
@@ -428,7 +434,7 @@ class DbContent
 	* DeletePageByTitle()
 	* @params string $title the title of the page
 	*/
-	public function DeletePageByTitle($title)
+/*	public function DeletePageByTitle($title)
 	{
 		$result = $this->database->ExecutePreparedStatement("deletePageByTitle", array($title));
 
@@ -449,7 +455,7 @@ class DbContent
 			 return false;
 		}
 	}
-
+*/
 
 
 	/**
@@ -458,17 +464,15 @@ class DbContent
 	*/
 	public function DeleteTemplateById($templateId)
 	{
+		$templatename = $this->FetchArray($this->SelectTemplateById($templateId))['templatename'];
 		$result = $this->database->ExecutePreparedStatement("deleteTemplateById", array($templateId));
 
 		if($result==true)
 		{
-			$logUsername = 'Wer ist gerade angemeldet?';
-			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';		//pagemanegement muss true sein!
-			$logDescription = 'Folgendes Template wurde gelöscht:';
-
-			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-
-			var_dump($re);
+			$logUsername = $_SESSION['username'];
+			$logRolename = $_SESSION['rolename'];
+			$logDescription = 'Folgendes Template wurde gelöscht: <br> <strong>'.$templatename;
+ 		  $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
 			return true;
 		}
@@ -484,7 +488,7 @@ class DbContent
 	* DeleteTemplateByTemplatename()
 	* @params string $templatename the templatename of the template
 	*/
-	public function DeleteTemplateByTemplatename($templatename)
+/*	public function DeleteTemplateByTemplatename($templatename)
 	{
 		$result = $this->database->ExecutePreparedStatement("deleteTemplateByTemplatename", array($templatename));
 
@@ -507,7 +511,7 @@ class DbContent
 	}
 
 
-
+*/
 
 	/**
 	* PagetitleAlreadyExists()
@@ -586,11 +590,11 @@ class DbContent
 
 			if($result==true)
 			{
-				$logUsername = 'Wer ist gerade angemeldet? => $username';		// es sollte nicht möglich sein, dass jemand anders da etwas von einer anderen Person ändert.
-				$logRolename = 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName';
-				$logDescription = 'Neues Template erstellt.';
+				$logUsername = $_SESSION['username'];
+				$logRolename = $_SESSION['rolename'];
+				$logDescription = 'Folgendes Template wurde erstellt: <br> <strong>'.$templatename;
 
-				$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+				$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
 				return true;
 			}
@@ -617,16 +621,13 @@ class DbContent
 			$title = $this->database->RealEscapeString($title);
 			$result = $this->database->ExecuteQuery("INSERT INTO page (id, title, relativeposition, template_id, website_id) VALUES (NULL, '".$title."', ".$relativeposition.", ".$templateId." , ".$websiteId.") ");
 
-			echo 'Bloß zur Info: var_dump hat den Wert:';
-			var_dump($result);
-
 			if($result==true)
 			{
-				$logUsername = 'Wer ist gerade angemeldet? => $username';		// es sollte nicht möglich sein, dass jemand anders da etwas von einer anderen Person ändert.
-				$logRolename = 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName';
-				$logDescription = 'Neue Page erstellt.';
+				$logUsername = $_SESSION['username'];
+				$logRolename = $_SESSION['rolename'];
+				$logDescription = 'Folgende Seite wurde erstellt: <br> <strong>'.$title;
 
-				$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+				$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
 				return true;
 			}
@@ -748,15 +749,28 @@ class DbContent
 	*/
 	public function UpdatePageById($pageId, $title, $relativeposition, $templateId, $websiteId)
 	{
+		$pageTitleBevoreUpdate = $this->FetchArray($this->SelectPageById($pageId))['title'];
 		$result = $this->database->ExecuteQuery("UPDATE page SET title  ='".$title."', relativeposition = ".$relativeposition.", template_id  = ".$templateId.",  website_id = ".$websiteId."  WHERE id = ". $pageId);
 
 		if($result==true)
 		{
-			$logUsername = 'Wer ist gerade angemeldet?';
-			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
-			$logDescription = 'Die Page mit dem Titel abc wurde geändert.';
+			$logUsername = $_SESSION['username'];
+			$logRolename = $_SESSION['rolename'];
 
-			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+			if($pageTitleBevoreUpdate == $title)
+			{
+				$pageTitleChanged = $title;
+			}
+			else
+				{
+					$pageTitleChanged = $pageTitleBevoreUpdate. '(neue Überschrift: '.$title.')';
+				}
+
+			$logDescription = 'Folgende Seite wurde geändert: <br> <strong>'.$pageTitleChanged;
+
+			$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+
 
 			return true;
 		}
@@ -802,15 +816,27 @@ class DbContent
 	*/
 	public function UpdateTemplateById($templateId, $templatename, $filelink)
 	{
+		$templatenameBevoreUpdate = $this->FetchArray($this->SelectTemplateById($templateId))['templatename'];
 		$result = $this->database->ExecuteQuery("UPDATE template SET templatename  = '".$templatename."', filelink  ='".$filelink."'  WHERE id = ". $templateId);
 
 		if($result==true)
 		{
-			$logUsername = 'Wer ist gerade angemeldet?';
-			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
-			$logDescription = 'Das Template mit dem Namen abc wurde geändert.';
+			$logUsername = $_SESSION['username'];
+			$logRolename = $_SESSION['rolename'];
 
-			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+			if($templatenameBevoreUpdate == $templatename)
+			{
+				$templatenameChanged = $templatename;
+			}
+			else
+				{
+					$templatenameChanged = $templatenameBevoreUpdate. '(neuer Templatename: '.$templatename.')';
+				}
+
+			$logDescription = 'Folgendes Template wurde geändert: <br> <strong>'.$templatenameChanged;
+
+			$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
 
 			return true;
 		}
