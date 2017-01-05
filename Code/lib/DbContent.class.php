@@ -216,9 +216,7 @@ class DbContent
  			$logRolename = $_SESSION['rolename'];
 			$logDescription = 'Folgender Artikel wurde neu eingefügt: <br> <strong>'.$header.'</strong>';
 
-			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-
-			var_dump($re);
+			$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
 			return true;
 		 }
