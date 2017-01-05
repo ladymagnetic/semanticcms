@@ -44,7 +44,7 @@ session_start();
 		BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
 	?>
 <main>
-    <h1>Startseite</h1>
+    <h1><i class='fa fa-home fontawesome'></i>Startseite</h1>
 		<h4>Letzte Änderungen</h4>
 		<?php
     BackendComponentPrinter::PrintTableStart(array("Logdatum", "Benutzername", "Rolle", "Beschreibung"));
