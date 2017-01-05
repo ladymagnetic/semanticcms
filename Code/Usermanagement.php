@@ -188,16 +188,18 @@ else if (isset($_POST['saveRoleChanges']))
     $id = intval($_POST['roleId']);
     $rolename = $_POST['roleName'];
     $uri = $_POST['uri'];
-    SetPermissionsFromForm($guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction);
-    $dbUser->UpdateRoleById($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $id);
+    SetPermissionsFromForm($guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $databasemanagement, $backendlogin);
+    $dbUser->UpdateRoleById($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, 
+        $databasemanagement, $backendlogin, $id);
 }
 // if submit button with name 'createRole' is pressed
 else if (isset($_POST['createRole'])) 
 {
     $rolename = $_POST['rolename'];
     $uri = $_POST['uri'];
-    SetPermissionsFromForm($guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction);
-    $dbUser->NewRole($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction);
+    SetPermissionsFromForm($guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $databasemanagement, $backendlogin);
+    $dbUser->NewRole($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction,
+        $databasemanagement, $backendlogin);
 }
 
 BackendComponentPrinter::PrintHead("Benutzerverwaltung", $jquery=true);
@@ -513,8 +515,27 @@ function EditRole($roleId, $dbUser)
                 echo " checked";
             }
     echo
-            " value='".$roleRow['templateconstruction']."'><br><br>".
+            " value='".$roleRow['databasemanagement']."'><br><br>";
+    echo
+            "<label for='databasemanagement'>Datenbankverwaltung</label>".
+            "<input id='databasemanagement' name='databasemanagement' type='checkbox'";
+            if (boolval($roleRow['databasemanagement']))
+            {
+                echo " checked";
+            }
+    echo
+            " value='".$roleRow['databasemanagement']."'><br><br>";
+    echo
+            "<label for='backendlogin'>Backendanmeldung</label>".
+            "<input id='backendlogin' name='backendlogin' type='checkbox'";
+            if (boolval($roleRow['backendlogin']))
+            {
+                echo " checked";
+            }
+    echo
+            " value='".$roleRow['backendlogin']."'><br><br>".
             "<input id='saveRoleChanges' name='saveRoleChanges' type='submit' value='Rollenänderung speichern'></form>";
+
     echo
             "<form method='post' action='Usermanagement.php'><input id='back' name='back' type='submit' value='Zurück'><form>";
     echo
@@ -638,7 +659,13 @@ function CreateNewRole($dbUser)
             "<input id='guestbookusage' name='guestbookusage' type='checkbox' value='1'><br><br>";
     echo
             "<label for='templateconstruction'>Template erstellen</label>".
-            "<input id='templateconstruction' name='templateconstruction' type='checkbox' value='1'><br><br>".
+            "<input id='templateconstruction' name='templateconstruction' type='checkbox' value='1'><br><br>";
+    echo
+            "<label for='databasemanagement'>Datenbankverwaltung</label>".
+            "<input id='databasemanagement' name='databasemanagement' type='checkbox' value='1'><br><br>";
+    echo
+            "<label for='backendlogin'>Backendanmeldung</label>".
+            "<input id='backendlogin' name='backendlogin' type='checkbox' value='1'><br><br>".
             "<input id='createRole' name='createRole' type='submit' value='Rolle erstellen'></form>";
     echo
             "<form method='post' action='Usermanagement.php'><input id='back' name='back' type='submit' value='Zurück'><form>";
@@ -774,7 +801,8 @@ function ReallyDeleteRole($roleId)
 * Sets the permissions from the form to variables (call by reference --> &)
 *
 */
-function SetPermissionsFromForm(&$guestbookmanagement, &$usermanagement, &$pagemanagement, &$articlemanagement, &$guestbookusage, &$templateconstruction)
+function SetPermissionsFromForm(&$guestbookmanagement, &$usermanagement, &$pagemanagement, &$articlemanagement, &$guestbookusage, &$templateconstruction,
+        &$databasemanagement, &$backendlogin)
 {
     if (isset($_POST['guestbookmanagement']))
     {
@@ -823,6 +851,22 @@ function SetPermissionsFromForm(&$guestbookmanagement, &$usermanagement, &$pagem
     else 
     {
         $templateconstruction = 0;
+    }
+    if (isset($_POST['databasemanagement']))
+    {
+        $databasemanagement = 1;
+    }
+    else 
+    {
+        $databasemanagement = 0;
+    }
+    if (isset($_POST['backendlogin']))
+    {
+        $backendlogin = 1;
+    }
+    else 
+    {
+        $backendlogin = 0;
     }
 }
 ?>
