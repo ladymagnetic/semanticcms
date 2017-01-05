@@ -196,10 +196,6 @@ BackendComponentPrinter::PrintDatatablesPlugin();
                 <input id='savePageChanges' name='savePageChanges' type='submit' value='Änderungen speichern'>
                 </form>";
         echo "<form method='post' action='Pagemanagement.php'><input id='back' name='back' type='submit' value='Zurück'><form>";
-
-        echo "</main>
-              </body>
-              </html>";
     }
     ?>
 
