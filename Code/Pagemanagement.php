@@ -18,6 +18,7 @@ use SemanticCms\Model\Permission;
 /** Database related objects */
 $db = new DbEngine($config['cms_db']['dbhost'],$config['cms_db']['dbuser'],$config['cms_db']['dbpass'],$config['cms_db']['database']);
 $dbContent = new DbContent($config['cms_db']['dbhost'], $config['cms_db']['dbuser'], $config['cms_db']['dbpass'], $config['cms_db']['database']);
+$websiteId = 0;
 
 /* Begin: React to user actions -------------------------------*/
 // Submit button with the name 'newPage' was clicked
@@ -38,7 +39,7 @@ if (isset($_POST['newPage'])) {
         } while($dbContent->PagetitleAlreadyExists($newTitle));
 
         $relativePosition = $dbContent->GetHighestRelativeNumber()+1;
-        $dbContent->InsertPage($newTitle, $relativePosition, $defaultTemplate['id']);
+        $dbContent->InsertPage($newTitle, $relativePosition, $defaultTemplate['id'], $websiteId);
     }
 }
 // Submit button with the name 'options' was clicked
@@ -55,7 +56,7 @@ else if (isset($_POST['savePageChanges'])) {
     $queryResult = $dbContent->SelectTemplateByTemplatename($_POST['templateName']);
     $templateId = $dbContent->FetchArray($queryResult)['id'];
     $dbContent->UpdatePageById($_POST['pageId'], $_POST['pageTitle'],
-        $_POST['relativePosition'], $templateId);
+        $_POST['relativePosition'], $templateId, $websiteId);
 }
 // Submit button with the name 'deletePage' was clicked
 else if (isset($_POST['deletePage'])) {
