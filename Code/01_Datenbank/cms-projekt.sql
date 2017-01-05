@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 05. Jan 2017 um 12:05
+-- Erstellungszeit: 05. Jan 2017 um 16:34
 -- Server-Version: 10.1.16-MariaDB
 -- PHP-Version: 5.6.24
 
@@ -29,7 +29,6 @@ USE `cms-projekt`;
 DROP USER IF EXISTS cms@localhost;
 CREATE USER IF NOT EXISTS cms@localhost IDENTIFIED BY 'pleasechange';
 GRANT SELECT, INSERT, UPDATE, DELETE ON *.* TO 'cms'@'localhost' IDENTIFIED BY 'pleasechange';
-
 -- --------------------------------------------------------
 
 --
@@ -62,7 +61,8 @@ INSERT INTO `article` (`id`, `header`, `content`, `publicationdate`, `page_id`, 
 (7, 'Frankreich', 'Frankreich (amtlich Französische Republik, französisch République française [?e.py.?blik f???.?s?z], Kurzform  Audio-Datei / Hörbeispiel (la) France?/i [f???s]) ist ein demokratischer, interkontinentaler Einheitsstaat in Westeuropa mit Überseeinseln und -gebieten auf mehreren Kontinenten. Metropolitan-Frankreich, d. h. der europäische Teil des Staatsgebietes, erstreckt sich vom Mittelmeer bis zum Ärmelkanal und zur Nordsee sowie vom Rhein bis zum Atlantischen Ozean. Sein Festland wird wegen seiner Landesform als Hexagone (dt: Sechseck) bezeichnet. Frankreich ist flächenmäßig das größte Land der Europäischen Union und verfügt (nach Russland und der Ukraine) über das drittgrößte Staatsgebiet in Europa. Die Métropole Paris ist die Hauptstadt und mit der Île-de-France größter Ballungsraum des Landes, vor Lyon, Marseille, Toulouse und Lille.', '2014-07-16', 4, 6, 'Blog', 0, 'Frankreich'),
 (8, 'München', 'Minga ist die Landeshauptstadt des Freistaates Bayern. Sie ist mit rund 1,5 Millionen Einwohnern die einwohnerstärkste Stadt Bayerns und (nach Berlin und Hamburg) die nach Einwohnern drittgrößte Gemeinde Deutschlands sowie die zwölftgrößte der Europäischen Union. Im Ballungsraum München leben mehr als 2,7 Millionen Menschen;[3] die flächengrößere europäische Metropolregion München umfasst rund 5,7 Millionen Einwohner.\r\nDie Landeshauptstadt ist eine kreisfreie Stadt und ein bayerisches Oberzentrum, zudem Verwaltungssitz des die Stadt umgebenden gleichnamigen Landkreises mit dem Landratsamt München als Verwaltung, des Bezirks Oberbayern und des Regierungsbezirks Oberbayern.', '2013-12-19', 3, 5, 'Blog', 0, 'München'),
 (9, 'Hallo', 'Hallo ist im Deutschen ein mündlicher oder schriftlicher, nicht förmlicher Gruß, insbesondere unter Bekannten oder Freunden. Als Interjektion wird der Ausdruck auch ähnlich dem veralteten Anruf „Heda!“ gebraucht, um auf sich aufmerksam zu machen: „Hallo, ist da jemand?“ Eine weitere Interjektion – „Aber hallo!“ – hat die Bedeutung einer Bekräftigung (etwa: „Da hast du sowas von Recht!“) oder auch eines Widersprechens (etwa: „Da übersiehst du etwas Wesentliches!“). Seit einigen Jahren vermehrt aufgekommen ist der Gebrauch als Frage „Hallo?“ mit abweichender Betonung, um jemanden zur Besinnung zu rufen.\r\nWesentlich für die jeweilige Bedeutung ist die gewählte Betonung, Mimik und Gestik des Sprechenden.\r\nVon dem Ausruf leitet sich die substantivierte, im Gegensatz zu den anderen Formen auf der zweiten Silbe betonte Form „ein Hallo“ ab, die ein (fröhliches) lärmendes Durcheinander bezeichnet („Er wurde mit großem Hallo empfangen.“).', '1993-12-08', 7, 2, 'Blog', 0, 'Hallo - Grußformel'),
-(10, 'Pferd', 'Die Pferde (mittellat. paraveredus abgeleitet von keltisch-spätlat. veredus „Kurierpferd“)[1] (Equus) sind die einzige rezente Gattung der Familie Equidae. Arten anderer Gattungen dieser Familie sind nur als Fossilien erhalten.\r\nZur Gattung Equus gehören die Tiere, die als Pferde, Esel und Zebras bezeichnet werden. Die Abgrenzung der Arten ist bis heute umstritten. Insgesamt werden meist sieben Arten unterschieden, von denen die meisten in ihrem Bestand gefährdet sind. Das Hauspferd und der Hausesel, die domestizierten Formen des Wildpferds respektive des Afrikanischen Esels, spielen als Last- und Reittier eine wichtige Rolle und sind weltweit verbreitet.', '1887-12-08', 6, 3, 'Blog', 0, 'Pferde - Pferdl');
+(10, 'Pferd', 'Die Pferde (mittellat. paraveredus abgeleitet von keltisch-spätlat. veredus „Kurierpferd“)[1] (Equus) sind die einzige rezente Gattung der Familie Equidae. Arten anderer Gattungen dieser Familie sind nur als Fossilien erhalten.\r\nZur Gattung Equus gehören die Tiere, die als Pferde, Esel und Zebras bezeichnet werden. Die Abgrenzung der Arten ist bis heute umstritten. Insgesamt werden meist sieben Arten unterschieden, von denen die meisten in ihrem Bestand gefährdet sind. Das Hauspferd und der Hausesel, die domestizierten Formen des Wildpferds respektive des Afrikanischen Esels, spielen als Last- und Reittier eine wichtige Rolle und sind weltweit verbreitet.', '1887-12-08', 6, 3, 'Blog', 0, 'Pferde - Pferdl'),
+(11, 'Fertig', '<p>Mein Artikel</p>', '2017-01-05', 10, 1, 'Blog', 1, 'Bloggi');
 
 -- --------------------------------------------------------
 
@@ -220,14 +220,6 @@ CREATE TABLE `logtable` (
   `description` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Daten für Tabelle `logtable`
---
-
-INSERT INTO `logtable` (`id`, `logdate`, `username`, `rolename`, `description`) VALUES
-(1, '2017-01-05', 'Wer ist gerade angemeldet? => $username', 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName', 'Neue Page erstellt.'),
-(2, '2017-01-05', 'Wer ist gerade angemeldet? => $username', 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName', 'Neue Page erstellt.');
-
 -- --------------------------------------------------------
 
 --
@@ -286,7 +278,7 @@ CREATE TABLE `role` (
 --
 
 INSERT INTO `role` (`id`, `uri`, `rolename`, `guestbookmanagement`, `usermanagement`, `pagemanagement`, `articlemanagement`, `guestbookusage`, `templateconstruction`, `databasemanagement`, `backendlogin`) VALUES
-(1, 'uri.uri', 'Admin', 1, 1, 1, 0, 1, 1, 0, 0),
+(1, 'uri.uri', 'Admin', 1, 1, 1, 1, 1, 1, 1, 1),
 (2, 'uri.uri', 'Gast', 0, 0, 0, 0, 1, 0, 0, 0),
 (3, 'uri.uri', 'Redakteur', 1, 0, 1, 1, 1, 0, 0, 0),
 (4, 'uri.uri', 'Designer', 1, 0, 1, 1, 1, 1, 0, 0);
@@ -427,7 +419,9 @@ CREATE TABLE `website` (
   `imprint` text,
   `privacyinformation` text,
   `gtc` text,
-  `login` int(1) NOT NULL DEFAULT '0'
+  `login` int(1) NOT NULL DEFAULT '0',
+  `guestbook` tinyint(1) DEFAULT '0',
+  `template_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -536,7 +530,7 @@ ALTER TABLE `website`
 -- AUTO_INCREMENT für Tabelle `article`
 --
 ALTER TABLE `article`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT für Tabelle `ban`
 --
@@ -556,7 +550,7 @@ ALTER TABLE `lable`
 -- AUTO_INCREMENT für Tabelle `logtable`
 --
 ALTER TABLE `logtable`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT für Tabelle `page`
 --
