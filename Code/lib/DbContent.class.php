@@ -610,16 +610,16 @@ class DbContent
 	* @params int $relativeposition
 	* @params int $templateId the id of the used template
 	*/
-	public function InsertPage($title, $relativeposition, $templateId)
+	public function InsertPage($title, $relativeposition, $templateId, $websiteId)
 	{
 		if(!($this->PagetitleAlreadyExists($title)))
 		{
 			$title = $this->database->RealEscapeString($title);
-			$result = $this->database->ExecuteQuery("INSERT INTO page (id, title, relativeposition, template_id) VALUES (NULL, '".$title."', ".$relativeposition.", ".$templateId.") ");
+			$result = $this->database->ExecuteQuery("INSERT INTO page (id, title, relativeposition, template_id, website_id) VALUES (NULL, '".$title."', ".$relativeposition.", ".$templateId." , ".$websiteId.") ");
 
 			echo 'Bloß zur Info: var_dump hat den Wert:';
 			var_dump($result);
-			
+
 			if($result==true)
 			{
 				$logUsername = 'Wer ist gerade angemeldet? => $username';		// es sollte nicht möglich sein, dass jemand anders da etwas von einer anderen Person ändert.
@@ -729,10 +729,11 @@ class DbContent
 	* @params string $title
 	* @params int $relativeposition
 	* @params int $templateId
+	* @params int $websiteId
 	*/
-	public function UpdatePageByTitle($title, $relativeposition, $templateId)
+	public function UpdatePageByTitle($title, $relativeposition, $templateId, $websiteId)
 	{
-		$result = $this->database->ExecuteQuery("UPDATE page SET relativeposition = ".$relativeposition.", template_id = ".$templateId." WHERE templatename = '". $templatename."'");
+		$result = $this->database->ExecuteQuery("UPDATE page SET relativeposition = ".$relativeposition.", template_id = ".$templateId.",  website_id = ".$websiteId." WHERE templatename = '". $templatename."'");
 
 		if($result==true)
 		{		//warum wurde der User gedebannt und wer hat das gemacht?
@@ -759,10 +760,11 @@ class DbContent
 	* @params string $title
 	* @params int $relativeposition
 	* @params int $templateId
+	* @params int $websiteId
 	*/
-	public function UpdatePageById($pageId, $title, $relativeposition, $templateId)
+	public function UpdatePageById($pageId, $title, $relativeposition, $templateId, $websiteId)
 	{
-		$result = $this->database->ExecuteQuery("UPDATE page SET title  ='".$title."', relativeposition = ".$relativeposition.", template_id  = ".$templateId."  WHERE id = ". $pageId);
+		$result = $this->database->ExecuteQuery("UPDATE page SET title  ='".$title."', relativeposition = ".$relativeposition.", template_id  = ".$templateId.",  website_id = ".$websiteId."  WHERE id = ". $pageId);
 
 		if($result==true)
 		{
@@ -1046,7 +1048,7 @@ class DbContent
 
 
 
-	
+
 	//neue Funktionen
 	/**
 	* SelectAllLable_User()
@@ -1056,7 +1058,7 @@ class DbContent
 		return $this->database->ExecutePreparedStatement("selectAllLable_User", array());
 	}
 
-	
+
 
 	/**
 	* DeleteAllLable_User()
@@ -1082,8 +1084,8 @@ class DbContent
 	}
 
 
-	
-	
+
+
 	/**
 	* DeleteLable_UserByArticleId()
 	* @params int $userId the user's id (foreign key)
@@ -1108,9 +1110,9 @@ class DbContent
 		}
 	}
 
-	
-	
-	
+
+
+
 	/**
 	* DeleteLable_UserByLableId()
 	* @params int $lableId the id of the lable (foreign key)
@@ -1133,10 +1135,10 @@ class DbContent
 		{
 			return false;
 		}
-	}	
-	
-	
-	
+	}
+
+
+
 	/**
 	* InsertLable_User()
 	* @params int $lableId the id of the lable (foreign key)
@@ -1161,10 +1163,10 @@ class DbContent
 			return false;
 		}
 	}
-	
- 	
-	
-	
+
+
+
+
 	/**
 	* UpdateLable_UserByLableId()
 	* @params int $lableId the id of the lable (foreign key)
@@ -1222,9 +1224,9 @@ class DbContent
 			return false;
 		}
 	}
-	
-	
-	
+
+
+
 }
 
 ?>

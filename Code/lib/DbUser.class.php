@@ -651,6 +651,8 @@ function check_date($date,$format,$sep)
 	* @params bool $articlemanagement
 	* @params bool $guestbookusage
 	* @params bool $templateconstruction
+	* @params bool $databasemanagement
+	* @params bool $backendlogin
 	*/
 	public function NewRole($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $databasemanagement, $backendlogin)
 	{
@@ -710,6 +712,8 @@ function check_date($date,$format,$sep)
 	* @params bool $articlemanagement
 	* @params bool $guestbookusage
 	* @params bool $templateconstruction
+	* @params bool $databasemanagement
+	* @params bool $backendlogin
 	*/
 	public function UpdateRoleById($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $databasemanagement, $backendlogin, $id)
 	{
