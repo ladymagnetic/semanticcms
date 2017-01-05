@@ -143,9 +143,9 @@ BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
 
 /* Datatables */
 BackendComponentPrinter::PrintDatatablesPlugin();
-if (isset($_POST['pageName']))
+if (isset($_REQUEST['pageName']))
 {
-    $pageName = $_POST['pageName'];
+    $pageName = $_REQUEST['pageName'];
 }
 else 
 {
