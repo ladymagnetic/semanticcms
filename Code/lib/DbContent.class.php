@@ -5,6 +5,7 @@ namespace SemanticCms\DatabaseAbstraction;
 /* Include(s) */
 require_once 'DbEngine.class.php';
 
+
 /**
 * Provides functionality for communication with the database according to page content
 */
@@ -159,16 +160,15 @@ class DbContent
 	{
 		$result = $this->database->ExecutePreparedStatement("deleteArticleById", array($articleId));
 
-		$headerOfArticle = $this->database->ExecuteQuery("SELECT header FROM article WHERE id = ".$articleId);
+		$headerOfArticle = $this->FetchArray($this->SelectOneArticleById($articleId))['header'];
 
 		if($result==true)
 		{
-			$logUsername = 'Wer ist gerade angemeldet?';
-			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
-			//$logDescription = 'der User: '.$usersName.' wurde gelöscht';
-			$logDescription = 'Folgender Article wurde gelöscht: => $headerOfArticle';
+			$logUsername = $_SESSION['username'];
+			$logRolename =  $this->FetchArray($this->SelectRolenameByUsername($logUsername))['rolename'];
+			$logDescription = 'Folgender Article wurde gelöscht: <strong>'.$headerOfArticle.'</strong>';
 
-			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+			$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
 			return true;
 		}
@@ -652,11 +652,6 @@ class DbContent
 
 		if($result==true)
 		{
-			$logUsername = 'Wer ist gerade angemeldet? => $username';		// es sollte nicht möglich sein, dass jemand anders da etwas von einer anderen Person ändert.
-			$logRolename = 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName';
-			$logDescription = 'Neues Lable erstellt.';
-
-			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
 			return true;
 		}
@@ -680,11 +675,6 @@ class DbContent
 
 		if($result==true)
 		{
-			$logUsername = 'Wer ist gerade angemeldet?';
-			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
-			$logDescription = 'Lable geändert.';
-
-			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
 			return true;
 		}
@@ -708,13 +698,7 @@ class DbContent
 
 		if($result==true)
 		{
-			$logUsername = 'Wer ist gerade angemeldet?';
-			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
-			$logDescription = 'Lable geändert.';
-
-			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-
-			return true;
+		  	return true;
 		}
 		else
 		{
@@ -731,7 +715,7 @@ class DbContent
 	* @params int $templateId
 	* @params int $websiteId
 	*/
-	public function UpdatePageByTitle($title, $relativeposition, $templateId, $websiteId)
+/*	public function UpdatePageByTitle($title, $relativeposition, $templateId, $websiteId)
 	{
 		$result = $this->database->ExecuteQuery("UPDATE page SET relativeposition = ".$relativeposition.", template_id = ".$templateId.",  website_id = ".$websiteId." WHERE templatename = '". $templatename."'");
 
@@ -751,7 +735,7 @@ class DbContent
 				return false;
 		}
 	}
-
+*/
 
 
 	/**
@@ -788,7 +772,7 @@ class DbContent
 	* @params string $templatename
 	* @params string $filelink
 	*/
-	public function UpdateTemplateByTemplatename($templatename, $filelink)
+/*	public function UpdateTemplateByTemplatename($templatename, $filelink)
 	{
 		$result = $this->database->ExecuteQuery("UPDATE template SET filelink  ='".$filelink."'  WHERE templatename = '". $templatename."'");
 
@@ -807,7 +791,7 @@ class DbContent
 			return false;
 		}
 	}
-
+*/
 
 
 	/**
@@ -853,11 +837,6 @@ class DbContent
 
 		if($result==true)
 		{
-			$logUsername = 'Wer ist gerade angemeldet? => $username';
-			$logRolename = 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName';
-			$logDescription = 'Alle Verbindungen zwischen Lable und Article mit bestimmter article_id gelöscht.';
-
-			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
 			return true;
 		}
@@ -881,11 +860,6 @@ class DbContent
 
 	 	if($result==true)
 	 	{
-	 		$logUsername = 'Wer ist gerade angemeldet? => $username';
-	 		$logRolename = 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName';
-	 		$logDescription = 'Alle Verbindungen zwischen Lable und Article mit bestimmter lable_id gelöscht.';
-
-	 		$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
 	 		return true;
 	 	}
@@ -908,13 +882,7 @@ class DbContent
 
   		if($result==true)
   		{
-  			$logUsername = 'Wer ist gerade angemeldet? => $username';
-  			$logRolename = 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName';
-  			$logDescription = 'Keinem Artikel ist ein Lable zugewiesen. ';
-
-  			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-
-  			return true;
+  		 	return true;
   		}
   		else
   		{
@@ -936,13 +904,7 @@ class DbContent
 
  		if($result==true)
  		{
- 			$logUsername = 'Wer ist gerade angemeldet? => $username';
- 			$logRolename = 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName';
- 			$logDescription = 'einem Article wurden neue Lables hinzugefügt erstellt.';
-
- 			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-
- 			return true;
+ 				return true;
  		}
  		else
  		{
@@ -960,19 +922,10 @@ class DbContent
 	*/
 	public function UpdateLable_ArticleByLableId($lableId, $articleId)
 	{
-
 		$result = $this->database->ExecuteQuery("UPDATE lable_article SET article_id  = ".$articleId."  WHERE lable_id  = " .$lableId);
-
-		//$lable = ... SELECT lablename FROM lable WHERE id = ".$lableId."....;
 
 		if($result==true)
 		{
-			$logUsername = 'Wer ist gerade angemeldet? => $username';
-			$logRolename = 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName';
-			$logDescription = 'Update.';
-
-			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-
 			return true;
 		}
 		else
@@ -993,16 +946,8 @@ class DbContent
 
 		$result = $this->database->ExecuteQuery("UPDATE lable_article SET lable_id  = ".$lableId."  WHERE article_id  = " .$articleId);
 
-		//$lable = ... SELECT lablename FROM lable WHERE id = ".$lableId."....;
-
 		if($result==true)
 		{
-			$logUsername = 'Wer ist gerade angemeldet? => $username';
-			$logRolename = 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName';
-			$logDescription = 'Update.';
-
-			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-
 			return true;
 		}
 		else
@@ -1069,11 +1014,6 @@ class DbContent
 
 		if($result==true)
 		{
-			$logUsername = 'Wer ist gerade angemeldet? => $username';
-			$logRolename = 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName';
-			$logDescription = 'Keinem User ist ein Lable zugewiesen. ';
-
-			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
 			return true;
 		}
@@ -1096,13 +1036,7 @@ class DbContent
 
 		if($result==true)
 		{
-			$logUsername = 'Wer ist gerade angemeldet? => $username';
-			$logRolename = 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName';
-			$logDescription = 'Alle Verbindungen zwischen Lable und User mit bestimmter userid gelöscht.';
-
-			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-
-			return true;
+				return true;
 		}
 		else
 		{
@@ -1123,12 +1057,6 @@ class DbContent
 
 		if($result==true)
 		{
-			$logUsername = 'Wer ist gerade angemeldet? => $username';
-			$logRolename = 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName';
-			$logDescription = 'Alle Verbindungen zwischen Lable und User mit bestimmter lable_id gelöscht.';
-
-			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-
 			return true;
 		}
 		else
@@ -1150,11 +1078,6 @@ class DbContent
 
 		if($result==true)
 		{
-			$logUsername = 'Wer ist gerade angemeldet? => $username';
-			$logRolename = 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName';
-			$logDescription = 'einem User wurden neue Lables hinzugefügt erstellt.';
-
-			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
 			return true;
 		}
@@ -1181,13 +1104,7 @@ class DbContent
 
 		if($result==true)
 		{
-			$logUsername = 'Wer ist gerade angemeldet? => $username';
-			$logRolename = 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName';
-			$logDescription = 'Update.';
-
-			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-
-			return true;
+		 	return true;
 		}
 		else
 		{
@@ -1204,19 +1121,10 @@ class DbContent
 	*/
 	public function UpdateLable_UserByArticleId($lableId, $userId)
 	{
-
 		$result = $this->database->ExecuteQuery("UPDATE lable_user SET lable_id  = ".$lableId."  WHERE user_id  = " .$userId);
-
-		//$lable = ... SELECT lablename FROM lable WHERE id = ".$lableId."....;
 
 		if($result==true)
 		{
-			$logUsername = 'Wer ist gerade angemeldet? => $username';
-			$logRolename = 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName';
-			$logDescription = 'Update.';
-
-			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-
 			return true;
 		}
 		else
