@@ -82,9 +82,9 @@ session_regenerate_id();
 					if($permissions["databasemanagement"] == 1) 	array_push($_SESSION['permissions'],Permission::Databasemanagement);
 					
 					$_SESSION['rolename'] = $database->FetchArray($database->SelectRolenameByUsername($nameInput))['rolename'];
-					var_dump($_SESSION);
+
 					// Seitenweiterleitung
-					//header("Location: start.php");
+					header("Location: start.php");
 				}
 			}
 			else
