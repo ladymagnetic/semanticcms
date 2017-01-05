@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 27. Dez 2016 um 14:23
+-- Erstellungszeit: 05. Jan 2017 um 12:05
 -- Server-Version: 10.1.16-MariaDB
 -- PHP-Version: 5.6.24
 
@@ -220,6 +220,14 @@ CREATE TABLE `logtable` (
   `description` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Daten für Tabelle `logtable`
+--
+
+INSERT INTO `logtable` (`id`, `logdate`, `username`, `rolename`, `description`) VALUES
+(1, '2017-01-05', 'Wer ist gerade angemeldet? => $username', 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName', 'Neue Page erstellt.'),
+(2, '2017-01-05', 'Wer ist gerade angemeldet? => $username', 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName', 'Neue Page erstellt.');
+
 -- --------------------------------------------------------
 
 --
@@ -230,25 +238,28 @@ CREATE TABLE `page` (
   `id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
   `relativeposition` int(11) NOT NULL,
-  `template_id` int(11) NOT NULL
+  `template_id` int(11) NOT NULL,
+  `website_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Daten für Tabelle `page`
 --
 
-INSERT INTO `page` (`id`, `title`, `relativeposition`, `template_id`) VALUES
-(1, 'Reisen', 5, 1),
-(2, 'Fußball', 7, 2),
-(3, 'Witze', 8, 3),
-(4, 'Möbel', 9, 4),
-(5, 'Haus', 20, 6),
-(6, 'Autos', 30, 3),
-(7, 'Katzen', 17, 5),
-(8, 'Pferde', 13, 5),
-(9, 'Zoo', 2, 8),
-(10, 'Bäume', 12, 8),
-(11, 'Pflanzen', 18, 10);
+INSERT INTO `page` (`id`, `title`, `relativeposition`, `template_id`, `website_id`) VALUES
+(1, 'Reisen', 5, 1, 0),
+(2, 'Fußball', 7, 2, 0),
+(3, 'Witze', 8, 3, 0),
+(4, 'Möbel', 9, 4, 0),
+(5, 'Haus', 20, 6, 0),
+(6, 'Autos', 30, 3, 0),
+(7, 'Katzen', 17, 5, 0),
+(8, 'Pferde', 13, 5, 0),
+(9, 'Zoo', 2, 8, 0),
+(10, 'Bäume', 12, 8, 0),
+(11, 'Pflanzen', 18, 10, 0),
+(12, 'Neue Seite1', 31, 1, 0),
+(13, 'Neue Seite2', 32, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -265,17 +276,20 @@ CREATE TABLE `role` (
   `pagemanagement` tinyint(1) NOT NULL DEFAULT '0',
   `articlemanagement` tinyint(1) NOT NULL DEFAULT '0',
   `guestbookusage` tinyint(1) NOT NULL DEFAULT '1',
-  `templateconstruction` tinyint(1) NOT NULL DEFAULT '0'
+  `templateconstruction` tinyint(1) NOT NULL DEFAULT '0',
+  `databasemanagement` tinyint(1) NOT NULL DEFAULT '0',
+  `backendlogin` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Daten für Tabelle `role`
 --
 
-INSERT INTO `role` (`id`, `uri`, `rolename`, `guestbookmanagement`, `usermanagement`, `pagemanagement`, `articlemanagement`, `guestbookusage`, `templateconstruction`) VALUES
-(2, 'uri.uri', 'Gast', 0, 0, 0, 0, 1, 0),
-(3, 'uri.uri', 'Redakteur', 1, 0, 1, 1, 1, 0),
-(4, 'uri.uri', 'Designer', 1, 0, 1, 1, 1, 1);
+INSERT INTO `role` (`id`, `uri`, `rolename`, `guestbookmanagement`, `usermanagement`, `pagemanagement`, `articlemanagement`, `guestbookusage`, `templateconstruction`, `databasemanagement`, `backendlogin`) VALUES
+(1, 'uri.uri', 'Admin', 1, 1, 1, 0, 1, 1, 0, 0),
+(2, 'uri.uri', 'Gast', 0, 0, 0, 0, 1, 0, 0, 0),
+(3, 'uri.uri', 'Redakteur', 1, 0, 1, 1, 1, 0, 0, 0),
+(4, 'uri.uri', 'Designer', 1, 0, 1, 1, 1, 1, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -373,7 +387,7 @@ CREATE TABLE `user` (
   `lastname` varchar(255) NOT NULL,
   `firstname` varchar(255) NOT NULL,
   `username` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
+  `password` varchar(512) NOT NULL,
   `email` varchar(255) NOT NULL,
   `registrydate` date NOT NULL,
   `birthdate` date NOT NULL
@@ -399,6 +413,22 @@ INSERT INTO `user` (`id`, `role_id`, `lastname`, `firstname`, `username`, `passw
 (13, 4, 'HeinrichDesigner', 'Hannah', 'Hanni', 'Hanni', 'Hanna.Heinrich@asdbdfag.de', '2016-12-22', '2015-08-19'),
 (14, 3, 'HeinrichRedakteur', 'Nanni', 'N', 'Nanni', 'Nanni.Heinrich@web.asdfaer', '2016-12-22', '2016-12-12'),
 (15, 3, 'Müller', 'Milch', 'Milch', 'Milch', 'Milch.Heinrich@web.asdfaer', '2016-12-22', '2016-12-12');
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `website`
+--
+
+CREATE TABLE `website` (
+  `id` int(11) NOT NULL,
+  `headertitle` varchar(255) NOT NULL,
+  `contact` text,
+  `imprint` text,
+  `privacyinformation` text,
+  `gtc` text,
+  `login` int(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Indizes der exportierten Tabellen
@@ -453,7 +483,8 @@ ALTER TABLE `logtable`
 --
 ALTER TABLE `page`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `title` (`title`);
+  ADD UNIQUE KEY `title` (`title`),
+  ADD KEY `website_id` (`website_id`);
 
 --
 -- Indizes für die Tabelle `role`
@@ -491,6 +522,13 @@ ALTER TABLE `user`
   ADD UNIQUE KEY `username` (`username`,`email`);
 
 --
+-- Indizes für die Tabelle `website`
+--
+ALTER TABLE `website`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `headertitle` (`headertitle`);
+
+--
 -- AUTO_INCREMENT für exportierte Tabellen
 --
 
@@ -518,12 +556,12 @@ ALTER TABLE `lable`
 -- AUTO_INCREMENT für Tabelle `logtable`
 --
 ALTER TABLE `logtable`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT für Tabelle `page`
 --
 ALTER TABLE `page`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT für Tabelle `role`
 --
@@ -544,6 +582,11 @@ ALTER TABLE `template`
 --
 ALTER TABLE `user`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+--
+-- AUTO_INCREMENT für Tabelle `website`
+--
+ALTER TABLE `website`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- Constraints der exportierten Tabellen
 --
