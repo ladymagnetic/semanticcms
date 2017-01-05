@@ -419,7 +419,7 @@ CREATE TABLE `website` (
   `imprint` text,
   `privacyinformation` text,
   `gtc` text,
-  `login` int(1) NOT NULL DEFAULT '0',
+  `login` tinyint(1) NOT NULL DEFAULT '0',
   `guestbook` tinyint(1) DEFAULT '0',
   `template_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
