@@ -86,6 +86,10 @@ class DbUser
 		$selectAllBan_Reason = "SELECT * FROM ban_reason";
 		$this->database->PrepareStatement("selectAllBan_Reason", $selectAllBan_Reason);
 
+		$selectBan_ReasonById = "SELECT * FROM ban_reason WHERE id = ?";
+		$this->database->PrepareStatement("selectBan_ReasonById", $selectBan_ReasonById);
+
+
 		$selectAllBan= "SELECT * FROM ban";
 		$this->database->PrepareStatement("selectAllBan", $selectAllBan);
 
@@ -362,7 +366,7 @@ class DbUser
 		{
 			$logUsername = $_SESSION['username'];
 			$logRolename =  $this->FetchArray($this->SelectRolenameByUsername($logUsername))['rolename'];
-  		$logDescription = 'Folgender User wurde gelöscht: '.$logDeletedUser;
+  		$logDescription = 'Folgender User wurde gelöscht: <strong>'.$logDeletedUser.'</strong>';
 			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 			return true;
 		}
@@ -446,7 +450,7 @@ class DbUser
 		{
 			$logUsername = $_SESSION['username'];
 			$logRolename =  $this->FetchArray($this->SelectRolenameByUsername($logUsername))['rolename'];
-		 	$logDescription = 'Folgende Rolle wurde gelöscht: '.$logDeletedRolename ;
+		 	$logDescription = 'Folgende Rolle wurde gelöscht: <strong>'.$logDeletedRolename.'</strong>' ;
 
 			$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
@@ -467,29 +471,18 @@ class DbUser
 	*/
 	public function AssignRole($roleId, $userId)
 	{
-
 		$result = $this->database->ExecuteQuery("UPDATE user SET role_id ='".$roleId."' WHERE id = '". $userId."'");
-
-
 
 		if($result==true)
 		{
-			// für Log-Tabelle:
-			// Welche Rolle wird zugewiesen?
-			// Wer hat die Zuweisung durchgeführt? => Usermanagement is true. => alle diese könnnen Rollen zuweisen!
-			// eventuell neuen Parameter bei Funktion mitgeben ($userId von der Person, die die Rolle zuweist.)
-
 			$logUsername = $_SESSION['username'];
 		  $whoIsAssigned	 = $this->FetchArray($this->GetUserInformationById($userId))['username'];
 			$logAssignedRolename = $this->FetchArray($this->SelectRoleById($roleId))['rolename'];
 			$logRolename =  $this->FetchArray($this->SelectRolenameByUsername($logUsername))['rolename'];
 
-		 	$logDescription = 'Dem User '.$whoIsAssigned.' wurde die Rolle '.$logAssignedRolename.' zugewiesen.' ;
+		 	$logDescription = 'Dem User <strong>'.$whoIsAssigned.'</strong> wurde die Rolle <strong>'.$logAssignedRolename.'</strong> zugewiesen.' ;
 
 	  	$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-
-
-
 
 			return true;
 		}
@@ -520,17 +513,11 @@ class DbUser
 
 		 if($result==true)
 		 {
-			// für Log-Tabelle:
-			 // Welche hat die neue Rolle erstellt?
+			$logUsername = $_SESSION['username'];
+			$logRolename =  $this->FetchArray($this->SelectRolenameByUsername($logUsername))['rolename'];
 
-			$logUsername = 'Wer ist gerade angemeldet?';
-			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
-		 	$logDescription = 'Welche neue Rolle wurde gerade angelegt? => $rolename';
-
-			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-
-			var_dump($re);
-
+			$logDescription = 'Die Rolle <strong>'.$rolename.'</strong> wurde neu angelegt.';
+			$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 			return true;
 		 }
 		 else
@@ -577,19 +564,25 @@ class DbUser
 	*/
 	public function UpdateRoleById($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $databasemanagement, $backendlogin, $id)
 	{
+		$rolenameBevoreUpdate =  $this->FetchArray($this->SelectRoleById($id))['rolename'];
 		$result = $this->database->ExecuteQuery("UPDATE role SET uri ='".$uri."',  rolename ='".$rolename."',  guestbookmanagement ='".$guestbookmanagement."',  usermanagement ='".$usermanagement."', pagemanagement ='".$pagemanagement."', articlemanagement ='".$articlemanagement."', guestbookusage ='".$guestbookusage."' , templateconstruction ='".$templateconstruction."', databasemanagement ='".$databasemanagement."', backendlogin ='".$backendlogin."' WHERE id = '". $id."'");
 
 		if($result==true)
 		{
-			// was wurde geändert und WER hat die Änderung durchgeführt??
+			$logUsername = $_SESSION['username'];
+			$logRolename =  $this->FetchArray($this->SelectRolenameByUsername($logUsername))['rolename'];
 
-			$logUsername = 'Wer ist gerade angemeldet?';
-			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
-		 	$logDescription = 'welche Rolle  wurde geändert? => $rolename';
+			if($rolenameBevoreUpdate == $rolename)
+			{
+				$rolenameChanged = $rolename;
+			}
+			else
+				{
+					$rolenameChanged = $rolenameBevoreUpdate. '(neuer Rollenname: '.$rolename.')';
+				}
 
-			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-
-			var_dump($re);
+		 	$logDescription = 'An der Rolle <strong>'.$rolenameChanged.'</strong> wurden Änderugen vorgenommen.';
+		  $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
 			return true;
 		}
@@ -609,27 +602,12 @@ class DbUser
 	* @params string $lastname the user's email
 	* @params int $id user's id
 	*/
-	public function UpdateUserDifferentNamesById($lastname, $firstname, $username, $email, $userId)
+	public function UpdateUserDifferentNamesById($lastname, $firstname, $email, $userId)
 	{
-		$result = $this->database->ExecuteQuery("UPDATE user SET lastname ='".$lastname."',  firstname ='".$firstname."',  username ='".$username."',  email ='".$email."' WHERE id = '". $userId."'");
-
-		$usersRoleId = $this->database->ExecuteQuery("SELECT role_id FROM user WHERE username = ".$username);
-
-		//$usersRoleName = $this->database->ExecuteQuery("SELECT rolename FROM role WHERE id = ".$usersRoleId);
-
+		$result = $this->database->ExecuteQuery("UPDATE user SET lastname ='".$lastname."',  firstname ='".$firstname."', email ='".$email."' WHERE id = '". $userId."'");
 
 		if($result==true)
 		{
-				// was wurde geändert und WER hat die Änderung durchgeführt??
-
-			$logUsername = 'Wer ist gerade angemeldet? => $username';		// es sollte nicht möglich sein, dass jemand anders da etwas von einer anderen Person ändert.
-			$logRolename = 'Welche Rolle hat der angemeldete Benutzer? => $usersRoleName';
-		 	$logDescription = 'Änderung der persönlichen Daten.';
-
-			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-
-			var_dump($re);
-
 			return true;
 		}
 		else
@@ -709,13 +687,10 @@ class DbUser
 
 		if($result==true)
 		{
-			echo "User ist gerade gesperrt";
-
 			return true;
 		}
 		else
 		{
-			echo "Vorgang fehlgeschlagen - User ist nicht gesperrt.";
 			return false;
 		}
 	}
@@ -731,23 +706,25 @@ class DbUser
 	*/
 	public function InsertBanViaUserId($user_id, $reason_id, $description, $begindatetime, $enddatetime)
 	{
-	// Datum überprüfen
 		$description = $this->database->RealEscapeString($description);
+		$BannedUsername = $this->FetchArray($this->GetUserInformationById($user_id))['username'];
+		var_dump($BannedUsername);
+
 		$result = $this->database->ExecuteQuery("INSERT INTO ban (id, user_id, reason_id, description, begindatetime, enddatetime) VALUES (NULL, ".$user_id.", ".$reason_id.", '".$description."', '".$begindatetime."', '".$enddatetime."')");
-
-		$usersName = $this->database->ExecuteQuery("SELECT username FROM user WHERE id = ".$user_id);
-
 
 		if($result==true)
 		{
-			// welcher User wurde gebannt und WER hat den Ban erstellt??
+			if($reason_id != 6)
+			{
+		 	$logUsername = $_SESSION['username'];
+			$logRolename =  $this->FetchArray($this->SelectRolenameByUsername($logUsername))['rolename'];
 
-			$logUsername = 'Wer ist gerade angemeldet?';
-			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
-		 	$logDescription = 'Folgender User wurde gerade gebannt: $usersName';
+			$banReason = $this->FetchArray($this->SelectBan_ReasonById($reason_id))['reason'];
 
-			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+		 	$logDescription = 'Der User <strong>'.$BannedUsername.'</strong> wurde gebannt. <br> Grund: <strong>'.$banReason.'</strong>';
 
+			$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+			}
 			return true;
 		}
 		else
@@ -756,6 +733,7 @@ class DbUser
 		}
 
 	}
+
 
 	/**
 	*  DebanUserViaBanId()
@@ -766,17 +744,8 @@ class DbUser
 	{
 		$result = $this->database->ExecuteQuery("UPDATE ban SET enddatetime = NOW() WHERE id = ". $id);
 
-		$usersName = $this->database->ExecuteQuery("SELECT username FROM user INNER JOIN ban ON user.id = ban.user_id WHERE ban.id = ".$id);
-
 		if($result==true)
-		{		//warum wurde der User gedebannt und wer hat das gemacht?
-
-			$logUsername = 'Wer ist gerade angemeldet?';
-			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
-		 	$logDescription = 'Folgender User ist nicht mehr gebannt: $usersName';
-
-			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-
+		{
 			return true;
 		}
 		else
@@ -802,12 +771,10 @@ class DbUser
 	* creates a new  ban_reason
 	* @params string $reason the reason of a ban_reason
 	*/
-	public function InsertBan_Reason($reason)
+/*	public function InsertBan_Reason($reason)
 	{
 		$reason = $this->database->RealEscapeString($reason);
 		$result = $this->database->ExecutePreparedStatement("insertBan_Reason", array($reason));
-
-		//var_dump($result);
 
 		if($result==true)
 		{
@@ -826,6 +793,7 @@ class DbUser
 			 return false;
 		}
 	}
+*/
 
 
 	/**
@@ -852,8 +820,7 @@ class DbUser
 	*/
 	public function SelectAllBansFromAUserByUsername($username)
 	{
-		// Beispiel: SELECT * FROM ban INNER JOIN user ON ban.user_id = user.id WHERE username = 'M'
-		return $this->database->ExecutePreparedStatement("selectAllBansFromAUserByUsername", array($username));
+	 	return $this->database->ExecutePreparedStatement("selectAllBansFromAUserByUsername", array($username));
 	}
 
 
@@ -905,12 +872,12 @@ class DbUser
 				$changePassword = $this->database->ExecuteQuery("UPDATE user SET password = '.$newPassword.'");
 				return true;
 			}
-			echo 'Unterschiedliche Passwörter!';
+
 			return false;
 		}
 		else
 		{
-			echo 'Falsches Passwort.';
+
 			return false;
 		}
 
@@ -941,9 +908,6 @@ class DbUser
 
 
 
-
-
-
 	/**
 	*  GetUserPermissionByUsername()
 	* @params string $username the user's username
@@ -966,57 +930,6 @@ class DbUser
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	/** => wird noch überarbeitet
-	* SelectAllUsersWhoAreBannedNowForASpecialReasonById()
-	* @params int $reason_id the ban's reason_id
-
-	public function SelectAllUsersWhoAreBannedNowForASpecialReasonById($reason_id)
-	{
-		return $this->database->ExecutePreparedStatement("selectAllUsersWhoAreBannedNowForASpecialReasonById", array($reason_id));
-	}
-	*/
-
-
-
-
-
-
-	/*Conny => wichtige Funktionen*/
-	/*
-	HashPassword
-	DecodePassword
-	*/
 
 
 	/**
@@ -1044,21 +957,24 @@ class DbUser
 
 
 
+		/**
+		* selectRolenameByUsername ()
+		* @params string $username the user's username
+		*/
+		public function SelectRolenameByUsername($username)
+		{
+				return $this->database->ExecutePreparedStatement("selectRolenameByUsername ", array($username));
+		}
 
 
-
-
-
-
-/**
-* selectRolenameByUsername ()
-* @params string $username the user's username
-*/
-public function SelectRolenameByUsername($username)
-{
-		return $this->database->ExecutePreparedStatement("selectRolenameByUsername ", array($username));
-}
-
+		/**
+		* SelectBan_ReasonById()
+		* @params int $id the ban_ReasonId's Id
+		*/
+		public function SelectBan_ReasonById($id)
+		{
+			return $this->database->ExecutePreparedStatement("selectBan_ReasonById", array($id));
+		}
 
 }
 ?>
