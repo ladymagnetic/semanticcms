@@ -42,22 +42,34 @@ if (isset($_POST['newPage'])) {
     }
 }
 // Submit button with the name 'options' was clicked
-if (isset($_POST['options'])) {
+else if (isset($_POST['options'])) {
     // noch keine Aufgabe
 }
+// Submit button with the name 'siteDetails' was clicked
+else if (isset($_POST['pageDetails'])) {
+    EditPageDetails($_POST['pageId']);
+    return;
+}
+// Submit button with the name 'savePageChanges' was clicked
+else if (isset($_POST['savePageChanges'])) {
+    $queryResult = $dbContent->SelectTemplateByTemplatename($_POST['templateName']);
+    $templateId = $dbContent->FetchArray($queryResult)['id'];
+    $dbContent->UpdatePageById($_POST['pageId'], $_POST['pageTitle'],
+        $_POST['relativePosition'], $templateId);
+}
 // Submit button with the name 'deletePage' was clicked
-if (isset($_POST['deletePage'])) {
+else if (isset($_POST['deletePage'])) {
     BackendComponentPrinter::AskIfReallyDelete('Seitenverwaltung', 'Pagemanagement.php',
         'pageId', $_POST['pageId']);
     return;
 }
 // User has confirmed the deletion of a page
-if (isset($_POST['reallyDelete'])) {
+else if (isset($_POST['reallyDelete'])) {
     $pageId = intval($_POST['pageId']);
     $dbContent->DeletePageById($pageId);
 }
 // Submit button with the name 'editContent' was clicked
-if (isset($_POST['editContent'])) {
+else if (isset($_POST['editContent'])) {
     $pageTitle = $_POST['pageTitle'];
     header("Location: Articlemanagement.php?pageName=$pageTitle");
     return;
@@ -112,6 +124,7 @@ BackendComponentPrinter::PrintDatatablesPlugin();
         $queryResult = $dbContent->SelectTemplateById($page['template_id']);
         $siteTemplate = $dbContent->FetchArray($queryResult);
         $siteActions = "<form method='post' action=''>
+                <input id='pageDetails' name='pageDetails' type='submit' value='Details'>
                 <input id='deletePage' name='deletePage' type='submit' value='Löschen'>
                 <input id='editContent' name='editContent' type='submit' value='Inhalte bearbeiten'>
                 <input id='pageId' name='pageId' type='hidden' value='".$page['id']."'>
@@ -121,6 +134,72 @@ BackendComponentPrinter::PrintDatatablesPlugin();
         BackendComponentPrinter::PrintTableRow(array($siteTitle, $siteTemplate['templatename'], $siteActions, $siteRelativePosition));
     }
     BackendComponentPrinter::PrintTableEnd();
+
+    /**
+     * Opens the page for the editing of the page details
+     *
+     */
+    function EditPageDetails($pageId)
+    {
+        BackendComponentPrinter::PrintHead("Seitenverwaltung", $jquery=true);
+        //*----- Permissions ----- */
+        /* Include(s) */
+        require_once 'lib/Permission.enum.php';
+        require_once 'config/config.php';
+
+        BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
+        //*----- Permissions End ----- */
+
+        /* Global variables */
+        global $dbContent;
+
+        /* Datatables */
+        BackendComponentPrinter::PrintDatatablesPlugin();
+
+        echo
+        "<main>
+            <h1><i class='fa fa-users fontawesome'></i> Seitendetails</h1>
+                <form method='post' action='Pagemanagement.php'>";
+        $page = $dbContent->FetchArray($dbContent->SelectPageById($pageId));
+
+        // let the user edit page details
+        echo "<form method='post' action=''>
+                <input id='pageId' name='pageId' type='hidden' value='".$page['id']."'>
+                
+                <label for='pageTitle'>Seitentitel</label>
+                <input id='pageTitle' name='pageTitle' value='".$page['title']."'>
+                <br><br>
+                <label for='relativePosition'>Relative Position</label>
+                <input id='relativePosition' name='relativePosition' value='".$page['relativeposition']."'>
+                <br><br>
+                <label for='templateId'>Template</label>";
+        // fetch all existing templates
+        $queryResult = $dbContent->SelectAllTemplates();
+        echo "<select name='templateName' size='1'>
+              <option></option>";
+        $templateAssigned = false;
+        while ($template = $dbContent->FetchArray($queryResult)){
+            if ($template['id'] == $page['template_id']) {
+                echo "<option selected='selected'>".$template['templatename']."</option>";
+                $templateAssigned = true;
+            } else {
+                echo "<option>".$template['templatename']."</option>";
+            }
+        }
+        echo "</select>
+             </label>";
+        if (!$templateAssigned) {
+            echo "<label>Der Seite ist kein Template zugewiesen!</label>";
+        }
+        echo "<br><br>
+                <input id='savePageChanges' name='savePageChanges' type='submit' value='Änderungen speichern'>
+                </form>";
+        echo "<form method='post' action='Pagemanagement.php'><input id='back' name='back' type='submit' value='Zurück'><form>";
+
+        echo "</main>
+              </body>
+              </html>";
+    }
     ?>
 
     <form method="post" action=''>
