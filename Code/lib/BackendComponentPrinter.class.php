@@ -96,7 +96,7 @@ class BackendComponentPrinter
      * @param $jquery true if jquery used otherwise false
      * @param $jqueryUI true if jquery-ui used otherwise false
      */
-    public function PrintHead($title, $jquery=false, $jqueryUI=false)
+    public static function PrintHead($title, $jquery=false, $jqueryUI=false)
     {
          // evtl. auch schema.org tags im head einfügen, wenn sinnvoll
         // (z.B. 'description', 'datePublished' (eher für die Blog Artikel geeignet)

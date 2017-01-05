@@ -51,9 +51,16 @@ if (isset($_POST['deletePage'])) {
         'pageId', $_POST['pageId']);
     return;
 }
+// User has confirmed the deletion of a page
 if (isset($_POST['reallyDelete'])) {
     $pageId = intval($_POST['pageId']);
     $dbContent->DeletePageById($pageId);
+}
+// Submit button with the name 'editContent' was clicked
+if (isset($_POST['editContent'])) {
+    $pageTitle = $_POST['pageTitle'];
+    header("Location: Articlemanagement.php?pageName=$pageTitle");
+    return;
 }
 /* End: React to user actions -------------------------------*/
 ?>
@@ -107,7 +114,8 @@ BackendComponentPrinter::PrintDatatablesPlugin();
         $siteActions = "<form method='post' action=''>
                 <input id='deletePage' name='deletePage' type='submit' value='Löschen'>
                 <input id='editContent' name='editContent' type='submit' value='Inhalte bearbeiten'>
-                <input id='pageId' name='pageId' type='hidden' value='".$page['id']."'></form>";
+                <input id='pageId' name='pageId' type='hidden' value='".$page['id']."'>
+                <input id='pageTitle' name='pageTitle' type='hidden' value='".$page['title']."'></form>";
         $siteRelativePosition = $page['relativeposition'];
 
         BackendComponentPrinter::PrintTableRow(array($siteTitle, $siteTemplate['templatename'], $siteActions, $siteRelativePosition));
