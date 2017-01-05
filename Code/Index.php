@@ -41,22 +41,29 @@ session_regenerate_id();
 		if($_POST['action'] == "login")
 		{
 			$database = new DbUser($config['cms_db']['dbhost'],$config['cms_db']['dbuser'],$config['cms_db']['dbpass'],$config['cms_db']['database']);
-			
-			// Pruefung mit if(isset($_POST['...'])) einbauen (ist username/password tatsächlich gesetzt)
-			
+					
+			if(!isset($_POST['username']) || !isset($_POST['password'])) { die("<p> Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut. </p>"); }
+		
 			$nameInput =  $_POST["username"];
 			$password = $_POST["password"];
 			
-			// an Passwort Hash Denken
-			// $hash = $hash('sha512', $password); bzw mit salt: $hash = hash('sha512', $password, $salt);
+		/*	$salt = mcrypt_create_iv(60, MCRYPT_RAND );	
+			$hash = password_hash($password, PASSWORD_BCRYPT, array('salt' => $salt, 'cost' => 12));
+			//var_dump(password_verify($password, $hash));
+			
+			//$hash = hash('sha512', $password); */
+			
 			$login = $database->LoginUser($nameInput, $password);	
 						
 			if($login)
 			{
 				// set username and permissions
-				$_SESSION['username'] = $nameInput;	// Aufpassen wg. E-Mail
-				
-				$result = $database->GetUserPermissionByUsername($nameInput);
+				if (filter_var($nameInput, FILTER_VALIDATE_EMAIL)) 
+				{ $_SESSION['username'] = $database->FetchArray($database->SelectUserByEmail($nameInput))['username']; }
+				else 
+				{ $_SESSION['username'] = $nameInput; }
+
+				$result = $database->GetUserPermissionByUsername($_SESSION['username']);
 				$permissions = $database->FetchArray($result);
 							
 				$_SESSION['permissions'] = array();
@@ -73,7 +80,7 @@ session_regenerate_id();
 			}
 			else
 			{
-				echo "<p> Username und/oder Passwort sind falsch. Bitte versuchen Sie es erneut </p>";
+				echo "<p> Username und/oder Passwort sind falsch. Bitte versuchen Sie es erneut. </p>";
 			}
 		}
 		// else if (/* Abfrage für password vergessen*/)
