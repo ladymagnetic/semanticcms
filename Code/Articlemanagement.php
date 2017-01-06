@@ -216,6 +216,8 @@ echo
 
 /**
 * Opens the page to create a new article
+* @param string $pageName The corresponding pagename
+* @param DbContent $dbContent The corresponding dbcontent
 *
 */
 function CreateNewArticle($pageName, $dbContent)
@@ -317,7 +319,7 @@ function CreateNewArticle($pageName, $dbContent)
             <script src='media/ml-lodlive/js/profile/profile.example.js'></script>
             <script>
             'use strict';
-            jQuery('#graph').lodlive({ profile: ExampleProfile, firstUri: 'http://dbpedia.org/resource/".str_replace(" ", "_", $pageName)."', ignoreBnodes: true }); // 'http://dbpedia.org/resource/Philadelphia_Flyers'
+            jQuery('#graph').lodlive({ profile: ExampleProfile, firstUri: 'http://dbpedia.org/resource/".str_replace(" ", "_", $pageName)."', ignoreBnodes: true });
             </script>";
     echo
             "</main></body></html>";
@@ -325,6 +327,10 @@ function CreateNewArticle($pageName, $dbContent)
 
 /**
 * Opens the page to edit a article
+* @param string $pageName The corresponding pagename
+* @param int $articleId The corresponding artticleId
+* @param DbContent $dbContent The corresponding dbcontent
+* @param DbUser $dbUser The corresponding dbuser
 *
 */
 function EditArticle($pageName, $articleId, $dbContent, $dbUser)
@@ -421,6 +427,8 @@ function EditArticle($pageName, $articleId, $dbContent, $dbUser)
 
 /**
 * Opens the page to decide if really delete article
+* @param int $articleId The corresponding articleid
+* @param string $pageName The corresponding pagename
 *
 */
 function ReallyDelete($articleId, $pageName)

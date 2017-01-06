@@ -349,6 +349,8 @@ echo
 
 /**
 * Opens the page for the details of the user
+* @param int $userId The corresponding userId
+* @param DbUser $dbUser The corresponding dbuser
 *
 */
 function EditUser($userId, $dbUser)
@@ -437,6 +439,8 @@ function EditUser($userId, $dbUser)
 }
 /**
 * Opens the page for editing the role
+* @param int $roleId The corresponding roleId
+* @param DbUser $dbUser The corresponding dbuser
 *
 */
 function EditRole($roleId, $dbUser)
@@ -547,6 +551,7 @@ function EditRole($roleId, $dbUser)
 
 /**
 * Opens the page to create a new user
+* @param DbUser $dbUser The corresponding dbuser
 *
 */
 function CreateNewUser($dbUser)
@@ -616,6 +621,7 @@ function CreateNewUser($dbUser)
 
 /**
 * Opens the page to create a new role
+* @param DbUser $dbUser The corresponding dbuser
 *
 */
 function CreateNewRole($dbUser)
@@ -672,6 +678,8 @@ function CreateNewRole($dbUser)
 
 /**
 * Opens the page to ban a new user
+* @param int $userId The corresponding userId
+* @param DbUser $dbUser The corresponding dbuser
 *
 */
 function BanUser($userId, $dbUser)
@@ -733,6 +741,7 @@ function BanUser($userId, $dbUser)
 
 /**
 * Opens the page to decide if raelly delete
+* @param int $userId The corresponding userId
 *
 */
 function ReallyDelete($userId)
@@ -763,6 +772,7 @@ function ReallyDelete($userId)
 
 /**
 * Opens the page to decide if really delete role
+* @param int $roleId The corresponding roleId
 *
 */
 function ReallyDeleteRole($roleId)
@@ -793,6 +803,14 @@ function ReallyDeleteRole($roleId)
 
 /**
 * Sets the permissions from the form to variables (call by reference --> &)
+* @param int $guestbookmanagement The corresponding guestbookmanagement
+* @param int $usermanagement The corresponding usermanagement
+* @param int $pagemanagement The corresponding pagemanagement
+* @param int $articlemanagement The corresponding articlemanagement
+* @param int $guestbookusage The corresponding guestbookusage
+* @param int $templateconstruction The corresponding templateconstruction
+* @param int $databasemanagement The corresponding databasemanagement
+* @param int $backendlogin The corresponding backendlogin
 *
 */
 function SetPermissionsFromForm(&$guestbookmanagement, &$usermanagement, &$pagemanagement, &$articlemanagement, &$guestbookusage, &$templateconstruction,
