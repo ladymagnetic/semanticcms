@@ -135,7 +135,6 @@ BackendComponentPrinter::printSidebar($_SESSION['permissions']);
 
 if(isset($_POST['save'])) {
   $templateParser = new TemplateParser();
-  $title = $_POST['Title'];
   $backgroundColor = $_POST['BackgroundColor'];
   $backgroundPicture = $_POST['BackgroundPicture'];
   $height = $_POST['Height'];
@@ -185,11 +184,9 @@ if(isset($_POST['save'])) {
   $buttonFontColor = $_POST['ButtonFontColor'];
   $buttonBackgroundColor = $_POST['ButtonBackgroundColor'];
   $buttonBackgroundPic = $_POST['ButtonBackgroundPic'];
-  $templateParser->SaveButton($buttonRounded, $button3D, $buttonFont, $buttonFontsize, $buttonFontColor, $buttonBackgroundColor, $buttonBackgroundPic);
-  $searchField = $_POST['SearchField'];
-  $login = $_POST['Login'];
   $templateName = $_POST['TemplateName'];
-  $templateParser->SavePlugIns($searchField, $login, $templateName);
+  $templateParser->SaveButton($buttonRounded, $button3D, $buttonFont, $buttonFontsize, $buttonFontColor, $buttonBackgroundColor, $buttonBackgroundPic, $templateName);
+  
 }
 
 ?>
@@ -198,7 +195,6 @@ if(isset($_POST['save'])) {
 		<h1><i class="fa fa-paint-brush fontawesome"></i> Templates</h1>
     <form  action="TemplateConstruction.php" method="post">
     <h2>Header</h2>
-    <label>Titel: <input type="text" name="Title"> </label><br><br>
     <label>Position:
 
       <input type="radio" name="Position" value="right" checked="true">
@@ -257,7 +253,7 @@ if(isset($_POST['save'])) {
       <label>Breite:</label>
         <input type="number" name="MenuWidth" min="10" max="100"><label for="MenuWidth">%</label><br><br>
       <label>Höhe:</label>
-        <input type="number" name="MenuHeight" min="10" max="100"><br><br>
+        <input type="number" name="MenuHeight" min="10" max="100"><label for="MenuHeight">px</label><br><br>
       <label>Position:</label>
         <input type="radio" name="MenuPosition" value="right" checked="true">
         <label for="right">rechts</label>
@@ -385,13 +381,7 @@ if(isset($_POST['save'])) {
         <label for="ButtonBackPic">Bild</label>
           <div class="BtnBackPic">
             <input type="file" name="ButtonBackgroundPic">
-          </div><br><br>
-      <label>PlugIns:</label>
-        <input type="checkbox" name="SearchField">
-        <label for="SearchField">Suchfeld</label>
-        <input type="checkbox" name="Login">
-        <label for="Login">Login</label>
-        <br><br><br>
+          </div><br><br><br>
       <label>Name des erstellten Templates:</label>
         <input type="text" name="TemplateName">
     <input type="submit" name="save" value="speichern">

@@ -129,7 +129,7 @@ class TemplateParser
 	* Save the Button data of the TemplateConstruction.php in an XML-file
 	*
 	*/
-	public function SaveButton($Rounded, $button3D, $Font, $Fontsize, $Fontcolor, $Backgroundcolor, $Backgroundpic)
+	public function SaveButton($Rounded, $button3D, $Font, $Fontsize, $Fontcolor, $Backgroundcolor, $Backgroundpic, $TemplateName)
 	{
 		$this->root->appendChild($sixthNode = $this->dom->createElement("Button"));
 		$sixthNode->appendChild($this->dom->createElement("Rounded", $Rounded));
@@ -139,23 +139,12 @@ class TemplateParser
 		$sixthNode->appendChild($this->dom->createElement("Fontcolor", $Fontcolor));
 		$sixthNode->appendChild($this->dom->createElement("Backgroundcolor", $Backgroundcolor));
 		$sixthNode->appendChild($this->dom->createElement("Backgroundpicture", $Backgroundpic));
-
-
-	}
-
-	/**
-	* Save the PlugIn data of the TemplateConstruction.php in an XML-file
-	*
-	*/
-	public function SavePlugIns($SearchField, $Login, $TemplateName)
-	{
-		$this->root->appendChild($seventhNode = $this->dom->createElement("PlugIns"));
-		$seventhNode->appendChild($this->dom->createElement("SearchField", $SearchField));
-		$seventhNode->appendChild($this->dom->createElement("Login", $Login));
-
 		$this->dom->save("templates/".$TemplateName.".xml");
-		//$dbUser->NewTemplate($TemplateName, "templates/".$TemplateName.".xml");
+
 	}
+
+		//$dbUser->NewTemplate($TemplateName, "templates/".$TemplateName.".xml");
+
 
 
 	/**
@@ -308,29 +297,6 @@ class TemplateParser
 	}
 
 
-	/**
-	* Gives the PlugIn data of the TemplateName.xml
-	*
-	*/
-	public function GetPlugIn($TemplateName)
-	{
-
-			$doc = new DOMDocument();
-			$doc->load("templates/".$TemplateName.".xml");
-
-
-			$plugInArray;
-			$i=0;
-			while(is_object($plugIn = $doc->getElementsByTagName("PlugIns")->item($i)))
-			{
-				foreach($plugIn->childNodes as $nodename)
-				{
-					$plugInArray[$nodename->nodeName] = $nodename->nodeValue;
-				}
-				$i++;
-			}
-			return $plugInArray;
-	}
 
 
 
