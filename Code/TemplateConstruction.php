@@ -184,9 +184,14 @@ if(isset($_POST['save'])) {
   $buttonFontColor = $_POST['ButtonFontColor'];
   $buttonBackgroundColor = $_POST['ButtonBackgroundColor'];
   $buttonBackgroundPic = $_POST['ButtonBackgroundPic'];
+  $templateParser->SaveButton($buttonRounded, $button3D, $buttonFont, $buttonFontsize, $buttonFontColor, $buttonBackgroundColor, $buttonBackgroundPic);
+  $tagBackgroundColor = $_POST['TagBackgroundColor'];
+  $tagfont = $_POST['TagFont'];
+  $tagFontsize = $_POST['TagFontsize'];
+  $tagFontColor = $_POST['TagFontColor'];
+  $tagRounded = $_POST['TagRounded'];
   $templateName = $_POST['TemplateName'];
-  $templateParser->SaveButton($buttonRounded, $button3D, $buttonFont, $buttonFontsize, $buttonFontColor, $buttonBackgroundColor, $buttonBackgroundPic, $templateName);
-  
+  $templateParser->SaveTag($tagBackgroundColor, $tagfont, $tagFontsize, $tagFontColor, $tagRounded, $templateName);
 }
 
 ?>
@@ -381,7 +386,22 @@ if(isset($_POST['save'])) {
         <label for="ButtonBackPic">Bild</label>
           <div class="BtnBackPic">
             <input type="file" name="ButtonBackgroundPic">
-          </div><br><br><br>
+          </div><br><br>
+      <h2>Tags</h2>
+        <label>Hintergrundfarbe: </label>
+          <input type="color" name="TagBackgroundColor" value="#000000"><br><br>
+        <?php
+          BackendComponentPrinter::PrintFontsDropdownList("Schriftart:", "TagFont");
+        ?><br><br>
+        <label>Schriftgröße: </label>
+          <input type="number" name="TagFontsize" min="2" max="50"><br><br>
+        <label>Schriftfarbe:</label>
+          <input type="color" name="TagFontColor" value="#000000"><br><br>
+        <label>abgerundet:</label>
+          <input type="radio" name="TagRounded" value="Rounded" checked="true">
+          <label for="Rounded">ja</label>
+          <input type="radio" name="TagRounded" value="Rectangular">
+          <label for="Rectangular">nein</label><br><br><br>
       <label>Name des erstellten Templates:</label>
         <input type="text" name="TemplateName">
     <input type="submit" name="save" value="speichern">

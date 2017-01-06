@@ -129,7 +129,7 @@ class TemplateParser
 	* Save the Button data of the TemplateConstruction.php in an XML-file
 	*
 	*/
-	public function SaveButton($Rounded, $button3D, $Font, $Fontsize, $Fontcolor, $Backgroundcolor, $Backgroundpic, $TemplateName)
+	public function SaveButton($Rounded, $button3D, $Font, $Fontsize, $Fontcolor, $Backgroundcolor, $Backgroundpic)
 	{
 		$this->root->appendChild($sixthNode = $this->dom->createElement("Button"));
 		$sixthNode->appendChild($this->dom->createElement("Rounded", $Rounded));
@@ -139,6 +139,24 @@ class TemplateParser
 		$sixthNode->appendChild($this->dom->createElement("Fontcolor", $Fontcolor));
 		$sixthNode->appendChild($this->dom->createElement("Backgroundcolor", $Backgroundcolor));
 		$sixthNode->appendChild($this->dom->createElement("Backgroundpicture", $Backgroundpic));
+
+
+	}
+
+
+
+	/**
+	* Save the Tag data of the TemplateConstruction.php in an XML-file
+	*
+	*/
+	public function SaveTag($BackgroundColor, $Font, $Fontsize, $Fontcolor, $Rounded, $TemplateName)
+	{
+		$this->root->appendChild($seventhNode = $this->dom->createElement("Tag"));
+		$seventhNode->appendChild($this->dom->createElement("Backgroundcolor", $BackgroundColor));
+		$seventhNode->appendChild($this->dom->createElement('Font', $Font));
+		$seventhNode->appendChild($this->dom->createElement("Fontsize", $Fontsize));
+		$seventhNode->appendChild($this->dom->createElement("Fontcolor", $Fontcolor));
+		$seventhNode->appendChild($this->dom->createElement("Rounded", $Rounded));
 		$this->dom->save("templates/".$TemplateName.".xml");
 
 	}
@@ -295,6 +313,32 @@ class TemplateParser
 			}
 			return $buttonArray;
 	}
+
+
+	/**
+	* Gives the Button data of the TemplateName.xml
+	*
+	*/
+	public function GetTag($TemplateName)
+	{
+
+			$doc = new DOMDocument();
+			$doc->load("templates/".$TemplateName.".xml");
+
+
+  		$tagArray;
+			$i=0;
+			while(is_object($tag = $doc->getElementsByTagName("Tag")->item($i)))
+			{
+				foreach($tag->childNodes as $nodename)
+			  {
+			    $tagArray[$nodename->nodeName] = $nodename->nodeValue;
+			  }
+			  $i++;
+			}
+			return $tagArray;
+	}
+
 
 
 
