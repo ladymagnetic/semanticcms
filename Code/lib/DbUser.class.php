@@ -440,22 +440,30 @@ class DbUser
 	*/
 	public function DeleteRole($roleId)
 	{
-		$logDeletedRolename = $this->FetchArray($this->SelectRoleById($roleId))['rolename'];
-		$result = $this->database->ExecutePreparedStatement("deleteRole", array($roleId));
-
-		if($result==true)
+ 		if ($this->CountUsersWithASpecialRoleByRoleId($roleId) > 0)
 		{
-			$logUsername = $_SESSION['username'];
-			$logRolename = $_SESSION['rolename'];
-		 	$logDescription = 'Folgende Rolle wurde gelöscht: <strong>'.$logDeletedRolename.'</strong>' ;
-
-			$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-
-			return true;
+			echo "-------------------------------------------------------------------------Role wird nicht gelöscht weil sie immer noch in Verwendung ist!!!";
+			return false;
 		}
 		else
 		{
-			 return false;
+			$logDeletedRolename = $this->FetchArray($this->SelectRoleById($roleId))['rolename'];
+			$result = $this->database->ExecutePreparedStatement("deleteRole", array($roleId));
+
+			if($result==true)
+			{
+				$logUsername = $_SESSION['username'];
+				$logRolename = $_SESSION['rolename'];
+				$logDescription = 'Folgende Rolle wurde gelöscht: <strong>'.$logDeletedRolename.'</strong>' ;
+
+				$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+				return true;
+			}
+			else
+			{
+				 return false;
+			}
 		}
 	}
 
@@ -953,24 +961,39 @@ class DbUser
 
 
 
-		/**
-		* selectRolenameByUsername ()
-		* @params string $username the user's username
-		*/
-		public function SelectRolenameByUsername($username)
-		{
-				return $this->database->ExecutePreparedStatement("selectRolenameByUsername ", array($username));
-		}
+	/**
+	* selectRolenameByUsername ()
+	* @params string $username the user's username
+	*/
+	public function SelectRolenameByUsername($username)
+	{
+			return $this->database->ExecutePreparedStatement("selectRolenameByUsername ", array($username));
+	}
 
 
-		/**
-		* SelectBan_ReasonById()
-		* @params int $id the ban_ReasonId's Id
-		*/
-		public function SelectBan_ReasonById($id)
-		{
-			return $this->database->ExecutePreparedStatement("selectBan_ReasonById", array($id));
-		}
+	/**
+	* SelectBan_ReasonById()
+	* @params int $id the ban_ReasonId's Id
+	*/
+	public function SelectBan_ReasonById($id)
+	{
+		return $this->database->ExecutePreparedStatement("selectBan_ReasonById", array($id));
+	}
+	
+	
+	/**
+	* CountUsersWithASpecialRoleByRoleId ()
+	* @params int $roleId 
+	*/
+	public function CountUsersWithASpecialRoleByRoleId($roleId)
+	{
+	$countUsersWithThisRoleid = $this->database->ExecuteQuery("SELECT COUNT(*) AS NumberOfUserWithASpecialRole FROM USER WHERE role_id =".$roleId);
+	$num = $this->FetchArray($countUsersWithThisRoleid);
+	return ($num['NumberOfUserWithASpecialRole']);
+	}
+
+		
+		
 
 }
 ?>
