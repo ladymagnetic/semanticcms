@@ -593,7 +593,7 @@ class DbContent
 	*/
 	public function SelectAllLablesFromAnArticleById($articleId)
 	{
-		return $this->database->ExecutePreparedStatement("selectAllLablesFromAnArticleById", array());
+		return $this->database->ExecutePreparedStatement("selectAllLablesFromAnArticleById", array($articleId));
 	}
 
 
