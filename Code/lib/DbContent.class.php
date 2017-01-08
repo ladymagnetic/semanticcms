@@ -151,6 +151,15 @@ class DbContent
 						 "ORDER BY article.publicationdate DESC;";
 
 		if(!$this->database->PrepareStatement("allArticlesOfPage", $articleOfPage)) die("Abfrage konnte nicht erstellt werden.");
+		
+		
+		
+		$selectLableByLableId = "SELECT * FROM lable WHERE id = ?";
+		$this->database->PrepareStatement("selectLableByLableId", $selectLableByLableId);
+
+		$selectLableIdByLablename = "SELECT id FROM lable WHERE lablename = ?";
+		$this->database->PrepareStatement("selectLableIdByLablename", $selectLableIdByLablename);
+
 	
 
 	}
@@ -1325,6 +1334,28 @@ class DbContent
 	{
 		if(!is_string($pagename)) return null;
 		return $this->database->ExecutePreparedStatement("allArticlesOfPage", array($pagename));
+	}
+
+	
+	
+	/**
+	* SelectLableByLableId()
+	* @params int $lableId the id of the lable
+	*/
+	public function SelectLableByLableId($lableId)
+	{
+		return $this->database->ExecutePreparedStatement("selectLableByLableId", array($lableId));
+	}
+
+	
+
+	/**
+	* SelectLableIdByLablename()
+	* @params int $lablename the lablename of the lable
+	*/
+	public function SelectLableIdByLablename($lablename)
+	{
+		return $this->database->ExecutePreparedStatement("selectLableIdByLablename", array($lablename));
 	}
 
 
