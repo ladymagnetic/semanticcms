@@ -191,41 +191,37 @@ class DbEngine
 		{
 			$storagepath = "01_Datenbank/Backup/";
 
-			$pathToMysqldump = "xampp/mysql/bin/";  // muss noch angepasst werden => !!! => da wo mysqldump.exe liegt.
+			$pathToMysqldump = "media\mysqldump ";
 
 			$dumpfile = $storagepath .$dbname . "_" . date("Y-m-d_H-i-s") . ".sql";
 
-			passthru("mysqldump --opt --host=$dbhost --user=$dbuser --password=$dbpwd $dbname > $dumpfile");
-
-			//passthru($pathToMysqldump."mysqldump --opt --host=$dbhost --user=$dbuser --password=$dbpwd $dbname > $dumpfile");
-
+			passthru("$pathToMysqldump --opt --host=$dbhost --user=$dbuser --password=$dbpwd $dbname > $dumpfile");
+				
 			echo "$dumpfile "; passthru("tail -1 $dumpfile");
 		}
 
 
 
-		//@Theresa: Bloß zum Testen, damit du die Standardpasswörter usw. kennst.
+		//@Theresa, @Dimitrij: Bloß zum Testen, damit du die Standardpasswörter usw. kennst.
 		/**
 		* DownloadDBTest()
 		*/
 		public function DownloadDBTest()
 		{
-			// werden in Funktion DownloadDBTest() als Parameter übergeben
-		  $dbhost = 'localhost';
-		  $dbuser = 'root';
-		  $dbpwd =  '';
-		  $dbname =  'cms-projekt';
-		  $storagepath = "01_Datenbank/Backup/";
+			$dbhost = 'localhost';
+			$dbuser = 'root';
+			$dbpwd =  '';
+			$dbname =  'cms-projekt';
+			
+			$storagepath = "01_Datenbank/Backup/"; 
+			
+			$pathToMysqldump = "media\mysqldump "; 
 
-		  $pathToMysqldump = "xampp/mysql/bin/";  // muss noch angepasst werden => !!! => da wo mysqldump.exe liegt.
+			$dumpfile = $storagepath .$dbname . "_" . date("Y-m-d_H-i-s") . ".sql";
 
-		  $dumpfile = $storagepath .$dbname . "_" . date("Y-m-d_H-i-s") . ".sql";
+			passthru("$pathToMysqldump --opt --host=$dbhost --user=$dbuser --password=$dbpwd $dbname > $dumpfile");
 
-		  passthru("mysqldump --opt --host=$dbhost --user=$dbuser --password=$dbpwd $dbname > $dumpfile");
-
-		  //passthru($pathToMysqldump."mysqldump --opt --host=$dbhost --user=$dbuser --password=$dbpwd $dbname > $dumpfile");
-
-		  echo "$dumpfile "; passthru("tail -1 $dumpfile");
+			echo "$dumpfile "; passthru("tail -1 $dumpfile");
 		}
 
 
