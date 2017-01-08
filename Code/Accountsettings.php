@@ -53,11 +53,6 @@ BackendComponentPrinter::PrintHead("Konto bearbeiten", $jquery=true);
     else if(!isset($_SESSION['permissions']))
     {
         die($config['error']['permissionNotSet']);  		
-    }
-    /*  Check if user has the permission the see this page */
-    else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
-    {
-        die($config['error']['permissionMissing']);  	  
     }		
     BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
     //*----- Permissions End ----- */
