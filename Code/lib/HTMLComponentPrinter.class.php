@@ -58,7 +58,7 @@ class HTMLComponentPrinter
 	{
 		$header =	"<header>";
 		if(!empty($imgSource)) $header = $header."<img src=\"media\\".$imgSource."\" property=\"image\">";
-		$header =	$header."<h1 property=\"name\">".utf8_encode(htmlspecialchars($title))."</h1>".
+		$header =	$header."<h1 property=\"name\">".htmlspecialchars($title)."</h1>".
 					"</header>";
 					
 		return $header;
@@ -73,8 +73,8 @@ class HTMLComponentPrinter
 				 " \$result = \$db->GetAllPages(); ".
 				 " while(\$page = \$db->FetchArray(\$result)) { ".
 				 " if(strcmp(\$page[\"title\"],\"".$pageName."\" ) == 0) {".	
-				 " echo '<li> <a id=\"currentPage\" href=\"'.utf8_encode(\$page[\"title\"]).'.php\" itemprop=\"url\">'.utf8_encode(\$page[\"title\"]).'</a></li>'; } ".
-			     " else { echo '<li> <a href=\"'.utf8_encode(\$page[\"title\"]).'.php\" itemprop=\"url\">'.utf8_encode(\$page[\"title\"]).'</a></li>';}".
+				 " echo '<li> <a id=\"currentPage\" href=\"'.\$page[\"title\"].'.php\" itemprop=\"url\">'.\$page[\"title\"].'</a></li>'; } ".
+			     " else { echo '<li> <a href=\"'.\$page[\"title\"].'.php\" itemprop=\"url\">'.\$page[\"title\"].'</a></li>';}".
 				 " } ?>\n";
 				
 		$menu .= "</ul></nav>";
@@ -84,9 +84,21 @@ class HTMLComponentPrinter
 	
 	public static function GetArticleContainer($pageName)
 	{
-		$article = "<main>";
-		// php code für artikel selbst
-		$article .= " </main>";		
+		$article = "<main><?php ";
+		
+		$article .= "\$result = \$db->GetAllArticlesOfPage(\"".$pageName."\");".
+					"while(\$article = \$db->FetchArray(\$result)) { ".
+						"\$pubdate = new DateTime(\$article['publicationdate']); \$curdate = new DateTime(date('Y-m-d'));".
+						"if (\$pubdate <= \$curdate){".
+							"echo '<section class=\'article\'> <h2>'.htmlspecialchars(\$article['header']).'</h2>'.".
+								" '<div class=\'info\'> veröffentlicht am <span>'.\$pubdate->format('d. F Y').'</span>'.". 
+								" ' von <span>'.htmlspecialchars(\$article['author']).'</span></div>'.".
+								" '<div class=\'content\'>'.\$article['content'].'</div><ul>';".
+								"\$res = \$db->SelectAllLablesFromAnArticleById(\$article['id']);".
+								"while(\$label = \$db->FetchArray(\$res)) {echo '<li>'.htmlspecialchars(\$label['lablename']).'</li>';}".
+							"echo '</ul></section>';}}";
+							
+		$article .= "?> </main>";		
 		return $article;
 	}
 	

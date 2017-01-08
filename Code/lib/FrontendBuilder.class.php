@@ -3,11 +3,13 @@
 namespace SemanticCms\FrontendGenerator;
 
 /* include(s) */
+echo getcwd ();
+
 require_once 'CSSComponentPrinter.class.php';
 require_once 'HTMLComponentPrinter.class.php';
 require_once 'TemplateParser.class.php';
 require_once 'DbContent.class.php';
-require_once '../config/config.php';
+require_once 'config/config.php';
 
 /* namespace use(s) */
 use SemanticCms\ComponentPrinter\Frontend\CSSComponentPrinter as CSS;
@@ -161,9 +163,10 @@ class FrontendBuilder
 		$buttonData = self::$templateParser->GetButton($cssName);
 		$footerData = self::$templateParser->GetFooter($cssName);
 		$menuData = self::$templateParser->GetMenu($cssName);
+		$articleContainerData = self::$templateParser->GetArticleContainer($cssName);
 		$backgroundData = self::$templateParser->GetBackground($cssName);
 		
-		var_dump($menuData);
+		var_dump($articleContainerData);
 		echo "<br><br><br>";
 		var_dump($backgroundData);
 		
@@ -173,9 +176,10 @@ class FrontendBuilder
 			fwrite($cssHandle, CSS::GetBackground($backgroundData));
 			fwrite($cssHandle, CSS::GetHeader($headerData));
 			fwrite($cssHandle, CSS::GetMenu($menuData));
-			fwrite($cssHandle, CSS::GetButton($buttonData));
+			fwrite($cssHandle, CSS::GetArticle(array("Backgroundcolor"=>"#22F4C6", "Fontsize"=>"10", "Fontcolor"=>"#FFFFFF", "Font"=>"")));
+		//	fwrite($cssHanlde, CSS::GetArticleContainer($));
 			fwrite($cssHandle, CSS::GetFooter($footerData));
-		
+			fwrite($cssHandle, CSS::GetButton($buttonData));		
 		fclose($cssHandle);	
 	}
 	

@@ -131,6 +131,31 @@ class CSSComponentPrinter
 		return $css;
 	}
 
+	public static function GetArticle(array $data)
+	{
+		$headline = ".article h2 {margin: 0; padding: 0;}";
+		$infoline = ".article .info {font-size: smaller;font-style: italic;display: inline-block;padding: 0;padding-left: 10px;}".
+				    ".article .info span {font-weight:bold;}";
+		$lables = 	".article ul {list-style: none;margin: 0;padding: 0;}".
+					".article ul li {display: inline-block; padding: 5px; margin-right: 5px;".
+									"border: 1px solid #555;".
+									"color: ".$data['Fontcolor'].";".
+									"font-size: ".$data['Fontsize']."px;".
+									"font-family: \"".$data['Font']."\",\"sans-serif\";";
+		if(strcmp($data['Rounded'], "Rounded") == 0)	$lables .= "border-radius: 4px;";
+		if(!empty($data['Backgroundcolor'])) { $lables .= "background-color: ".$data['Backgroundcolor'].";";}
+		else {}
+		$lables .=	"} .article ul li:last-child {margin-right: 0px;}";
+					
+		$css = $headline."\n".$infoline."\n".$lables."\n";
+		return $css;
+	}
+	
+	public static function GetArticleContainer(array $data)
+	{
+		
+	}
+	
 	public static function GetBackground(array $data)
 	{
 		$css = " body {margin: 10px; padding: 0; ";
