@@ -89,15 +89,15 @@ else if (isset($_POST['publish']))
     // assign labels
     foreach ($_POST['labels'] as $selectedOption)
     {
-        $labelId = $dbContent->FetchArray($dbContent->SelectLabelIdByLabelName($selectedOption));
+        $labelId = $dbContent->FetchArray($dbContent->SelectLabelIdByLabelName(strtolower($selectedOption)));
         if ($labelId != "" && $labelId != null)
         {
             $labelId = intval($labelId);
         }
         else
         {
-            $dbContent->InsertLable($selectedOption, $selectedOption);
-            $labelId = intval($dbContent->FetchArray($dbContent->SelectLabelIdByLabelName($selectedOption)));
+            $dbContent->InsertLable(strtolower($selectedOption), $selectedOption);
+            $labelId = intval($dbContent->FetchArray($dbContent->SelectLabelIdByLabelName(strtolower($selectedOption))));
         }
         $articleId = $dbContent->FetchArray($dbContent->GetArticleIdByHeader($header));
         InsertLable_Article($labelId, $articleId);
@@ -138,15 +138,15 @@ else if (isset($_POST['updateArticle']))
     // assign labels
     foreach ($_POST['labels'] as $selectedOption)
     {
-        $labelId = $dbContent->FetchArray($dbContent->SelectLabelIdByLabelName($selectedOption));
+        $labelId = $dbContent->FetchArray($dbContent->SelectLabelIdByLabelName(strtolower($selectedOption)));
         if ($labelId != "" && $labelId != null)
         {
             $labelId = intval($labelId);
         }
         else
         {
-            $dbContent->InsertLable($selectedOption, $selectedOption);
-            $labelId = intval($dbContent->FetchArray($dbContent->SelectLabelIdByLabelName($selectedOption)));
+            $dbContent->InsertLable(strtolower($selectedOption), $selectedOption);
+            $labelId = intval($dbContent->FetchArray($dbContent->SelectLabelIdByLabelName(strtolower($selectedOption))));
         }
         InsertLable_Article($labelId, $articleId);
     }
