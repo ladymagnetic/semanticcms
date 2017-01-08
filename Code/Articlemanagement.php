@@ -64,7 +64,7 @@ else if (isset($_POST['publish']))
     $pageId = intval($dbContent->FetchArray($dbContent->SelectPageByPagename($_POST['pageSelect']))['id']);
     $header = $_POST['header'];
     $content = $_POST['content'];
-    $date = date("Y-m-d");
+    $date = $_POST['date'];
     $type = $_POST['type'];
     if (isset($_POST['public']))
     {
@@ -92,7 +92,7 @@ else if (isset($_POST['updateArticle']))
     $pageId = intval($dbContent->FetchArray($dbContent->SelectPageByPagename($_POST['pageSelect']))['id']);
     $header = $_POST['header'];
     $content = $_POST['content'];
-    $date = date("Y-m-d"); 
+    $date = $_POST['date']; 
     $type = $_POST['type'];
     if (isset($_POST['public']))
     {
@@ -222,7 +222,7 @@ echo
 */
 function CreateNewArticle($pageName, $dbContent)
 {
-    BackendComponentPrinter::PrintHead("Inhaltsverwaltung", $jquery=true);
+    BackendComponentPrinter::PrintHead("Inhaltsverwaltung", $jquery=true, $jqueryUI=true);
     //*----- Permissions ----- */
     /* Include(s) */
     require_once 'lib/Permission.enum.php';
@@ -237,10 +237,10 @@ function CreateNewArticle($pageName, $dbContent)
                 $('ul li a').addClass('contentEditMenue');
             });
         </script>";
+    
     /* Summernote */
     echo 
-        "<link href='http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.css' rel='stylesheet'>
-        <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js'></script> 
+        "<link href='http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.css' rel='stylesheet'> 
         <script src='http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.js'></script> 
         <link href='http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.css' rel='stylesheet'>
         <script src='http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.js'></script>";
@@ -264,8 +264,8 @@ function CreateNewArticle($pageName, $dbContent)
                 });
             </script>
             <input id='content' name='content' type='hidden' value='<p>Mein Artikel</p>'>
-            <label for='date'>Datum</label>
-            <input readonly id='date' name='date' type='text' value='".date("Y-m-d")."'><br><br>";
+            <label for='date'>Veröffentlichungsdatum</label>
+            <input required id='date' name='date' type='text' value='".date("Y-m-d")."'><br><br>";
     $pageSelect = "";
     $pageRows = $dbContent->GetAllPages();
     while ($pageRow = $dbContent->FetchArray($pageRows))
@@ -323,6 +323,17 @@ function CreateNewArticle($pageName, $dbContent)
             </script>";
     echo
             "</main></body></html>";
+
+    /* Datepicker */
+    echo
+        "<link rel='stylesheet' href='//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css'>
+        <link rel='stylesheet' href='/resources/demos/style.css'>
+        <script>
+        $(document).ready(function() {
+                $( '#date' ).datepicker({ dateFormat: 'yy-mm-dd' });
+            });
+        </script>
+    ";
 }
 
 /**
@@ -335,7 +346,7 @@ function CreateNewArticle($pageName, $dbContent)
 */
 function EditArticle($pageName, $articleId, $dbContent, $dbUser)
 {
-    BackendComponentPrinter::PrintHead("Inhaltsverwaltung", $jquery=true);
+    BackendComponentPrinter::PrintHead("Inhaltsverwaltung", $jquery=true,  $jqueryUI=true);
     //*----- Permissions ----- */
     /* Include(s) */
     require_once 'lib/Permission.enum.php';
@@ -343,6 +354,7 @@ function EditArticle($pageName, $articleId, $dbContent, $dbUser)
     	
     BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
     //*----- Permissions End ----- */
+    
     /* specific style because of summernote */
     echo
         "<script>
@@ -353,7 +365,6 @@ function EditArticle($pageName, $articleId, $dbContent, $dbUser)
     /* Summernote */
     echo 
         "<link href='http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.css' rel='stylesheet'>
-        <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js'></script> 
         <script src='http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.js'></script> 
         <link href='http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.css' rel='stylesheet'>
         <script src='http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.js'></script>";
@@ -379,8 +390,8 @@ function EditArticle($pageName, $articleId, $dbContent, $dbUser)
                 });
             </script>
             <input id='content' name='content' type='hidden' value='".$articleRow['content']."'>
-            <label for='date'>Datum</label>
-            <input readonly id='date' name='date' type='text' value='".$articleRow['publicationdate']."'><br><br>".
+            <label for='date'>Veröffentlichungsdatum</label>
+            <input required id='date' name='date' type='text' value='".$articleRow['publicationdate']."'><br><br>".
             "<label for='author'>Author</label>
             <input readonly id='author' name='author' type='text' value='".$authorName."'><br><br>";
     $pageSelect = "";
@@ -423,6 +434,17 @@ function EditArticle($pageName, $articleId, $dbContent, $dbUser)
             "<form>";
     echo
         "</main></body></html>";
+
+    /* Datepicker */
+    echo
+        "<link rel='stylesheet' href='//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css'>
+        <link rel='stylesheet' href='/resources/demos/style.css'>
+        <script>
+        $(document).ready(function() {
+                $( '#date' ).datepicker({ dateFormat: 'yy-mm-dd' });
+            });
+        </script>
+    ";
 }
 
 /**
