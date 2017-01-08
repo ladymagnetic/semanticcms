@@ -42,6 +42,11 @@ session_start();
 
 		// no special permissions required for startpage beside login
 		BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
+
+
+		if (isset($_POST['exportDatabase'])) {
+			//Funktion aufrufen für Datenbank exportieren
+		}
 	?>
 <main>
     <h1><i class='fa fa-home fontawesome'></i>Startseite</h1>
@@ -50,44 +55,40 @@ session_start();
     BackendComponentPrinter::PrintTableStart(array("Logdatum", "Benutzername", "Rolle", "Beschreibung"));
 
 		$changes = $dbUser->SelectAllLogs();
-
+		$i=0;
 		while ($row = $dbUser->FetchArray($changes)) {
-			$tableRow1 = $row['logdate'];
-			$tableRow2 = $row['username'];
-			$tableRow3 = $row['rolename'];
-			$tableRow4 = $row['description'];
 
-			BackendComponentPrinter::PrintTableRow(array($tableRow1, $tableRow2, $tableRow3, $tableRow4));
+			if($i<15)
+			{
+				$tableRow1 = $row['logdate'];
+				$tableRow2 = $row['username'];
+				$tableRow3 = $row['rolename'];
+				$tableRow4 = $row['description'];
+
+				BackendComponentPrinter::PrintTableRow(array($tableRow1, $tableRow2, $tableRow3, $tableRow4));
+			}
+			$i++;
+
 		}
 
 		BackendComponentPrinter::PrintTableEnd();
 
+		echo "<br><br>";
 
-		BackendComponentPrinter::PrintTableStart(array("Anzahl der Benutzer"));
+		BackendComponentPrinter::PrintTableStart(array("Beschreibung", "Anzahl"));
 		$allUser = $dbUser->CountUsers();
-		BackendComponentPrinter::PrintTableRow(array($allUser));
-		BackendComponentPrinter::PrintTableEnd();
-
-		BackendComponentPrinter::PrintTableStart(array("Anzahl der Rollen"));
+		BackendComponentPrinter::PrintTableRow(array("Benutzer", $allUser));
 		$allRoles = $dbUser->CountRoles();
-		BackendComponentPrinter::PrintTableRow(array($allRoles));
-		BackendComponentPrinter::PrintTableEnd();
-
-		BackendComponentPrinter::PrintTableStart(array("Anzahl der Artikel"));
+		BackendComponentPrinter::PrintTableRow(array("Rollen", $allRoles));
 		$allArticle = $dbUser->CountArticles();
-		BackendComponentPrinter::PrintTableRow(array($allArticle));
-		BackendComponentPrinter::PrintTableEnd();
-
-		BackendComponentPrinter::PrintTableStart(array("Anzahl der Seiten"));
+		BackendComponentPrinter::PrintTableRow(array("Artikel", $allArticle));
 		$allPages = $dbUser->CountPages();
-		BackendComponentPrinter::PrintTableRow(array($allPages));
+		BackendComponentPrinter::PrintTableRow(array("Seiten", $allPages));
+		$allTemplates = $dbUser->CountTemplates();
+		BackendComponentPrinter::PrintTableRow(array("Templates", $allTemplates));
 		BackendComponentPrinter::PrintTableEnd();
 
-		BackendComponentPrinter::PrintTableStart(array("Anzahl der Templates"));
-		$allTemplates = $dbUser->CountTemplates();
-		BackendComponentPrinter::PrintTableRow(array($allTemplates));
-		BackendComponentPrinter::PrintTableEnd();
-		?>
+	?>
     <form method="post" action="Start.php">
 		<button id="exportDatabase" name="action" value="exportDatabase"> Datenbank exportieren </button>
 		<button id="importDatabase" name="action" value="importDatabase"> Datenbank importieren </button>
