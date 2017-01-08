@@ -160,7 +160,8 @@ class DbContent
 		$selectLableIdByLablename = "SELECT id FROM lable WHERE lablename = ?";
 		$this->database->PrepareStatement("selectLableIdByLablename", $selectLableIdByLablename);
 
-	
+		$selectArticleByHeader = "SELECT * FROM article WHERE header = ?";
+		$this->database->PrepareStatement("selectArticleByHeader", $selectArticleByHeader);
 
 	}
 
@@ -1351,14 +1352,23 @@ class DbContent
 
 	/**
 	* SelectLableIdByLablename()
-	* @params int $lablename the lablename of the lable
+	* @params string $lablename the lablename of the lable
 	*/
 	public function SelectLableIdByLablename($lablename)
 	{
 		return $this->database->ExecutePreparedStatement("selectLableIdByLablename", array($lablename));
 	}
-
-
+	
+	
+	
+	/**
+	* SelectArticleByHeader()
+	* @params string $header the header of the article
+	*/
+	public function SelectArticleByHeader($header)
+	{
+		return $this->database->ExecutePreparedStatement("selectArticleByHeader", array($header));
+	}
 
 }
 
