@@ -28,6 +28,8 @@
       $(".Sitenavigation").hide();
       $(".NavBackgroundColorDiv").hide();
       $(".NavBackgroundPicDiv").hide();
+      $(".ArticleBackgroundColorDiv").hide();
+      $(".ArticleBackgroundPicDiv").hide();
       $(".FooterBackColor").hide();
       $(".FooterBackPic").hide();
       $(".BtnBackColor").hide();
@@ -108,9 +110,11 @@
 require_once 'lib/TemplateParser.class.php';
 require_once 'lib/Permission.enum.php';
 require_once 'config/config.php';
+require_once 'lib/dbContent.class.php';
 
 use SemanticCms\FrontendGenerator\TemplateParser;
 use SemanticCms\Model\Permission;
+use SemanticCms\DatabaseAbstraction\dbContent;
 
 
 /* Check if user is logged in */
@@ -132,6 +136,8 @@ else if(!in_array(Permission::Templateconstruction, $_SESSION['permissions']))
 /* menue */
 /* dynamisch erzeugt je nach Rechten */
 BackendComponentPrinter::printSidebar($_SESSION['permissions']);
+
+$dbContent = new DbContent($config['cms_db']['dbhost'], $config['cms_db']['dbuser'], $config['cms_db']['dbpass'], $config['cms_db']['database']);
 
 if(isset($_POST['save'])) {
   $templateParser = new TemplateParser();
@@ -193,219 +199,334 @@ if(isset($_POST['save'])) {
   $templateName = $_POST['TemplateName'];
   $templateParser->SaveTag($tagBackgroundColor, $tagfont, $tagFontsize, $tagFontColor, $tagRounded, $templateName);
 }
+else if (isset($_POST['create'])) {
+  CreateTemplate();
+  return;
+}
+else if (isset($_POST['edit'])) {
+  //brauch ich alle Informationen über das Template
+  $templateParser = new TemplateParser();
+  $templateName = intval($_POST['templateName']);
+  $header = $templateParser->GetHeader($templateName);
+  $background = $templateParser->GetBackground($templateName);
+  $menu = $templateParser->GetMenu($templateName);
+  $articleContainer = $templateParser->GetArticleContainer($templateName);
+  $footer = $templateParser->GetFooter($templateName);
+  $button = $templateParser->GetButton($templateName);
+  $tag = $templateParser->GetTag($templateName);
+  EditTemplate($header, $background, $menu, $articleContainer, $footer, $button, $tag);
+  return;
+}
+else if (isset($_POST['delete'])) {
+  $templateId = intval($_POST['templateId']);
+  $dbContent->DeleteTemplateById($templateId);
+}
 
 ?>
 
-  <main>
-		<h1><i class="fa fa-paint-brush fontawesome"></i> Templates</h1>
-    <form  action="TemplateConstruction.php" method="post">
-    <h2>Header</h2>
-    <label>Position:
+<main>
+    <h1><i></i>Templates</h1>
 
-      <input type="radio" name="Position" value="right" checked="true">
-      <label for="right">rechts</label>
-      <input type="radio" name="Position" value="center">
-      <label for="center">mittig</label>
-      <input type="radio" name="Position" value="left">
-      <label for="left">links</label>
+		<?php
+    BackendComponentPrinter::PrintTableStart(array("Templatename", "Aktion"));
 
-    </label><br><br>
+		$templates = $dbContent->SelectAllTemplates();
+		$i=0;
+		while ($row = $dbContent->FetchArray($templates)) {
 
-    <label>Hoehe: <input type="number" min="10" max="25" name="Height"><label for="Height">%</label></label><br><br>
-    <label>Hintergrund:
+			if($i<15)
+			{
+				$tableRow1 = $row['templatename'];
+				$tableRow2 =
+            "<form method='post' action='TemplateConstruction.php'>"
+            ."<input name='edit' type='submit' value='Bearbeiten'><input name='delete' type='submit' value='löschen'>"
+            ."<input name='templateName' type='hidden' value='".$row['templatename']."'>"
+            ."<input name='templateId' type='hidden' value='".$row['id']."'>"
+            ."</form>";
 
-      <input type="radio" name="Background" value="Color" checked="true" onclick="onColorPicker()">
-      <label for="Color"> Farbe</label>
-      <div class="Colorpicker" >
-        <input type="color" name="BackgroundColor" value="#000000">
-      </div>
+				BackendComponentPrinter::PrintTableRow(array($tableRow1, $tableRow2));
+			}
+			$i++;
 
-      <input type="radio" name="Background" value="Picture" onclick="onPictureUpload()">
-      <label for="Picture"> Bild</label>
-      <div class="PictureUpload">
-        <input type="file" name="BackgroundPicture">
-      </div>
+		}
 
-    </label><br><br>
+		BackendComponentPrinter::PrintTableEnd();
 
-    <?php
-      BackendComponentPrinter::PrintFontsDropdownList("Schriftart:", "Font");
-     ?>
 
-    <br><br>
-    <label>Schriftgröße: <input type="number" min="2" max="50" name="Fontsize"></label><br><br>
-    <label>Schriftfarbe: <input type="color" name="FontColor" value="#000000"></label><br><br>
-    <label>Logo: <input type="file" name="Logo"></label><br><br>
-    <h2>Hintergrund von der Website</h2>
-      <input type="radio" name="WebsiteBackground" value="WebsiteColor" checked="true" onclick="onWebsiteColorPicker()">
-      <label for="WebsiteColor"> Farbe</label>
-      <div class="WebsiteColerPicker">
-        <input type="color" name="WebColor" value="#000000">
-      </div>
-      <input type="radio" name="WebsiteBackground" value="WebsitePicture" onclick="onWebsitePictureUpload()">
-      <label for="WebsitePicture"> Bild</label>
-      <div class="WebsitePictureUpload">
-        <input type="file" name="WebPicture">
-        <label>Position</label>
-          <input type="radio" name="WebPicPosition" value="right" checked="true">
-          <label for="right">rechts</label>
-          <input type="radio" name="WebPicPosition" value="center">
-          <label for="center">mittig</label>
-          <input type="radio" name="WebPicPosition" value="left">
-          <label for="left">links</label>
-      </div><br><br>
-      <h2>Menue</h2>
-      <label>Breite:</label>
-        <input type="number" name="MenuWidth" min="10" max="100"><label for="MenuWidth">%</label><br><br>
-      <label>Höhe:</label>
-        <input type="number" name="MenuHeight" min="10" max="100"><label for="MenuHeight">px</label><br><br>
-      <label>Position:</label>
-        <input type="radio" name="MenuPosition" value="right" checked="true">
-        <label for="right">rechts</label>
-        <input type="radio" name="MenuPosition" value="center">
-        <label for="center">mittig unter dem Header</label>
-        <input type="radio" name="MenuPosition" value="left">
-        <label for="left">links</label><br><br>
-      <?php
-        BackendComponentPrinter::PrintFontsDropdownList("Schriftart:", "MenuFont");
-      ?><br><br>
-      <label>Schriftgröße</label>
-        <input type="number" min="2" max="50" name="MenuFontsize"><br><br>
-      <label>Schriftfarbe: </label>
-        <input type="color" name="MenuFontColor" value="#000000"><br><br>
-      <label>Hintergrundfarbe: </label>
-        <input type="color" name="MenuBackgroundColor" value="#000000"><br><br>
-      <label>Anordnung: </label>
-        <input type="radio" name="Order" value="vertical" checked="true">
-        <label for="vertical">vertikal</label>
-        <input type="radio" name="Order" value="horizontal">
-        <label for="horizontal">horizontal</label><br><br>
-      <h2>Artikelcontainer</h2>
-      <label>Position:</label>
-        <input type="radio" name="ArticlePosition" value="right" checked="true">
-        <label for="right">rechts</label>
-        <input type="radio" name="ArticlePosition" value="center">
-        <label for="center">mittig</label>
-        <input type="radio" name="ArticlePosition" value="left">
-        <label for="left">links</label><br><br>
-      <label>Artikelanzahl auf einer Seite</label><br><br>
-        <input type="number" name="Articlenumber" min="1" max="250" onclick="onArticleNavSettings()">
-        <div class="Sitenavigation">
-          <label>Navigation innerhalb der Artikelseiten:</label><br><br>
-            <label>Auswahl der Navigation:</label>
-              <input type="radio" name="Navigation" value="ArrowButton" checked="true">
-              <label for="ArrowButton">Pfeile als Button</label>
-              <input type="radio" name="Navigation" value="ArrowSymbole">
-              <label for="ArrowSymbole">Pfeile als Symbol</label>
-              <input type="radio" name="Navigation" value="NumberButton">
-              <label for="NumberButton">Nummerierung als Button</label>
-              <input type="radio" name="Navigation" value="NumberSymbole">
-              <label for="NumberSymbole">Nummerierung als Symbol</label>
-            <br><br>
-            <label>Position:</label>
-              <input type="radio" name="NavigationPosition" value="top" checked="true">
-              <label for="top">oben</label>
-              <input type="radio" name="NavigationPosition" value="bottom">
-              <label for="bottom">unten</label>
-              <input type="radio" name="NavigationPosition" value="top/bottom">
-              <label for="top/bottom">oben und unten</label><br><br>
-            <?php
-              BackendComponentPrinter::PrintFontsDropdownList("Schriftart:", "NavFont");
-            ?><br><br>
-            <label>Schriftfarbe:</label>
-              <input type="color" name="NavFontColor" value="#000000"><br><br>
-            <label>Schriftgröße</label>
-              <input type="number" name="NavFontsize" min="2" max="50"><br><br>
-            <label>Buttonhintergrund:</label>
-              <input type="color" name="NavButtonBackgroundColor" value="#000000"><br><br>
-        </div><br><br>
-        <label>Hintergrund:</label>
-          <input type="radio" name="ArticleBackground" value="ArticleBackgroundColor" checked="true" onclick="onArticleBackColorClick()">
-          <label for="ArticleBackgroundColor">Farbe</label>
-            <div class="ArticleBackgroundColorDiv">
-              <input type="color" name="ArticleBackColor" value="#000000">
-            </div>
-          <input type="radio" name="ArticleBackground" value="ArticleBackgroundPic" onclick="onArticleBackPicClick()">
-          <label for="ArticleBackgroundPic">Bild</label>
-            <div class="ArticleBackgroundPicDiv">
-              <input type="file" name="ArticleBackgroundPicture">
-            </div><br><br>
-        <label>Artikelcontainerbreite:</label>
-          <input type="number" name="ArticleWidth" min="10" max="100"><label for="ArticleWidth">%</label><br><br>
-    <h2>Footer</h2>
-      <label>Hoehe:</label>
-        <input type="number" name="FooterHeight" min="10" max="25"><label for="FooterHeight">%</label><br><br>
-      <?php
-        BackendComponentPrinter::PrintFontsDropdownList("Schriftart:", "FooterFont");
-      ?><br><br>
-      <label>Schriftgröße:</label>
-        <input type="number" name="FooterFontsize" min="2" max="50"><br><br>
-      <label>Schriftfarbe:</label>
-        <input type="color" name="FooterFontColor" value="#000000"><br><br>
-      <label>Hintergrund:</label>
-        <input type="radio" name="FooterBackground" value="FooterBackgroundColor" checked="true" onclick="onFooterBackColorClick()">
-        <label for="FooterBackgroundColor">Farbe</label>
-          <div class="FooterBackColor">
-            <input type="color" name="FooterBackColorPicker" value="#000000">
-          </div>
-        <input type="radio" name="FooterBackground" value="FooterBackgroundPic" onclick="onFooterBackPicClick()">
-        <label for="FooterBackgroundPic">Bild</label>
-          <div class="FooterBackPic">
-            <input type="file" name="FooterBackPicture">
-          </div><br><br>
-      <label>Anordnung innerhalb des Footers:</label>
-        <input type="radio" name="OrderFooter" value="Vertical" checked="true">
-        <label for="Vertical">vertikal</label>
-        <input type="radio" name="OrderFooter" value="Horizontal">
-        <label for="Horizontal">horizontal</label><br><br>
-    <h2>Buttondesign</h2>
-      <label>abgerundet:</label>
-        <input type="radio" name="ButtonRounded" value="Rounded" checked="true">
-        <label for="Rounded">ja</label>
-        <input type="radio" name="ButtonRounded" value="Rectangular">
-        <label for="Rectangular">nein</label><br><br>
-      <label>3D:</label>
-        <input type="radio" name="Button3D" value="ja" checked="true">
-        <label for="ja">ja</label>
-        <input type="radio" name="Button3D" value="nein">
-        <label for="nein">nein</label><br><br>
-      <?php
-        BackendComponentPrinter::PrintFontsDropdownList("Schriftart:", "ButtonFont");
-      ?><br><br>
-      <label>Schriftgröße:</label>
-        <input type="number" name="ButtonFontsize" min="2" max="50"><br><br>
-      <label>Schriftfarbe:</label>
-        <input type="color" name="ButtonFontColor" value="#000000"><br><br>
-      <label>Hintergrund:</label>
-        <input type="radio" name="ButtonBackground" value="ButtonBackColor" checked="true" onclick="onBtnBackColorClick()">
-        <label for="ButtonBackColor">Farbe</label>
-          <div class="BtnBackColor">
-            <input type="color" name="ButtonBackgroundColor" value="#000000">
-          </div>
-        <input type="radio" name="ButtonBackground" value="ButtonBackPic" onclick="onBtnBackPicClick()">
-        <label for="ButtonBackPic">Bild</label>
-          <div class="BtnBackPic">
-            <input type="file" name="ButtonBackgroundPic">
-          </div><br><br>
-      <h2>Tags</h2>
-        <label>Hintergrundfarbe: </label>
-          <input type="color" name="TagBackgroundColor" value="#000000"><br><br>
-        <?php
-          BackendComponentPrinter::PrintFontsDropdownList("Schriftart:", "TagFont");
-        ?><br><br>
-        <label>Schriftgröße: </label>
-          <input type="number" name="TagFontsize" min="2" max="50"><br><br>
-        <label>Schriftfarbe:</label>
-          <input type="color" name="TagFontColor" value="#000000"><br><br>
-        <label>abgerundet:</label>
-          <input type="radio" name="TagRounded" value="Rounded" checked="true">
-          <label for="Rounded">ja</label>
-          <input type="radio" name="TagRounded" value="Rectangular">
-          <label for="Rectangular">nein</label><br><br><br>
-      <label>Name des erstellten Templates:</label>
-        <input type="text" name="TemplateName">
-    <input type="submit" name="save" value="speichern">
-    </form>
-	</main>
+
+echo
+  "<form action='TemplateConstruction.php' method='post'>
+    <br><br><input type='submit' name='create' value='Template erstellen'><br><br><br>
+  </form>
+
+</main>
 </body>
-</html>
+
+</html>";
+?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<?php
+
+
+function CreateTemplate()
+{
+  BackendComponentPrinter::printSidebar($_SESSION['permissions']);
+  echo
+          "<body><main>
+        		<h1><i class='fa fa-paint-brush fontawesome'></i> Templates</h1>
+            <form  action='TemplateConstruction.php' method='post'>
+            <h2>Header</h2>
+            <label>Position: </label>
+
+              <input type='radio' name='Position' value='right' checked='true'>
+              <label for='right'>rechts</label>
+              <input type='radio' name='Position' value='center'>
+              <label for='center'>mittig</label>
+              <input type='radio' name='Position' value='left'>
+              <label for='left'>links</label>
+
+            <br><br>
+
+            <label>Hoehe: </label>
+              <input type='number' min='10' max='25' name='Height'><label for='Height'>%</label>
+              <br><br>
+            <label>Hintergrund: </label>
+
+              <input type='radio' name='Background' value='Color' checked='true' onclick='onColorPicker()'>
+              <label for='Color'> Farbe</label>
+              <div class='Colorpicker' >
+                <input type='color' name='BackgroundColor' value='#000000'>
+              </div>
+
+              <input type='radio' name='Background' value='Picture' onclick='onPictureUpload()'>
+              <label for='Picture'> Bild</label>
+              <div class='PictureUpload'>
+                <input type='file' name='BackgroundPicture'>
+              </div>
+
+            <br><br>";
+
+
+              BackendComponentPrinter::PrintFontsDropdownList("Schriftart:", "Font");
+
+  echo
+            "<br><br>
+            <label>Schriftgröße: </label>
+              <input type='number' min='2' max='50' name='Fontsize'>
+              <br><br>
+            <label>Schriftfarbe: </label>
+              <input type='color' name='FontColor' value='#000000'>
+              <br><br>
+            <label>Logo: </label>
+              <input type='file' name='Logo'>
+              <br><br>
+            <h2>Hintergrund von der Website</h2>
+              <input type='radio' name='WebsiteBackground' value='WebsiteColor' checked='true' onclick='onWebsiteColorPicker()'>
+              <label for='WebsiteColor'> Farbe</label>
+              <div class='WebsiteColerPicker'>
+                <input type='color' name='WebColor' value='#000000'>
+              </div>
+              <input type='radio' name='WebsiteBackground' value='WebsitePicture' onclick='onWebsitePictureUpload()'>
+              <label for='WebsitePicture'> Bild</label>
+              <div class='WebsitePictureUpload'>
+                <input type='file' name='WebPicture'>
+                <label>Position</label>
+                  <input type='radio' name='WebPicPosition' value='right' checked='true'>
+                  <label for='right'>rechts</label>
+                  <input type='radio' name='WebPicPosition' value='center'>
+                  <label for='center'>mittig</label>
+                  <input type='radio' name='WebPicPosition' value='left'>
+                  <label for='left'>links</label>
+              </div><br><br>
+              <h2>Menue</h2>
+              <label>Breite:</label>
+                <input type='number' name='MenuWidth' min='10' max='100'><label for='MenuWidth'>%</label><br><br>
+              <label>Höhe:</label>
+                <input type='number' name='MenuHeight' min='10' max='100'><label for='MenuHeight'>px</label><br><br>
+              <label>Position:</label>
+                <input type='radio' name='MenuPosition' value='right' checked='true'>
+                <label for='right'>rechts</label>
+                <input type='radio' name='MenuPosition' value='center'>
+                <label for='center'>mittig unter dem Header</label>
+                <input type='radio' name='MenuPosition' value='left'>
+                <label for='left'>links</label><br><br>";
+
+                BackendComponentPrinter::PrintFontsDropdownList("Schriftart:", "MenuFont");
+  echo
+                "<br><br>
+              <label>Schriftgröße</label>
+                <input type='number' min='2' max='50' name='MenuFontsize'><br><br>
+              <label>Schriftfarbe: </label>
+                <input type='color' name='MenuFontColor' value='#000000'><br><br>
+              <label>Hintergrundfarbe: </label>
+                <input type='color' name='MenuBackgroundColor' value='#000000'><br><br>
+              <label>Anordnung: </label>
+                <input type='radio' name='Order' value='vertical' checked='true'>
+                <label for='vertical'>vertikal</label>
+                <input type='radio' name='Order' value='horizontal'>
+                <label for='horizontal'>horizontal</label><br><br>
+              <h2>Artikelcontainer</h2>
+              <label>Position:</label>
+                <input type='radio' name='ArticlePosition' value='right' checked='true'>
+                <label for='right'>rechts</label>
+                <input type='radio' name='ArticlePosition' value='center'>
+                <label for='center'>mittig</label>
+                <input type='radio' name='ArticlePosition' value='left'>
+                <label for='left'>links</label><br><br>
+              <label>Artikelanzahl auf einer Seite</label><br><br>
+                <input type='number' name='Articlenumber' min='1' max='250' onclick='onArticleNavSettings()'>
+                <div class='Sitenavigation'>
+                  <label>Navigation innerhalb der Artikelseiten:</label><br><br>
+                    <label>Auswahl der Navigation:</label>
+                      <input type='radio' name='Navigation' value='ArrowButton' checked='true'>
+                      <label for='ArrowButton'>Pfeile als Button</label>
+                      <input type='radio' name='Navigation' value='ArrowSymbole'>
+                      <label for='ArrowSymbole'>Pfeile als Symbol</label>
+                      <input type='radio' name='Navigation' value='NumberButton'>
+                      <label for='NumberButton'>Nummerierung als Button</label>
+                      <input type='radio' name='Navigation' value='NumberSymbole'>
+                      <label for='NumberSymbole'>Nummerierung als Symbol</label>
+                    <br><br>
+                    <label>Position:</label>
+                      <input type='radio' name='NavigationPosition' value='top' checked='true'>
+                      <label for='top'>oben</label>
+                      <input type='radio' name='NavigationPosition' value='bottom'>
+                      <label for='bottom'>unten</label>
+                      <input type='radio' name='NavigationPosition' value='top/bottom'>
+                      <label for='top/bottom'>oben und unten</label><br><br>";
+
+                      BackendComponentPrinter::PrintFontsDropdownList("Schriftart:", "NavFont");
+  echo
+                      "<br><br>
+                    <label>Schriftfarbe:</label>
+                      <input type='color' name='NavFontColor' value='#000000'><br><br>
+                    <label>Schriftgröße</label>
+                      <input type='number' name='NavFontsize' min='2' max='50'><br><br>
+                    <label>Buttonhintergrund:</label>
+                      <input type='color' name='NavButtonBackgroundColor' value='#000000'><br><br>
+                </div><br><br>
+                <label>Hintergrund:</label>
+                  <input type='radio' name='ArticleBackground' value='ArticleBackgroundColor' checked='true' onclick='onArticleBackColorClick()'>
+                  <label for='ArticleBackgroundColor'>Farbe</label>
+                    <div class='ArticleBackgroundColorDiv'>
+                      <input type='color' name='ArticleBackColor' value='#000000'>
+                    </div>
+                  <input type='radio' name='ArticleBackground' value='ArticleBackgroundPic' onclick='onArticleBackPicClick()'>
+                  <label for='ArticleBackgroundPic'>Bild</label>
+                    <div class='ArticleBackgroundPicDiv'>
+                      <input type='file' name='ArticleBackgroundPicture'>
+                    </div><br><br>
+                <label>Artikelcontainerbreite:</label>
+                  <input type='number' name='ArticleWidth' min='10' max='100'><label for='ArticleWidth'>%</label><br><br>
+            <h2>Footer</h2>
+              <label>Hoehe:</label>
+                <input type='number' name='FooterHeight' min='10' max='25'><label for='FooterHeight'>%</label><br><br>";
+
+                BackendComponentPrinter::PrintFontsDropdownList("Schriftart:", "FooterFont");
+  echo
+                "<br><br>
+              <label>Schriftgröße:</label>
+                <input type='number' name='FooterFontsize' min='2' max='50'><br><br>
+              <label>Schriftfarbe:</label>
+                <input type='color' name='FooterFontColor' value='#000000'><br><br>
+              <label>Hintergrund:</label>
+                <input type='radio' name='FooterBackground' value='FooterBackgroundColor' checked='true' onclick='onFooterBackColorClick()'>
+                <label for='FooterBackgroundColor'>Farbe</label>
+                  <div class='FooterBackColor'>
+                    <input type='color' name='FooterBackColorPicker' value='#000000'>
+                  </div>
+                <input type='radio' name='FooterBackground' value='FooterBackgroundPic' onclick='onFooterBackPicClick()'>
+                <label for='FooterBackgroundPic'>Bild</label>
+                  <div class='FooterBackPic'>
+                    <input type='file' name='FooterBackPicture'>
+                  </div><br><br>
+              <label>Anordnung innerhalb des Footers:</label>
+                <input type='radio' name='OrderFooter' value='Vertical' checked='true'>
+                <label for='Vertical'>vertikal</label>
+                <input type='radio' name='OrderFooter' value='Horizontal'>
+                <label for='Horizontal'>horizontal</label><br><br>
+            <h2>Buttondesign</h2>
+              <label>abgerundet:</label>
+                <input type='radio' name='ButtonRounded' value='Rounded' checked='true'>
+                <label for='Rounded'>ja</label>
+                <input type='radio' name='ButtonRounded' value='Rectangular'>
+                <label for='Rectangular'>nein</label><br><br>
+              <label>3D:</label>
+                <input type='radio' name='Button3D' value='ja' checked='true'>
+                <label for='ja'>ja</label>
+                <input type='radio' name='Button3D' value='nein'>
+                <label for='nein'>nein</label><br><br>";
+
+                BackendComponentPrinter::PrintFontsDropdownList("Schriftart:", "ButtonFont");
+  echo
+                "<br><br>
+              <label>Schriftgröße:</label>
+                <input type='number' name='ButtonFontsize' min='2' max='50'><br><br>
+              <label>Schriftfarbe:</label>
+                <input type='color' name='ButtonFontColor' value='#000000'><br><br>
+              <label>Hintergrund:</label>
+                <input type='radio' name='ButtonBackground' value='ButtonBackColor' checked='true' onclick='onBtnBackColorClick()'>
+                <label for='ButtonBackColor'>Farbe</label>
+                  <div class='BtnBackColor'>
+                    <input type='color' name='ButtonBackgroundColor' value='#000000'>
+                  </div>
+                <input type='radio' name='ButtonBackground' value='ButtonBackPic' onclick='onBtnBackPicClick()'>
+                <label for='ButtonBackPic'>Bild</label>
+                  <div class='BtnBackPic'>
+                    <input type='file' name='ButtonBackgroundPic'>
+                  </div><br><br>
+              <h2>Tags</h2>
+                <label>Hintergrundfarbe: </label>
+                  <input type='color' name='TagBackgroundColor' value='#000000'><br><br>";
+
+                  BackendComponentPrinter::PrintFontsDropdownList("Schriftart:", "TagFont");
+  echo
+                  "<br><br>
+                <label>Schriftgröße: </label>
+                  <input type='number' name='TagFontsize' min='2' max='50'><br><br>
+                <label>Schriftfarbe:</label>
+                  <input type='color' name='TagFontColor' value='#000000'><br><br>
+                <label>abgerundet:</label>
+                  <input type='radio' name='TagRounded' value='Rounded' checked='true'>
+                  <label for='Rounded'>ja</label>
+                  <input type='radio' name='TagRounded' value='Rectangular'>
+                  <label for='Rectangular'>nein</label><br><br><br>
+              <label>Name des erstellten Templates:</label>
+                <input type='text' name='TemplateName'>
+            <input type='submit' name='save' value='speichern'><br><br>
+            </form>
+        	</main>
+        </body>
+        </html>";
+}
+
+function EditTemplate($header, $background, $menu, $articleContainer, $footer, $button, $tag)
+{
+
+}
+?>
