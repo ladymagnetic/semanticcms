@@ -442,7 +442,10 @@ class DbUser
 	{
  		if ($this->CountUsersWithASpecialRoleByRoleId($roleId) > 0)
 		{
-			echo "-------------------------------------------------------------------------Role wird nicht gelöscht weil sie immer noch in Verwendung ist!!!";
+			echo
+	        "<div class='info'>
+	        <strong>Info!</strong> Die Rolle wurde nicht gelöscht, weil sie immer noch in Verwendung ist!!!
+	        </div>";
 			return false;
 		}
 		else
