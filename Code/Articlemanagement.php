@@ -96,7 +96,7 @@ else if (isset($_POST['publish']))
         }
         else
         {
-            $dbContent->InsertLable(mb_strtolower($selectedOption), $selectedOption);
+            $dbContent->InsertLable(mb_strtolower($selectedOption), "label.".mb_strtolower($selectedOption));
             $labelId = intval($dbContent->FetchArray($dbContent->SelectLableIdByLablename(mb_strtolower($selectedOption))));
         }
         $articleId = intval($dbContent->FetchArray($dbContent->SelectArticleByHeader($header))['id']);
@@ -145,8 +145,8 @@ else if (isset($_POST['updateArticle']))
         }
         else
         {
-            $dbContent->InsertLable(mb_strtolower($selectedOption), $selectedOption);
-            $labelId = intval($dbContent->FetchArray($dbContent->SelectLableIdByLablename(mb_strtolower($selectedOption))));
+            $dbContent->InsertLable(mb_strtolower($selectedOption), "label.".mb_strtolower($selectedOption));
+            $labelId = intval($dbContent->FetchArray($dbContent->SelectLableIdByLablename(mb_strtolower($selectedOption)))['id']);
         }
         $dbContent->InsertLable_Article($labelId, $articleId);
     }
