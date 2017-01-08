@@ -9,26 +9,39 @@ use Mysqli;
 */
 class DbEngine
 {
-	private $conn;	// database connection
+	/** @var Mysqli\mysqli stores information about the database connection */
+	private $conn;
 
 	/* ---- Constructor / Destructor ---- */
 	/**
 	* constructor
-	* @params string $dsn database connection string
+	* @param string $host database host
+	* @param string $user database user
+	* @param string $password password for database user
+	* @param string $database database name
 	*/
 	public function __construct($host, $user, $password, $database)
 	{
 		$this->connectDB($host, $user, $password, $database);
 	}
+	/**
+	* destructor
+	* @param void	
+	*/
 	public function __destruct()
 	{
 		// Does connection still exist?
 		if(empty($this->conn)) {$this->disconnectDB();}
 	}
+	
 	/* ---- Methods ---- */
 	/**
-	* connect_db()
 	* Establishes database connection
+	* @param string $host database host
+	* @param string $user database user
+	* @param string $password password for database user
+	* @param string $database database name
+	* @return void
 	*/
 	private function connectDB($host, $user, $password, $database)
 	{
@@ -40,7 +53,9 @@ class DbEngine
 	}
 	/**
 	* disconnect_db()
-	* Establishes database connection
+	* Shutes down the database connection
+	* @param void
+	* @return void
 	*/
 	private function disconnectDB()
 	{
@@ -49,11 +64,10 @@ class DbEngine
 	}
 
 	/**
-	* prepare_statement()
 	* Prepares one query with a specific name
 	* @param string $name name used for the query
 	* @param string $query desired query
-	* @result success as boolean value: true (everything went well) / false (error occured)
+	* @return boolean success: true (everything went well) / false (error occured)
 	*/
 	public function PrepareStatement($name, $query)
 	{
@@ -65,11 +79,10 @@ class DbEngine
 	}
 
 	/**
-	* ExecutePreparedStatement()
 	* Executes a specifc query with the given parameters
 	* @param string $name query name (same as used in PrepareStatement())
 	* @param array $params query parameter array
-	* @result query result (could be FALSE on failure)
+	* @return Mysqli\mysqli_result|boolean Result of the query or FALSE on failure
 	*/
 	public function ExecutePreparedStatement($name, array $values)
 	{
@@ -83,47 +96,54 @@ class DbEngine
 
 			foreach($values as $val)
 			{
-				// generates a variable name for sql
+				// generates a variable name for SQL
 				$varname = "@value_".$counter;
 
 				$set = $varname." = ";
+				
 				//sets variable in SQL
 				if(is_string($val)) { $set .= "'".$val."'"; }
 				else { $set .= "".$val;}
-				//sets variable in SQL
 				$this->ExecuteQuery("SET ".$set);
 
+				// generates using string for SQL
+				if($counter > 0) $using.=",";	// sets comma 
 				$using .= " ".$varname." ";
+
+				$counter += 1;
 			}
 		}
 
-		$stmt = "EXECUTE ".$this->RealEscapeString($name).$using.";";
-
+		$stmt = "EXECUTE ".$this->RealEscapeString($name).$using.";";	
 		return $this->ExecuteQuery($stmt);
 	}
 
 	/**
-	* ExecuteQuery()
 	* Executes a specifc query with the given parameters
 	* @param string $query the desired query
-	* @result query result (could be FALSE on failure)
+	* @return Mysqli\mysqli_result|boolean Result of the query or FALSE on failure
 	*/
 	public function ExecuteQuery($query)
 	{
-		$result =  mysqli_query($this->conn, $query);
-		return $result;
+		return mysqli_query($this->conn, $query);
 	}
 
+	/*
+	* Escapes a string used for a database query
+	* @param string $string string that should be escapeshellarg
+	* @return string|null the escaped string or null if an error occured
+	*/
 	public function RealEscapeString($string)
 	{
+		if(!is_string($string)) return null;
 		// Evtl. noch weitere Pruefungen erwuenscht
 		return mysqli_real_escape_string($this->conn, $string);
 	}
 
 	/**
-	* FetchArray()
-	* @params resource $result query result
-	* @result query result (could be FALSE on failure)
+	* Fetches the next result row as an array
+	* @param Mysqli\mysqli_result $result Query Result
+	* @return array|null array filled with the row's data or null if no next row is available
 	*/
 	public function FetchArray($result)
 	{
@@ -131,10 +151,9 @@ class DbEngine
 	}
 
 	/**
-	* GetResultCount()
-	* Returns the number of rows in the result.
-	* @params resource $result query result
-	* @result number of results (number of rows in $result)
+	* Returns the number of rows in the result
+	* @param Mysqli\mysqli_result $result Query Result
+	* @return int number of results (number of rows in $result)
 	*/
 	public function GetResultCount($result)
 	{
@@ -142,9 +161,9 @@ class DbEngine
 	}
 
 	/**
-	* GetLastError()
 	* Returns last database error
-	* @result errorstring
+	* @param void
+	* @return string errorstring
 	*/
 	public function GetLastError()
 	{
@@ -152,15 +171,14 @@ class DbEngine
 	}
 
 	/**
-	* InsertNewLog()
-	* @params string $logUsername the user who changed something
-	* @params string $logRolename the user's role who changes something
-	* @params string $logDescription describes the things which have been changed until now
-	*  to log all the changes on the database so that the admin can see all important information at a glance
+	* Inserts a new logmessage about a change in the log table
+	* @param string $username the user who changed something
+	* @param string $rolename the user's role 
+	* @param string $description description of the change
 	*/
-	public function InsertNewLog($logUsername, $logRolename, $logDescription)
+	public function InsertNewLog($username, $rolename, $description)
 	{
-		$result = $this->ExecuteQuery("INSERT INTO logtable (id, logdate , username, rolename, description) VALUES (NULL, NOW(), '".$logUsername."', '".$logRolename."', '".$logDescription."')");
+		$this->ExecuteQuery("INSERT INTO logtable (id, logdate , username, rolename, description) VALUES (NULL, NOW(), '".$username."', '".$rolename."', '".$description."')");
 	}
 
 
