@@ -85,6 +85,23 @@ else if (isset($_POST['publish']))
     }
 
     $dbContent->InsertNewArticleToPage($header, $content, $date, $pageId, $authorId, $type, $public, $description);
+
+    // assign labels
+    foreach ($_POST['labels'] as $selectedOption)
+    {
+        $labelId = $dbContent->FetchArray($dbContent->selectLabelIdByLabelName($selectedOption);
+        if ($labelId != "" && $labelId != null)
+        {
+            $labelId = intval($labelId);
+        }
+        else
+        {
+            $dbContent->InsertLable($selectedOption, $selectedOption);
+            $labelId = intval($dbContent->FetchArray($dbContent->selectLabelIdByLabelName($selectedOption));
+        }
+        $articleId = $dbContent->FetchArray($dbContent->GetArticleIdByHeader($header));
+        InsertLable_Article($labelId, $articleId);
+    }
 }
 // if submit button with name 'updateArticle' is pressed
 else if (isset($_POST['updateArticle']))
@@ -114,6 +131,25 @@ else if (isset($_POST['updateArticle']))
     }
 
     $dbContent->UpdateArticleToPage($articleId, $header, $content, $date, $pageId, $authorId, $type, $public, $description);
+
+    // delete all labels to assign all current labels
+    $dbContent->DeleteLable_ArticleByArticleId($articleId);
+
+    // assign labels
+    foreach ($_POST['labels'] as $selectedOption)
+    {
+        $labelId = $dbContent->FetchArray($dbContent->selectLabelIdByLabelName($selectedOption);
+        if ($labelId != "" && $labelId != null)
+        {
+            $labelId = intval($labelId);
+        }
+        else
+        {
+            $dbContent->InsertLable($selectedOption, $selectedOption);
+            $labelId = intval($dbContent->FetchArray($dbContent->selectLabelIdByLabelName($selectedOption));
+        }
+        InsertLable_Article($labelId, $articleId);
+    }
 }
 
 BackendComponentPrinter::PrintHead("Inhaltsverwaltung", $jquery=true);
@@ -290,9 +326,27 @@ function CreateNewArticle($pageName, $dbContent)
             <input id='public' name='public' type='checkbox' value=''><br><br>
             <label for='description'>Beschreibung</label>
             <input required id='description' name='description' type='text' value=''><br><br>
-            <input id='pageName' name='pageName' type='hidden' value='".$pageName."'>
-            <input id='publish' name='publish' type='submit' value='Publish'>
-            </form>";
+            <input id='pageName' name='pageName' type='hidden' value='".$pageName."'>";
+             /* labels */
+            echo 
+                // select2
+                "<link href='https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css' rel='stylesheet' />
+                <script src='https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js'></script>".
+                "<script type='text/javascript'>
+                $(document).ready(function() {
+                $('#labels').select2({
+                    tags: true
+                });
+                });
+                </script>";
+            echo 
+                "<label for='labels[]'>Labels</label><select required style='width: 500px;' id='labels' name='labels[]' multiple='multiple'>";
+            echo
+                "</select><br><br>";
+            /* labels end */
+            echo
+                "<input id='publish' name='publish' type='submit' value='Publish'>
+                </form>";
     echo
             "<form method='post' action='Articlemanagement.php'><input id='back' name='back' type='submit' value='Zurück'>
             <input id='pageName' name='pageName' type='hidden' value='".$pageName."'>
@@ -423,8 +477,32 @@ function EditArticle($pageName, $articleId, $dbContent, $dbUser)
             echo
             "><br><br>".
             "<label for='description'>Beschreibung</label>
-            <input required id='description' name='description' type='text' value='".$articleRow['description']."'><br><br>
-            <input id='updateArticle' name='updateArticle' type='submit' value='Publish'>".
+            <input required id='description' name='description' type='text' value='".$articleRow['description']."'><br><br>";
+            /* labels */
+            echo 
+                // select2
+                "<link href='https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css' rel='stylesheet' />
+                <script src='https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js'></script>".
+                "<script type='text/javascript'>
+                $(document).ready(function() {
+                $('#labels').select2({
+                    tags: true
+                });
+                });
+                </script>";
+            echo 
+                "<label for='labels[]'>Labels</label><select required style='width: 500px;' id='labels' name='labels[]' multiple='multiple'>";
+            //$labelRows = $dbContent->SelectAllLablesFromAnArticleById($articleRow['id']);
+            //while ($labelRow = $dbContent->FetchArray($labelRows))
+            //{
+                //echo
+                //    "<option selected value='".$labelRow['lablename']."'>".$labelRow['lablename']."</option>";
+            //}
+            echo
+                "</select><br><br>";
+            /* labels end */
+    echo
+            "<input id='updateArticle' name='updateArticle' type='submit' value='Publish'>".
             "<input id='pageName' name='pageName' type='hidden' value='".$pageName."'>".
             "<input id='articleId' name='articleId' type='hidden' value='".$articleId."'>
             </form>";
