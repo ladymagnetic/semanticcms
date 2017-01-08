@@ -89,15 +89,15 @@ else if (isset($_POST['publish']))
     // assign labels
     foreach ($_POST['labels'] as $selectedOption)
     {
-        $labelId = $dbContent->FetchArray($dbContent->SelectLableIdByLablename(strtolower($selectedOption)))['id'];
+        $labelId = $dbContent->FetchArray($dbContent->SelectLableIdByLablename(mb_strtolower($selectedOption)))['id'];
         if ($labelId != "" && $labelId != null)
         {
             $labelId = intval($labelId);
         }
         else
         {
-            $dbContent->InsertLable(strtolower($selectedOption), $selectedOption);
-            $labelId = intval($dbContent->FetchArray($dbContent->SelectLableIdByLablename(strtolower($selectedOption)))['id']);
+            $dbContent->InsertLable(mb_strtolower($selectedOption), $selectedOption);
+            $labelId = intval($dbContent->FetchArray($dbContent->SelectLableIdByLablename(mb_strtolower($selectedOption))));
         }
         $articleId = intval($dbContent->FetchArray($dbContent->SelectArticleByHeader($header))['id']);
         $dbContent->InsertLable_Article($labelId, $articleId);
@@ -134,19 +134,19 @@ else if (isset($_POST['updateArticle']))
 
     // delete all labels to assign all current labels
     $dbContent->DeleteLable_ArticleByArticleId($articleId);
-
+  
     // assign labels
     foreach ($_POST['labels'] as $selectedOption)
-    {
-        $labelId = $dbContent->FetchArray($dbContent->SelectLableIdByLablename(strtolower($selectedOption)))['id'];
+    {  
+        $labelId = $dbContent->FetchArray($dbContent->SelectLableIdByLablename(mb_strtolower($selectedOption)))['id'];
         if ($labelId != "" && $labelId != null)
-        {
+        { 
             $labelId = intval($labelId);
         }
         else
         {
-            $dbContent->InsertLable(strtolower($selectedOption), $selectedOption);
-            $labelId = intval($dbContent->FetchArray($dbContent->SelectLableIdByLablename(strtolower($selectedOption)))['id']);
+            $dbContent->InsertLable(mb_strtolower($selectedOption), $selectedOption);
+            $labelId = intval($dbContent->FetchArray($dbContent->SelectLableIdByLablename(mb_strtolower($selectedOption))));
         }
         $dbContent->InsertLable_Article($labelId, $articleId);
     }
