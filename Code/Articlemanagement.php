@@ -89,7 +89,7 @@ else if (isset($_POST['publish']))
     // assign labels
     foreach ($_POST['labels'] as $selectedOption)
     {
-        $labelId = $dbContent->FetchArray($dbContent->SelectLabelIdByLabelName(strtolower($selectedOption)));
+        $labelId = $dbContent->FetchArray($dbContent->SelectLableIdByLablename(strtolower($selectedOption)))['id'];
         if ($labelId != "" && $labelId != null)
         {
             $labelId = intval($labelId);
@@ -97,10 +97,10 @@ else if (isset($_POST['publish']))
         else
         {
             $dbContent->InsertLable(strtolower($selectedOption), $selectedOption);
-            $labelId = intval($dbContent->FetchArray($dbContent->SelectLabelIdByLabelName(strtolower($selectedOption))));
+            $labelId = intval($dbContent->FetchArray($dbContent->SelectLableIdByLablename(strtolower($selectedOption)))['id']);
         }
-        $articleId = $dbContent->FetchArray($dbContent->GetArticleIdByHeader($header));
-        InsertLable_Article($labelId, $articleId);
+        $articleId = intval($dbContent->FetchArray($dbContent->SelectArticleByHeader($header))['id']);
+        $dbContent->InsertLable_Article($labelId, $articleId);
     }
 }
 // if submit button with name 'updateArticle' is pressed
@@ -138,7 +138,7 @@ else if (isset($_POST['updateArticle']))
     // assign labels
     foreach ($_POST['labels'] as $selectedOption)
     {
-        $labelId = $dbContent->FetchArray($dbContent->SelectLabelIdByLabelName(strtolower($selectedOption)));
+        $labelId = $dbContent->FetchArray($dbContent->SelectLableIdByLablename(strtolower($selectedOption)))['id'];
         if ($labelId != "" && $labelId != null)
         {
             $labelId = intval($labelId);
@@ -146,9 +146,9 @@ else if (isset($_POST['updateArticle']))
         else
         {
             $dbContent->InsertLable(strtolower($selectedOption), $selectedOption);
-            $labelId = intval($dbContent->FetchArray($dbContent->SelectLabelIdByLabelName(strtolower($selectedOption))));
+            $labelId = intval($dbContent->FetchArray($dbContent->SelectLableIdByLablename(strtolower($selectedOption)))['id']);
         }
-        InsertLable_Article($labelId, $articleId);
+        $dbContent->InsertLable_Article($labelId, $articleId);
     }
 }
 
