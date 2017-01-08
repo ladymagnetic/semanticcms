@@ -979,11 +979,11 @@ class DbUser
 	{
 		return $this->database->ExecutePreparedStatement("selectBan_ReasonById", array($id));
 	}
-	
-	
+
+
 	/**
 	* CountUsersWithASpecialRoleByRoleId ()
-	* @params int $roleId 
+	* @params int $roleId
 	*/
 	public function CountUsersWithASpecialRoleByRoleId($roleId)
 	{
@@ -992,8 +992,10 @@ class DbUser
 	return ($num['NumberOfUserWithASpecialRole']);
 	}
 
-		
-		
+
+		puplic function DownloadDBUser{
+     $this->database->DownloadDB($dbhost, $dbuser, $dbpwd, 	$dbname);		
+		}
 
 }
 ?>
