@@ -993,9 +993,13 @@ class DbUser
 	}
 
 
-		puplic function DownloadDBUser{
+	/**
+	* DownloadDBUser()
+	*/
+	public function DownloadDBUser()
+	{
      $this->database->DownloadDB($dbhost, $dbuser, $dbpwd, 	$dbname);		
-		}
+	}
 
 }
 ?>
