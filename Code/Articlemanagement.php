@@ -341,6 +341,12 @@ function CreateNewArticle($pageName, $dbContent)
                 </script>";
             echo 
                 "<label for='labels[]'>Labels</label><select required style='width: 500px;' id='labels' name='labels[]' multiple='multiple'>";
+            $labelRows = $dbContent->SelectAllLables();
+            while ($labelRow = $dbContent->FetchArray($labelRows))
+            {
+                echo
+                    "<option value='".$labelRow['lablename']."'>".$labelRow['lablename']."</option>";
+            }
             echo
                 "</select><br><br>";
             /* labels end */
@@ -492,11 +498,17 @@ function EditArticle($pageName, $articleId, $dbContent, $dbUser)
                 </script>";
             echo 
                 "<label for='labels[]'>Labels</label><select required style='width: 500px;' id='labels' name='labels[]' multiple='multiple'>";
-            $labelRows = $dbContent->SelectAllLablesFromAnArticleById($articleRow['id']);
+            $selectedlabelRows = $dbContent->SelectAllLablesFromAnArticleById($articleRow['id']);
+            while ($selectedlabelRow = $dbContent->FetchArray($selectedlabelRows))
+            {
+                echo
+                    "<option selected value='".$selectedlabelRow['lablename']."'>".$selectedlabelRow['lablename']."</option>";
+            }
+            $labelRows = $dbContent->SelectAllLables();
             while ($labelRow = $dbContent->FetchArray($labelRows))
             {
                 echo
-                    "<option selected value='".$labelRow['lablename']."'>".$labelRow['lablename']."</option>";
+                    "<option value='".$labelRow['lablename']."'>".$labelRow['lablename']."</option>";
             }
             echo
                 "</select><br><br>";
