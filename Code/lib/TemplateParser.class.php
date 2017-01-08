@@ -4,9 +4,9 @@ namespace SemanticCms\FrontendGenerator;
 
 use DOMDocument;
 
-require_once 'lib/DbUser.class.php';
+require_once 'lib/dbContent.class.php';
 require_once 'config/config.php';
-use SemanticCms\DatabaseAbstraction\DbUser;
+use SemanticCms\DatabaseAbstraction\dbContent;
 use SemanticCms\config;
 
 
@@ -17,9 +17,8 @@ class TemplateParser
 {
 	private $dom;
 	private $root;
+	private $dbContent;
 
-
-	//$dbUser = new DbUser($config['cms_db']['dbhost'], $config['cms_db']['dbuser'], $config['cms_db']['dbpass'], $config['cms_db']['database']);
 
 	/* ---- Constructor / Destructor ---- */
 	// /**
@@ -29,7 +28,8 @@ class TemplateParser
 
  	 public function __construct()
  	 	{
-
+			global $config;
+			$this->dbContent = new DbContent($config['cms_db']['dbhost'],$config['cms_db']['dbuser'],$config['cms_db']['dbpass'],$config['cms_db']['database']);
 			/*Create a DOMDocument that is a XML-file*/
 			$this->dom = new DOMDocument('1.0', 'utf-8');
 			$this->root = $this->dom->createElement('Template');
@@ -42,11 +42,10 @@ class TemplateParser
 	* Save the Header data of the TemplateConstruction.php in an XML-file
 	*
 	*/
-	public function SaveHeader($Title, $Height, $Position, $Font, $Fontsize, $Fontcolor, $Backgroundcolor, $Backgroundpic, $Logo)
+	public function SaveHeader($Height, $Position, $Font, $Fontsize, $Fontcolor, $Backgroundcolor, $Backgroundpic, $Logo)
 	{
 
 		$this->root->appendChild($firstNode = $this->dom->createElement("Header"));
-		$firstNode->appendChild($this->dom->createElement('Title', $Title));
 		$firstNode->appendChild($this->dom->createElement('Height', $Height));
 		$firstNode->appendChild($this->dom->createElement('Position', $Position));
 		$firstNode->appendChild($this->dom->createElement('Font', $Font));
@@ -144,24 +143,48 @@ class TemplateParser
 	}
 
 
+	/**
+	* Save the Tag data of the TemplateConstruction.php in an XML-file
+	*
+	*/
+	public function SaveLogin($BackgroundColor, $ForegroundColor, $Font, $Fontsize, $Fontcolor)
+	{
+		$this->root->appendChild($seventhNode = $this->dom->createElement("Login"));
+		$seventhNode->appendChild($this->dom->createElement("Backgroundcolor", $BackgroundColor));
+		$seventhNode->appendChild($this->dom->createElement("ForegroundColor", $ForegroundColor));
+		$seventhNode->appendChild($this->dom->createElement('Font', $Font));
+		$seventhNode->appendChild($this->dom->createElement("Fontsize", $Fontsize));
+		$seventhNode->appendChild($this->dom->createElement("Fontcolor", $Fontcolor));
+
+
+	}
+
+
 
 	/**
 	* Save the Tag data of the TemplateConstruction.php in an XML-file
 	*
 	*/
-	public function SaveTag($BackgroundColor, $Font, $Fontsize, $Fontcolor, $Rounded, $TemplateName)
+	public function SaveTag($BackgroundColor, $Font, $Fontsize, $Fontcolor, $Rounded)
 	{
-		$this->root->appendChild($seventhNode = $this->dom->createElement("Tag"));
-		$seventhNode->appendChild($this->dom->createElement("Backgroundcolor", $BackgroundColor));
-		$seventhNode->appendChild($this->dom->createElement('Font', $Font));
-		$seventhNode->appendChild($this->dom->createElement("Fontsize", $Fontsize));
-		$seventhNode->appendChild($this->dom->createElement("Fontcolor", $Fontcolor));
-		$seventhNode->appendChild($this->dom->createElement("Rounded", $Rounded));
-		$this->dom->save("templates/".$TemplateName.".xml");
+		$this->root->appendChild($eighthNode = $this->dom->createElement("Tag"));
+		$eighthNode->appendChild($this->dom->createElement("Backgroundcolor", $BackgroundColor));
+		$eighthNode->appendChild($this->dom->createElement('Font', $Font));
+		$eighthNode->appendChild($this->dom->createElement("Fontsize", $Fontsize));
+		$eighthNode->appendChild($this->dom->createElement("Fontcolor", $Fontcolor));
+		$eighthNode->appendChild($this->dom->createElement("Rounded", $Rounded));
+
 
 	}
 
-		//$dbUser->NewTemplate($TemplateName, "templates/".$TemplateName.".xml");
+
+	public function SaveTemplate($TemplateName)
+	{
+			$this->dom->save("templates/".$TemplateName.".xml");
+			$this->dbContent->InsertTemplate($TemplateName, "templates/".$TemplateName.".xml");
+	}
+
+
 
 
 
@@ -316,7 +339,32 @@ class TemplateParser
 
 
 	/**
-	* Gives the Button data of the TemplateName.xml
+	* Gives the Login data of the TemplateName.xml
+	*
+	*/
+	public function GetLogin($TemplateName)
+	{
+
+			$doc = new DOMDocument();
+			$doc->load("templates/".$TemplateName.".xml");
+
+
+  		$loginArray;
+			$i=0;
+			while(is_object($login = $doc->getElementsByTagName("Tag")->item($i)))
+			{
+				foreach($login->childNodes as $nodename)
+			  {
+			    $loginArray[$nodename->nodeName] = $nodename->nodeValue;
+			  }
+			  $i++;
+			}
+			return $loginArray;
+	}
+
+
+	/**
+	* Gives the Tag data of the TemplateName.xml
 	*
 	*/
 	public function GetTag($TemplateName)

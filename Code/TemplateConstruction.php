@@ -149,7 +149,7 @@ if(isset($_POST['save'])) {
   $fontColor = $_POST['FontColor'];
   $position = $_POST['Position'];
   $logo = $_POST['Logo'];
-  $templateParser->SaveHeader($title, $height, $position, $font, $fontsize, $fontColor, $backgroundColor, $backgroundPicture, $logo);
+  $templateParser->SaveHeader($height, $position, $font, $fontsize, $fontColor, $backgroundColor, $backgroundPicture, $logo);
   $webBackgroundcolor = $_POST['WebColor'];
   $webBackgroundpic = $_POST['WebPicture'];
   $webBackPicPosition = $_POST['WebPicPosition'];
@@ -191,13 +191,20 @@ if(isset($_POST['save'])) {
   $buttonBackgroundColor = $_POST['ButtonBackgroundColor'];
   $buttonBackgroundPic = $_POST['ButtonBackgroundPic'];
   $templateParser->SaveButton($buttonRounded, $button3D, $buttonFont, $buttonFontsize, $buttonFontColor, $buttonBackgroundColor, $buttonBackgroundPic);
+  $loginBackgroundColor = $_POST['LoginBackgroundColor'];
+  $loginForegroundColor = $_POST['LoginForegroundColor'];
+  $loginFont = $_POST['LoginFont'];
+  $loginFontsize = $_POST['LoginFontsize'];
+  $loginFontColor = $_POST['LoginFontColor'];
+  $templateParser->SaveLogin($loginBackgroundColor, $loginForegroundColor, $loginFont, $loginFontsize, $loginFontColor);
   $tagBackgroundColor = $_POST['TagBackgroundColor'];
   $tagfont = $_POST['TagFont'];
   $tagFontsize = $_POST['TagFontsize'];
   $tagFontColor = $_POST['TagFontColor'];
   $tagRounded = $_POST['TagRounded'];
+  $templateParser->SaveTag($tagBackgroundColor, $tagfont, $tagFontsize, $tagFontColor, $tagRounded);
   $templateName = $_POST['TemplateName'];
-  $templateParser->SaveTag($tagBackgroundColor, $tagfont, $tagFontsize, $tagFontColor, $tagRounded, $templateName);
+  $templateParser->SaveTemplate($templateName);
 }
 else if (isset($_POST['create'])) {
   CreateTemplate();
@@ -500,6 +507,20 @@ function CreateTemplate()
                   <div class='BtnBackPic'>
                     <input type='file' name='ButtonBackgroundPic'>
                   </div><br><br>
+
+            <h2>Loginfeld</h2>
+              <label>Hintergrundfarbe: </label>
+                <input type='color' name='LoginBackgroundColor' value='#000000'><br><br>
+              <label>Vordergrundfarbe: </label>
+                <input type='color' name='LoginForegroundColor' value='#000000'><br><br>";
+
+                BackendComponentPrinter::PrintFontsDropdownList("Schriftart:", "LoginFont");
+  echo
+                "<br><br>
+              <label>Schriftgröße: </label>
+                <input type='number' name='LoginFontsize' min='2' max='50'><br><br>
+              <label>Schriftfarbe:</label>
+                <input type='color' name='LoginFontColor' value='#000000'><br><br>
               <h2>Tags</h2>
                 <label>Hintergrundfarbe: </label>
                   <input type='color' name='TagBackgroundColor' value='#000000'><br><br>";
