@@ -492,12 +492,12 @@ function EditArticle($pageName, $articleId, $dbContent, $dbUser)
                 </script>";
             echo 
                 "<label for='labels[]'>Labels</label><select required style='width: 500px;' id='labels' name='labels[]' multiple='multiple'>";
-            //$labelRows = $dbContent->SelectAllLablesFromAnArticleById($articleRow['id']);
-            //while ($labelRow = $dbContent->FetchArray($labelRows))
-            //{
-                //echo
-                //    "<option selected value='".$labelRow['lablename']."'>".$labelRow['lablename']."</option>";
-            //}
+            $labelRows = $dbContent->SelectAllLablesFromAnArticleById($articleRow['id']);
+            while ($labelRow = $dbContent->FetchArray($labelRows))
+            {
+                echo
+                    "<option selected value='".$labelRow['lablename']."'>".$labelRow['lablename']."</option>";
+            }
             echo
                 "</select><br><br>";
             /* labels end */
