@@ -141,6 +141,17 @@ class DbContent
 
 		$deleteWebsiteById =  "DELETE FROM website WHERE id = ?";
 		$this->database->PrepareStatement("deleteWebsiteById", $deleteWebsiteById );
+		
+		
+	
+		$articleOfPage = "SELECT article.id, article.header, article.content, article.publicationdate, article.public, article.description, article.type, user.username AS author ".
+						 "FROM article INNER JOIN user ON user.id = article.author ".
+						 "INNER JOIN PAGE ON page.id = article.page_id ".
+						 "WHERE page.title = ? ".
+						 "ORDER BY article.publicationdate DESC;";
+
+		if(!$this->database->PrepareStatement("allArticlesOfPage", $articleOfPage)) die("Abfrage konnte nicht erstellt werden.");
+	
 
 	}
 
@@ -293,13 +304,12 @@ class DbContent
 
 
 
-	/*---- vorher ----*/
-
-
 	/**
 	* GetAllPages()
+	* Selects all pages with title, relativeposition and templatename orderd by their relative position ascending
+	* @param void
+	* @return Mysqli\mysqli_result Query Result for use with FetchArray()
 	*/
-	// titel, relative_position, templatename
 	public function GetAllPages()
 	{
 		return $this->database->ExecutePreparedStatement("allPages", array());
@@ -308,7 +318,9 @@ class DbContent
 
 	/**
 	* GetAllPagesWithTemplate()
-	* @params string $templatename
+	* Selects the title of all pages that use a specific template
+	* @param string $templatename Name of the template
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function GetAllPagesWithTemplate($templatename)
 	{
@@ -1176,129 +1188,144 @@ class DbContent
 
 
 
-		/**
-		* SelectAllWebsite()
-		*/
-		public function SelectAllWebsite($templateId)
+	/**
+	* SelectAllWebsite()
+	*/
+	public function SelectAllWebsite($templateId)
+	{
+		 return	$this->database->ExecutePreparedStatement("selectAllWebsite", array());
+	}
+
+
+
+	/**
+	* SelectWebsiteById()
+	* @params int $id the id of the website
+	*/
+	public function SelectWebsiteById($id)
+	{
+		 return	$this->database->ExecutePreparedStatement("selectWebsiteById", array($id));
+	}
+
+
+
+	/**
+	* DeleteWebsiteById()
+	* @params int $id the id of the website
+	*/
+	public function DeleteWebsiteById($id)
+	{
+		$logDeletedWebsite = $this->FetchArray($this->SelectWebsiteById($id))['headertitle'];
+		$result = $this->database->ExecutePreparedStatement("deleteWebsiteById", array($id));
+
+		 if($result==true)
+		 {
+			 $logUsername = $_SESSION['username'];
+			 $logRolename = $_SESSION['rolename'];
+			 $logDescription = 'Folgende Website wurde gelöscht: <strong>'.$logDeletedWebsite.'</strong>';
+			 $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+			 return true;
+		 }
+		 else
+		 {
+				return false;
+		 }
+	}
+
+
+
+
+	/**
+	* UpdateWebsiteById()
+	* @params int $websiteId
+	* @params string $headertitle
+	* @params string $contact
+	* @params string $imprint
+	* @params string $privacyinformation
+	* @params string $gtc
+	* @params bool $login
+	* @params bool $guestbook
+	* @params int $template_id
+	*/
+	public function UpdateWebsiteById($websiteId, $headertitle, $contact, $imprint, $privacyinformation, $gtc, $login, $guestbook, $template_id)
+	{
+		$websiteHeadertitleBevoreUpdate = $this->FetchArray($this->SelectWebsiteById($headertitle))['headertitle'];
+		$result = $this->database->ExecuteQuery("UPDATE website SET headertitle  ='".$headertitle."', contact = '".$contact."', imprint  = '".$imprint."',  privacyinformation = '".$privacyinformation."', gtc ='".$gtc."', login = ".$login.", guestbook = ".$guestbook.", template_id = ".$template_id." WHERE id = ". $websiteId);
+
+		if($result==true)
 		{
-			 return	$this->database->ExecutePreparedStatement("selectAllWebsite", array());
-		}
+			$logUsername = $_SESSION['username'];
+			$logRolename = $_SESSION['rolename'];
 
-
-
-		/**
-		* SelectWebsiteById()
-		* @params int $id the id of the website
-		*/
-		public function SelectWebsiteById($id)
-		{
-			 return	$this->database->ExecutePreparedStatement("selectWebsiteById", array($id));
-		}
-
-
-
-		/**
-		* DeleteWebsiteById()
-		* @params int $id the id of the website
-		*/
-		public function DeleteWebsiteById($id)
-		{
-			$logDeletedWebsite = $this->FetchArray($this->SelectWebsiteById($id))['headertitle'];
-			$result = $this->database->ExecutePreparedStatement("deleteWebsiteById", array($id));
-
-			 if($result==true)
-			 {
-				 $logUsername = $_SESSION['username'];
-				 $logRolename = $_SESSION['rolename'];
-				 $logDescription = 'Folgende Website wurde gelöscht: <strong>'.$logDeletedWebsite.'</strong>';
-				 $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-				 return true;
-			 }
-			 else
-			 {
-					return false;
-			 }
-		}
-
-
-
-
-		/**
-		* UpdateWebsiteById()
-		* @params int $websiteId
-		* @params string $headertitle
-		* @params string $contact
-		* @params string $imprint
-		* @params string $privacyinformation
-		* @params string $gtc
-		* @params bool $login
-		* @params bool $guestbook
-		* @params int $template_id
-		*/
-		public function UpdateWebsiteById($websiteId, $headertitle, $contact, $imprint, $privacyinformation, $gtc, $login, $guestbook, $template_id)
-		{
-			$websiteHeadertitleBevoreUpdate = $this->FetchArray($this->SelectWebsiteById($headertitle))['headertitle'];
-			$result = $this->database->ExecuteQuery("UPDATE website SET headertitle  ='".$headertitle."', contact = '".$contact."', imprint  = '".$imprint."',  privacyinformation = '".$privacyinformation."', gtc ='".$gtc."', login = ".$login.", guestbook = ".$guestbook.", template_id = ".$template_id." WHERE id = ". $websiteId);
-
-			if($result==true)
+			if($websiteHeadertitleBevoreUpdate == $headertitle)
 			{
-				$logUsername = $_SESSION['username'];
-				$logRolename = $_SESSION['rolename'];
-
-				if($websiteHeadertitleBevoreUpdate == $headertitle)
-				{
-					$websiteHeadertitleChanged = $headertitle;
-				}
-				else
-					{
-						$websiteHeadertitleChanged = $websiteHeadertitleBevoreUpdate. '(neue Überschrift: '.$headertitle.')';
-					}
-
-				$logDescription = 'Folgende Website wurde geändert: <br> <strong>'.$websiteHeadertitleChanged;
-
-				$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-
-
-
-				return true;
+				$websiteHeadertitleChanged = $headertitle;
 			}
 			else
-			{
-				 return false;
-			}
+				{
+					$websiteHeadertitleChanged = $websiteHeadertitleBevoreUpdate. '(neue Überschrift: '.$headertitle.')';
+				}
+
+			$logDescription = 'Folgende Website wurde geändert: <br> <strong>'.$websiteHeadertitleChanged;
+
+			$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+
+
+			return true;
 		}
-
-
-
-		/**
-		* InsertWebsite()
-		* @params int $websiteId
-		* @params string $headertitle
-		* @params string $contact
-		* @params string $imprint
-		* @params string $privacyinformation
-		* @params string $gtc
-		* @params bool $login
-		* @params bool $guestbook
-		* @params int $template_id
-		*/
-		public function InsertWebsite($websiteId, $headertitle, $contact, $imprint, $privacyinformation, $gtc, $login, $guestbook, $template_id)
+		else
 		{
-			$result = $this->database->ExecuteQuery("INSERT INTO website (id, headertitle, contact, imprint, privacyinformation, gtc, login, guestbook, template_id) VALUES (NULL, '".$headertitle."', '".$contact."', '".$imprint."', '".$privacyinformation."', '".$gtc."', ".$login.", ".$guestbook.",  ".$template_id.")");
-
-			 if($result==true)
-			 {
-				$logUsername = $_SESSION['username'];
-				$logRolename = $_SESSION['rolename'];
-				$logDescription = 'Die Website <strong>'.$rolename.'</strong> wurde neu erstellt.';
-				$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-				return true;
-			 }
-			 else
-			 {
-				 return false;
-			 }
+			 return false;
 		}
+	}
+
+
+
+	/**
+	* InsertWebsite()
+	* @params int $websiteId
+	* @params string $headertitle
+	* @params string $contact
+	* @params string $imprint
+	* @params string $privacyinformation
+	* @params string $gtc
+	* @params bool $login
+	* @params bool $guestbook
+	* @params int $template_id
+	*/
+	public function InsertWebsite($websiteId, $headertitle, $contact, $imprint, $privacyinformation, $gtc, $login, $guestbook, $template_id)
+	{
+		$result = $this->database->ExecuteQuery("INSERT INTO website (id, headertitle, contact, imprint, privacyinformation, gtc, login, guestbook, template_id) VALUES (NULL, '".$headertitle."', '".$contact."', '".$imprint."', '".$privacyinformation."', '".$gtc."', ".$login.", ".$guestbook.",  ".$template_id.")");
+
+		 if($result==true)
+		 {
+			$logUsername = $_SESSION['username'];
+			$logRolename = $_SESSION['rolename'];
+			$logDescription = 'Die Website <strong>'.$rolename.'</strong> wurde neu erstellt.';
+			$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+			return true;
+		 }
+		 else
+		 {
+			 return false;
+		 }
+	}
+
+	
+	
+	/**
+	* Returns all articles of a particular page with id, header, content, publicationdate, description and author
+	* as well as information about being public/private (field name: public) and type
+	* The articles are sorted by publication date (newest first)
+	* @param string pagename title of the page which articles you want to retrieve
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
+	*/
+	public function GetAllArticlesOfPage($pagename)
+	{
+		if(!is_string($pagename)) return null;
+		return $this->database->ExecutePreparedStatement("allArticlesOfPage", array($pagename));
+	}
 
 
 
