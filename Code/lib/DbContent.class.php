@@ -162,6 +162,9 @@ class DbContent
 
 		$selectArticleByHeader = "SELECT * FROM article WHERE header = ?";
 		$this->database->PrepareStatement("selectArticleByHeader", $selectArticleByHeader);
+		
+		$selectAllLables = "SELECT * FROM lable";
+		$this->database->PrepareStatement("selectAllLables", $selectAllLables);
 
 	}
 
@@ -1368,6 +1371,16 @@ class DbContent
 	public function SelectArticleByHeader($header)
 	{
 		return $this->database->ExecutePreparedStatement("selectArticleByHeader", array($header));
+	}
+	
+	
+	
+	/**
+	* SelectAllLables()
+	*/
+	public function SelectAllLables()
+	{
+		return $this->database->ExecutePreparedStatement("selectAllLables", array());
 	}
 
 }
