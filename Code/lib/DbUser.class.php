@@ -996,9 +996,19 @@ class DbUser
 	/**
 	* DownloadDBUser()
 	*/
-	public function DownloadDBUser()
+	public function DownloadDBUser($dbhost, $dbuser, $dbpwd, $dbname)
 	{
-     $this->database->DownloadDB($dbhost, $dbuser, $dbpwd, 	$dbname);		
+     $this->database->DownloadDB($dbhost, $dbuser, $dbpwd, $dbname);		
+	}
+	
+	
+	
+	/**
+	* DownloadDBUserTest()
+	*/
+	public function DownloadDBUserTest()
+	{
+     $this->database->DownloadDBTest();		
 	}
 
 }
