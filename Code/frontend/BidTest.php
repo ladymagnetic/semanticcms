@@ -1,5 +1,0 @@
-<?php  session_start();  require_once 'lib/DbContent.class.php'; require_once 'config/config.php'; use SemanticCms\Databaseabstraction\DbContent; use SemanticCms\config; $db = new DbContent($config['cms_db']['dbhost'], $config['cms_db']['dbuser'], $config['cms_db']['dbpass'], $config['cms_db']['database']); ?><!DOCTYPE html>
-<html vocab="http://schema.org/" typeof="WebPage" lang="de"><head><title>BidTest</title><meta content="de" http-equiv="Content-Language"><meta content="text/html. charset=utf-8" http-equiv="Content-Type"><link rel="stylesheet" href="css\testtemplate.css"></head><body><header><h1 property="name">Testseite</h1></header><nav typeof="SiteNavigationElement"> <ul>
-<?php  $result = $db->GetAllPages();  while($page = $db->FetchArray($result)) {  if(strcmp($page["title"],"BidTest" ) == 0) { echo '<li> <a id="currentPage" href="'.utf8_encode($page["title"]).'.php" itemprop="url">'.utf8_encode($page["title"]).'</a></li>'; }  else { echo '<li> <a href="'.utf8_encode($page["title"]).'.php" itemprop="url">'.utf8_encode($page["title"]).'</a></li>';} } ?>
-</ul></nav><main> </main><footer></footer>
-</body></html>

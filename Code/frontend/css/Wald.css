@@ -1,0 +1,15 @@
+ body {margin: 10px; padding: 0; height: 100vh; background-color: #bf7122;}
+header {color: #002d00;font-size: 20px;font-family: "Comic Sans MS","Serif";background-color: #00a800;height: 15%; width: calc(100% - 20px); padding: 0px 10px; margin-bottom: 10px}
+h1{margin:0;}
+nav{	background-color: #002d00;display: table; width: 85%; height:50px; margin-bottom: 10px;padding: 0px 5px;margin-left: auto; margin-right: auto; margin-bottom: 10px;}
+nav ul{ list-style-type: none; margin: 0; padding: 0;display: table-row; text-align: center;}
+nav ul li{display: table-cell; height: 50px; vertical-align: middle;}
+nav li a{	color: #00a800;font-size: 15px;font-family: "Comic Sans MS","Serif";text-decoration: none; display: block;border-left: 1px solid #333;}
+ nav li:first-child a { border-left: none;}
+.article {margin-bottom: 10px; padding: 5px; border: solid #555 1px; background-color: beige;}.article:last-child {margin-bottom: 0px;}
+.article h2 {margin: 0; padding: 0;}
+.article .info {font-size: smaller;font-style: italic;display: inline-block;padding: 0;padding-left: 10px;}.article .info span {font-weight:bold;}
+.article ul {list-style: none;margin: 0;padding: 5px;}.article ul li {display: inline-block; padding: 5px; margin-right: 5px;border: 1px solid #555;color: #000000;font-size: 12px;font-family: "Arial","sans-serif";border-radius: 4px;background-color: #6f4424;} .article ul li:last-child {margin-right: 0px;}
+main {clear:both; padding: 10px; widht: width: calc(85% - 20px); margin-bottom: 10px;margin-left: auto; margin-right: auto;background-color: #006a00;}
+footer {color: #000000;font-size: 8px;font-family: "Comic Sans MS","Serif";background-color: #c0c0c0;height: 10%; width: calc(100% - 20px); padding: 0px 10px;clear: both;}
+button {color: #000000;font-size: 12px;font-family: "Comic Sans MS","Serif";cursor: pointer;border-radius: 4px;background-color: #005500;box-shadow:	1px 1px 1px rgba(255,255,255, 0.5),inset 1px 1px 1px rgba(255,255,255, 0.5),-1px -1px 1px rgba(0,0,0, 0.2),inset -1px -1px 1px rgba(0,0,0, 0.5);border: 1px solid #333;background-image: linear-gradient(rgba(255,255,255, 0.3), rgba(0,0,0, 0.3))}

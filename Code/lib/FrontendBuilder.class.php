@@ -3,8 +3,6 @@
 namespace SemanticCms\FrontendGenerator;
 
 /* include(s) */
-echo getcwd ();
-
 require_once 'CSSComponentPrinter.class.php';
 require_once 'HTMLComponentPrinter.class.php';
 require_once 'TemplateParser.class.php';
@@ -22,19 +20,26 @@ use SemanticCms\config;
 */
 class FrontendBuilder
 {
+	/** @var DbContent internal DbContent object */
 	private static $db;
+	/** @var TemplateParser internal TemplateParser object for retrieving template information */
 	private static $templateParser;
 		
 	
 	/* ---- Constructor / Destructor ---- */
 	/**
-	* constructor
-	* @params paramtype $paramname param description
+	* constructor should not be used, instead use the static method Init()
+	* @param void
 	*/
  	private function __construct() {}	
 	
 	/**
-	* Initilisation method for FrontendBuilder
+	* Initilisation method for FrontendBuilder, always use this first!
+	*
+	* Initializes the FrontendBuilder's internal objects in order to be able to retrieve information of both the database and template files.
+	* It is necessary to invoke this method before invoking any other method!
+	* @param void
+	* @return void
 	*/
 	public static function Init()
 	{
@@ -47,21 +52,35 @@ class FrontendBuilder
 	/* ---- Methods ---- */
 
 	/**
-	* MakeNewPage()
-	* Generates a new page and - if necessary - the corresponding css file.
+	* Method for creating a new page.
+	*
+	* This method creates a new file on the filesystem for the desired page. If the corresponding css file does not exist, it will be created afterwards. 
+	* If a page with the given name already exists, this method has no effect. For updating an existing page, please use the 
+	* method UpdatePage(). For updating a template, please use the method UpdateTemplate() .
+	*
+	* @see FrontendBuilder::UpdatePage()		Method for updating an existing page
+	* @see FrontendBuilder::UpdateTemplate()	Method for updating a template 
+	*
+	* @param string $pageName the name of the page (keep in mind that this must be the same as used in the database)
+	* @param string $templatePath the path to the template file to be used
+	* @param int $websiteId Defaults to 1. Set this if you the page belongs to another website than the default one. May be a numeric string (e.g. "1" instead of 1).
+	* @return boolean Success status: false indicates an error with the parameters otherwise true. (Note: This does not indicate if a new file was created or not.)
 	*/
-	public static function MakeNewPage($pageName, $templatePath)
+	public static function MakeNewPage($pageName, $templatePath, $websiteId=1)
 	{					
+		if(!is_string($pageName) || !is_string($templatePath) || !is_numeric($websiteId)) return false;
+		
 		$cssName = basename($templatePath, ".xml");
 		$cssPath = self::cssFilePath($cssName);
 		
-		self::createPage($pageName, $cssName);
+		self::createPage($pageName, $websiteId, $cssName);
 		
 		if(!file_exists($cssPath)) { self::createCSS($cssName); }
+		
+		return true;
 	}
 	
 	/**
-	*
 	*
 	*/
 	public static function UpdateTemplate($templatePath)
@@ -91,10 +110,10 @@ class FrontendBuilder
 	* Updates a given page if its title changed.
 	*
 	*/
-	public static function UpdatePage($pageName, $newTemplatePath, $oldTemplatePath)
+	public static function UpdatePage($pageName, $newTemplatePath, $oldTemplatePath, $websiteId=1)
 	{
 		self::DeletePage($pageName, $oldTemplatePath);
-		self::makePage($pageName, $newTemplatePath);
+		self::MakeNewPage($pageName, $websiteId, $newTemplatePath);
 	}
 	
 	public static function AddLogin()
@@ -133,10 +152,12 @@ class FrontendBuilder
 		}
 	}
 	
-	private function createPage($pageName, $cssName)
+	private function createPage($pageName, $websiteId, $cssName)
 	{
 		$pagePath = self::pageFilePath($pageName);	
-		$headerData = self::$templateParser->GetHeader($cssName);
+		if(file_exists($pagePath)) return;
+		
+		$websiteData = self::$db->FetchArray(self::$db->GetWebsiteInfoById($websiteId));
 		
 		// write HTML + PHP Code
 		$handle = fopen($pagePath, "x");
@@ -145,11 +166,11 @@ class FrontendBuilder
 			fwrite($handle, HTML::GetHtmlStart());
 			fwrite($handle, HTML::GetHead($pageName, $cssName));
 			fwrite($handle, "<body>");
-			fwrite($handle, HTML::GetHeader($headerData["Title"]));
+			fwrite($handle, HTML::GetHeader($websiteData["headertitle"]));
 			fwrite($handle, HTML::GetMenu($pageName));
 			fwrite($handle, HTML::GetArticleContainer($pageName));
-			fwrite($handle, HTML::GetFooter());
-			//fwrite($handle, " <form action='test.php'> <button> LINK </button> <a href='mep.html'> <button type='button'> LINK </button> </a></form> ");
+			fwrite($handle, HTML::GetFooter($websiteData));
+//			fwrite($handle, " <form action='test.php'> <button> LINK </button> <a href='mep.html'> <button type='button'> LINK </button> </a></form> ");
 			fwrite($handle, "\n</body></html>");
 		
 		fclose($handle);
@@ -165,6 +186,7 @@ class FrontendBuilder
 		$menuData = self::$templateParser->GetMenu($cssName);
 		$articleContainerData = self::$templateParser->GetArticleContainer($cssName);
 		$backgroundData = self::$templateParser->GetBackground($cssName);
+		$tagData = self::$templateParser->GetTag($cssName);
 		
 		var_dump($articleContainerData);
 		echo "<br><br><br>";
@@ -176,8 +198,8 @@ class FrontendBuilder
 			fwrite($cssHandle, CSS::GetBackground($backgroundData));
 			fwrite($cssHandle, CSS::GetHeader($headerData));
 			fwrite($cssHandle, CSS::GetMenu($menuData));
-			fwrite($cssHandle, CSS::GetArticle(array("Backgroundcolor"=>"#22F4C6", "Fontsize"=>"10", "Fontcolor"=>"#FFFFFF", "Font"=>"")));
-		//	fwrite($cssHanlde, CSS::GetArticleContainer($));
+			fwrite($cssHandle, CSS::GetArticle($tagData));
+			fwrite($cssHandle, CSS::GetArticleContainer($articleContainerData));
 			fwrite($cssHandle, CSS::GetFooter($footerData));
 			fwrite($cssHandle, CSS::GetButton($buttonData));		
 		fclose($cssHandle);	

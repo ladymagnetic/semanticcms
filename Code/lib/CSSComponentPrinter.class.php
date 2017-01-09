@@ -28,7 +28,7 @@ class CSSComponentPrinter
 			
 		}
 	
-		$css .= "height: ".$data['Height']."%; margin-bottom: 10px";					
+		$css .= "height: ".$data['Height']."%; width: calc(100% - 20px); padding: 0px 10px; margin-bottom: 10px";					
  
 		$css .=	"}\nh1{margin:0;}\n";
 		
@@ -56,7 +56,7 @@ class CSSComponentPrinter
 		// Order
 		if(strcmp($data['Order'], "horizontal") == 0)
 		{
-			$nav .= "display: table; width: ".$data['Width']."%; margin-bottom: 10px;".
+			$nav .= "display: table; width: ".$data['Width']."%; height:".$data['Height']."px; margin-bottom: 10px;".
 					"padding: 0px 5px;";
 			$ul .= "display: table-row; text-align: center;";
 			$li .= "display: table-cell; height: ".$data['Height']."px; vertical-align: middle;";
@@ -133,10 +133,12 @@ class CSSComponentPrinter
 
 	public static function GetArticle(array $data)
 	{
+		$article =	".article {margin-bottom: 10px; padding: 5px; border: solid #555 1px; background-color: beige;}".
+					".article:last-child {margin-bottom: 0px;}";
 		$headline = ".article h2 {margin: 0; padding: 0;}";
 		$infoline = ".article .info {font-size: smaller;font-style: italic;display: inline-block;padding: 0;padding-left: 10px;}".
 				    ".article .info span {font-weight:bold;}";
-		$lables = 	".article ul {list-style: none;margin: 0;padding: 0;}".
+		$lables = 	".article ul {list-style: none;margin: 0;padding: 5px;}".
 					".article ul li {display: inline-block; padding: 5px; margin-right: 5px;".
 									"border: 1px solid #555;".
 									"color: ".$data['Fontcolor'].";".
@@ -147,27 +149,41 @@ class CSSComponentPrinter
 		else {}
 		$lables .=	"} .article ul li:last-child {margin-right: 0px;}";
 					
-		$css = $headline."\n".$infoline."\n".$lables."\n";
+		$css = $article."\n".$headline."\n".$infoline."\n".$lables."\n";
 		return $css;
 	}
 	
 	public static function GetArticleContainer(array $data)
 	{
+		$main = "main {clear:both; padding: 10px; widht: width: calc(".$data['Width']."% - 20px); margin-bottom: 10px;";
 		
+		if(strcmp($data['Position'], "left") == 0)	
+		{
+		}
+		else if(strcmp($data['Position'], "center") == 0)
+		{
+			$main .= "margin-left: auto; margin-right: auto;";
+		}
+		else if(strcmp($data['Position'], "right") == 0)
+		{
+			$main .= "float: right;";
+		}	
+		if(!empty($data['Backgroundcolor'])) { $main .= "background-color: ".$data['Backgroundcolor'].";";}
+		//	else { /* BILD */}	
+
+		return $main."}\n";
 	}
 	
 	public static function GetBackground(array $data)
 	{
-		$css = " body {margin: 10px; padding: 0; ";
+		$css = " body {margin: 10px; padding: 0; height: 100vh; ";
 		
-		if(!empty($data['Backgroundcolor']))
+		if(!empty($data['Color']))
 		{
-			$css .= "background-color: ".$data['Backgroundcolor'].";";
+			$css .= "background-color: ".$data['Color'].";";
 		}
-		else 
-		{
-			
-		}
+		else {}
+		
 		$css .=	"}\n";
 		return $css;
 	}
@@ -190,8 +206,8 @@ class CSSComponentPrinter
 			
 		}
 	
-		$css .= "height: ".$data['Height']."%;".
-				"position: absolute; bottom: 10px; width: calc(100% - 20px);";
+		$css .= "height: ".$data['Height']."%; width: calc(100% - 20px); padding: 0px 10px;".
+				"clear: both;";
  
 		$css .=	"}\n";
 		
