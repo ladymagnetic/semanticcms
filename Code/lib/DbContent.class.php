@@ -16,7 +16,7 @@ class DbContent
 	/* ---- Constructor / Destructor ---- */
 	/**
 	* constructor
-	* @params string $dsn database connection string
+	* @param string $dsn database connection string
 	*/
 	 public function __construct($host, $user, $password, $db)
   	{
@@ -41,14 +41,26 @@ class DbContent
 					"FROM page INNER JOIN template ON page.template_id = template.id ".
 					"ORDER BY page.relativeposition ASC;";
 
+		$allPagesSite = "SELECT page.title, page.relativeposition, template.templatename ".
+						"FROM page INNER JOIN template ON page.template_id = template.id ".
+						"WHERE website_id = ? ".
+						"ORDER BY page.relativeposition ASC;";			
+					
 		$allPagesWithTemplate = "SELECT page.title ".
 								"FROM page INNER JOIN template ON page.template_id = template.id ".
 								"WHERE templatename = ?;";
 
 		if(!$this->database->PrepareStatement("allPages", $allPages)) die("Abfrage konnte nicht erstellt werden.");
+		if(!$this->database->PrepareStatement("allPagesOfSite", $allPagesSite)) die("Abfrage konnte nicht erstellt werden.");
 		if(!$this->database->PrepareStatement("allPagesWithTemplate", $allPagesWithTemplate)) die("Abfrage konnte nicht erstellt werden.");
+	
+		// Website
+		$websiteById =  "SELECT website.headertitle, website.contact, website.imprint, website.privacyinformation, website.gtc, website.login, website.guestbook, template.templatename AS template ".
+						"FROM website INNER JOIN template ON website.template_id = template.id ".
+						"WHERE website.id = ?";
+			
+		if(!$this->database->PrepareStatement("websiteById", $websiteById)) die("Abfrage konnte nicht erstellt werden.");
 
-	//	var_dump($this->database->GetLastError());
 		// Article
 
 
@@ -190,7 +202,7 @@ class DbContent
 
 	/**
 	* DeleteArticleById()
-	* @params int $articleId is the id of the article
+	* @param int $articleId is the id of the article
 	*/
 	public function DeleteArticleById($articleId)
 	{
@@ -218,7 +230,7 @@ class DbContent
 	// neue Funktion für => 	GetArticleInformationById($articleId):
 	/**
 	* SelectOneArticleById()
-	* @params int $articleId the id of the article
+	* @param int $articleId the id of the article
 	*/
 	public function SelectOneArticleById($articleId)
 	{
@@ -228,14 +240,14 @@ class DbContent
 
 	/**
 	* InsertNewArticleToPage()
-	* @params string $header
-	* @params string $content
-	* @params string $publicationdate
-	* @params int $pageId the id of the page the article is published
-	* @params int author the author's id
-	* @params string $type
-	* @params int $public
-	* @params string $description
+	* @param string $header
+	* @param string $content
+	* @param string $publicationdate
+	* @param int $pageId the id of the page the article is published
+	* @param int author the author's id
+	* @param string $type
+	* @param int $public
+	* @param string $description
 	*/
 	public function InsertNewArticleToPage($header, $content, $publicationdate, $pageId, $author, $type, $public, $description)
 	{
@@ -266,15 +278,15 @@ class DbContent
 
 	/**
 	* UpdateArticleToPage()
-	* @params int $articleId the id of the article
-	* @params string $header
-	* @params string $content
-	* @params string $publicationdate
-	* @params int $pageId the id of the page the article is published
-	* @params int $author
-	* @params string $type
-	* @params int $public
-	* @params string $description
+	* @param int $articleId the id of the article
+	* @param string $header
+	* @param string $content
+	* @param string $publicationdate
+	* @param int $pageId the id of the page the article is published
+	* @param int $author
+	* @param string $type
+	* @param int $public
+	* @param string $description
 	*/
 	public function	UpdateArticleToPage($articleId, $header, $content, $publicationdate, $pageId, $author, $type, $public, $description)
 	{
@@ -318,7 +330,8 @@ class DbContent
 
 
 	/**
-	* GetAllPages()
+	* Selects all available pages
+	*
 	* Selects all pages with title, relativeposition and templatename orderd by their relative position ascending
 	* @param void
 	* @return Mysqli\mysqli_result Query Result for use with FetchArray()
@@ -328,25 +341,51 @@ class DbContent
 		return $this->database->ExecutePreparedStatement("allPages", array());
 	}
 
+	/**
+	* Selects all available pages of a particular website
+	*
+	* Selects all pages with title, relativeposition and templatename orderd by their relative position ascending
+	* @param int websiteId Id indicating the website and defaults to 1 (May contain a numeric string, e.g. "1" instead of 1)
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
+	*/
+	public function GetAllPagesOfWebsite($websiteId=1)
+	{
+		if(!is_numeric($websiteId)) return null;
+		return $this->database->ExecutePreparedStatement("allPagesOfSite", array($websiteId));
+	}
 
 	/**
-	* GetAllPagesWithTemplate()
+	* Method to get all page names of pages that use the given template.
+	*
 	* Selects the title of all pages that use a specific template
 	* @param string $templatename Name of the template
 	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function GetAllPagesWithTemplate($templatename)
 	{
+		if(!is_string($templatename)) return null;
 		return $this->database->ExecutePreparedStatement("allPagesWithTemplate", array($templatename));
 	}
 
+	/**
+	* Selects information of a given website.
+	* Selects the fields website.headertitle, website.contact, website.imprint, website.privacyinformation, website.gtc, website.login, website.guestbook 
+	* and template.templatename (named template in the row array)
+	* @param int $id id of the website. May be a numeric string ("1" instead of 1)
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
+	*/
+	public function GetWebsiteInfoById($id)
+	{
+		if(!is_numeric($id)) return null;
+		return $this->database->ExecutePreparedStatement("websiteById", array($id));
+	}
+	
 
 
 	/**
 	* GetHighestRelativeNumber()
-	* @params string $templatename
+	* @param string $templatename
 	*/
-	// braucht man nur intern beim Hochzählen (?) => private
 	public function GetHighestRelativeNumber()
 	{
 		$result = $this->database->ExecuteQuery("SELECT MAX(relativeposition) AS maxpos FROM page;");
@@ -359,7 +398,7 @@ class DbContent
 
 	/**
 	* FetchArray()
-	* @params string $result
+	* @param string $result
 	*/
 	public function FetchArray($result)
 	{
@@ -370,7 +409,7 @@ class DbContent
 
 	/**
 	* GetResultCount()
-	* @params string $result
+	* @param string $result
 	*/
 	public function GetResultCount($result)
 	{
@@ -385,7 +424,7 @@ class DbContent
 
 	/**
 	* SelectPageByPagename()
-	* @params string $title is the title of the page
+	* @param string $title is the title of the page
 	*/
 	public function SelectPageByPagename($title)
 	{
@@ -396,7 +435,7 @@ class DbContent
 
 	/**
 	* SelectPageById()
-	* @params int $pageId the id of the page
+	* @param int $pageId the id of the page
 	*/
 	public function SelectPageById($pageId)
 	{
@@ -407,7 +446,7 @@ class DbContent
 
 	/**
 	* SelectTemplateByTemplatename()
-	* @params string $templatename is the name of the template
+	* @param string $templatename is the name of the template
 	*/
 	public function SelectTemplateByTemplatename($templatename)
 	{
@@ -418,7 +457,7 @@ class DbContent
 
 	/**
 	* SelectTemplateById()
-	* @params int $templateId the id of the template
+	* @param int $templateId the id of the template
 	*/
 	public function SelectTemplateById($templateId)
 	{
@@ -429,7 +468,7 @@ class DbContent
 
 	/**
 	* SelectPageIdByPagename()
-	* @params string $title the title of the page
+	* @param string $title the title of the page
 	*/
 	public function SelectPageIdByPagename($title)
 	{
@@ -440,7 +479,7 @@ class DbContent
 
 	/**
 	* DeletePageById()
-	* @params int $pageId the id of the page
+	* @param int $pageId the id of the page
 	*/
 	public function DeletePageById($pageId)
 	{
@@ -467,7 +506,7 @@ class DbContent
 
 	/**
 	* DeletePageByTitle()
-	* @params string $title the title of the page
+	* @param string $title the title of the page
 	*/
 /*	public function DeletePageByTitle($title)
 	{
@@ -495,7 +534,7 @@ class DbContent
 
 	/**
 	* DeleteTemplateById()
-	* @params int $templateId the id of the template
+	* @param int $templateId the id of the template
 	*/
 	public function DeleteTemplateById($templateId)
 	{
@@ -521,7 +560,7 @@ class DbContent
 
 	/**
 	* DeleteTemplateByTemplatename()
-	* @params string $templatename the templatename of the template
+	* @param string $templatename the templatename of the template
 	*/
 /*	public function DeleteTemplateByTemplatename($templatename)
 	{
@@ -550,7 +589,7 @@ class DbContent
 
 	/**
 	* PagetitleAlreadyExists()
-	* @params string $title the title of the page
+	* @param string $title the title of the page
 	* checks whether the title of a page already exists in the database
 	*/
 	public function PagetitleAlreadyExists($title)
@@ -571,7 +610,7 @@ class DbContent
 
 	/**
 	* TemplatenameAlreadyExists()
-	* @params string $templatename the templatename of the template
+	* @param string $templatename the templatename of the template
 	* checks whether the templatename of a template already exists in the database
 	*/
 	public function TemplatenameAlreadyExists($templatename)
@@ -602,7 +641,7 @@ class DbContent
 
 	/**
 	* SelectAllLablesFromAnArticleById()
-	* @params int $articleId the id of the article
+	* @param int $articleId the id of the article
 	*/
 	public function SelectAllLablesFromAnArticleById($articleId)
 	{
@@ -613,8 +652,8 @@ class DbContent
 
 	/**
 	* InsertTemplate()
-	* @params string $templatename the name of the template
-	* @params string $filelink the filelink of the template
+	* @param string $templatename the name of the template
+	* @param string $filelink the filelink of the template
 	*/
 	public function InsertTemplate($templatename, $filelink)
 	{
@@ -645,9 +684,9 @@ class DbContent
 
 	/**
 	* InsertPage()
-	* @params string $title the title of the template
-	* @params int $relativeposition
-	* @params int $templateId the id of the used template
+	* @param string $title the title of the template
+	* @param int $relativeposition
+	* @param int $templateId the id of the used template
 	*/
 	public function InsertPage($title, $relativeposition, $templateId, $websiteId)
 	{
@@ -678,8 +717,8 @@ class DbContent
 
 	/**
 	* InsertLable()
-	* @params string $lablename the name of the lable
-	* @params string $uri the uri of the lable
+	* @param string $lablename the name of the lable
+	* @param string $uri the uri of the lable
 	*/
 	public function InsertLable($lablename, $uri)
 	{
@@ -702,8 +741,8 @@ class DbContent
 
 	/**
 	* UpdateLableByUri()
-	* @params string $lablename
-	* @params string $uri
+	* @param string $lablename
+	* @param string $uri
 	*/
 	public function UpdateLableByUri($lablename, $uri)
 	{
@@ -724,9 +763,9 @@ class DbContent
 
 	/**
 	* UpdateLableById()
-	* @params int $lableId
-	* @params string $lablename
-	* @params string $uri
+	* @param int $lableId
+	* @param string $lablename
+	* @param string $uri
 	*/
 	public function UpdateLableById($lableId, $lablename, $uri)
 	{
@@ -746,10 +785,10 @@ class DbContent
 
 	/**
 	* UpdatePageByTitle()
-	* @params string $title
-	* @params int $relativeposition
-	* @params int $templateId
-	* @params int $websiteId
+	* @param string $title
+	* @param int $relativeposition
+	* @param int $templateId
+	* @param int $websiteId
 	*/
 /*	public function UpdatePageByTitle($title, $relativeposition, $templateId, $websiteId)
 	{
@@ -776,11 +815,11 @@ class DbContent
 
 	/**
 	* UpdatePageById()
-	* @params int $pageId
-	* @params string $title
-	* @params int $relativeposition
-	* @params int $templateId
-	* @params int $websiteId
+	* @param int $pageId
+	* @param string $title
+	* @param int $relativeposition
+	* @param int $templateId
+	* @param int $websiteId
 	*/
 	public function UpdatePageById($pageId, $title, $relativeposition, $templateId, $websiteId)
 	{
@@ -818,8 +857,8 @@ class DbContent
 
 	/**
 	* UpdateTemplateByTemplatename()
-	* @params string $templatename
-	* @params string $filelink
+	* @param string $templatename
+	* @param string $filelink
 	*/
 /*	public function UpdateTemplateByTemplatename($templatename, $filelink)
 	{
@@ -845,9 +884,9 @@ class DbContent
 
 	/**
 	* UpdateTemplateById()
-	* @params int $templateId
-	* @params string $templatename
-	* @params string $filelink
+	* @param int $templateId
+	* @param string $templatename
+	* @param string $filelink
 	*/
 	public function UpdateTemplateById($templateId, $templatename, $filelink)
 	{
@@ -890,7 +929,7 @@ class DbContent
 
 	/**
 	* DeleteLable_ArticleByArticleId()
-	* @params int $articleId the id of the article (foreign key)
+	* @param int $articleId the id of the article (foreign key)
 	*/
 	public function DeleteLable_ArticleByArticleId($articleId)
 	{
@@ -913,7 +952,7 @@ class DbContent
 
 	 /**
 	 * DeleteLable_ArticleByLableId()
-	 * @params int $lableId the id of the lable (foreign key)
+	 * @param int $lableId the id of the lable (foreign key)
 	 */
 	 public function DeleteLable_ArticleByLableId($lableId)
 	 {
@@ -955,8 +994,8 @@ class DbContent
 
 	/**
  	* InsertLable_Article()
- 	* @params int $lableId the id of the lable (foreign key)
- 	* @params int $articleId the id of the article (foreign key)
+ 	* @param int $lableId the id of the lable (foreign key)
+ 	* @param int $articleId the id of the article (foreign key)
  	*/
  	public function InsertLable_Article($lableId, $articleId)
  	{
@@ -978,8 +1017,8 @@ class DbContent
 
 	/**
 	* UpdateLable_ArticleByLableId()
-	* @params int $lableId the id of the lable (foreign key)
-	* @params int $articleId the id of the article (foreign key)
+	* @param int $lableId the id of the lable (foreign key)
+	* @param int $articleId the id of the article (foreign key)
 	*/
 	public function UpdateLable_ArticleByLableId($lableId, $articleId)
 	{
@@ -999,8 +1038,8 @@ class DbContent
 
 	/**
 	* UpdateLable_ArticleByArticleId()
-	* @params int $lableId the id of the lable (foreign key)
-	* @params int $articleId the id of the article (foreign key)
+	* @param int $lableId the id of the lable (foreign key)
+	* @param int $articleId the id of the article (foreign key)
 	*/
 	public function UpdateLable_ArticleByArticleId($lableId, $articleId)
 	{
@@ -1089,7 +1128,7 @@ class DbContent
 
 	/**
 	* DeleteLable_UserByArticleId()
-	* @params int $userId the user's id (foreign key)
+	* @param int $userId the user's id (foreign key)
 	*/
 	public function DeleteLable_UserByArticleId($userId)
 	{
@@ -1110,7 +1149,7 @@ class DbContent
 
 	/**
 	* DeleteLable_UserByLableId()
-	* @params int $lableId the id of the lable (foreign key)
+	* @param int $lableId the id of the lable (foreign key)
 	*/
 	public function DeleteLable_UserByLableId($lableId)
 	{
@@ -1130,8 +1169,8 @@ class DbContent
 
 	/**
 	* InsertLable_User()
-	* @params int $lableId the id of the lable (foreign key)
-	* @params int $userId the user's id (foreign key)
+	* @param int $lableId the id of the lable (foreign key)
+	* @param int $userId the user's id (foreign key)
 	*/
 	public function InsertLable_User($lableId, $userId)
 	{
@@ -1153,8 +1192,8 @@ class DbContent
 
 	/**
 	* UpdateLable_UserByLableId()
-	* @params int $lableId the id of the lable (foreign key)
-	* @params int $userId the user's id (foreign key)
+	* @param int $lableId the id of the lable (foreign key)
+	* @param int $userId the user's id (foreign key)
 	*/
 	public function UpdateLable_UserByLableId($lableId, $userId)
 	{
@@ -1177,8 +1216,8 @@ class DbContent
 
 	/**
 	* UpdateLable_UserByArticleId()
-	* @params int $lableId the id of the lable (foreign key)
-	* @params int $userId the user's id (foreign key)
+	* @param int $lableId the id of the lable (foreign key)
+	* @param int $userId the user's id (foreign key)
 	*/
 	public function UpdateLable_UserByArticleId($lableId, $userId)
 	{
@@ -1213,7 +1252,7 @@ class DbContent
 
 	/**
 	* SelectWebsiteById()
-	* @params int $id the id of the website
+	* @param int $id the id of the website
 	*/
 	public function SelectWebsiteById($id)
 	{
@@ -1224,7 +1263,7 @@ class DbContent
 
 	/**
 	* DeleteWebsiteById()
-	* @params int $id the id of the website
+	* @param int $id the id of the website
 	*/
 	public function DeleteWebsiteById($id)
 	{
@@ -1250,15 +1289,15 @@ class DbContent
 
 	/**
 	* UpdateWebsiteById()
-	* @params int $websiteId
-	* @params string $headertitle
-	* @params string $contact
-	* @params string $imprint
-	* @params string $privacyinformation
-	* @params string $gtc
-	* @params bool $login
-	* @params bool $guestbook
-	* @params int $template_id
+	* @param int $websiteId
+	* @param string $headertitle
+	* @param string $contact
+	* @param string $imprint
+	* @param string $privacyinformation
+	* @param string $gtc
+	* @param bool $login
+	* @param bool $guestbook
+	* @param int $template_id
 	*/
 	public function UpdateWebsiteById($websiteId, $headertitle, $contact, $imprint, $privacyinformation, $gtc, $login, $guestbook, $template_id)
 	{
@@ -1297,15 +1336,15 @@ class DbContent
 
 	/**
 	* InsertWebsite()
-	* @params int $websiteId
-	* @params string $headertitle
-	* @params string $contact
-	* @params string $imprint
-	* @params string $privacyinformation
-	* @params string $gtc
-	* @params bool $login
-	* @params bool $guestbook
-	* @params int $template_id
+	* @param int $websiteId
+	* @param string $headertitle
+	* @param string $contact
+	* @param string $imprint
+	* @param string $privacyinformation
+	* @param string $gtc
+	* @param bool $login
+	* @param bool $guestbook
+	* @param int $template_id
 	*/
 	public function InsertWebsite($websiteId, $headertitle, $contact, $imprint, $privacyinformation, $gtc, $login, $guestbook, $template_id)
 	{
@@ -1344,7 +1383,7 @@ class DbContent
 	
 	/**
 	* SelectLableByLableId()
-	* @params int $lableId the id of the lable
+	* @param int $lableId the id of the lable
 	*/
 	public function SelectLableByLableId($lableId)
 	{
@@ -1355,7 +1394,7 @@ class DbContent
 
 	/**
 	* SelectLableIdByLablename()
-	* @params string $lablename the lablename of the lable
+	* @param string $lablename the lablename of the lable
 	*/
 	public function SelectLableIdByLablename($lablename)
 	{
@@ -1366,7 +1405,7 @@ class DbContent
 	
 	/**
 	* SelectArticleByHeader()
-	* @params string $header the header of the article
+	* @param string $header the header of the article
 	*/
 	public function SelectArticleByHeader($header)
 	{
