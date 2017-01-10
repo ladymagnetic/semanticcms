@@ -44,8 +44,8 @@ class DbContent
 		$allPagesSite = "SELECT page.title, page.relativeposition, template.templatename ".
 						"FROM page INNER JOIN template ON page.template_id = template.id ".
 						"WHERE website_id = ? ".
-						"ORDER BY page.relativeposition ASC;";			
-					
+						"ORDER BY page.relativeposition ASC;";
+
 		$allPagesWithTemplate = "SELECT page.title ".
 								"FROM page INNER JOIN template ON page.template_id = template.id ".
 								"WHERE templatename = ?;";
@@ -53,12 +53,12 @@ class DbContent
 		if(!$this->database->PrepareStatement("allPages", $allPages)) die("Abfrage konnte nicht erstellt werden.");
 		if(!$this->database->PrepareStatement("allPagesOfSite", $allPagesSite)) die("Abfrage konnte nicht erstellt werden.");
 		if(!$this->database->PrepareStatement("allPagesWithTemplate", $allPagesWithTemplate)) die("Abfrage konnte nicht erstellt werden.");
-	
+
 		// Website
 		$websiteById =  "SELECT website.headertitle, website.contact, website.imprint, website.privacyinformation, website.gtc, website.login, website.guestbook, template.templatename AS template ".
 						"FROM website INNER JOIN template ON website.template_id = template.id ".
 						"WHERE website.id = ?";
-			
+
 		if(!$this->database->PrepareStatement("websiteById", $websiteById)) die("Abfrage konnte nicht erstellt werden.");
 
 		// Article
@@ -153,9 +153,9 @@ class DbContent
 
 		$deleteWebsiteById =  "DELETE FROM website WHERE id = ?";
 		$this->database->PrepareStatement("deleteWebsiteById", $deleteWebsiteById );
-		
-		
-	
+
+
+
 		$articleOfPage = "SELECT article.id, article.header, article.content, article.publicationdate, article.public, article.description, article.type, user.username AS author ".
 						 "FROM article INNER JOIN user ON user.id = article.author ".
 						 "INNER JOIN PAGE ON page.id = article.page_id ".
@@ -163,9 +163,9 @@ class DbContent
 						 "ORDER BY article.publicationdate DESC;";
 
 		if(!$this->database->PrepareStatement("allArticlesOfPage", $articleOfPage)) die("Abfrage konnte nicht erstellt werden.");
-		
-		
-		
+
+
+
 		$selectLableByLableId = "SELECT * FROM lable WHERE id = ?";
 		$this->database->PrepareStatement("selectLableByLableId", $selectLableByLableId);
 
@@ -174,7 +174,7 @@ class DbContent
 
 		$selectArticleByHeader = "SELECT * FROM article WHERE header = ?";
 		$this->database->PrepareStatement("selectArticleByHeader", $selectArticleByHeader);
-		
+
 		$selectAllLables = "SELECT * FROM lable";
 		$this->database->PrepareStatement("selectAllLables", $selectAllLables);
 
@@ -182,6 +182,7 @@ class DbContent
 
 	/**
 	* GetAllArticles()
+	* @param void
 	*/
 	public function GetAllArticles()
 	{
@@ -192,6 +193,7 @@ class DbContent
 
 	/**
 	* GetAllArticlesWithDetailedInformation()
+	* @param void
 	*/
 	public function GetAllArticlesWithDetailedInformation()
 	{
@@ -369,7 +371,7 @@ class DbContent
 
 	/**
 	* Selects information of a given website.
-	* Selects the fields website.headertitle, website.contact, website.imprint, website.privacyinformation, website.gtc, website.login, website.guestbook 
+	* Selects the fields website.headertitle, website.contact, website.imprint, website.privacyinformation, website.gtc, website.login, website.guestbook
 	* and template.templatename (named template in the row array)
 	* @param int $id id of the website. May be a numeric string ("1" instead of 1)
 	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
@@ -379,7 +381,7 @@ class DbContent
 		if(!is_numeric($id)) return null;
 		return $this->database->ExecutePreparedStatement("websiteById", array($id));
 	}
-	
+
 
 
 	/**
@@ -631,6 +633,7 @@ class DbContent
 		// GetArticleLabels($id)
 	/**
 	* SelectAllLable_Article()
+	* @param void
 	*/
 	public function SelectAllLable_Article()
 	{
@@ -1060,6 +1063,7 @@ class DbContent
 
 	/**
 	* SelectAllPages()
+	* @param void
 	*/
 	public function SelectAllPages()
 	{
@@ -1074,6 +1078,7 @@ class DbContent
 	// aus DBUser
 	/**
 	* SelectAllArticles()
+	* @param void
 	*/
 	public function SelectAllArticles()
 	{
@@ -1083,8 +1088,8 @@ class DbContent
 
 		/**
 	* SelectAllTemplates()
+	* @param void
 	*/
-
 	public function SelectAllTemplates()
 	{
 		return $this->database->ExecutePreparedStatement("selectAllTemplates", array());
@@ -1097,6 +1102,7 @@ class DbContent
 	//neue Funktionen
 	/**
 	* SelectAllLable_User()
+	* @param void
 	*/
 	public function SelectAllLable_User()
 	{
@@ -1107,6 +1113,7 @@ class DbContent
 
 	/**
 	* DeleteAllLable_User()
+	* @param void
 	*/
 	public function DeleteAllLable_User()
 	{
@@ -1242,6 +1249,7 @@ class DbContent
 
 	/**
 	* SelectAllWebsite()
+	* @param void
 	*/
 	public function SelectAllWebsite($templateId)
 	{
@@ -1364,8 +1372,8 @@ class DbContent
 		 }
 	}
 
-	
-	
+
+
 	/**
 	* Returns all articles of a particular page with id, header, content, publicationdate, description and author
 	* as well as information about being public/private (field name: public) and type
@@ -1379,8 +1387,8 @@ class DbContent
 		return $this->database->ExecutePreparedStatement("allArticlesOfPage", array($pagename));
 	}
 
-	
-	
+
+
 	/**
 	* SelectLableByLableId()
 	* @param int $lableId the id of the lable
@@ -1390,7 +1398,7 @@ class DbContent
 		return $this->database->ExecutePreparedStatement("selectLableByLableId", array($lableId));
 	}
 
-	
+
 
 	/**
 	* SelectLableIdByLablename()
@@ -1400,9 +1408,9 @@ class DbContent
 	{
 		return $this->database->ExecutePreparedStatement("selectLableIdByLablename", array($lablename));
 	}
-	
-	
-	
+
+
+
 	/**
 	* SelectArticleByHeader()
 	* @param string $header the header of the article
@@ -1411,11 +1419,12 @@ class DbContent
 	{
 		return $this->database->ExecutePreparedStatement("selectArticleByHeader", array($header));
 	}
-	
-	
-	
+
+
+
 	/**
 	* SelectAllLables()
+	* @param void
 	*/
 	public function SelectAllLables()
 	{

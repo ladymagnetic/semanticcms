@@ -10,12 +10,17 @@ require_once 'DbEngine.class.php';
 */
 class DbUser
 {
+	/** @var Mysqli\mysqli stores information about the database */
 	private $database;			// DbEngine object
+
 
 	/* ---- Constructor / Destructor ---- */
 	/**
 	* constructor
-	* @params string $dsn database connection string
+	* @param string $host database host
+	* @param string $user database user
+	* @param string $password password for database user
+	* @param string $db database name
 	*/
 	 public function __construct($host, $user, $password, $db)
   	{
@@ -23,6 +28,11 @@ class DbUser
 	   $this->PrepareSQL();
     }
 
+
+	/**
+	* destructor
+	* @param void
+	*/
 		public function __destruct()
 		{
 			$this->database->__destruct();
@@ -32,6 +42,7 @@ class DbUser
 	/**
 	* prepare_sql()
 	* Prepares the SQL statements
+	* @param void
 	*/
 	private function PrepareSQL()
 	{
@@ -138,6 +149,7 @@ class DbUser
 	/* --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- für die Startseite: Statistik für Admin --- --- --- --- --- --- --- --- --- */
 	/**
 	* CountUsers()
+	* @param void
 	*/
 	public function CountUsers()
 	{
@@ -149,6 +161,7 @@ class DbUser
 
 	/**
 	* CountRoles()
+	* @param void
 	*/
 	public function CountRoles()
 	{
@@ -160,6 +173,7 @@ class DbUser
 
 	/**
 	* CountBans()
+	* @param void
 	* macht in der Form nicht unbedingt so viel Sinn. => besser: auf einen bestimmten Zeitraum beziehen
 	*/
 	public function CountBans()
@@ -172,6 +186,7 @@ class DbUser
 
 	/**
 	* CountArticles()
+	* @param void
 	*/
 	public function CountArticles()
 	{
@@ -183,6 +198,7 @@ class DbUser
 
 	/**
 	* CountPages()
+	* @param void
 	*/
 	public function CountPages()
 	{
@@ -194,6 +210,7 @@ class DbUser
 
 	/**
 	* CountTemplates()
+	* @param void
 	*/
 	public function CountTemplates()
 	{
@@ -209,6 +226,7 @@ class DbUser
 
 	/**
 	* SelectAllLogs()
+	* @param void
 	*/
 	public function SelectAllLogs()
 	{
@@ -281,7 +299,7 @@ class DbUser
 
 	/**
 	* UsernameAlreadyExists()
-	* @params string $username the user's name
+	* @param string $username the user's name
 	* checks whether the username already exists in database
 	*/
 	public function UsernameAlreadyExists($username)
@@ -302,12 +320,12 @@ class DbUser
 
 	/**
 	* registrateUser()
-	* @params string $username the user's username
-	* @params string $firstname the user's firstname
-	* @params string $lastname the user's lastname
-	* @params string $mail the user's mailaddress
-	* @params string $password the user's password
-	* @params string $birthdate the user's birthdate as date formatted string
+	* @param string $username the user's username
+	* @param string $firstname the user's firstname
+	* @param string $lastname the user's lastname
+	* @param string $mail the user's mailaddress
+	* @param string $password the user's password
+	* @param string $birthdate the user's birthdate as date formatted string
 	*/
 		public function RegistrateUser($role_id, $lastname, $firstname, $username, $password, $email, $birthdate)
 	{
@@ -352,7 +370,7 @@ class DbUser
 	/**
 	* deleteUserById()
 	* Delets a particular User
-	* @params int $userId the user's Id
+	* @param int $userId the user's Id
 	*/
 	public function DeleteUserById($userId)
 	{
@@ -415,7 +433,7 @@ class DbUser
 
 	/**
 	* GetUserInformationById()
-	* @params int $userId the id of the user
+	* @param int $userId the id of the user
 	*/
 	public function GetUserInformationById($userId) /*oder:SelectUserById() als anderen Namen?*/
 	{
@@ -425,7 +443,7 @@ class DbUser
 
 	/**
 	* GetUserInformationByUsername()
-	* @params string $username the role's name
+	* @param string $username the role's name
 	*/
 	public function GetUserInformationByUsername($username) /*oder:SelectUserByUserName() als anderen Namen?*/
 	{
@@ -436,7 +454,7 @@ class DbUser
 	/**
 	* DeleteRole()
 	* Delets a particular Role
-	* @params int $roleId the role's Id
+	* @param int $roleId the role's Id
 	*/
 	public function DeleteRole($roleId)
 	{
@@ -474,8 +492,8 @@ class DbUser
 	/**
 	* AssignRole()
 	* Assigns a chosen role to a particular user
-	* @params int $roleId the role's Id
-	* @params int $userId the user's Id
+	* @param int $roleId the role's Id
+	* @param int $userId the user's Id
 	*/
 	public function AssignRole($roleId, $userId)
 	{
@@ -504,16 +522,16 @@ class DbUser
 	/**
 	* NewRole()
 	* creates a new role
-	* @params int $uri the role's uri
-	* @params string $rolename the name of the role
-	* @params bool $guestbookmanagement
-	* @params bool $usermanagement
-	* @params bool $pagemanagement
-	* @params bool $articlemanagement
-	* @params bool $guestbookusage
-	* @params bool $templateconstruction
-	* @params bool $databasemanagement
-	* @params bool $backendlogin
+	* @param int $uri the role's uri
+	* @param string $rolename the name of the role
+	* @param bool $guestbookmanagement
+	* @param bool $usermanagement
+	* @param bool $pagemanagement
+	* @param bool $articlemanagement
+	* @param bool $guestbookusage
+	* @param bool $templateconstruction
+	* @param bool $databasemanagement
+	* @param bool $backendlogin
 	*/
 	public function NewRole($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $databasemanagement, $backendlogin)
 	{
@@ -536,7 +554,7 @@ class DbUser
 
 	/**
 	* SelectRoleById()
-	* @params int $roleId the role's Id
+	* @param int $roleId the role's Id
 	*/
 	public function SelectRoleById($roleId)  /*oder: GetRoleInfoById() als anderen Namen?*/
 	{
@@ -547,7 +565,7 @@ class DbUser
 	/**
 	* SelectRoleByRolename()
 	* Selects a particular Role
-	* @params string $rolename the role's name
+	* @param string $rolename the role's name
 	*/
 	public function SelectRoleByRolename($rolename) /*oder: GetRoleInfoByRolename() als anderen Namen?*/
 	{
@@ -558,16 +576,16 @@ class DbUser
 	/**
 	* UpdateRoleById()  => @Jonas: vorher: SaveRoleChanges()
 	* saves role changes
-	* @params int $uri the role's uri
-	* @params string $rolename the name of the role
-	* @params bool $guestbookmanagement
-	* @params bool $usermanagement
-	* @params bool $pagemanagement
-	* @params bool $articlemanagement
-	* @params bool $guestbookusage
-	* @params bool $templateconstruction
-	* @params bool $databasemanagement
-	* @params bool $backendlogin
+	* @param int $uri the role's uri
+	* @param string $rolename the name of the role
+	* @param bool $guestbookmanagement
+	* @param bool $usermanagement
+	* @param bool $pagemanagement
+	* @param bool $articlemanagement
+	* @param bool $guestbookusage
+	* @param bool $templateconstruction
+	* @param bool $databasemanagement
+	* @param bool $backendlogin
 	*/
 	public function UpdateRoleById($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $databasemanagement, $backendlogin, $id)
 	{
@@ -603,11 +621,11 @@ class DbUser
 	/**
 	* UpdateUserDifferentNamesById => @Jonas: vorher: ApplyChangesToUser()
 	* saves role changes
-	* @params string $lastname the user's lastname
-	* @params string $lastname the user's firstname
-	* @params string $lastname the user's username
-	* @params string $lastname the user's email
-	* @params int $id user's id
+	* @param string $lastname the user's lastname
+	* @param string $lastname the user's firstname
+	* @param string $lastname the user's username
+	* @param string $lastname the user's email
+	* @param int $id user's id
 	*/
 	public function UpdateUserDifferentNamesById($lastname, $firstname, $email, $userId)
 	{
@@ -627,7 +645,7 @@ class DbUser
 
 	/**
 	* SelectUserByEmail()
-	* @params string $lastname the user's email
+	* @param string $lastname the user's email
 	*/
 	public function SelectUserByEmail($email)
 	{
@@ -638,6 +656,7 @@ class DbUser
 
 	/**
 	* SelectAllUsers()
+	* @param void
 	*/
 	public function SelectAllUsers()
 	{
@@ -647,6 +666,7 @@ class DbUser
 
 	/**
 	* SelectAllRoles()
+	* @param void
 	*/
 	public function SelectAllRoles()
 	{
@@ -663,7 +683,7 @@ class DbUser
 	/**
 	* IsUserBannedId()
 	* checks via userid if the user is banned
-	* @params int $userId the user's id
+	* @param int $userId the user's id
 	*/
 	public function IsUserBannedId($userId)
 	{
@@ -685,7 +705,7 @@ class DbUser
 	/**
 	*  IsUserBannedUsername()
 	* checks via username if the user is banned
-	* @params string $username the user's username
+	* @param string $username the user's username
 	*/
 	public function IsUserBannedUsername($username)
 	{
@@ -705,11 +725,11 @@ class DbUser
 
 	/**
 	*  InsertBanViaUserId()
-	* @params int $user_id the user's id
-	* @params int $reason_id the banreasons's id
-	* @params string $description the ban's description
-	* @params datetime $begindatetime the ban's begindatetime
-	* @params datetime $enddatetime the ban's enddatetime
+	* @param int $user_id the user's id
+	* @param int $reason_id the banreasons's id
+	* @param string $description the ban's description
+	* @param datetime $begindatetime the ban's begindatetime
+	* @param datetime $enddatetime the ban's enddatetime
 	*/
 	public function InsertBanViaUserId($user_id, $reason_id, $description, $begindatetime, $enddatetime)
 	{
@@ -745,7 +765,7 @@ class DbUser
 	/**
 	*  DebanUserViaBanId()
 	* checks via username if the user is banned
-	* @params int $id the ban's id
+	* @param int $id the ban's id
 	*/
 	public function DebanUserViaBanId($id)
 	{
@@ -765,7 +785,7 @@ class DbUser
 	/**
 	*  SelectBanByUserid()
 	* select a special Ban by an user's id
-	* @params int $id the users's id
+	* @param int $id the users's id
 	*/
 	public function SelectBanByUserid($user_id)
 	{
@@ -805,6 +825,7 @@ class DbUser
 
 	/**
 	*  SelectAllBan()
+	* @param void
 	*/
 	public function SelectAllBan()
 	{
@@ -814,6 +835,7 @@ class DbUser
 
 	/**
 	*  SelectAllBan_Reason()
+	* @param void
 	*/
 	public function SelectAllBan_Reason()
 	{
@@ -823,7 +845,7 @@ class DbUser
 
 	/**
 	* SelectAllBansFromAUserByUsername($username)
-	* @params string $username the user's username
+	* @param string $username the user's username
 	*/
 	public function SelectAllBansFromAUserByUsername($username)
 	{
@@ -834,6 +856,7 @@ class DbUser
 
 	/**
 	* SelectAllUsersWhichAreBannedNow ()
+	* @param void
 	*/
 	public function SelectAllUsersWhichAreBannedNow()
 	{
@@ -845,7 +868,7 @@ class DbUser
 
 	/**
 	* SelectAllUsersWhoAreBannedNowForASpecialReasonByReason()
-	* @params string $reason the ban_reasons's reason
+	* @param string $reason the ban_reasons's reason
 	*/
 	public function SelectAllUsersWhoAreBannedNowForASpecialReasonByReason($reason)
 	{
@@ -856,10 +879,10 @@ class DbUser
 
 	/**
 	* ApplyPasswordChangesToUser()
-	* @params string $userId the user's id
-	* @params string $password the user's password
-	* @params string $newPassword the user's new password
-	* @params string $newPasswordRepeat the user's the repetition of new password
+	* @param string $userId the user's id
+	* @param string $password the user's password
+	* @param string $newPassword the user's new password
+	* @param string $newPasswordRepeat the user's the repetition of new password
 	*/
 	public function ApplyPasswordChangesToUser($userId, $password, $newPassword, $newPasswordRepeat)
 	{
@@ -895,7 +918,7 @@ class DbUser
 
 	/**
 	* FetchArray()
-	* @params string $result is the result of an query
+	* @param string $result is the result of an query
 	*/
 	public function FetchArray($result)
 	{
@@ -905,7 +928,7 @@ class DbUser
 
 	/**
 	* GetResultCount()
-	* @params string $result
+	* @param string $result
 	*/
 	public function GetResultCount($result)
 	{
@@ -917,7 +940,7 @@ class DbUser
 
 	/**
 	*  GetUserPermissionByUsername()
-	* @params string $username the user's username
+	* @param string $username the user's username
 	*/
 	public function GetUserPermissionByUsername($username)
 	{
@@ -928,7 +951,7 @@ class DbUser
 
 	/**
 	*  WhichRoleHasASpecialUser()
-	* @params string $username the user's username
+	* @param string $username the user's username
 	*/
 	public function WhichRoleHasASpecialUser($username)
 	{
@@ -941,8 +964,8 @@ class DbUser
 
 	/**
 	* loginUser()
-	* @params string $nameInput the user's username or mail
-	* @params string $password the user's password
+	* @param string $nameInput the user's username or mail
+	* @param string $password the user's password
 	* @result true if login was successfull otherwise false
 	*/
 	public function LoginUser($nameInput, $password)
@@ -966,7 +989,7 @@ class DbUser
 
 	/**
 	* selectRolenameByUsername ()
-	* @params string $username the user's username
+	* @param string $username the user's username
 	*/
 	public function SelectRolenameByUsername($username)
 	{
@@ -998,20 +1021,25 @@ class DbUser
 
 	/**
 	* DownloadDBUser()
+	* @param string $host database host
+	* @param string $user database user
+	* @param string $password password for database user
+	* @param string $db database name
 	*/
 	public function DownloadDBUser($dbhost, $dbuser, $dbpwd, $dbname)
 	{
-     $this->database->DownloadDB($dbhost, $dbuser, $dbpwd, $dbname);		
+     $this->database->DownloadDB($dbhost, $dbuser, $dbpwd, $dbname);
 	}
-	
-	
-	
+
+
+
 	/**
 	* DownloadDBUserTest()
+	* @param void
 	*/
 	public function DownloadDBUserTest()
 	{
-     $this->database->DownloadDBTest();		
+     $this->database->DownloadDBTest();
 	}
 
 }

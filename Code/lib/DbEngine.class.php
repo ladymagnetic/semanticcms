@@ -26,14 +26,14 @@ class DbEngine
 	}
 	/**
 	* destructor
-	* @param void	
+	* @param void
 	*/
 	public function __destruct()
 	{
 		// Does connection still exist?
 		if(empty($this->conn)) {$this->disconnectDB();}
 	}
-	
+
 	/* ---- Methods ---- */
 	/**
 	* Establishes database connection
@@ -100,21 +100,21 @@ class DbEngine
 				$varname = "@value_".$counter;
 
 				$set = $varname." = ";
-				
+
 				//sets variable in SQL
 				if(is_string($val)) { $set .= "'".$val."'"; }
 				else { $set .= "".$val;}
 				$this->ExecuteQuery("SET ".$set);
 
 				// generates using string for SQL
-				if($counter > 0) $using.=",";	// sets comma 
+				if($counter > 0) $using.=",";	// sets comma
 				$using .= " ".$varname." ";
 
 				$counter += 1;
 			}
 		}
 
-		$stmt = "EXECUTE ".$this->RealEscapeString($name).$using.";";	
+		$stmt = "EXECUTE ".$this->RealEscapeString($name).$using.";";
 		return $this->ExecuteQuery($stmt);
 	}
 
@@ -173,7 +173,7 @@ class DbEngine
 	/**
 	* Inserts a new logmessage about a change in the log table
 	* @param string $username the user who changed something
-	* @param string $rolename the user's role 
+	* @param string $rolename the user's role
 	* @param string $description description of the change
 	*/
 	public function InsertNewLog($username, $rolename, $description)
@@ -196,7 +196,7 @@ class DbEngine
 			$dumpfile = $storagepath .$dbname . "_" . date("Y-m-d_H-i-s") . ".sql";
 
 			passthru("$pathToMysqldump --opt --host=$dbhost --user=$dbuser --password=$dbpwd $dbname > $dumpfile");
-				
+
 			echo "$dumpfile "; passthru("tail -1 $dumpfile");
 		}
 
@@ -212,10 +212,10 @@ class DbEngine
 			$dbuser = 'root';
 			$dbpwd =  '';
 			$dbname =  'cms-projekt';
-			
-			$storagepath = "01_Datenbank/Backup/"; 
-			
-			$pathToMysqldump = "media\mysqldump "; 
+
+			$storagepath = "01_Datenbank/Backup/";
+
+			$pathToMysqldump = "media\mysqldump ";
 
 			$dumpfile = $storagepath .$dbname . "_" . date("Y-m-d_H-i-s") . ".sql";
 
