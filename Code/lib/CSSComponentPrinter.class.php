@@ -1,4 +1,8 @@
 <?php
+/**
+* Contains the class CSSComponentPrinter.
+*/
+
 /* namespace */
 namespace SemanticCms\ComponentPrinter\Frontend;
 
@@ -90,7 +94,7 @@ class CSSComponentPrinter
 		$nav .=				"}\n";
 		$ul .=				"}\n";
 		$li .=				"}\n";
-		$a .=				"}\n";		
+		$a .=				"} #currentPage {font-weight: bold; text-decoration: underline;}\n";		
 		
 		return $nav."".$ul."".$li."".$a."".$special;
 	}
@@ -206,10 +210,13 @@ class CSSComponentPrinter
 			
 		}
 	
-		$css .= "height: ".$data['Height']."%; width: calc(100% - 20px); padding: 0px 10px;".
+		$css .= "height: calc(".$data['Height']."% + 10px); width: calc(100% - 20px); padding: 10px; margin-bottom: 10px;".
 				"clear: both;";
  
 		$css .=	"}\n";
+		
+		$css .= "footer ul {padding: 0; margin: 0; list-style-type: none;}\n";
+		$css .= "footer ul li a {text-decoration: none;color: inherit;}\n";
 		
 		return $css;
 	}

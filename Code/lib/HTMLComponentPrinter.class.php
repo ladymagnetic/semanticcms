@@ -22,7 +22,7 @@ class HTMLComponentPrinter
 					"<title>".$title."</title>".
 					"<meta content=\"de\" http-equiv=\"Content-Language\">".
 					"<meta content=\"text/html. charset=utf-8\" http-equiv=\"Content-Type\">".
-					"<link rel=\"stylesheet\" href=\"css\\".$css.".css\">".
+					"<link rel=\"stylesheet\" href=\"..\css\\".$css.".css\">".
 				"</head>";
 				
 		return $head;
@@ -40,8 +40,8 @@ class HTMLComponentPrinter
 	{
 		$php =  "<?php ".
 				" session_start(); ".
-				" require_once 'lib/DbContent.class.php';".
-				" require_once 'config/config.php';".
+				" require_once '../lib/DbContent.class.php';".
+				" require_once '../config/config.php';".
 				" use SemanticCms\Databaseabstraction\DbContent;".
 				" use SemanticCms\config;".
 				" \$db = new DbContent(\$config['cms_db']['dbhost'], \$config['cms_db']['dbuser'], \$config['cms_db']['dbpass'], \$config['cms_db']['database']);".
@@ -56,8 +56,8 @@ class HTMLComponentPrinter
 	*/
 	public static function GetHeader($title, $imgSource="")
 	{
-		$header =	"<header>";
-		if(!empty($imgSource)) $header = $header."<img src=\"media\\".$imgSource."\" property=\"image\">";
+		$header =	"<header typeof=\"WPHeader\">";
+		if(!empty($imgSource)) $header = $header."<img src=\"..\media\\".$imgSource."\" property=\"image\">";
 		$header =	$header."<h1 property=\"name\">".htmlspecialchars($title)."</h1>".
 					"</header>";
 					
@@ -65,12 +65,12 @@ class HTMLComponentPrinter
 	}
 	
 	
-	public static function GetMenu($pageName)
+	public static function GetMenu($pageName="", $websiteId=1)
 	{
 		$menu =	"<nav typeof=\"SiteNavigationElement\"> <ul>";
 
 		$menu .= "\n<?php ".
-				 " \$result = \$db->GetAllPages(); ".
+				 " \$result = \$db->GetAllPagesOfWebsite(".$websiteId."); ".
 				 " while(\$page = \$db->FetchArray(\$result)) { ".
 				 " if(strcmp(\$page[\"title\"],\"".$pageName."\" ) == 0) {".	
 				 " echo '<li> <a id=\"currentPage\" href=\"'.\$page[\"title\"].'.php\" itemprop=\"url\">'.\$page[\"title\"].'</a></li>'; } ".
@@ -84,13 +84,13 @@ class HTMLComponentPrinter
 	
 	public static function GetArticleContainer($pageName)
 	{
-		$article = "<main><?php ";
+		$article = "<main property=\"mainContentOfPage\" typeof=\"WebPageElement\"><?php ";
 		
 		$article .= "\$result = \$db->GetAllArticlesOfPage(\"".$pageName."\");".
 					"while(\$article = \$db->FetchArray(\$result)) { ".
 						"\$pubdate = new DateTime(\$article['publicationdate']); \$curdate = new DateTime(date('Y-m-d'));".
 						"if (\$pubdate <= \$curdate){".
-							"echo '<section class=\'article\'> <h2>'.htmlspecialchars(\$article['header']).'</h2>'.".
+							"echo '<section class=\'article\'> <h2 property=\"headline\">'.htmlspecialchars(\$article['header']).'</h2>'.".
 								" '<div class=\'info\'> veröffentlicht am <span>'.\$pubdate->format('d. F Y').'</span>'.". 
 								" ' von <span>'.htmlspecialchars(\$article['author']).'</span></div>'.".
 								" '<div class=\'content\'>'.\$article['content'].'</div><ul>';".
@@ -102,13 +102,25 @@ class HTMLComponentPrinter
 		return $article;
 	}
 	
-	public static function GetFooter()
+	public static function GetFooter($pages)
 	{
 		// schema.org fehlt noch
-		$footer =	"<footer>".
-					"</footer>";
+		$footer =	"<footer typeof=\"WPFooter\"> <ul>";
+		foreach($pages as $page)
+		{
+			$footer .= "<li> <a href=\"".$page["filename"].".php\" itemprop=\"url\">".$page["pagetitle"]."</a></li>"; 
+		}
+		$footer .=	"</ul></footer>";
 					
 		return $footer;
+	}
+	
+	public static function GetMain($content)
+	{
+		$main = "<main property=\"mainContentOfPage\" typeof=\"WebPageElement\">";
+		$main .= "<section>".$content."</section> </main>";
+		
+		return $main;
 	}
 	
 }

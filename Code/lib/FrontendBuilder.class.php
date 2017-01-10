@@ -1,4 +1,8 @@
 <?php
+/**
+* Contains the class FrontendBuilder.
+*/
+
 /* namespace */
 namespace SemanticCms\FrontendGenerator;
 
@@ -24,7 +28,6 @@ class FrontendBuilder
 	private static $db;
 	/** @var TemplateParser internal TemplateParser object for retrieving template information */
 	private static $templateParser;
-		
 	
 	/* ---- Constructor / Destructor ---- */
 	/**
@@ -110,10 +113,10 @@ class FrontendBuilder
 	* Updates a given page if its title changed.
 	*
 	*/
-	public static function UpdatePage($pageName, $newTemplatePath, $oldTemplatePath, $websiteId=1)
+	public static function UpdatePage($oldPageName, $oldTemplatePath, $newPageName, $newTemplatePath, $oldWebsiteId=1, $newWebsiteId=1)
 	{
-		self::DeletePage($pageName, $oldTemplatePath);
-		self::MakeNewPage($pageName, $websiteId, $newTemplatePath);
+		self::DeletePage($oldPageName, $oldTemplatePath, $oldWebsiteId);
+		self::MakeNewPage($newPageName, $newTemplatePath, $newWebsiteId);
 	}
 	
 	public static function AddLogin()
@@ -129,13 +132,10 @@ class FrontendBuilder
 	* @params string $pageName name of the page
 	* @params string $templatePath full path (incl, its name)  to the template used for the site
 	*/
-	public static function DeletePage($pageName, $templatePath)
+	public static function DeletePage($pageName, $templatePath, $websiteId=1)
 	{
-		// pagename pruefen auf string
-		// pagename pruefen auf / 
-		// templateName pruefen auf string etc.
-		
-		$pagePath = self::pageFilePath($pageName);
+		$websiteData = self::$db->FetchArray(self::$db->GetWebsiteInfoById($websiteId));		
+		$pagePath = self::pageFilePath($pageName, $websiteData["headertitle"]);
 		
 		if(file_exists($pagePath))
 		{
@@ -150,14 +150,21 @@ class FrontendBuilder
 				if(file_exists($cssFilePath)) { unlink($cssFilePath); }
 			}
 		}
+		
+		// @todo ggf. website löschen
 	}
 	
 	private function createPage($pageName, $websiteId, $cssName)
 	{
-		$pagePath = self::pageFilePath($pageName);	
-		if(file_exists($pagePath)) return;
-		
 		$websiteData = self::$db->FetchArray(self::$db->GetWebsiteInfoById($websiteId));
+		$pagePath = self::pageFilePath($pageName, $websiteData["headertitle"]);		
+		if(file_exists($pagePath)) return;
+			
+		$sitePath = self::websiteDirPath($websiteData["headertitle"]);
+		if(!is_dir($sitePath)) {mkdir($sitePath);}
+		
+		$technicalPages = self::getTechnicalPageArray($websiteData);
+		self::createTechnicalPages($technicalPages, $websiteData["headertitle"], $websiteData["template"]);
 		
 		// write HTML + PHP Code
 		$handle = fopen($pagePath, "x");
@@ -169,11 +176,37 @@ class FrontendBuilder
 			fwrite($handle, HTML::GetHeader($websiteData["headertitle"]));
 			fwrite($handle, HTML::GetMenu($pageName));
 			fwrite($handle, HTML::GetArticleContainer($pageName));
-			fwrite($handle, HTML::GetFooter($websiteData));
+			fwrite($handle, HTML::GetFooter($technicalPages));
 //			fwrite($handle, " <form action='test.php'> <button> LINK </button> <a href='mep.html'> <button type='button'> LINK </button> </a></form> ");
 			fwrite($handle, "\n</body></html>");
 		
 		fclose($handle);
+	}
+	
+	private function createTechnicalPages($technicalPages, $websiteName, $cssName)
+	{
+		foreach($technicalPages as $page)
+		{
+			$pagePath = self::pageFilePath($page['filename'], $websiteName);
+			if(file_exists($pagePath)) continue;
+			
+			$handle = fopen($pagePath, "x");
+				
+				fwrite($handle, HTML::GetPhpStart());
+				fwrite($handle, HTML::GetHtmlStart());
+				fwrite($handle, HTML::GetHead($page['pagetitle'], $cssName));
+				fwrite($handle, "<body>");
+				fwrite($handle, HTML::GetHeader($websiteName));
+				fwrite($handle, HTML::GetMenu());
+				fwrite($handle, HTML::GetMain($page['content'])); 
+				fwrite($handle, HTML::GetFooter($technicalPages));
+				fwrite($handle, "\n</body></html>");
+			
+			fclose($handle);		
+		}
+		
+		$cssPath = self::cssFilePath($cssName);
+		if(!file_exists($cssPath)) { self::createCSS($cssName); }
 	}
 
 	private function createCSS($cssName)
@@ -188,9 +221,9 @@ class FrontendBuilder
 		$backgroundData = self::$templateParser->GetBackground($cssName);
 		$tagData = self::$templateParser->GetTag($cssName);
 		
-		var_dump($articleContainerData);
+	/*	var_dump($articleContainerData);
 		echo "<br><br><br>";
-		var_dump($backgroundData);
+		var_dump($backgroundData);*/
 		
 		// write css Code
 		$cssHandle = fopen($cssPath, "x");
@@ -227,14 +260,72 @@ class FrontendBuilder
 	* @params string $pageName only the name of the page without any file extension or path information
 	* @return string absolute path of the .php file
 	*/
-	private function pageFilePath($pageName)
+	private function pageFilePath($pageName, $websiteName)
 	{
-		$path = "";
-		
-		if(strcmp(basename(getcwd()),"lib") === 0) { $path = realpath("../frontend/");	}
-		else { $path = realpath("frontend/"); }
+		$pageName = str_replace(" ", "_", $pageName);
+		$path = self::websiteDirPath($websiteName);
 		
 		return $path."\\".$pageName.".php";		
 	}
+	
+	private function websiteDirPath($websiteName)
+	{
+		$websiteName = str_replace(" ", "_", $websiteName);
+		$path = "";
+	
+		if(strcmp(basename(getcwd()),"lib") === 0) { $path = realpath("../frontend/");	}
+		else { $path = realpath("frontend/"); }
+
+		return $path."\\".$websiteName;
+	}
+	
+	private function getTechnicalPageArray(array $websiteData)
+	{
+		$tp = array();
+		
+		if(!is_null($websiteData['contact'])) 
+		{
+			$tp[TechnicalPage::CONTACT]['pagetitle'] = "Kontakt"; 
+			$tp[TechnicalPage::CONTACT]['filename'] = "Kontakt"; 
+			$tp[TechnicalPage::CONTACT]['content'] = $websiteData['contact']; 
+		}
+		if(!is_null($websiteData['imprint'])) 
+		{ 
+			$tp[TechnicalPage::IMPRINT]['pagetitle'] = "Impressum"; 
+			$tp[TechnicalPage::IMPRINT]['filename'] = "Impressum"; 
+			$tp[TechnicalPage::IMPRINT]['content'] = $websiteData['imprints']; 
+		}
+		if(!is_null($websiteData['privacyinformation'])) 
+		{
+			$tp[TechnicalPage::PRIVACY]['pagetitle'] = "Datenschutzbestimmungen"; 
+			$tp[TechnicalPage::PRIVACY]['filename'] = "Datenschutz"; 
+			$tp[TechnicalPage::PRIVACY]['content'] = $websiteData['privacyinformation']; 
+		}
+		if(!is_null($websiteData['gtc'])) 
+		{ 
+			$tp[TechnicalPage::GTC]['pagetitle'] = "Allgemeine Geschäftsbedingungen"; 
+			$tp[TechnicalPage::GTC]['filename'] = "AGBs"; 
+			$tp[TechnicalPage::GTC]['content'] = $websiteData['gtc']; 
+		}
+	
+	/*	if($websiteData['login'] == 1 ) { $tp[TechnicalPage::LOGIN] = "Login"; $tp[TechnicalPage::LOGOUT] = "Logout";}
+		if($websiteData['guestbook'] == 1 ) { $tp[TechnicalPage::GUESTBOOK] = "Gästebuch"; }
+		*/
+		return $tp;
+	}
+}
+
+/**
+* Provides an enumeration replacement for technical pages used in class FrontendBuilder
+*/
+abstract class TechnicalPage
+{
+	const LOGIN = 'login';
+	const LOGOUT = 'logout';
+	const CONTACT = 'contact';
+	const IMPRINT = 'imprint';
+	const GTC = 'gtc';
+	const PRIVACY = 'privacyinfo';
+	const GUESTBOOK = 'guestbook';
 }
 ?>
