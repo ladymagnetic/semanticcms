@@ -65,7 +65,6 @@ class DbUser
 		$this->database->PrepareStatement("deleteUserByUsername", $deleteUserByUsername );
 
 
-		// Role
 		$deleteRole = "DELETE FROM role WHERE id = ?";
 		$this->database->PrepareStatement("deleteRole", $deleteRole);
 
@@ -81,18 +80,11 @@ class DbUser
 		$selectRolenameByUsername = "SELECT role.rolename FROM role INNER JOIN user ON role.id = user.role_id WHERE user.username = ? ";
 		$this->database->PrepareStatement("selectRolenameByUsername", $selectRolenameByUsername);
 
-		// => kommt noch:
-		//$selectUserByUsernameOrEmail = "SELECT * FROM user WHERE ( username = ? OR email = ? )";
-		//$this->database->PrepareStatement("selectUserByUsernameOrEmail ", $selectUserByUsernameOrEmail );
-
-
 		$selectAllUsers = "SELECT * FROM user";
 		$this->database->PrepareStatement("selectAllUsers", $selectAllUsers);
 
 		$selectAllRoles = "SELECT * FROM role";
 		$this->database->PrepareStatement("selectAllRoles", $selectAllRoles);
-
-
 
 		$selectAllBan_Reason = "SELECT * FROM ban_reason";
 		$this->database->PrepareStatement("selectAllBan_Reason", $selectAllBan_Reason);
@@ -115,11 +107,6 @@ class DbUser
 
 		$selectAllUsersWhichAreBannedNow = "SELECT * FROM ban INNER JOIN user ON ban.user_id = user.id WHERE ban.enddatetime > now()";
 		$this->database->PrepareStatement("selectAllUsersWhichAreBannedNow", $selectAllUsersWhichAreBannedNow);
-
-/*noch nicht eintragen => in Arbeit*/
-		//$selectAllUsersWhoAreBannedNowForASpecialReasonById() = "SELECT * FROM ban INNER JOIN user ON ban.user_id = user.id WHERE ( ban.enddatetime > now() AND ban.reason_id = ? )";
-		//$this->database->PrepareStatement("selectAllUsersWhoAreBannedNowForASpecialReasonById", $selectAllUsersWhoAreBannedNowForASpecialReasonById);
-		// SELECT * FROM ban INNER JOIN user ON ban.user_id = user.id WHERE ( ban.enddatetime > now() AND ban.reason_id = 2)
 
 
 		$getUserPermissionByUsername = "SELECT role.guestbookmanagement, role.usermanagement, role.pagemanagement, role.articlemanagement, role.guestbookusage, role.templateconstruction, role.databasemanagement, role.backendlogin FROM role INNER JOIN user ON role.id = user.role_id WHERE user.username = ? ";
@@ -148,8 +135,9 @@ class DbUser
 
 	/* --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- für die Startseite: Statistik für Admin --- --- --- --- --- --- --- --- --- */
 	/**
-	* CountUsers()
+	* Counts the number of users who are registrated
 	* @param void
+	* @return int number of registrated users
 	*/
 	public function CountUsers()
 	{
@@ -160,8 +148,9 @@ class DbUser
 
 
 	/**
-	* CountRoles()
+	* Counts the number of defined roles in the database
 	* @param void
+	* @return int number of defined roles
 	*/
 	public function CountRoles()
 	{
@@ -172,9 +161,9 @@ class DbUser
 
 
 	/**
-	* CountBans()
+	* Counts the number of bans all users have in total
 	* @param void
-	* macht in der Form nicht unbedingt so viel Sinn. => besser: auf einen bestimmten Zeitraum beziehen
+	* @return int number of bans
 	*/
 	public function CountBans()
 	{
@@ -185,8 +174,9 @@ class DbUser
 
 
 	/**
-	* CountArticles()
+	* Counts the number of articles
 	* @param void
+	* @return int number of articles
 	*/
 	public function CountArticles()
 	{
@@ -197,8 +187,9 @@ class DbUser
 
 
 	/**
-	* CountPages()
+	* Counts the number of pages
 	* @param void
+	* @return int number of pages
 	*/
 	public function CountPages()
 	{
@@ -209,8 +200,9 @@ class DbUser
 
 
 	/**
-	* CountTemplates()
+	* Counts the number of templates
 	* @param void
+	* @return int number of templates
 	*/
 	public function CountTemplates()
 	{
@@ -225,8 +217,9 @@ class DbUser
 	/* ENDE: --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- für die Startseite: Statistik für Admin --- --- --- --- --- --- --- --- --- */
 
 	/**
-	* SelectAllLogs()
+	* select all logs which are located on the first page
 	* @param void
+	* @return
 	*/
 	public function SelectAllLogs()
 	{
