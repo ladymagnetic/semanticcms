@@ -10,8 +10,8 @@ require_once 'DbEngine.class.php';
 */
 class DbUser
 {
-	/** @var */
-	private $database;			// DbEngine object
+	/** @var DbEngine*/
+	private $database;
 
 
 	/* ---- Constructor / Destructor ---- */
@@ -102,7 +102,7 @@ class DbUser
 		$selectBanByUserid = "SELECT * FROM ban where user_id = ? ";
 		$this->database->PrepareStatement("selectBanByUserid", $selectBanByUserid);
 
-	  $selectAllBansFromAUserByUsername = "SELECT * FROM ban INNER JOIN  user ON  ban.user_id = user.id WHERE username = ?";
+		$selectAllBansFromAUserByUsername = "SELECT * FROM ban INNER JOIN  user ON  ban.user_id = user.id WHERE username = ?";
 		$this->database->PrepareStatement("selectAllBansFromAUserByUsername", $selectAllBansFromAUserByUsername);
 
 		$selectAllUsersWhichAreBannedNow = "SELECT * FROM ban INNER JOIN user ON ban.user_id = user.id WHERE ban.enddatetime > now()";
@@ -218,7 +218,7 @@ class DbUser
 	/**
 	* select all logs
 	* @param void
-	* @return
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectAllLogs()
 	{
@@ -229,10 +229,11 @@ class DbUser
 	/**
 	* selects one special log by the id of the log
 	* @param int $logtableId the id of the logtable
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectOneLogById($logtableId)
 	{
-			return $this->database->ExecutePreparedStatement("selectOneLogById", array($logtableId));
+		return $this->database->ExecutePreparedStatement("selectOneLogById", array($logtableId));
 	}
 
 
@@ -240,10 +241,11 @@ class DbUser
 	/**
 	* selects all logs from one user by his username
 	* @param string $logtableUsername is the user who changed something => the user who is responsible for the new log in the logtable
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectAllLogsFromOneUserByUsername($logtableUsername)
 	{
-			return $this->database->ExecutePreparedStatement("selectAllLogsFromOneUserByUsername", array($logtableUsername));
+		return $this->database->ExecutePreparedStatement("selectAllLogsFromOneUserByUsername", array($logtableUsername));
 	}
 
 
@@ -251,6 +253,7 @@ class DbUser
 	/**
 	* select all logs from the logtable by logdate and ordered the result descending by the id of the logtable
 	* @param string $logtableLogdate
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectAllLogsFromASpecialDateByLogdate($logtableLogdate)
 	{
@@ -271,7 +274,7 @@ class DbUser
 	/**
 	* checks whether the email adress already exists in database or not
 	* @param string $email the user's email
-	* @return boolean true|false true when email already exists of false when not
+	* @return boolean true|false successful (true) when email already exists, false when not
 	*/
 	public function EmailAlreadyExists($email)
 	{
@@ -292,7 +295,7 @@ class DbUser
 	/**
 	* checks whether the username already exists in database
 	* @param string $username the user's name
-	* @return boolean true when username already exists in database
+	* @return boolean true|false successful (true) when username already exists in database, false when the username doesn't exist
 	*/
 	public function UsernameAlreadyExists($username)
 	{
@@ -318,7 +321,7 @@ class DbUser
 	* @param string $mail the user's mailaddress
 	* @param string $password the user's password
 	* @param string $birthdate the user's birthdate as date formatted string
-	* @return boolean
+	* @return boolean true|false successful (true) when the query could be executed correctly and a new user is registrated
 	*/
 		public function RegistrateUser($role_id, $lastname, $firstname, $username, $password, $email, $birthdate)
 	{
@@ -363,7 +366,7 @@ class DbUser
 	/**
 	* Delets a particular User by its id
 	* @param int $userId the user's Id
-	* @return boolean
+	* @return boolean true|false successful (true) when the query could be executed correctly and a special user is deleted
 	*/
 	public function DeleteUserById($userId)
 	{
@@ -388,6 +391,7 @@ class DbUser
 	/**
 	* Delets a particular User by a name
 	* @param int $userId the user's Id
+	* @return boolean true|false successful (true) when the query could be executed correctly and a special user is deleted
 	*/
 /*	public function DeleteUserByUsername($username)
 	{
@@ -426,16 +430,18 @@ class DbUser
 	/**
 	* selecte the user by id to get some information
 	* @param int $userId the id of the user
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function GetUserInformationById($userId)
 	{
-			return $this->database->ExecutePreparedStatement("selectUserById", array($userId));
+		return $this->database->ExecutePreparedStatement("selectUserById", array($userId));
 	}
 
 
 	/**
 	* selecte the user by username to get some information
 	* @param string $username the role's name
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function GetUserInformationByUsername($username)
 	{
@@ -446,6 +452,7 @@ class DbUser
 	/**
 	* delets a particular Role
 	* @param int $roleId the role's Id
+	* @return boolean true|false successful (true) when the query could be executed correctly and a special role is deleted
 	*/
 	public function DeleteRole($roleId)
 	{
@@ -484,6 +491,7 @@ class DbUser
 	* assigns a chosen role to a particular user (update one special user)
 	* @param int $roleId the role's Id
 	* @param int $userId the user's Id
+	* @return boolean true|false successful (true) when the query could be executed correctly and a special role is assinged to a user
 	*/
 	public function AssignRole($roleId, $userId)
 	{
@@ -521,6 +529,7 @@ class DbUser
 	* @param bool $templateconstruction
 	* @param bool $databasemanagement
 	* @param bool $backendlogin
+	* @return boolean true|false successful (true) when the query could be executed correctly and a new role is generated correctly
 	*/
 	public function NewRole($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $databasemanagement, $backendlogin)
 	{
@@ -544,6 +553,7 @@ class DbUser
 	/**
 	* select one role by id to get some informaion about the role
 	* @param int $roleId the role's Id
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectRoleById($roleId)
 	{
@@ -554,6 +564,7 @@ class DbUser
 	/**
 	* selects a particular role by rolename to get some information about the role
 	* @param string $rolename the role's name
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectRoleByRolename($rolename)
 	{
@@ -573,6 +584,7 @@ class DbUser
 	* @param bool $templateconstruction
 	* @param bool $databasemanagement
 	* @param bool $backendlogin
+	* @return boolean true|false successful (true) when the query could be executed correctly and the changes in terms of the role are done
 	*/
 	public function UpdateRoleById($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $databasemanagement, $backendlogin, $id)
 	{
@@ -594,7 +606,7 @@ class DbUser
 				}
 
 		 	$logDescription = 'An der Rolle <strong>'.$rolenameChanged.'</strong> wurden Änderugen vorgenommen.';
-		  $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+			$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
 			return true;
 		}
@@ -612,6 +624,7 @@ class DbUser
 	* @param string $lastname the user's username
 	* @param string $lastname the user's email
 	* @param int $id user's id
+	* @return boolean true|false successful (true) when the query could be executed correctly and changes regarding a user are done
 	*/
 	public function UpdateUserDifferentNamesById($lastname, $firstname, $email, $userId)
 	{
@@ -632,10 +645,11 @@ class DbUser
 	/**
 	* select one special user by email
 	* @param string $email the user's email
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectUserByEmail($email)
 	{
-			return $this->database->ExecutePreparedStatement("selectUserByEmail", array($email));
+		return $this->database->ExecutePreparedStatement("selectUserByEmail", array($email));
 	}
 
 
@@ -643,6 +657,7 @@ class DbUser
 	/**
 	* select all registrated users
 	* @param void
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectAllUsers()
 	{
@@ -653,6 +668,7 @@ class DbUser
 	/**
 	* select all roles
 	* @param void
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectAllRoles()
 	{
@@ -662,14 +678,10 @@ class DbUser
 
 
 
-
-
-
-
 	/**
 	* checks via userid if the user is banned
 	* @param int $userId the user's id
-	* @return boolean
+	* @return boolean true|false successful (true) when the query could be executed correctly and the question (is a special user banned at the moment?) is asked
 	*/
 	public function IsUserBannedId($userId)
 	{
@@ -691,7 +703,7 @@ class DbUser
 	/**
 	* checks via username if the user is banned
 	* @param string $username the user's username
-	* @return boolean
+	* @return boolean true|false successful (true) when the query could be executed correctly and the question (is a special user banned at the moment?) is asked
 	*/
 	public function IsUserBannedUsername($username)
 	{
@@ -716,6 +728,7 @@ class DbUser
 	* @param string $description the ban's description
 	* @param datetime $begindatetime the ban's begindatetime
 	* @param datetime $enddatetime the ban's enddatetime
+	* @return boolean true|false successful (true) when the query could be executed correctly and a special user is banned for a period of time
 	*/
 	public function InsertBanViaUserId($user_id, $reason_id, $description, $begindatetime, $enddatetime)
 	{
@@ -752,6 +765,7 @@ class DbUser
 	*  deban one special user
 	* @param int $id the ban's id
 	* @return boolean
+	* @return boolean true|false successful (true) when the query could be executed correctly and a special user isn't banned any more
 	*/
 	public function DebanUserViaBanId($id)
 	{
@@ -771,6 +785,7 @@ class DbUser
 	/**
 	* select a special Ban by an user's id
 	* @param int $user_id the users's id
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectBanByUserid($user_id)
 	{
@@ -810,6 +825,7 @@ class DbUser
 	/**
 	*  select all bans
 	* @param void
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectAllBan()
 	{
@@ -820,6 +836,7 @@ class DbUser
 	/**
 	*  select all ban_reasons
 	* @param void
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectAllBan_Reason()
 	{
@@ -830,6 +847,7 @@ class DbUser
 	/**
 	* select all bans from a speacial user by username
 	* @param string $username the user's username
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectAllBansFromAUserByUsername($username)
 	{
@@ -841,6 +859,7 @@ class DbUser
 	/**
 	* select all users who are banned right now independently of reason
 	* @param void
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectAllUsersWhichAreBannedNow()
 	{
@@ -867,6 +886,7 @@ class DbUser
 	* @param string $password the user's password
 	* @param string $newPassword the user's new password
 	* @param string $newPasswordRepeat the user's the repetition of new password
+	* @return boolean true|false successful (true) when the query could be executed correctly and the changes in terms of the password are done
 	*/
 	public function ApplyPasswordChangesToUser($userId, $password, $newPassword, $newPasswordRepeat)
 	{
@@ -876,8 +896,6 @@ class DbUser
 		$result = $this->database->ExecuteQuery("SELECT password FROM user WHERE id ='".$userId."'");
 
 		var_dump($result);
-
-		//echo $result;
 
 		if ($result == $password)
 		{
@@ -903,6 +921,7 @@ class DbUser
 	/**
 	* Fetches the next result row as an array
 	* @param string $result is the result of an query
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function FetchArray($result)
 	{
@@ -913,6 +932,7 @@ class DbUser
 	/**
 	* get result count
 	* @param string $result
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function GetResultCount($result)
 	{
@@ -925,6 +945,7 @@ class DbUser
 	/**
 	* to find out the permissions of one special user
 	* @param string $username the user's username
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function GetUserPermissionByUsername($username)
 	{
@@ -936,6 +957,7 @@ class DbUser
 	/**
 	*  to find out the role of a special user
 	* @param string $username the user's username
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function WhichRoleHasASpecialUser($username)
 	{
@@ -951,6 +973,7 @@ class DbUser
 	* @param string $nameInput the user's username or mail
 	* @param string $password the user's password
 	* @return true if login was successful otherwise false
+	* @return boolean true|false successful (true) when the query could be executed correctly and a user can log in the system
 	*/
 	public function LoginUser($nameInput, $password)
 	{
@@ -974,6 +997,7 @@ class DbUser
 	/**
 	* select the rolename from one user by his username
 	* @param string $username the user's username
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectRolenameByUsername($username)
 	{
@@ -984,6 +1008,7 @@ class DbUser
 	/**
 	* select the ban_reason by id
 	* @param int $id the ban_ReasonId's Id
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectBan_ReasonById($id)
 	{
@@ -994,6 +1019,7 @@ class DbUser
 	/**
 	* to find out how many users have one special role
 	* @param int $roleId
+	* @return int number of templates
 	*/
 	public function CountUsersWithASpecialRoleByRoleId($roleId)
 	{
@@ -1009,6 +1035,7 @@ class DbUser
 	* @param string $user database user
 	* @param string $password password for database user
 	* @param string $db database name
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function DownloadDBUser($dbhost, $dbuser, $dbpwd, $dbname)
 	{
@@ -1020,6 +1047,7 @@ class DbUser
 	/**
 	* download the database (nur zum Testen)
 	* @param void
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function DownloadDBUserTest()
 	{
