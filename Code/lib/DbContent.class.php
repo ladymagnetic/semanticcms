@@ -11,12 +11,17 @@ require_once 'DbEngine.class.php';
 */
 class DbContent
 {
+	/** @var */
 	private $database;			// DbEngine object
+
 
 	/* ---- Constructor / Destructor ---- */
 	/**
 	* constructor
-	* @param string $dsn database connection string
+	* @param string $host database host
+	* @param string $user database user
+	* @param string $password password for database user
+	* @param string $db database name
 	*/
 	 public function __construct($host, $user, $password, $db)
   	{
@@ -24,15 +29,22 @@ class DbContent
 	   $this->PrepareSQL();
     }
 
+
+		/**
+		* destructor
+		* @param void
+		*/
 		public function __destruct()
 		{
 			$this->database->__destruct();
 		}
 
+
 	/* ---- Methods ---- */
 	/**
 	* prepare_sql()
 	* Prepares the SQL statements
+	* @param void
 	*/
 	private function PrepareSQL()
 	{
@@ -61,12 +73,7 @@ class DbContent
 
 		if(!$this->database->PrepareStatement("websiteById", $websiteById)) die("Abfrage konnte nicht erstellt werden.");
 
-		// Article
 
-
-
-
-	/*---- Mirjam ----*/
 
 		$allArticlesWithDetailedInformation = "SELECT article.header, article.content, article.publicationdate, article.public, user.username, page.title ".
 												"FROM page INNER JOIN article ON page.id = article.page_id INNER JOIN user ON article.author = user.id ".
@@ -116,8 +123,6 @@ class DbContent
 
 
 
-
-		// => anstatt: GetArticleLabels($id)
 		$selectAllLable_Article = "SELECT * FROM lable_article";
 		$this->database->PrepareStatement("selectAllLable_Article", $selectAllLable_Article );
 
@@ -130,7 +135,7 @@ class DbContent
 		$allArticles = "SELECT * FROM article";			//Mirjam: Wird noch überprüft, welche davon verwendet wird.
 		$this->database->PrepareStatement("allArticles", $allArticles);
 
-		// aus DBUser
+
 
 		$selectAllArticles = "SELECT * FROM article"; 	//Mirjam: Wird noch überprüft, welche davon verwendet wird.
 		$this->database->PrepareStatement("selectAllArticles", $selectAllArticles);
@@ -139,12 +144,12 @@ class DbContent
 		$this->database->PrepareStatement("selectAllTemplates", $selectAllTemplates);
 
 
-		//neue Funktion
+
 		$selectAllLable_User = "SELECT * FROM lable_user";
 		$this->database->PrepareStatement("selectAllLable_User", $selectAllLable_User);
 
 
-		//neu
+
 		$selectAllWebsite = "SELECT * FROM website";
 		$this->database->PrepareStatement("selectAllWebsite", $selectAllWebsite);
 
@@ -181,7 +186,7 @@ class DbContent
 	}
 
 	/**
-	* GetAllArticles()
+	* select all articles
 	* @param void
 	*/
 	public function GetAllArticles()
@@ -192,7 +197,7 @@ class DbContent
 
 
 	/**
-	* GetAllArticlesWithDetailedInformation()
+	* select all articles with detailed information
 	* @param void
 	*/
 	public function GetAllArticlesWithDetailedInformation()
@@ -203,7 +208,7 @@ class DbContent
 
 
 	/**
-	* DeleteArticleById()
+	* delete one article by id
 	* @param int $articleId is the id of the article
 	*/
 	public function DeleteArticleById($articleId)
@@ -231,7 +236,7 @@ class DbContent
 
 	// neue Funktion für => 	GetArticleInformationById($articleId):
 	/**
-	* SelectOneArticleById()
+	* select one article by id to get information about the special article
 	* @param int $articleId the id of the article
 	*/
 	public function SelectOneArticleById($articleId)
@@ -241,7 +246,7 @@ class DbContent
 
 
 	/**
-	* InsertNewArticleToPage()
+	* create a new article
 	* @param string $header
 	* @param string $content
 	* @param string $publicationdate
@@ -279,7 +284,7 @@ class DbContent
 
 
 	/**
-	* UpdateArticleToPage()
+	* assigne one article to a page
 	* @param int $articleId the id of the article
 	* @param string $header
 	* @param string $content
@@ -399,8 +404,8 @@ class DbContent
 
 
 	/**
-	* FetchArray()
-	* @param string $result
+	* Fetches the next result row as an array
+	* @param string $result is the result of an query
 	*/
 	public function FetchArray($result)
 	{
@@ -410,7 +415,7 @@ class DbContent
 
 
 	/**
-	* GetResultCount()
+	* get result count
 	* @param string $result
 	*/
 	public function GetResultCount($result)
@@ -425,7 +430,7 @@ class DbContent
 
 
 	/**
-	* SelectPageByPagename()
+	* select one page by the title of the page
 	* @param string $title is the title of the page
 	*/
 	public function SelectPageByPagename($title)
@@ -436,7 +441,7 @@ class DbContent
 
 
 	/**
-	* SelectPageById()
+	* select one page by the id of the page
 	* @param int $pageId the id of the page
 	*/
 	public function SelectPageById($pageId)
@@ -447,7 +452,7 @@ class DbContent
 
 
 	/**
-	* SelectTemplateByTemplatename()
+  * select one template by the templatename
 	* @param string $templatename is the name of the template
 	*/
 	public function SelectTemplateByTemplatename($templatename)
@@ -458,7 +463,7 @@ class DbContent
 
 
 	/**
-	* SelectTemplateById()
+	* select one template by id
 	* @param int $templateId the id of the template
 	*/
 	public function SelectTemplateById($templateId)
@@ -469,7 +474,7 @@ class DbContent
 
 
 	/**
-	* SelectPageIdByPagename()
+	* select the id of the page by the name of the page
 	* @param string $title the title of the page
 	*/
 	public function SelectPageIdByPagename($title)
@@ -480,7 +485,7 @@ class DbContent
 
 
 	/**
-	* DeletePageById()
+	* delete one special page by id
 	* @param int $pageId the id of the page
 	*/
 	public function DeletePageById($pageId)
@@ -507,7 +512,7 @@ class DbContent
 
 
 	/**
-	* DeletePageByTitle()
+	* delete one special page by title
 	* @param string $title the title of the page
 	*/
 /*	public function DeletePageByTitle($title)
@@ -535,7 +540,7 @@ class DbContent
 
 
 	/**
-	* DeleteTemplateById()
+	* delete one special template by id
 	* @param int $templateId the id of the template
 	*/
 	public function DeleteTemplateById($templateId)
@@ -561,7 +566,7 @@ class DbContent
 
 
 	/**
-	* DeleteTemplateByTemplatename()
+	* delete one special template by name
 	* @param string $templatename the templatename of the template
 	*/
 /*	public function DeleteTemplateByTemplatename($templatename)
@@ -590,9 +595,8 @@ class DbContent
 */
 
 	/**
-	* PagetitleAlreadyExists()
-	* @param string $title the title of the page
 	* checks whether the title of a page already exists in the database
+	* @param string $title the title of the page
 	*/
 	public function PagetitleAlreadyExists($title)
 	{
@@ -611,9 +615,8 @@ class DbContent
 
 
 	/**
-	* TemplatenameAlreadyExists()
-	* @param string $templatename the templatename of the template
 	* checks whether the templatename of a template already exists in the database
+	* @param string $templatename the templatename of the template
 	*/
 	public function TemplatenameAlreadyExists($templatename)
 	{
@@ -630,9 +633,9 @@ class DbContent
 	}
 
 
-		// GetArticleLabels($id)
+
 	/**
-	* SelectAllLable_Article()
+	* select all lable_article
 	* @param void
 	*/
 	public function SelectAllLable_Article()
@@ -643,7 +646,7 @@ class DbContent
 
 
 	/**
-	* SelectAllLablesFromAnArticleById()
+	* select all lable from an article by id
 	* @param int $articleId the id of the article
 	*/
 	public function SelectAllLablesFromAnArticleById($articleId)
@@ -654,7 +657,7 @@ class DbContent
 
 
 	/**
-	* InsertTemplate()
+	* creates a new template
 	* @param string $templatename the name of the template
 	* @param string $filelink the filelink of the template
 	*/
@@ -686,7 +689,7 @@ class DbContent
 
 
 	/**
-	* InsertPage()
+	* creates a new page
 	* @param string $title the title of the template
 	* @param int $relativeposition
 	* @param int $templateId the id of the used template
@@ -719,7 +722,7 @@ class DbContent
 
 
 	/**
-	* InsertLable()
+	* creates a new lable
 	* @param string $lablename the name of the lable
 	* @param string $uri the uri of the lable
 	*/
@@ -743,7 +746,7 @@ class DbContent
 	/**********/
 
 	/**
-	* UpdateLableByUri()
+	* updates a special lable by uri
 	* @param string $lablename
 	* @param string $uri
 	*/
@@ -765,7 +768,7 @@ class DbContent
 
 
 	/**
-	* UpdateLableById()
+	* updates a special lable by id
 	* @param int $lableId
 	* @param string $lablename
 	* @param string $uri
@@ -787,7 +790,7 @@ class DbContent
 
 
 	/**
-	* UpdatePageByTitle()
+	* updates a special page by title
 	* @param string $title
 	* @param int $relativeposition
 	* @param int $templateId
@@ -817,7 +820,7 @@ class DbContent
 
 
 	/**
-	* UpdatePageById()
+	* updates a special page by id
 	* @param int $pageId
 	* @param string $title
 	* @param int $relativeposition
@@ -844,10 +847,7 @@ class DbContent
 				}
 
 			$logDescription = 'Folgende Seite wurde geändert: <br> <strong>'.$pageTitleChanged;
-
 			$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-
-
 
 			return true;
 		}
@@ -859,7 +859,7 @@ class DbContent
 
 
 	/**
-	* UpdateTemplateByTemplatename()
+	* updates a special template by templatename
 	* @param string $templatename
 	* @param string $filelink
 	*/
@@ -886,7 +886,7 @@ class DbContent
 
 
 	/**
-	* UpdateTemplateById()
+	* updates template by id
 	* @param int $templateId
 	* @param string $templatename
 	* @param string $filelink
@@ -931,7 +931,7 @@ class DbContent
 
 
 	/**
-	* DeleteLable_ArticleByArticleId()
+	* delets lable_articles
 	* @param int $articleId the id of the article (foreign key)
 	*/
 	public function DeleteLable_ArticleByArticleId($articleId)
@@ -954,7 +954,7 @@ class DbContent
 
 
 	 /**
-	 * DeleteLable_ArticleByLableId()
+	 * delets lable_articles
 	 * @param int $lableId the id of the lable (foreign key)
 	 */
 	 public function DeleteLable_ArticleByLableId($lableId)
@@ -976,8 +976,8 @@ class DbContent
 
 
 
-	/**
-  	* DeleteAllLable_Article()
+  	/**
+		* delets all lable_articles
   	*/
   	public function DeleteAllLable_Article()
   	{
@@ -996,7 +996,7 @@ class DbContent
 
 
 	/**
- 	* InsertLable_Article()
+ 	* creates new lable_articles
  	* @param int $lableId the id of the lable (foreign key)
  	* @param int $articleId the id of the article (foreign key)
  	*/
@@ -1019,7 +1019,7 @@ class DbContent
 
 
 	/**
-	* UpdateLable_ArticleByLableId()
+	* updates lable_articles by lable_id
 	* @param int $lableId the id of the lable (foreign key)
 	* @param int $articleId the id of the article (foreign key)
 	*/
@@ -1040,7 +1040,7 @@ class DbContent
 
 
 	/**
-	* UpdateLable_ArticleByArticleId()
+	* updates lable_articles by lable_id by article_id
 	* @param int $lableId the id of the lable (foreign key)
 	* @param int $articleId the id of the article (foreign key)
 	*/
@@ -1062,7 +1062,7 @@ class DbContent
 
 
 	/**
-	* SelectAllPages()
+	* select all pages
 	* @param void
 	*/
 	public function SelectAllPages()
@@ -1072,12 +1072,8 @@ class DbContent
 
 
 
-
-
-
-	// aus DBUser
 	/**
-	* SelectAllArticles()
+	* select all articles
 	* @param void
 	*/
 	public function SelectAllArticles()
@@ -1087,7 +1083,7 @@ class DbContent
 
 
 		/**
-	* SelectAllTemplates()
+	* select all templates
 	* @param void
 	*/
 	public function SelectAllTemplates()
@@ -1098,10 +1094,8 @@ class DbContent
 
 
 
-
-	//neue Funktionen
 	/**
-	* SelectAllLable_User()
+	* select all lable_user
 	* @param void
 	*/
 	public function SelectAllLable_User()
@@ -1112,7 +1106,7 @@ class DbContent
 
 
 	/**
-	* DeleteAllLable_User()
+	* delete all lable_user
 	* @param void
 	*/
 	public function DeleteAllLable_User()
@@ -1134,7 +1128,7 @@ class DbContent
 
 
 	/**
-	* DeleteLable_UserByArticleId()
+	* delete lable_user by article_id
 	* @param int $userId the user's id (foreign key)
 	*/
 	public function DeleteLable_UserByArticleId($userId)
@@ -1155,7 +1149,7 @@ class DbContent
 
 
 	/**
-	* DeleteLable_UserByLableId()
+	* delete lable_user by lable_id
 	* @param int $lableId the id of the lable (foreign key)
 	*/
 	public function DeleteLable_UserByLableId($lableId)
@@ -1175,7 +1169,7 @@ class DbContent
 
 
 	/**
-	* InsertLable_User()
+	* cerates lable_user
 	* @param int $lableId the id of the lable (foreign key)
 	* @param int $userId the user's id (foreign key)
 	*/
@@ -1198,7 +1192,7 @@ class DbContent
 
 
 	/**
-	* UpdateLable_UserByLableId()
+	* update lable_user by lable_id
 	* @param int $lableId the id of the lable (foreign key)
 	* @param int $userId the user's id (foreign key)
 	*/
@@ -1222,7 +1216,7 @@ class DbContent
 
 
 	/**
-	* UpdateLable_UserByArticleId()
+	* update lable_user by article_id
 	* @param int $lableId the id of the lable (foreign key)
 	* @param int $userId the user's id (foreign key)
 	*/
@@ -1248,7 +1242,7 @@ class DbContent
 
 
 	/**
-	* SelectAllWebsite()
+  * Select all websites
 	* @param void
 	*/
 	public function SelectAllWebsite($templateId)
@@ -1259,7 +1253,7 @@ class DbContent
 
 
 	/**
-	* SelectWebsiteById()
+	* select all websites by id
 	* @param int $id the id of the website
 	*/
 	public function SelectWebsiteById($id)
@@ -1270,7 +1264,7 @@ class DbContent
 
 
 	/**
-	* DeleteWebsiteById()
+	* delete one website by id
 	* @param int $id the id of the website
 	*/
 	public function DeleteWebsiteById($id)
@@ -1296,7 +1290,7 @@ class DbContent
 
 
 	/**
-	* UpdateWebsiteById()
+	* update one website by id
 	* @param int $websiteId
 	* @param string $headertitle
 	* @param string $contact
@@ -1343,7 +1337,7 @@ class DbContent
 
 
 	/**
-	* InsertWebsite()
+	* creates new websites
 	* @param int $websiteId
 	* @param string $headertitle
 	* @param string $contact
@@ -1390,7 +1384,7 @@ class DbContent
 
 
 	/**
-	* SelectLableByLableId()
+	* selects all lables by lableid
 	* @param int $lableId the id of the lable
 	*/
 	public function SelectLableByLableId($lableId)
@@ -1401,7 +1395,7 @@ class DbContent
 
 
 	/**
-	* SelectLableIdByLablename()
+	* selects all lables by lablename
 	* @param string $lablename the lablename of the lable
 	*/
 	public function SelectLableIdByLablename($lablename)
@@ -1412,7 +1406,7 @@ class DbContent
 
 
 	/**
-	* SelectArticleByHeader()
+	* selects all articles by header
 	* @param string $header the header of the article
 	*/
 	public function SelectArticleByHeader($header)
@@ -1423,7 +1417,7 @@ class DbContent
 
 
 	/**
-	* SelectAllLables()
+	* select all lables
 	* @param void
 	*/
 	public function SelectAllLables()
