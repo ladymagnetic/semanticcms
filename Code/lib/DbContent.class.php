@@ -188,6 +188,7 @@ class DbContent
 	/**
 	* select all articles
 	* @param void
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function GetAllArticles()
 	{
@@ -199,6 +200,7 @@ class DbContent
 	/**
 	* select all articles with detailed information
 	* @param void
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function GetAllArticlesWithDetailedInformation()
 	{
@@ -239,6 +241,7 @@ class DbContent
 	/**
 	* select one article by id to get information about the special article
 	* @param int $articleId the id of the article
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectOneArticleById($articleId)
 	{
@@ -247,7 +250,7 @@ class DbContent
 
 
 	/**
-	* create a new article
+	* creates a new article
 	* @param string $header
 	* @param string $content
 	* @param string $publicationdate
@@ -286,7 +289,7 @@ class DbContent
 
 
 	/**
-	* assigne one article to a page
+	* assignes one article to a page
 	* @param int $articleId the id of the article
 	* @param string $header
 	* @param string $content
@@ -394,7 +397,8 @@ class DbContent
 
 	/**
 	* GetHighestRelativeNumber()
-	* @param string $templatename
+	* @param 
+	* @return int number of templates
 	*/
 	public function GetHighestRelativeNumber()
 	{
@@ -409,6 +413,7 @@ class DbContent
 	/**
 	* Fetches the next result row as an array
 	* @param string $result is the result of an query
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function FetchArray($result)
 	{
@@ -420,6 +425,7 @@ class DbContent
 	/**
 	* get result count
 	* @param string $result
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function GetResultCount($result)
 	{
@@ -435,6 +441,7 @@ class DbContent
 	/**
 	* select one page by the title of the page
 	* @param string $title is the title of the page
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectPageByPagename($title)
 	{
@@ -446,6 +453,7 @@ class DbContent
 	/**
 	* select one page by the id of the page
 	* @param int $pageId the id of the page
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectPageById($pageId)
 	{
@@ -455,8 +463,9 @@ class DbContent
 
 
 	/**
-  * select one template by the templatename
+    * select one template by the templatename
 	* @param string $templatename is the name of the template
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectTemplateByTemplatename($templatename)
 	{
@@ -468,6 +477,7 @@ class DbContent
 	/**
 	* select one template by id
 	* @param int $templateId the id of the template
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectTemplateById($templateId)
 	{
@@ -479,6 +489,7 @@ class DbContent
 	/**
 	* select the id of the page by the name of the page
 	* @param string $title the title of the page
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectPageIdByPagename($title)
 	{
@@ -646,6 +657,7 @@ class DbContent
 	/**
 	* select all lable_article
 	* @param void
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectAllLable_Article()
 	{
@@ -657,6 +669,7 @@ class DbContent
 	/**
 	* select all lable from an article by id
 	* @param int $articleId the id of the article
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectAllLablesFromAnArticleById($articleId)
 	{
@@ -1067,7 +1080,6 @@ class DbContent
 	*/
 	public function UpdateLable_ArticleByArticleId($lableId, $articleId)
 	{
-
 		$result = $this->database->ExecuteQuery("UPDATE lable_article SET lable_id  = ".$lableId."  WHERE article_id  = " .$articleId);
 
 		if($result==true)
@@ -1085,6 +1097,7 @@ class DbContent
 	/**
 	* select all pages
 	* @param void
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectAllPages()
 	{
@@ -1096,6 +1109,7 @@ class DbContent
 	/**
 	* select all articles
 	* @param void
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectAllArticles()
 	{
@@ -1103,9 +1117,10 @@ class DbContent
 	}
 
 
-		/**
+	/**
 	* select all templates
 	* @param void
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectAllTemplates()
 	{
@@ -1118,6 +1133,7 @@ class DbContent
 	/**
 	* select all lable_user
 	* @param void
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectAllLable_User()
 	{
@@ -1271,6 +1287,7 @@ class DbContent
 	/**
   * Select all websites
 	* @param void
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectAllWebsite($templateId)
 	{
@@ -1282,6 +1299,7 @@ class DbContent
 	/**
 	* select all websites by id
 	* @param int $id the id of the website
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectWebsiteById($id)
 	{
@@ -1416,6 +1434,7 @@ class DbContent
 	/**
 	* selects all lables by lableid
 	* @param int $lableId the id of the lable
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectLableByLableId($lableId)
 	{
@@ -1427,6 +1446,7 @@ class DbContent
 	/**
 	* selects all lables by lablename
 	* @param string $lablename the lablename of the lable
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectLableIdByLablename($lablename)
 	{
@@ -1438,6 +1458,7 @@ class DbContent
 	/**
 	* selects all articles by header
 	* @param string $header the header of the article
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectArticleByHeader($header)
 	{
@@ -1449,6 +1470,7 @@ class DbContent
 	/**
 	* select all lables
 	* @param void
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectAllLables()
 	{

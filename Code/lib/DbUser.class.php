@@ -11,7 +11,7 @@ require_once 'DbEngine.class.php';
 class DbUser
 {
 	/** @var DbEngine*/
-	private $database;			 
+	private $database;
 
 
 	/* ---- Constructor / Destructor ---- */
@@ -218,6 +218,7 @@ class DbUser
 	/**
 	* select all logs
 	* @param void
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectAllLogs()
 	{
@@ -228,6 +229,7 @@ class DbUser
 	/**
 	* selects one special log by the id of the log
 	* @param int $logtableId the id of the logtable
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectOneLogById($logtableId)
 	{
@@ -239,6 +241,7 @@ class DbUser
 	/**
 	* selects all logs from one user by his username
 	* @param string $logtableUsername is the user who changed something => the user who is responsible for the new log in the logtable
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectAllLogsFromOneUserByUsername($logtableUsername)
 	{
@@ -250,6 +253,7 @@ class DbUser
 	/**
 	* select all logs from the logtable by logdate and ordered the result descending by the id of the logtable
 	* @param string $logtableLogdate
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectAllLogsFromASpecialDateByLogdate($logtableLogdate)
 	{
@@ -426,16 +430,18 @@ class DbUser
 	/**
 	* selecte the user by id to get some information
 	* @param int $userId the id of the user
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function GetUserInformationById($userId)
 	{
-			return $this->database->ExecutePreparedStatement("selectUserById", array($userId));
+		return $this->database->ExecutePreparedStatement("selectUserById", array($userId));
 	}
 
 
 	/**
 	* selecte the user by username to get some information
 	* @param string $username the role's name
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function GetUserInformationByUsername($username)
 	{
@@ -547,6 +553,7 @@ class DbUser
 	/**
 	* select one role by id to get some informaion about the role
 	* @param int $roleId the role's Id
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectRoleById($roleId)
 	{
@@ -557,6 +564,7 @@ class DbUser
 	/**
 	* selects a particular role by rolename to get some information about the role
 	* @param string $rolename the role's name
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectRoleByRolename($rolename)
 	{
@@ -637,10 +645,11 @@ class DbUser
 	/**
 	* select one special user by email
 	* @param string $email the user's email
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectUserByEmail($email)
 	{
-			return $this->database->ExecutePreparedStatement("selectUserByEmail", array($email));
+		return $this->database->ExecutePreparedStatement("selectUserByEmail", array($email));
 	}
 
 
@@ -648,6 +657,7 @@ class DbUser
 	/**
 	* select all registrated users
 	* @param void
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectAllUsers()
 	{
@@ -658,13 +668,14 @@ class DbUser
 	/**
 	* select all roles
 	* @param void
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectAllRoles()
 	{
 		return $this->database->ExecutePreparedStatement("selectAllRoles", array());
 	}
 
- 
+
 
 
 	/**
@@ -774,6 +785,7 @@ class DbUser
 	/**
 	* select a special Ban by an user's id
 	* @param int $user_id the users's id
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectBanByUserid($user_id)
 	{
@@ -813,6 +825,7 @@ class DbUser
 	/**
 	*  select all bans
 	* @param void
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectAllBan()
 	{
@@ -823,6 +836,7 @@ class DbUser
 	/**
 	*  select all ban_reasons
 	* @param void
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectAllBan_Reason()
 	{
@@ -833,6 +847,7 @@ class DbUser
 	/**
 	* select all bans from a speacial user by username
 	* @param string $username the user's username
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectAllBansFromAUserByUsername($username)
 	{
@@ -844,6 +859,7 @@ class DbUser
 	/**
 	* select all users who are banned right now independently of reason
 	* @param void
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectAllUsersWhichAreBannedNow()
 	{
@@ -905,6 +921,7 @@ class DbUser
 	/**
 	* Fetches the next result row as an array
 	* @param string $result is the result of an query
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function FetchArray($result)
 	{
@@ -915,6 +932,7 @@ class DbUser
 	/**
 	* get result count
 	* @param string $result
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function GetResultCount($result)
 	{
@@ -927,6 +945,7 @@ class DbUser
 	/**
 	* to find out the permissions of one special user
 	* @param string $username the user's username
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function GetUserPermissionByUsername($username)
 	{
@@ -938,6 +957,7 @@ class DbUser
 	/**
 	*  to find out the role of a special user
 	* @param string $username the user's username
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function WhichRoleHasASpecialUser($username)
 	{
@@ -977,6 +997,7 @@ class DbUser
 	/**
 	* select the rolename from one user by his username
 	* @param string $username the user's username
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectRolenameByUsername($username)
 	{
@@ -987,6 +1008,7 @@ class DbUser
 	/**
 	* select the ban_reason by id
 	* @param int $id the ban_ReasonId's Id
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function SelectBan_ReasonById($id)
 	{
@@ -997,6 +1019,7 @@ class DbUser
 	/**
 	* to find out how many users have one special role
 	* @param int $roleId
+	* @return int number of templates
 	*/
 	public function CountUsersWithASpecialRoleByRoleId($roleId)
 	{
@@ -1012,6 +1035,7 @@ class DbUser
 	* @param string $user database user
 	* @param string $password password for database user
 	* @param string $db database name
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function DownloadDBUser($dbhost, $dbuser, $dbpwd, $dbname)
 	{
@@ -1023,6 +1047,7 @@ class DbUser
 	/**
 	* download the database (nur zum Testen)
 	* @param void
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
 	public function DownloadDBUserTest()
 	{
