@@ -11,7 +11,7 @@ require_once 'DbEngine.class.php';
 */
 class DbContent
 {
-	/** @var */
+	/** @var DbEngine*/
 	private $database;			// DbEngine object
 
 
@@ -30,14 +30,14 @@ class DbContent
     }
 
 
-		/**
-		* destructor
-		* @param void
-		*/
-		public function __destruct()
-		{
-			$this->database->__destruct();
-		}
+	/**
+	* destructor
+	* @param void
+	*/
+	public function __destruct()
+	{
+		$this->database->__destruct();
+	}
 
 
 	/* ---- Methods ---- */
@@ -210,6 +210,7 @@ class DbContent
 	/**
 	* delete one article by id
 	* @param int $articleId is the id of the article
+	* @return boolean true|false successful (true) when the query could be executed correctly and the article is deleted
 	*/
 	public function DeleteArticleById($articleId)
 	{
@@ -255,6 +256,7 @@ class DbContent
 	* @param string $type
 	* @param int $public
 	* @param string $description
+	* @return boolean true|false successful (true) when the query could be executed correctly and the article is generated and assigned to a page
 	*/
 	public function InsertNewArticleToPage($header, $content, $publicationdate, $pageId, $author, $type, $public, $description)
 	{
@@ -294,6 +296,7 @@ class DbContent
 	* @param string $type
 	* @param int $public
 	* @param string $description
+	* @return boolean true|false successful (true) when the query could be executed correctly and the article is updated and also assigned to a page
 	*/
 	public function	UpdateArticleToPage($articleId, $header, $content, $publicationdate, $pageId, $author, $type, $public, $description)
 	{
@@ -487,6 +490,7 @@ class DbContent
 	/**
 	* delete one special page by id
 	* @param int $pageId the id of the page
+		* @return boolean true|false successful (true) when the query could be executed correctly and the page is deleted
 	*/
 	public function DeletePageById($pageId)
 	{
@@ -514,6 +518,7 @@ class DbContent
 	/**
 	* delete one special page by title
 	* @param string $title the title of the page
+	* @return boolean true|false successful (true) when the query could be executed correctly and the page is deleted
 	*/
 /*	public function DeletePageByTitle($title)
 	{
@@ -542,6 +547,7 @@ class DbContent
 	/**
 	* delete one special template by id
 	* @param int $templateId the id of the template
+	* @return boolean true|false successful (true) when the query could be executed correctly and the template is deleted
 	*/
 	public function DeleteTemplateById($templateId)
 	{
@@ -568,6 +574,7 @@ class DbContent
 	/**
 	* delete one special template by name
 	* @param string $templatename the templatename of the template
+	* @return boolean true|false successful (true) when the query could be executed correctly and the template is deleted
 	*/
 /*	public function DeleteTemplateByTemplatename($templatename)
 	{
@@ -597,6 +604,7 @@ class DbContent
 	/**
 	* checks whether the title of a page already exists in the database
 	* @param string $title the title of the page
+	* @return boolean true|false successful (true) when the query could be executed correctly and there is already a page with this special title
 	*/
 	public function PagetitleAlreadyExists($title)
 	{
@@ -617,6 +625,7 @@ class DbContent
 	/**
 	* checks whether the templatename of a template already exists in the database
 	* @param string $templatename the templatename of the template
+	* @return boolean true|false successful (true) when the query could be executed correctly and there is already a template with this name
 	*/
 	public function TemplatenameAlreadyExists($templatename)
 	{
@@ -660,6 +669,7 @@ class DbContent
 	* creates a new template
 	* @param string $templatename the name of the template
 	* @param string $filelink the filelink of the template
+	* @return boolean true|false successful (true) when the query could be executed correctly and the template is generated
 	*/
 	public function InsertTemplate($templatename, $filelink)
 	{
@@ -693,6 +703,7 @@ class DbContent
 	* @param string $title the title of the template
 	* @param int $relativeposition
 	* @param int $templateId the id of the used template
+	* @return boolean true|false successful (true) when the query could be executed correctly and page is generated
 	*/
 	public function InsertPage($title, $relativeposition, $templateId, $websiteId)
 	{
@@ -725,6 +736,7 @@ class DbContent
 	* creates a new lable
 	* @param string $lablename the name of the lable
 	* @param string $uri the uri of the lable
+	* @return boolean true|false successful (true) when the query could be executed correctly and lable is generated
 	*/
 	public function InsertLable($lablename, $uri)
 	{
@@ -749,6 +761,7 @@ class DbContent
 	* updates a special lable by uri
 	* @param string $lablename
 	* @param string $uri
+	* @return boolean true|false successful (true) when the query could be executed correctly and the changes in terms of the lable are done
 	*/
 	public function UpdateLableByUri($lablename, $uri)
 	{
@@ -772,6 +785,7 @@ class DbContent
 	* @param int $lableId
 	* @param string $lablename
 	* @param string $uri
+	* @return boolean true|false successful (true) when the query could be executed correctly and the changes in terms of the lable are done
 	*/
 	public function UpdateLableById($lableId, $lablename, $uri)
 	{
@@ -795,6 +809,7 @@ class DbContent
 	* @param int $relativeposition
 	* @param int $templateId
 	* @param int $websiteId
+	* @return boolean true|false successful (true) when the query could be executed correctly and the changes in terms of the page are done
 	*/
 /*	public function UpdatePageByTitle($title, $relativeposition, $templateId, $websiteId)
 	{
@@ -826,6 +841,7 @@ class DbContent
 	* @param int $relativeposition
 	* @param int $templateId
 	* @param int $websiteId
+	* @return boolean true|false successful (true) when the query could be executed correctly and the changes in terms of the page are done
 	*/
 	public function UpdatePageById($pageId, $title, $relativeposition, $templateId, $websiteId)
 	{
@@ -862,6 +878,7 @@ class DbContent
 	* updates a special template by templatename
 	* @param string $templatename
 	* @param string $filelink
+	* @return boolean true|false successful (true) when the query could be executed correctly and the changes in terms of the template are done
 	*/
 /*	public function UpdateTemplateByTemplatename($templatename, $filelink)
 	{
@@ -890,6 +907,7 @@ class DbContent
 	* @param int $templateId
 	* @param string $templatename
 	* @param string $filelink
+	* @return boolean true|false successful (true) when the query could be executed correctly and the changes in terms of the template are done
 	*/
 	public function UpdateTemplateById($templateId, $templatename, $filelink)
 	{
@@ -906,14 +924,12 @@ class DbContent
 				$templatenameChanged = $templatename;
 			}
 			else
-				{
-					$templatenameChanged = $templatenameBevoreUpdate. '(neuer Templatename: '.$templatename.')';
-				}
+			{
+				$templatenameChanged = $templatenameBevoreUpdate. '(neuer Templatename: '.$templatename.')';
+			}
 
 			$logDescription = 'Folgendes Template wurde geändert: <br> <strong>'.$templatenameChanged;
-
 			$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-
 
 			return true;
 		}
@@ -933,6 +949,7 @@ class DbContent
 	/**
 	* delets lable_articles
 	* @param int $articleId the id of the article (foreign key)
+	* @return boolean true|false successful (true) when the query could be executed correctly and the lable_article is deleted
 	*/
 	public function DeleteLable_ArticleByArticleId($articleId)
 	{
@@ -956,6 +973,7 @@ class DbContent
 	 /**
 	 * delets lable_articles
 	 * @param int $lableId the id of the lable (foreign key)
+	 * @return boolean true|false successful (true) when the query could be executed correctly and the lable_article is deleted
 	 */
 	 public function DeleteLable_ArticleByLableId($lableId)
 	 {
@@ -977,7 +995,8 @@ class DbContent
 
 
   	/**
-		* delets all lable_articles
+	* delets all lable_articles
+	* @return boolean true|false successful (true) when the query could be executed correctly and all lable_articles are deleted
   	*/
   	public function DeleteAllLable_Article()
   	{
@@ -999,12 +1018,12 @@ class DbContent
  	* creates new lable_articles
  	* @param int $lableId the id of the lable (foreign key)
  	* @param int $articleId the id of the article (foreign key)
+	* @return boolean true|false successful (true) when the query could be executed correctly and a lable_article is created
  	*/
  	public function InsertLable_Article($lableId, $articleId)
  	{
  		$result = $this->database->ExecuteQuery("INSERT INTO lable_article (lable_id, article_id) VALUES (".$lableId.", ".$articleId.")");
-		//$lable = ... SELECT lablename FROM lable WHERE id = ".$lableId."....;
-
+		
  		if($result==true)
  		{
  				return true;
@@ -1022,6 +1041,7 @@ class DbContent
 	* updates lable_articles by lable_id
 	* @param int $lableId the id of the lable (foreign key)
 	* @param int $articleId the id of the article (foreign key)
+	* @return boolean true|false successful (true) when the query could be executed correctly and a lable_article is updated
 	*/
 	public function UpdateLable_ArticleByLableId($lableId, $articleId)
 	{
@@ -1043,6 +1063,7 @@ class DbContent
 	* updates lable_articles by lable_id by article_id
 	* @param int $lableId the id of the lable (foreign key)
 	* @param int $articleId the id of the article (foreign key)
+	* @return boolean true|false successful (true) when the query could be executed correctly and a lable_article is updated
 	*/
 	public function UpdateLable_ArticleByArticleId($lableId, $articleId)
 	{
@@ -1108,6 +1129,7 @@ class DbContent
 	/**
 	* delete all lable_user
 	* @param void
+	* @return boolean true|false successful (true) when the query could be executed correctly and all lable_users are deleted
 	*/
 	public function DeleteAllLable_User()
 	{
@@ -1130,6 +1152,7 @@ class DbContent
 	/**
 	* delete lable_user by article_id
 	* @param int $userId the user's id (foreign key)
+	* @return boolean true|false successful (true) when the query could be executed correctly and a lable_users is deleted
 	*/
 	public function DeleteLable_UserByArticleId($userId)
 	{
@@ -1151,6 +1174,7 @@ class DbContent
 	/**
 	* delete lable_user by lable_id
 	* @param int $lableId the id of the lable (foreign key)
+	* @return boolean true|false successful (true) when the query could be executed correctly and a lable_users is deleted
 	*/
 	public function DeleteLable_UserByLableId($lableId)
 	{
@@ -1172,6 +1196,7 @@ class DbContent
 	* cerates lable_user
 	* @param int $lableId the id of the lable (foreign key)
 	* @param int $userId the user's id (foreign key)
+	* @return boolean true|false successful (true) when the query could be executed correctly and a lable_users is created
 	*/
 	public function InsertLable_User($lableId, $userId)
 	{
@@ -1195,6 +1220,7 @@ class DbContent
 	* update lable_user by lable_id
 	* @param int $lableId the id of the lable (foreign key)
 	* @param int $userId the user's id (foreign key)
+	* @return boolean true|false successful (true) when the query could be executed correctly and a lable_users is updated
 	*/
 	public function UpdateLable_UserByLableId($lableId, $userId)
 	{
@@ -1219,6 +1245,7 @@ class DbContent
 	* update lable_user by article_id
 	* @param int $lableId the id of the lable (foreign key)
 	* @param int $userId the user's id (foreign key)
+	* @return boolean true|false successful (true) when the query could be executed correctly and a lable_users is updated
 	*/
 	public function UpdateLable_UserByArticleId($lableId, $userId)
 	{
@@ -1266,6 +1293,7 @@ class DbContent
 	/**
 	* delete one website by id
 	* @param int $id the id of the website
+	* @return boolean true|false successful (true) when the query could be executed correctly and a website is deleted
 	*/
 	public function DeleteWebsiteById($id)
 	{
@@ -1300,6 +1328,7 @@ class DbContent
 	* @param bool $login
 	* @param bool $guestbook
 	* @param int $template_id
+	* @return boolean true|false successful (true) when the query could be executed correctly and a website is updated
 	*/
 	public function UpdateWebsiteById($websiteId, $headertitle, $contact, $imprint, $privacyinformation, $gtc, $login, $guestbook, $template_id)
 	{
@@ -1347,6 +1376,7 @@ class DbContent
 	* @param bool $login
 	* @param bool $guestbook
 	* @param int $template_id
+	* @return boolean true|false successful (true) when the query could be executed correctly and a website is created
 	*/
 	public function InsertWebsite($websiteId, $headertitle, $contact, $imprint, $privacyinformation, $gtc, $login, $guestbook, $template_id)
 	{

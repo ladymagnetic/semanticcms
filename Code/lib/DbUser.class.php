@@ -10,8 +10,8 @@ require_once 'DbEngine.class.php';
 */
 class DbUser
 {
-	/** @var */
-	private $database;			// DbEngine object
+	/** @var DbEngine*/
+	private $database;			 
 
 
 	/* ---- Constructor / Destructor ---- */
@@ -102,7 +102,7 @@ class DbUser
 		$selectBanByUserid = "SELECT * FROM ban where user_id = ? ";
 		$this->database->PrepareStatement("selectBanByUserid", $selectBanByUserid);
 
-	  $selectAllBansFromAUserByUsername = "SELECT * FROM ban INNER JOIN  user ON  ban.user_id = user.id WHERE username = ?";
+		$selectAllBansFromAUserByUsername = "SELECT * FROM ban INNER JOIN  user ON  ban.user_id = user.id WHERE username = ?";
 		$this->database->PrepareStatement("selectAllBansFromAUserByUsername", $selectAllBansFromAUserByUsername);
 
 		$selectAllUsersWhichAreBannedNow = "SELECT * FROM ban INNER JOIN user ON ban.user_id = user.id WHERE ban.enddatetime > now()";
@@ -218,7 +218,6 @@ class DbUser
 	/**
 	* select all logs
 	* @param void
-	* @return
 	*/
 	public function SelectAllLogs()
 	{
@@ -232,7 +231,7 @@ class DbUser
 	*/
 	public function SelectOneLogById($logtableId)
 	{
-			return $this->database->ExecutePreparedStatement("selectOneLogById", array($logtableId));
+		return $this->database->ExecutePreparedStatement("selectOneLogById", array($logtableId));
 	}
 
 
@@ -243,7 +242,7 @@ class DbUser
 	*/
 	public function SelectAllLogsFromOneUserByUsername($logtableUsername)
 	{
-			return $this->database->ExecutePreparedStatement("selectAllLogsFromOneUserByUsername", array($logtableUsername));
+		return $this->database->ExecutePreparedStatement("selectAllLogsFromOneUserByUsername", array($logtableUsername));
 	}
 
 
@@ -271,7 +270,7 @@ class DbUser
 	/**
 	* checks whether the email adress already exists in database or not
 	* @param string $email the user's email
-	* @return boolean true|false true when email already exists of false when not
+	* @return boolean true|false successful (true) when email already exists, false when not
 	*/
 	public function EmailAlreadyExists($email)
 	{
@@ -292,7 +291,7 @@ class DbUser
 	/**
 	* checks whether the username already exists in database
 	* @param string $username the user's name
-	* @return boolean true when username already exists in database
+	* @return boolean true|false successful (true) when username already exists in database, false when the username doesn't exist
 	*/
 	public function UsernameAlreadyExists($username)
 	{
@@ -318,7 +317,7 @@ class DbUser
 	* @param string $mail the user's mailaddress
 	* @param string $password the user's password
 	* @param string $birthdate the user's birthdate as date formatted string
-	* @return boolean
+	* @return boolean true|false successful (true) when the query could be executed correctly and a new user is registrated
 	*/
 		public function RegistrateUser($role_id, $lastname, $firstname, $username, $password, $email, $birthdate)
 	{
@@ -363,7 +362,7 @@ class DbUser
 	/**
 	* Delets a particular User by its id
 	* @param int $userId the user's Id
-	* @return boolean
+	* @return boolean true|false successful (true) when the query could be executed correctly and a special user is deleted
 	*/
 	public function DeleteUserById($userId)
 	{
@@ -388,6 +387,7 @@ class DbUser
 	/**
 	* Delets a particular User by a name
 	* @param int $userId the user's Id
+	* @return boolean true|false successful (true) when the query could be executed correctly and a special user is deleted
 	*/
 /*	public function DeleteUserByUsername($username)
 	{
@@ -446,6 +446,7 @@ class DbUser
 	/**
 	* delets a particular Role
 	* @param int $roleId the role's Id
+	* @return boolean true|false successful (true) when the query could be executed correctly and a special role is deleted
 	*/
 	public function DeleteRole($roleId)
 	{
@@ -484,6 +485,7 @@ class DbUser
 	* assigns a chosen role to a particular user (update one special user)
 	* @param int $roleId the role's Id
 	* @param int $userId the user's Id
+	* @return boolean true|false successful (true) when the query could be executed correctly and a special role is assinged to a user
 	*/
 	public function AssignRole($roleId, $userId)
 	{
@@ -521,6 +523,7 @@ class DbUser
 	* @param bool $templateconstruction
 	* @param bool $databasemanagement
 	* @param bool $backendlogin
+	* @return boolean true|false successful (true) when the query could be executed correctly and a new role is generated correctly
 	*/
 	public function NewRole($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $databasemanagement, $backendlogin)
 	{
@@ -573,6 +576,7 @@ class DbUser
 	* @param bool $templateconstruction
 	* @param bool $databasemanagement
 	* @param bool $backendlogin
+	* @return boolean true|false successful (true) when the query could be executed correctly and the changes in terms of the role are done
 	*/
 	public function UpdateRoleById($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $databasemanagement, $backendlogin, $id)
 	{
@@ -594,7 +598,7 @@ class DbUser
 				}
 
 		 	$logDescription = 'An der Rolle <strong>'.$rolenameChanged.'</strong> wurden Änderugen vorgenommen.';
-		  $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+			$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
 			return true;
 		}
@@ -612,6 +616,7 @@ class DbUser
 	* @param string $lastname the user's username
 	* @param string $lastname the user's email
 	* @param int $id user's id
+	* @return boolean true|false successful (true) when the query could be executed correctly and changes regarding a user are done
 	*/
 	public function UpdateUserDifferentNamesById($lastname, $firstname, $email, $userId)
 	{
@@ -659,17 +664,13 @@ class DbUser
 		return $this->database->ExecutePreparedStatement("selectAllRoles", array());
 	}
 
-
-
-
-
-
+ 
 
 
 	/**
 	* checks via userid if the user is banned
 	* @param int $userId the user's id
-	* @return boolean
+	* @return boolean true|false successful (true) when the query could be executed correctly and the question (is a special user banned at the moment?) is asked
 	*/
 	public function IsUserBannedId($userId)
 	{
@@ -691,7 +692,7 @@ class DbUser
 	/**
 	* checks via username if the user is banned
 	* @param string $username the user's username
-	* @return boolean
+	* @return boolean true|false successful (true) when the query could be executed correctly and the question (is a special user banned at the moment?) is asked
 	*/
 	public function IsUserBannedUsername($username)
 	{
@@ -716,6 +717,7 @@ class DbUser
 	* @param string $description the ban's description
 	* @param datetime $begindatetime the ban's begindatetime
 	* @param datetime $enddatetime the ban's enddatetime
+	* @return boolean true|false successful (true) when the query could be executed correctly and a special user is banned for a period of time
 	*/
 	public function InsertBanViaUserId($user_id, $reason_id, $description, $begindatetime, $enddatetime)
 	{
@@ -752,6 +754,7 @@ class DbUser
 	*  deban one special user
 	* @param int $id the ban's id
 	* @return boolean
+	* @return boolean true|false successful (true) when the query could be executed correctly and a special user isn't banned any more
 	*/
 	public function DebanUserViaBanId($id)
 	{
@@ -867,6 +870,7 @@ class DbUser
 	* @param string $password the user's password
 	* @param string $newPassword the user's new password
 	* @param string $newPasswordRepeat the user's the repetition of new password
+	* @return boolean true|false successful (true) when the query could be executed correctly and the changes in terms of the password are done
 	*/
 	public function ApplyPasswordChangesToUser($userId, $password, $newPassword, $newPasswordRepeat)
 	{
@@ -876,8 +880,6 @@ class DbUser
 		$result = $this->database->ExecuteQuery("SELECT password FROM user WHERE id ='".$userId."'");
 
 		var_dump($result);
-
-		//echo $result;
 
 		if ($result == $password)
 		{
@@ -951,6 +953,7 @@ class DbUser
 	* @param string $nameInput the user's username or mail
 	* @param string $password the user's password
 	* @return true if login was successful otherwise false
+	* @return boolean true|false successful (true) when the query could be executed correctly and a user can log in the system
 	*/
 	public function LoginUser($nameInput, $password)
 	{
