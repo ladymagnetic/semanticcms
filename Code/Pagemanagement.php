@@ -44,7 +44,31 @@ if (isset($_POST['newPage'])) {
 }
 // Submit button with the name 'options' was clicked
 else if (isset($_POST['options'])) {
-    // noch keine Aufgabe
+    EditWebsiteOptions($websiteId);
+    return;
+}
+// Submit button with the name 'saveWebsiteChanges' was clicked
+else if (isset($_POST['saveWebsiteChanges'])) {
+    $loginEnabled = isset($_POST['loginEnabled']) ? 1 : 0;
+    $guestbookEnabled = isset($_POST['guestbookEnabled']) ? 1 : 0;
+    $contactContent = isset($_POST['contactEnabled']) ?
+        $_POST['contactContent'] : '';
+    $imprintContent = isset($_POST['imprintEnabled']) ?
+        $_POST['imprintContent'] : '';
+    $privacyInformationContent = isset($_POST['privacyInformationEnabled']) ?
+        $_POST['privacyInformationContent'] : '';
+    $gtcContent = isset($_POST['gtcEnabled']) ?
+        $_POST['gtcContent'] : '';
+
+    $queryResult = $dbContent->SelectTemplateByTemplatename($_POST['technicalSiteTemplateId']);
+    $templateId = $dbContent->FetchArray($queryResult)['id'];
+
+    $dbContent->UpdateWebsiteById($websiteId, $_POST['headerTitle'], $contactContent, $imprintContent,
+        $privacyInformationContent, $gtcContent, $loginEnabled, $guestbookEnabled,
+        $templateId);
+
+    /*$debug->debug("neue optionen:---".$websiteId."---".$_POST['headerTitle']."---".$contactContent."---".$imprintContent."---".
+        $privacyInformationContent."---".$gtcContent."---".$loginEnabled."---".$guestbookEnabled."----".$templateId);*/
 }
 // Submit button with the name 'siteDetails' was clicked
 else if (isset($_POST['pageDetails'])) {
@@ -196,6 +220,173 @@ BackendComponentPrinter::PrintDatatablesPlugin();
                 <input id='savePageChanges' name='savePageChanges' type='submit' value='Änderungen speichern'>
                 </form>";
         echo "<form method='post' action='Pagemanagement.php'><input id='back' name='back' type='submit' value='Zurück'><form>";
+    }
+
+    /**
+     * Opens the page for the editing of the page details
+     *
+     */
+    function EditWebsiteOptions($websiteId)
+    {
+        BackendComponentPrinter::PrintHead("Seitenverwaltung", $jquery=true);
+        //*----- Permissions ----- */
+        /* Include(s) */
+        require_once 'lib/Permission.enum.php';
+        require_once 'config/config.php';
+
+        BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
+        //*----- Permissions End ----- */
+
+        /* Global variables */
+        global $dbContent;
+
+        /* Datatables */
+        BackendComponentPrinter::PrintDatatablesPlugin();
+
+        /* specific style because of summernote */
+        echo
+        "<script>
+            $(document).ready(function() {
+                $('ul li a').addClass('contentEditMenue');
+            });
+        </script>";
+
+        /* Summernote */
+        echo
+        "<link href='http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.css' rel='stylesheet'> 
+        <script src='http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.js'></script> 
+        <link href='http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.css' rel='stylesheet'>
+        <script src='http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.js'></script>";
+
+        echo
+        "<main>
+            <h1><i class='fa fa-users fontawesome'></i> Webseiten-Einstellungen</h1>
+                <form method='post' action='Pagemanagement.php'>";
+
+        $website = $dbContent->FetchArray($dbContent->SelectWebsiteById($websiteId));
+        if ($dbContent->GetResultCount($website) < 1) {
+            echo "Es wurde noch keine Webseite erstellt!<br><br>"; // todo button für neue webseite einfügen
+        }
+
+        // let the user edit website details
+        // todo: felder-werte aus der website übernehmen
+        echo "<form method='post' action=''>
+                <input id='websiteId' name='websiteId' type='hidden' value='".$websiteId."'>
+                
+                <label for='headerTitle'>Headertitel</label>
+                <input id='headerTitle' name='headerTitle' value='".$website['headertitle']."'>
+                <br><br>
+                <label for='loginEnabled'>Login aktivieren</label>
+                <input type='checkbox' id='loginEnabled' name='loginEnabled' value=''>
+                <br><br>
+                <label for='guestbookEnabled'>Gästebuch aktivieren</label>
+                <input type='checkbox' id='guestbookEnabled' name='guestbookEnabled' value=''>
+                <br><br>
+                
+                <label for='imprintEnabled'>Impressum aktivieren</label>
+                <input type='checkbox' id='imprintEnabled' name='imprintEnabled' value=''>
+                 <div id='summernoteImprint' name='summernoteImprint'></div><br><br>
+            <script>
+                $(document).ready(function() {
+                    $('#summernoteImprint').summernote({
+                        callbacks: {
+                            onChange: function(contents, \$editable) {
+                                $('#imprintContent').val(contents);
+                            }
+                        }
+                    });
+                });
+            </script>
+            <input id='imprintContent' name='imprintContent' type='hidden'>
+                <br><br>
+                
+                <label for='contactEnabled'>Kontakt-Formular aktivieren</label>
+                <input type='checkbox' id='contactEnabled' name='contactEnabled' value=''>
+                <div id='summernoteContact' name='summernoteContact'></div><br><br>
+            <script>
+                $(document).ready(function() {
+                    $('#summernoteContact').summernote({
+                        callbacks: {
+                            onChange: function(contents, \$editable) {
+                                $('#contactContent').val(contents);
+                            }
+                        }
+                    });
+                });
+            </script>
+            <input id='contactContent' name='contactContent' type='hidden'>
+                <br><br>
+                
+                <label for='privacyInformationEnabled'>Datenschutz-Seite aktivieren</label>
+                <input type='checkbox' id='privacyInformationEnabled' name='privacyInformationEnabled' value=''>
+                <div id='summernotePrivacyInformation' name='summernotePrivacyInformation'></div><br><br>
+            <script>
+                $(document).ready(function() {
+                    $('#summernotePrivacyInformation').summernote({
+                        callbacks: {
+                            onChange: function(contents, \$editable) {
+                                $('#privacyInformationContent').val(contents);
+                            }
+                        }
+                    });
+                });
+            </script>
+            <input id='privacyInformationContent' name='privacyInformationContent' type='hidden'>
+                <br><br>
+                
+                <label for='gtcEnabled'>AGB-Seite aktivieren</label>
+                <input type='checkbox' id='gtcEnabled' name='gtcEnabled' value=''>
+                <div id='summernoteGTC' name='summernoteGTC'></div><br><br>
+            <script>
+                $(document).ready(function() {
+                    $('#summernoteGTC').summernote({
+                        callbacks: {
+                            onChange: function(contents, \$editable) {
+                                $('#gtcContent').val(contents);
+                            }
+                        }
+                    });
+                });
+            </script>
+            <input id='gtcContent' name='gtcContent' type='hidden'>
+                <br><br>
+                
+                <label for='technicalSiteTemplateId'>Template für die Webseiten-Details-Seite</label>";
+        // fetch all existing templates
+        $queryResult = $dbContent->SelectAllTemplates();
+        echo "<select name='technicalSiteTemplateId' size='1'>
+              <option></option>";
+        $templateAssigned = false;
+        while ($template = $dbContent->FetchArray($queryResult)){
+            if ($template['id'] == $website['template_id']) {
+                echo "<option selected='selected'>".$template['templatename']."</option>";
+                $templateAssigned = true;
+            } else {
+                echo "<option>".$template['templatename']."</option>";
+            }
+        }
+        echo "</select>
+             </label>";
+        if (!$templateAssigned) {
+            echo "<label>Der Webseite ist kein Template zugewiesen!</label>";
+        }
+                echo "<br><br>";
+
+        echo "<br><br>
+                <input id='saveWebsiteChanges' name='saveWebsiteChanges' type='submit' value='Änderungen speichern'>
+                </form>";
+        echo "<form method='post' action='Pagemanagement.php'><input id='back' name='back' type='submit' value='Zurück'><form>";
+
+        // todo: ein-/ausblenden
+        /*echo "<script>
+        $(document).ready(function() {
+           $('#summernoteImprint').hide();
+           
+           $('#imprintEnabled').click(function () {
+               $('#summernoteImprint').fadeToggle();
+           });
+        });
+        </script>";*/
     }
     ?>
 
