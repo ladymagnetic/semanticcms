@@ -1385,7 +1385,6 @@ class DbContent
 
 	/**
 	* creates new websites
-	* @param int $websiteId
 	* @param string $headertitle
 	* @param string $contact
 	* @param string $imprint
@@ -1396,7 +1395,7 @@ class DbContent
 	* @param int $template_id
 	* @return boolean true|false successful (true) when the query could be executed correctly and a website is created
 	*/
-	public function InsertWebsite($websiteId, $headertitle, $contact, $imprint, $privacyinformation, $gtc, $login, $guestbook, $template_id)
+	public function InsertWebsite($headertitle, $contact, $imprint, $privacyinformation, $gtc, $login, $guestbook, $template_id)
 	{
 		$result = $this->database->ExecuteQuery("INSERT INTO website (id, headertitle, contact, imprint, privacyinformation, gtc, login, guestbook, template_id) VALUES (NULL, '".$headertitle."', '".$contact."', '".$imprint."', '".$privacyinformation."', '".$gtc."', ".$login.", ".$guestbook.",  ".$template_id.")");
 
