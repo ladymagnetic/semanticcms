@@ -1285,11 +1285,11 @@ class DbContent
 
 
 	/**
-  * Select all websites
+	* Select all websites
 	* @param void
 	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
-	public function SelectAllWebsite($templateId)
+	public function SelectAllWebsite()
 	{
 		 return	$this->database->ExecutePreparedStatement("selectAllWebsite", array());
 	}
