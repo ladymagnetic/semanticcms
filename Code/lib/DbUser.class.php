@@ -450,7 +450,7 @@ class DbUser
 
 
 	/**
-	* delets a particular Role
+	* deletes a particular Role
 	* @param int $roleId the role's Id
 	* @return boolean true|false successful (true) when the query could be executed correctly and a special role is deleted
 	*/
@@ -467,7 +467,21 @@ class DbUser
 		else
 		{
 			$logDeletedRolename = $this->FetchArray($this->SelectRoleById($roleId))['rolename'];
-			$result = $this->database->ExecutePreparedStatement("deleteRole", array($roleId));
+			
+			if($logDeletedRolename == 'Admin')
+			{
+				echo
+				"<div class='info'>
+				<strong>Info!</strong> Die Rolle Admin kann nicht gelöscht werden!!!
+				</div>";
+				return false;
+			}
+			else
+			{
+				$result = $this->database->ExecutePreparedStatement("deleteRole", array($roleId));
+				return true;
+				
+			}
 
 			if($result==true)
 			{
