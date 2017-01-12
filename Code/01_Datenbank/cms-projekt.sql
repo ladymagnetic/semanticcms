@@ -29,8 +29,7 @@ USE `cms-projekt`;
 DROP USER IF EXISTS cms@localhost;
 CREATE USER IF NOT EXISTS cms@localhost IDENTIFIED BY 'pleasechange';
 GRANT SELECT, INSERT, UPDATE, DELETE ON *.* TO 'cms'@'localhost' IDENTIFIED BY 'pleasechange';
-
--------------------------------------
+-- -----------------------------------
 
 --
 -- Tabellenstruktur für Tabelle `article`
