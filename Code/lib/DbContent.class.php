@@ -182,6 +182,10 @@ class DbContent
 
 		$selectAllLables = "SELECT * FROM lable";
 		$this->database->PrepareStatement("selectAllLables", $selectAllLables);
+		
+		
+		$selectAllWebsiteByHeadertitle = "SELECT * FROM website WHERE headertitle = ?";
+		$this->database->PrepareStatement("selectAllWebsiteByHeadertitle", $selectAllWebsiteByHeadertitle);
 
 	}
 
@@ -1475,6 +1479,20 @@ class DbContent
 	{
 		return $this->database->ExecutePreparedStatement("selectAllLables", array());
 	}
+	
+	
+	
+	/**
+	* selects all websites by headertitle
+	* @param string $headertitle the headertitle of the website 
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
+	*/
+	public function SelectAllWebsiteByHeadertitle($headertitle)
+	{
+		return $this->database->ExecutePreparedStatement("selectAllWebsiteByHeadertitle", array($headertitle));
+	}
+	
+	
 
 }
 
