@@ -227,6 +227,7 @@ else if (isset($_POST['edit'])) {
 else if (isset($_POST['delete'])) {
   $templateId = intval($_POST['templateId']);
   $dbContent->DeleteTemplateById($templateId);
+  unlink("templates/".$_POST['templateName'].".xml");
 }
 
 ?>
