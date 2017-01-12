@@ -983,27 +983,25 @@ class DbUser
 
 
 	/**
-	* login
+	* Method for Login
+	*
+	* Checks if there is a dataset that matches the given name and password. 
+	* Important: The user's password may not be hashed before
+	*
 	* @param string $nameInput the user's username or mail
-	* @param string $password the user's password
+	* @param string $password the user's unhashed password
 	* @return true if login was successful otherwise false
-	* @return boolean true|false successful (true) when the query could be executed correctly and a user can log in the system
 	*/
 	public function LoginUser($nameInput, $password)
 	{
 		$nameInput = $this->database->RealEscapeString($nameInput);
+		$result = $this->database->ExecuteQuery("SELECT password FROM user WHERE email ='".$nameInput."' OR username ='".$nameInput."'");
 
-		//$stmt = $this->database->ExecuteQuery("SELECT password FROM user WHERE email =".$nameInput." OR username =".$nameInput);
-
-		// Fehlende '' eingefügt -> jetzt gibts auch keine Fehler mehr
-		$result = $this->database->ExecuteQuery("SELECT id FROM user WHERE (email ='".$nameInput."' OR username ='".$nameInput."') AND password = '". $password."'");
-
-		// Rückgabe prüfen => ist der Datensatz auch wirklich vorhanden? Ist es genau EIN Datensatz, der zurück kommt?
-		// Quellcode dafür ist implementiert, ich habs hier mal als Beispiel auch umgesetzt
-		if($result==true && $this->database->GetResultCount($result) == 1)
-		{ return true; }
-		else
-		{ return false;	}
+		if($result==true)
+		{ 
+			return password_verify($password, $this->database->FetchArray($result)['password']); 
+		}
+		else { return false;	}
 	}
 
 
