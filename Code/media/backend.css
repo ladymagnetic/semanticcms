@@ -199,9 +199,16 @@ input[type=text]
   background-color: #f2dede;
 }
 
-/*-----  Select ----->*/
+/*-----  Finetuning ----->*/
 #pageSelecter
 {
   height: 52px;
   margin-right: 10px;
+}
+
+#username, #password
+{
+    width: 300px;
+    display: block;
+    margin-bottom: 10px;
 }
