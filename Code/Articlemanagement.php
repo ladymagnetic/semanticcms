@@ -203,7 +203,7 @@ while ($pageRow = $dbContent->FetchArray($pageRows))
 }
 echo
     "<form method='post' action='Articlemanagement.php'>
-    <select name='pageName'><option></option>";
+    <select id='pageSelecter' name='pageName'><option></option>";
 echo $pageSelect;
 echo
     "</select><input id='selectPage' name='selectPage' type='submit' value='Anzeigen'></form><br><br>";
