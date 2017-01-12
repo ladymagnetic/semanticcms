@@ -16,9 +16,10 @@ nav
   width: 300px;
   left: 0;
   top: 0;
-  height: auto;
-  float: left;
+  height: 100%;
   background-color:darkseagreen;
+  position: fixed;
+  overflow: auto;
 }
 
 #logo
@@ -75,7 +76,6 @@ main
   left: 350px;
   margin: 0;
   padding: 0;
-  float: left;
 }
 
 /*----- Table -----*/
