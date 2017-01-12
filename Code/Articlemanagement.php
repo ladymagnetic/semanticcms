@@ -199,11 +199,16 @@ while ($pageRow = $dbContent->FetchArray($pageRows))
     {
         $pageSelect .= " selected";
     }
+    if ($pageName = "")
+    {
+        $pageName = $pageRow['title'];
+        $pageSelect .= " selected";
+    }
     $pageSelect .= ">".$pageRow['title']."</option>";
 }
 echo
     "<form method='post' action='Articlemanagement.php'>
-    <select id='pageSelecter' name='pageName'><option></option>";
+    <select id='pageSelecter' name='pageName'>";
 echo $pageSelect;
 echo
     "</select><input id='selectPage' name='selectPage' type='submit' value='Anzeigen'></form><br><br>";
