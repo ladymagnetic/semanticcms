@@ -89,16 +89,8 @@ session_start();
 		BackendComponentPrinter::PrintTableEnd();
 
 	?>
-    <form method="post" action="Start.php">
-		<button id="exportDatabase" name="action" value="exportDatabase"> Datenbank exportieren </button>
-		<button id="importDatabase" name="action" value="importDatabase"> Datenbank importieren </button>
-    </form>
-	<?php
-	// Form Handling nach POST
-	if($_SERVER['REQUEST_METHOD']=='POST')
-	{
-	}
-	?>
+
+	
 </main>
 </body>
 
