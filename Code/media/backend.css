@@ -16,7 +16,7 @@ nav
   width: 300px;
   left: 0;
   top: 0;
-  height: 100%;
+  height: auto;
   float: left;
   background-color:darkseagreen;
 }
