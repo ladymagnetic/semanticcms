@@ -199,7 +199,7 @@ while ($pageRow = $dbContent->FetchArray($pageRows))
     {
         $pageSelect .= " selected";
     }
-    if ($pageName = "")
+    if ($pageName == "")
     {
         $pageName = $pageRow['title'];
         $pageSelect .= " selected";
