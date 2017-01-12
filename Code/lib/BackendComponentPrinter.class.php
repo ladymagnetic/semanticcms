@@ -214,7 +214,7 @@ class BackendComponentPrinter
      */
 	public static function PrintDropdownList($label, $name, array $options, $size, $selected)
     {
-        echo "<label>$label
+        echo "<label>$label</label>
                 <select name='$name' size='$size'>";
 
         foreach ($options as $option) {
@@ -225,8 +225,7 @@ class BackendComponentPrinter
             }
         }
 
-        echo   "</select>
-             </label>";
+        echo   "</select>";
     }
 
     /**
