@@ -299,8 +299,7 @@ while ($row = $dbUser->FetchArray($userRows))
     $tableRow2 .=
         "<input id='userId' name='userId' type='hidden' value='".$row['id']."'></form>";
     $tableRow3 = 
-        "<form action='Usermanagement.php' method='post'> <label>Rolle: <select name='assignedRole'>".
-        "<option></option>";
+        "<form action='Usermanagement.php' method='post'> <label>Rolle: <select name='assignedRole'>";
         $roleRows = $dbUser->SelectAllRoles();
         while ($rolerow = $dbUser->FetchArray($roleRows))
         {
