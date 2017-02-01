@@ -128,6 +128,10 @@ class DbUser
 
 		$selectAllLogsFromOneUserByUsername = "SELECT * FROM logtable WHERE logtable.username = ?";
 		$this->database->PrepareStatement("selectAllLogsFromOneUserByUsername", $selectAllLogsFromOneUserByUsername);
+		
+		
+		$selectUsernameByBanId = "SELECT user.username FROM user INNER JOIN ban on user.id = ban.user_id WHERE ban.id = ?";
+		$this->database->PrepareStatement("selectUsernameByBanId", $selectUsernameByBanId);
 
 	}
 
@@ -806,15 +810,23 @@ class DbUser
 	*/
 	public function DebanUserViaBanId($id)
 	{
+		$debannedUsername = $this->FetchArray($this->SelectUsernameByBanId($id))['username'];
 		$result = $this->database->ExecuteQuery("UPDATE ban SET enddatetime = NOW() WHERE id = ". $id);
 
 		if($result==true)
 		{
+			$logUsername = $_SESSION['username'];
+			$logRolename = $_SESSION['rolename'];
+
+			$logDescription = 'Die Sperre des Users <strong>'.$debannedUsername.'</strong> ist abgelaufen. Er ist ab sofort wieder entsperrt. <br> ';
+
+			$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
 			return true;
 		}
 		else
 		{
-				return false;
+			return false;
 		}
 	}
 
@@ -1057,6 +1069,24 @@ class DbUser
 	return ($num['NumberOfUserWithASpecialRole']);
 	}
 
+	
+	
+	/**
+	* selects username by BanId
+	* @param string $banId is the id of the ban
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
+	*/
+	public function SelectUsernameByBanId($banId)
+	{
+		return $this->database->ExecutePreparedStatement("selectUsernameByBanId", array($banId));
+	}
+
+
+	
+	
+	
+	
+	
 
 	/**
 	* download the database
