@@ -468,11 +468,19 @@ class DbUser
 		{
 			$logDeletedRolename = $this->FetchArray($this->SelectRoleById($roleId))['rolename'];
 
-			if($logDeletedRolename == 'Admin')
+			if(($logDeletedRolename == 'Admin') || ($roleId == 1))
 			{
 				echo
 				"<div class='info'>
 				<strong>Info!</strong> Die Rolle Admin kann nicht gelöscht werden!!!
+				</div>";
+				return false;
+			}
+			elseif ($logDeletedRolename == 'Administrator')
+			{
+				echo
+				"<div class='info'>
+				<strong>Info!</strong> Die Rolle Administrator kann nicht gelöscht werden!!!
 				</div>";
 				return false;
 			}
