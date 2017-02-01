@@ -613,7 +613,8 @@ class DbUser
 		$rolenameBevoreUpdate =  $this->FetchArray($this->SelectRoleById($id))['rolename'];
 		
 		
-		if(($rolenameBevoreUpdate == 'Admin') || ($rolenameBevoreUpdate == 'Administrator'))
+		//if(($rolenameBevoreUpdate == 'Admin') || ($rolenameBevoreUpdate == 'Administrator')) => beziehen uns nicht auf den Namen sondern die Id.
+		if($id == 1)
 		{
 			echo
 			"<div class='info'>
