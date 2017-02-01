@@ -611,30 +611,44 @@ class DbUser
 	public function UpdateRoleById($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $databasemanagement, $backendlogin, $id)
 	{
 		$rolenameBevoreUpdate =  $this->FetchArray($this->SelectRoleById($id))['rolename'];
-		$result = $this->database->ExecuteQuery("UPDATE role SET uri ='".$uri."',  rolename ='".$rolename."',  guestbookmanagement ='".$guestbookmanagement."',  usermanagement ='".$usermanagement."', pagemanagement ='".$pagemanagement."', articlemanagement ='".$articlemanagement."', guestbookusage ='".$guestbookusage."' , templateconstruction ='".$templateconstruction."', databasemanagement ='".$databasemanagement."', backendlogin ='".$backendlogin."' WHERE id = '". $id."'");
-
-		if($result==true)
+		
+		
+		if(($rolenameBevoreUpdate == 'Admin') || ($rolenameBevoreUpdate == 'Administrator'))
 		{
-			$logUsername = $_SESSION['username'];
-			$logRolename = $_SESSION['rolename'];
+			echo
+			"<div class='info'>
+			<strong>Info!</strong> Die Rollenname Admin bzw. Administrator kann nicht geändert werden!!!
+			</div>";
 
-			if($rolenameBevoreUpdate == $rolename)
-			{
-				$rolenameChanged = $rolename;
-			}
-			else
-				{
-					$rolenameChanged = $rolenameBevoreUpdate. '(neuer Rollenname: '.$rolename.')';
-				}
-
-		 	$logDescription = 'An der Rolle <strong>'.$rolenameChanged.'</strong> wurden Änderugen vorgenommen.';
-			$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-
-			return true;
+			return false;
 		}
 		else
 		{
-			 return false;
+			$result = $this->database->ExecuteQuery("UPDATE role SET uri ='".$uri."',  rolename ='".$rolename."',  guestbookmanagement ='".$guestbookmanagement."',  usermanagement ='".$usermanagement."', pagemanagement ='".$pagemanagement."', articlemanagement ='".$articlemanagement."', guestbookusage ='".$guestbookusage."' , templateconstruction ='".$templateconstruction."', databasemanagement ='".$databasemanagement."', backendlogin ='".$backendlogin."' WHERE id = '". $id."'");
+
+			if($result==true)
+			{
+				$logUsername = $_SESSION['username'];
+				$logRolename = $_SESSION['rolename'];
+
+				if($rolenameBevoreUpdate == $rolename)
+				{
+					$rolenameChanged = $rolename;
+				}
+				else
+					{
+						$rolenameChanged = $rolenameBevoreUpdate. '(neuer Rollenname: '.$rolename.')';
+					}
+
+				$logDescription = 'An der Rolle <strong>'.$rolenameChanged.'</strong> wurden Änderugen vorgenommen.';
+				$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+				return true;
+			}
+			else
+			{
+				 return false;
+			}
 		}
 	}
 
