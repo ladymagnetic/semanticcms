@@ -186,6 +186,22 @@ class DbContent
 
 		$selectAllWebsiteByHeadertitle = "SELECT * FROM website WHERE headertitle = ?";
 		$this->database->PrepareStatement("selectAllWebsiteByHeadertitle", $selectAllWebsiteByHeadertitle);
+		
+		
+		
+		//*nur für Testzwecke*//
+		//DELETE website.*, page.*, article.* FROM website INNER JOIN page on website.id = page.website_id INNER JOIN article ON article.page_id = page.id WHERE website.id = ?
+		//$deleteWebsiteAndPageAndArticle = "DELETE website.*, page.*, article.* FROM website INNER JOIN page on website.id = page.website_id INNER JOIN article ON article.page_id = page.id";
+		//$this->database->PrepareStatement("deleteWebsiteAndPageAndArticle", $deleteWebsiteAndPageAndArticle );
+
+
+
+		$deleteWebsiteAndPageAndArticleByWebsiteId = "DELETE website.*, page.*, article.* ".
+													 "FROM website ".
+													 "INNER JOIN page on website.id = page.website_id ".
+													 "INNER JOIN article ON article.page_id = page.id ".
+													 "WHERE website.id = ?";
+		$this->database->PrepareStatement("deleteWebsiteAndPageAndArticleByWebsiteId", $deleteWebsiteAndPageAndArticleByWebsiteId );
 
 	}
 
@@ -1521,6 +1537,31 @@ class DbContent
      $this->database->DownloadDBTest();
 	}
 
+
+	
+	/**
+	* delete one website, the pages and the articles by website_id
+	* @param int $website_id the id of the website
+	* @return boolean true|false successful (true) when the query could be executed correctly and a website, the pages and the article is deleted
+	*/
+	public function DeleteWebsiteAndPageAndArticleByWebsiteId($website_id)
+	{
+		$logDeletedWebsite = $this->FetchArray($this->SelectWebsiteById($website_id))['headertitle'];
+		$result = $this->database->ExecutePreparedStatement("deleteWebsiteAndPageAndArticleByWebsiteId", array($website_id));
+
+		 if($result==true)
+		 {
+			 $logUsername = $_SESSION['username'];
+			 $logRolename = $_SESSION['rolename'];
+			 $logDescription = 'Folgende Website incl. Seiten und Artikeln wurde gelöscht: <strong>'.$logDeletedWebsite.'</strong>';
+			 $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+			 return true;
+		 }
+		 else
+		 {
+				return false;
+		 }
+	}
 
 
 }
