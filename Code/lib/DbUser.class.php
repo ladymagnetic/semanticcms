@@ -467,7 +467,7 @@ class DbUser
 		else
 		{
 			$logDeletedRolename = $this->FetchArray($this->SelectRoleById($roleId))['rolename'];
-			
+
 			if($logDeletedRolename == 'Admin')
 			{
 				echo
@@ -480,7 +480,7 @@ class DbUser
 			{
 				$result = $this->database->ExecutePreparedStatement("deleteRole", array($roleId));
 				return true;
-				
+
 			}
 
 			if($result==true)
@@ -985,7 +985,7 @@ class DbUser
 	/**
 	* Method for Login
 	*
-	* Checks if there is a dataset that matches the given name and password. 
+	* Checks if there is a dataset that matches the given name and password.
 	* Important: The user's password may not be hashed before
 	*
 	* @param string $nameInput the user's username or mail
@@ -998,8 +998,8 @@ class DbUser
 		$result = $this->database->ExecuteQuery("SELECT password FROM user WHERE email ='".$nameInput."' OR username ='".$nameInput."'");
 
 		if($result==true)
-		{ 
-			return password_verify($password, $this->database->FetchArray($result)['password']); 
+		{
+			return password_verify($password, $this->database->FetchArray($result)['password']);
 		}
 		else { return false;	}
 	}
@@ -1049,11 +1049,12 @@ class DbUser
 	* @param string $db database name
 	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
+	/*
 	public function DownloadDBUser($dbhost, $dbuser, $dbpwd, $dbname)
 	{
      $this->database->DownloadDB($dbhost, $dbuser, $dbpwd, $dbname);
 	}
-
+ */
 
 
 	/**
@@ -1061,10 +1062,12 @@ class DbUser
 	* @param void
 	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
+	/*
 	public function DownloadDBUserTest()
 	{
      $this->database->DownloadDBTest();
 	}
+ */
 
 }
 ?>
