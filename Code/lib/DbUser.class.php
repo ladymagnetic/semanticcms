@@ -319,7 +319,7 @@ class DbUser
 	* @param string $firstname the user's firstname
 	* @param string $lastname the user's lastname
 	* @param string $mail the user's mailaddress
-	* @param string $password the user's password
+	* @param string $password the user's unhashed password
 	* @param string $birthdate the user's birthdate as date formatted string
 	* @return boolean true|false successful (true) when the query could be executed correctly and a new user is registrated
 	*/
@@ -338,9 +338,9 @@ class DbUser
 					$lastname= $this->database->RealEscapeString($lastname);
 					$firstname= $this->database->RealEscapeString($firstname);
 					$username= $this->database->RealEscapeString($username);
-					$password= $this->database->RealEscapeString($password);
+					$hash = password_hash($password, PASSWORD_BCRYPT, array('cost' => 12));
 
-					$result = $this->database->ExecuteQuery("INSERT INTO user (id, role_id, lastname, firstname, birthdate, username, password, email, registrydate) VALUES (NULL, ".$role_id.", '".$lastname."', '".$firstname."', '".$birthdate."', '".$username."', '".$password."', '".$email."', NOW())");
+					$result = $this->database->ExecuteQuery("INSERT INTO user (id, role_id, lastname, firstname, birthdate, username, password, email, registrydate) VALUES (NULL, ".$role_id.", '".$lastname."', '".$firstname."', '".$birthdate."', '".$username."', '".$hash."', '".$email."', NOW())");
 
 						if($result==true)
 						{
@@ -897,36 +897,30 @@ class DbUser
 	/**
 	* apply changes of the password to one user
 	* @param string $userId the user's id
-	* @param string $password the user's password
-	* @param string $newPassword the user's new password
-	* @param string $newPasswordRepeat the user's the repetition of new password
+	* @param string $password the user's unhashed password
+	* @param string $newPassword the user's new unhashed password
+	* @param string $newPasswordRepeat the user's the repetition of new unhashed password
 	* @return boolean true|false successful (true) when the query could be executed correctly and the changes in terms of the password are done
 	*/
 	public function ApplyPasswordChangesToUser($userId, $password, $newPassword, $newPasswordRepeat)
 	{
-		//$password = $this->database->RealEscapeString($password);
-
-		echo $userId;
 		$result = $this->database->ExecuteQuery("SELECT password FROM user WHERE id ='".$userId."'");
 
-		var_dump($result);
-
-		if ($result == $password)
+		if ($result == true)
 		{
-			if($newPassword == $newPasswordRepeat)
+			$pwCheck = password_verify($password, $this->database->FetchArray($result)['password']); 
+
+			if($pwCheck && ($newPassword == $newPasswordRepeat))
 			{
-				$changePassword = $this->database->ExecuteQuery("UPDATE user SET password = '.$newPassword.'");
+				$hash = password_hash($newPassword, PASSWORD_BCRYPT, array('cost' => 12));
+				
+				$changePassword = $this->database->ExecuteQuery("UPDATE user SET password = '".$hash."' WHERE id ='".$userId."'");
 				return true;
 			}
-
 			return false;
 		}
 		else
-		{
-
-			return false;
-		}
-
+		{ return false; }
 	}
 
 
@@ -1001,7 +995,7 @@ class DbUser
 		{
 			return password_verify($password, $this->database->FetchArray($result)['password']);
 		}
-		else { return false;	}
+		else { return false; }
 	}
 
 
