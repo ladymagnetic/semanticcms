@@ -786,26 +786,32 @@ class DbUser
 		$BannedUsername = $this->FetchArray($this->GetUserInformationById($user_id))['username'];
 		var_dump($BannedUsername);
 
-		$result = $this->database->ExecuteQuery("INSERT INTO ban (id, user_id, reason_id, description, begindatetime, enddatetime) VALUES (NULL, ".$user_id.", ".$reason_id.", '".$description."', '".$begindatetime."', '".$enddatetime."')");
+		$logUsername = $_SESSION['username'];
+		$logRolename = $_SESSION['rolename'];
 
-		if($result==true)
+		if($logUsername == $BannedUsername)
 		{
-			if($reason_id != 6)
-			{
-		 	$logUsername = $_SESSION['username'];
-			$logRolename = $_SESSION['rolename'];
-
-			$banReason = $this->FetchArray($this->SelectBan_ReasonById($reason_id))['reason'];
-
-		 	$logDescription = 'Der User <strong>'.$BannedUsername.'</strong> wurde gebannt. <br> Grund: <strong>'.$banReason.'</strong>';
-
+			$logDescription = 'Man kann sich nicht selber sperren.';
 			$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-			}
-			return true;
 		}
 		else
 		{
-			return false;
+			$result = $this->database->ExecuteQuery("INSERT INTO ban (id, user_id, reason_id, description, begindatetime, enddatetime) VALUES (NULL, ".$user_id.", ".$reason_id.", '".$description."', '".$begindatetime."', '".$enddatetime."')");
+
+			if($result==true)
+			{
+				if($reason_id != 6)
+				{
+					$banReason = $this->FetchArray($this->SelectBan_ReasonById($reason_id))['reason'];
+					$logDescription = 'Der User <strong>'.$BannedUsername.'</strong> wurde gebannt. <br> Grund: <strong>'.$banReason.'</strong>';
+					$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+				}
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 	}
@@ -827,8 +833,8 @@ class DbUser
 			$logUsername = $_SESSION['username'];
 			$logRolename = $_SESSION['rolename'];
 
-			$logDescription = 'Die Sperre des Users <strong>'.$debannedUsername.'</strong> ist abgelaufen. Er ist ab sofort wieder entsperrt. <br> ';
-
+			$logDescription = 'Der User <strong>'.$debannedUsername.'</strong> wurde entsperrt. <br> ';
+				
 			$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
 			return true;
