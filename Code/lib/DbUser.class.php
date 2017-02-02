@@ -375,19 +375,28 @@ class DbUser
 	public function DeleteUserById($userId)
 	{
 		$logDeletedUser = $this->FetchArray($this->GetUserInformationById($userId))['username'];
-		$result = $this->database->ExecutePreparedStatement("deleteUserById", array($userId));
 
-		if($result==true)
+		$logUsername = $_SESSION['username'];
+		$logRolename = $_SESSION['rolename'];
+
+		if ($logUsername == $logDeletedUser)
 		{
-			$logUsername = $_SESSION['username'];
-			$logRolename = $_SESSION['rolename'];
-  		$logDescription = 'Folgender User wurde gelöscht: <strong>'.$logDeletedUser.'</strong>';
+			$logDescription = 'Man kann sich nicht selber löschen.';
 			$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-			return true;
 		}
 		else
 		{
-			 return false;
+			$result = $this->database->ExecutePreparedStatement("deleteUserById", array($userId));
+			if($result==true)
+			{
+				$logDescription = 'Folgender User wurde gelöscht: <strong>'.$logDeletedUser.'</strong>';
+				$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+				return true;
+			}
+			else
+			{
+				 return false;
+			}
 		}
 	}
 
