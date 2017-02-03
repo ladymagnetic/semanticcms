@@ -203,7 +203,7 @@ BackendComponentPrinter::PrintDatatablesPlugin();
 
         /* -------------- Print Pages table -------------- */
         $pages = $dbContent->SelectAllPages();
-        BackendComponentPrinter::PrintTableStart(array("Seite", "Template", "Aktionen", "Relative Position"));
+        BackendComponentPrinter::PrintTableStart(array("Relative Position", "Seite", "Template", "Aktionen"));
         while ($page = $dbContent->FetchArray($pages)) {
             if ($page['website_id'] != $websiteId) {
                 continue; // display only pages which belong to the currently selected website
@@ -221,7 +221,7 @@ BackendComponentPrinter::PrintDatatablesPlugin();
                 <input id='websiteId' name='websiteId' type='hidden' value='" . $websiteId . "'></form>";
             $siteRelativePosition = $page['relativeposition'];
 
-            BackendComponentPrinter::PrintTableRow(array($siteTitle, $siteTemplate['templatename'], $siteActions, $siteRelativePosition));
+            BackendComponentPrinter::PrintTableRow(array($siteRelativePosition, $siteTitle, $siteTemplate['templatename'], $siteActions));
         }
         BackendComponentPrinter::PrintTableEnd();
     }
