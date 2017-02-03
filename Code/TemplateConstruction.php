@@ -152,7 +152,11 @@ if(isset($_POST['save'])) {
   $filesize = $_FILES['Logo']['size'];
   $filetmpname = $_FILES['Logo']['tmp_name'];
   $filetype = $_FILES['Logo']['type'];
+  $logo = "";
+  if($filename != "")
+  {
   $logo = PictureSave($filename, $filesize, $filetmpname, $filetype);
+  }
   $templateParser->SaveHeader($height, $position, $font, $fontsize, $fontColor, $backgroundColor, $backgroundPicture, $logo);
   $webBackgroundcolor = $_POST['WebColor'];
   $webBackgroundpic = 'hallo';//$_POST['WebPicture'];
@@ -559,53 +563,55 @@ function EditTemplate($header, $background, $menu, $articleContainer, $footer, $
 
 function PictureSave($filename, $filesize, $filetmpname, $filetype)
 {
-  $upload_folder = 'frontend/media/';
-  $name = pathinfo($filename, PATHINFO_FILENAME);
-  $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+    $upload_folder = 'frontend/media/';
+    $name = pathinfo($filename, PATHINFO_FILENAME);
+    $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 
 
 
 
-  //Überprüfung der Dateiendung
-  $allowed_extensions = array('image/png', 'image/jpg', 'image/jpeg', 'image/gif');
-  if(!in_array(strtolower($filetype), $allowed_extensions)) {
-   die("Ungültige Dateiendung. Nur png, jpg, jpeg und gif-Dateien sind erlaubt");
- }
-
-  //Überprüfung der Dateigröße
-  $max_size = 5*1024*1024;
-  if($filesize > $max_size) {
-   die("Bitte keine Dateien größer 5Mb hochladen");
-  }
-
-  //Überprüfung dass das Bild keine Fehler enthält
-  if(function_exists('exif_imagetype')) { //exif_imagetype erfordert die exif-Erweiterung
-   $allowed_types = array(IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF);
-   $detected_type = exif_imagetype($filetmpname);
-   if(!in_array($detected_type, $allowed_types)) {
-   die("Nur der Upload von Bilddateien ist gestattet");
+    //Überprüfung der Dateiendung
+    $allowed_extensions = array('image/png', 'image/jpg', 'image/jpeg', 'image/gif');
+    if(!in_array(strtolower($filetype), $allowed_extensions)) {
+     die("Ungültige Dateiendung. Nur png, jpg, jpeg und gif-Dateien sind erlaubt");
    }
-  }
 
-  //Pfad zum Upload
-  $new_path = $upload_folder.$name.'.'.$extension;
-  $picturename = $name.'.'.$extension;
+    //Überprüfung der Dateigröße
+    $max_size = 5*1024*1024;
+    if($filesize > $max_size) {
+     die("Bitte keine Dateien größer 5Mb hochladen");
+    }
 
-  //Neuer Dateiname falls die Datei bereits existiert
-  if(file_exists($new_path)) { //Falls Datei existiert, hänge eine Zahl an den Dateinamen
-   $id = 1;
-   do {
-   $new_path = $upload_folder.$name.'_'.$id.'.'.$extension;
-   $picturename = $name.'_'.$id.'.'.$extension;
-   $id++;
-   } while(file_exists($new_path));
-  }
+    //Überprüfung dass das Bild keine Fehler enthält
+    if(function_exists('exif_imagetype')) { //exif_imagetype erfordert die exif-Erweiterung
+     $allowed_types = array(IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF);
+     $detected_type = exif_imagetype($filetmpname);
+     if(!in_array($detected_type, $allowed_types)) {
+     die("Nur der Upload von Bilddateien ist gestattet");
+     }
+    }
 
-  //Alles okay, verschiebe Datei an neuen Pfad
-  move_uploaded_file($filetmpname, $new_path);
+    //Pfad zum Upload
+    $new_path = $upload_folder.$name.'.'.$extension;
+    $picturename = $name.'.'.$extension;
 
-  return $picturename;
+    //Neuer Dateiname falls die Datei bereits existiert
+    if(file_exists($new_path)) { //Falls Datei existiert, hänge eine Zahl an den Dateinamen
+     $id = 1;
+     do {
+     $new_path = $upload_folder.$name.'_'.$id.'.'.$extension;
+     $picturename = $name.'_'.$id.'.'.$extension;
+     $id++;
+     } while(file_exists($new_path));
+    }
+
+    //Alles okay, verschiebe Datei an neuen Pfad
+    move_uploaded_file($filetmpname, $new_path);
+
+    return $picturename;
+
 
 }
+
 
 ?>
