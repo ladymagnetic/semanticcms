@@ -128,8 +128,8 @@ class DbUser
 
 		$selectAllLogsFromOneUserByUsername = "SELECT * FROM logtable WHERE logtable.username = ?";
 		$this->database->PrepareStatement("selectAllLogsFromOneUserByUsername", $selectAllLogsFromOneUserByUsername);
-		
-		
+
+
 		$selectUsernameByBanId = "SELECT user.username FROM user INNER JOIN ban on user.id = ban.user_id WHERE ban.id = ?";
 		$this->database->PrepareStatement("selectUsernameByBanId", $selectUsernameByBanId);
 
@@ -381,8 +381,11 @@ class DbUser
 
 		if ($logUsername == $logDeletedUser)
 		{
-			$logDescription = 'Man kann sich nicht selber löschen.';
-			$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+			echo
+					"<div class='info'>
+					<strong>Info!</strong> Man kann sich nicht selber löschen!!!
+					</div>";
+			return false;
 		}
 		else
 		{
@@ -624,8 +627,8 @@ class DbUser
 	public function UpdateRoleById($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $databasemanagement, $backendlogin, $id)
 	{
 		$rolenameBevoreUpdate =  $this->FetchArray($this->SelectRoleById($id))['rolename'];
-		
-		
+
+
 		//if(($rolenameBevoreUpdate == 'Admin') || ($rolenameBevoreUpdate == 'Administrator')) => beziehen uns nicht auf den Namen sondern die Id.
 		if($id == 1)
 		{
@@ -791,8 +794,12 @@ class DbUser
 
 		if($logUsername == $BannedUsername)
 		{
-			$logDescription = 'Man kann sich nicht selber sperren.';
-			$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+			echo
+					"<div class='info'>
+					<strong>Info!</strong> Man kann sich nicht selber sperren!!!
+					</div>";
+			return false;
+
 		}
 		else
 		{
@@ -834,7 +841,7 @@ class DbUser
 			$logRolename = $_SESSION['rolename'];
 
 			$logDescription = 'Der User <strong>'.$debannedUsername.'</strong> wurde entsperrt. <br> ';
-				
+
 			$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 
 			return true;
@@ -958,12 +965,12 @@ class DbUser
 
 		if ($result == true)
 		{
-			$pwCheck = password_verify($password, $this->database->FetchArray($result)['password']); 
+			$pwCheck = password_verify($password, $this->database->FetchArray($result)['password']);
 
 			if($pwCheck && ($newPassword == $newPasswordRepeat))
 			{
 				$hash = password_hash($newPassword, PASSWORD_BCRYPT, array('cost' => 12));
-				
+
 				$changePassword = $this->database->ExecuteQuery("UPDATE user SET password = '".$hash."' WHERE id ='".$userId."'");
 				return true;
 			}
@@ -1084,8 +1091,8 @@ class DbUser
 	return ($num['NumberOfUserWithASpecialRole']);
 	}
 
-	
-	
+
+
 	/**
 	* selects username by BanId
 	* @param string $banId is the id of the ban
@@ -1097,11 +1104,11 @@ class DbUser
 	}
 
 
-	
-	
-	
-	
-	
+
+
+
+
+
 
 	/**
 	* download the database
