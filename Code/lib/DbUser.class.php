@@ -216,6 +216,23 @@ class DbUser
 	}
 
 
+
+	/**
+	* how many bans has one special users depending on a special reason?
+  * @param int $BannedUserId the id of the banned user
+	* @param int $banReasonId the id of the ban-reason
+	* @return int number of bans
+	*/
+	public function Count_Bans_ByUserid_and_ByBan_ReasonId($BannedUserId, $banReasonId)
+		{
+			$count_Bans_ByUserid_and_ByBan_ReasonId = $this->database->ExecuteQuery("SELECT user.id, user.username, ban_reason.reason, COUNT(*) AS AnzahlBansAusBestimmtemGrundProUser FROM user ".
+																								"INNER JOIN ban ON user.id = ban.user_id ".
+																								"INNER JOIN ban_reason ON ban_reason.id = ban.reason_id ".
+																								"WHERE (user.id = ".$BannedUserId." AND ban_reason.id = ".$banReasonId.")");
+			 $num = $this->FetchArray($count_Bans_ByUserid_and_ByBan_ReasonId);
+	     return ($num['AnzahlBansAusBestimmtemGrundProUser']);
+		}
+
 	/* END:--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- for start.php => statistics for admin --- --- --- --- --- --- --- --- --- */
 
 
@@ -787,7 +804,7 @@ class DbUser
 	{
 		$description = $this->database->RealEscapeString($description);
 		$BannedUsername = $this->FetchArray($this->GetUserInformationById($user_id))['username'];
-		var_dump($BannedUsername);
+		$registrydate_from_User = $this->FetchArray($this->GetUserInformationById($user_id))['registrydate'];
 
 		$logUsername = $_SESSION['username'];
 		$logRolename = $_SESSION['rolename'];
@@ -799,7 +816,6 @@ class DbUser
 					<strong>Info!</strong> Man kann sich nicht selber sperren!!!
 					</div>";
 			return false;
-
 		}
 		else
 		{
@@ -810,7 +826,9 @@ class DbUser
 				if($reason_id != 6)
 				{
 					$banReason = $this->FetchArray($this->SelectBan_ReasonById($reason_id))['reason'];
-					$logDescription = 'Der User <strong>'.$BannedUsername.'</strong> wurde gebannt. <br> Grund: <strong>'.$banReason.'</strong>';
+					$num = $this->Count_Bans_ByUserid_and_ByBan_ReasonId($user_id, $reason_id);
+					$logDescription = 'Der User <strong>'.$BannedUsername.'</strong> wurde gebannt. <br> Grund: <strong>'.$banReason.'</strong>
+														<br> Anzahl der Banne seit dem <strong>'.$registrydate_from_User.'</strong> aus diesem Grund: <strong>'.$num.'</strong>';
 					$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 				}
 				return true;
@@ -820,7 +838,6 @@ class DbUser
 				return false;
 			}
 		}
-
 	}
 
 
