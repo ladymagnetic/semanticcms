@@ -8,7 +8,7 @@ $config =
 	/* database specific settings */
 	'cms_db' =>
 	[
-		 // database-name 
+		 // database-name
 		 'database' => 'cms-projekt',
 		 // username
 		 'dbuser' => 'cms',
@@ -16,8 +16,9 @@ $config =
 		 'dbpass' => 'pleasechange',
 		 // servername (database host)
 		 'dbhost' => 'localhost'
+
 	],
-	
+
 	/* error */
 	'error' =>
 	[
@@ -27,6 +28,18 @@ $config =
 		'permissionNotSet' => '<!-- Main --> <main><p> Ein Fehler ist aufgetreten. (PermissionsNotSet)</p></main>',
 		// permission missing
 		'permissionMissing' => '<!-- Main --> <main><p> Berechtigung für diese Seite fehlt.</p><a href="Start.php" property="url"> Hier geht\'s zurück zur Hauptseite </a></main>'
+	],
+
+	'cms_db_export' =>
+	[
+		 // database-name
+		 'database' => 'cms-projekt',
+		 // username
+		 'dbuser' => 'root',
+		 // password
+		 'dbpass' => '',
+		 // servername (database host)
+		 'dbhost' => 'localhost'
 	]
 ];
 ?>
