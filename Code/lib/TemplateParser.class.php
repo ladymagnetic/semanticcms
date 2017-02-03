@@ -144,7 +144,7 @@ class TemplateParser
 
 
 	/**
-	* Save the Tag data of the TemplateConstruction.php in an XML-file
+	* Save the Login data of the TemplateConstruction.php in an XML-file
 	*
 	*/
 	public function SaveLogin($BackgroundColor, $ForegroundColor, $Font, $Fontsize, $Fontcolor)
@@ -162,12 +162,12 @@ class TemplateParser
 
 
 	/**
-	* Save the Tag data of the TemplateConstruction.php in an XML-file
+	* Save the Label data of the TemplateConstruction.php in an XML-file
 	*
 	*/
-	public function SaveTag($BackgroundColor, $Font, $Fontsize, $Fontcolor, $Rounded)
+	public function SaveLabel($BackgroundColor, $Font, $Fontsize, $Fontcolor, $Rounded)
 	{
-		$this->root->appendChild($eighthNode = $this->dom->createElement("Tag"));
+		$this->root->appendChild($eighthNode = $this->dom->createElement("Label"));
 		$eighthNode->appendChild($this->dom->createElement("Backgroundcolor", $BackgroundColor));
 		$eighthNode->appendChild($this->dom->createElement('Font', $Font));
 		$eighthNode->appendChild($this->dom->createElement("Fontsize", $Fontsize));
@@ -351,7 +351,7 @@ class TemplateParser
 
   		$loginArray;
 			$i=0;
-			while(is_object($login = $doc->getElementsByTagName("Tag")->item($i)))
+			while(is_object($login = $doc->getElementsByTagName("Label")->item($i)))
 			{
 				foreach($login->childNodes as $nodename)
 			  {
@@ -364,27 +364,27 @@ class TemplateParser
 
 
 	/**
-	* Gives the Tag data of the TemplateName.xml
+	* Gives the Label data of the TemplateName.xml
 	*
 	*/
-	public function GetTag($TemplateName)
+	public function GetLabel($TemplateName)
 	{
 
 			$doc = new DOMDocument();
 			$doc->load("templates/".$TemplateName.".xml");
 
 
-  		$tagArray;
+  		$labelArray;
 			$i=0;
-			while(is_object($tag = $doc->getElementsByTagName("Tag")->item($i)))
+			while(is_object($label = $doc->getElementsByTagName("Label")->item($i)))
 			{
-				foreach($tag->childNodes as $nodename)
+				foreach($label->childNodes as $nodename)
 			  {
-			    $tagArray[$nodename->nodeName] = $nodename->nodeValue;
+			    $labelArray[$nodename->nodeName] = $nodename->nodeValue;
 			  }
 			  $i++;
 			}
-			return $tagArray;
+			return $labelArray;
 	}
 
 

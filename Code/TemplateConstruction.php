@@ -205,12 +205,12 @@ if(isset($_POST['save'])) {
   $loginFontsize = $_POST['LoginFontsize'];
   $loginFontColor = $_POST['LoginFontColor'];
   $templateParser->SaveLogin($loginBackgroundColor, $loginForegroundColor, $loginFont, $loginFontsize, $loginFontColor);
-  $tagBackgroundColor = $_POST['TagBackgroundColor'];
-  $tagfont = $_POST['TagFont'];
-  $tagFontsize = $_POST['TagFontsize'];
-  $tagFontColor = $_POST['TagFontColor'];
-  $tagRounded = $_POST['TagRounded'];
-  $templateParser->SaveTag($tagBackgroundColor, $tagfont, $tagFontsize, $tagFontColor, $tagRounded);
+  $labelBackgroundColor = $_POST['LabelBackgroundColor'];
+  $labelfont = $_POST['LabelFont'];
+  $labelFontsize = $_POST['LabelFontsize'];
+  $labelFontColor = $_POST['LabelFontColor'];
+  $labelRounded = $_POST['LabelRounded'];
+  $templateParser->SaveLabel($labelBackgroundColor, $labelfont, $labelFontsize, $labelFontColor, $labelRounded);
   $templateName = $_POST['TemplateName'];
   $templateParser->SaveTemplate($templateName);
 }
@@ -228,8 +228,8 @@ else if (isset($_POST['edit'])) {
   $articleContainer = $templateParser->GetArticleContainer($templateName);
   $footer = $templateParser->GetFooter($templateName);
   $button = $templateParser->GetButton($templateName);
-  $tag = $templateParser->GetTag($templateName);
-  EditTemplate($header, $background, $menu, $articleContainer, $footer, $button, $tag);
+  $label = $templateParser->GetLabel($templateName);
+  EditTemplate($header, $background, $menu, $articleContainer, $footer, $button, $label);
   return;
 }
 else if (isset($_POST['delete'])) {
@@ -530,21 +530,21 @@ function CreateTemplate()
                 <input type='number' name='LoginFontsize' min='2' max='50'><br><br>
               <label>Schriftfarbe:</label>
                 <input type='color' name='LoginFontColor' value='#000000'><br><br>
-              <h2>Tags</h2>
+              <h2>Label</h2>
                 <label>Hintergrundfarbe: </label>
-                  <input type='color' name='TagBackgroundColor' value='#000000'><br><br>";
+                  <input type='color' name='LabelBackgroundColor' value='#000000'><br><br>";
 
-                  BackendComponentPrinter::PrintFontsDropdownList("Schriftart:", "TagFont");
+                  BackendComponentPrinter::PrintFontsDropdownList("Schriftart:", "LabelFont");
   echo
                   "<br><br>
                 <label>Schriftgröße: </label>
-                  <input type='number' name='TagFontsize' min='2' max='50'><br><br>
+                  <input type='number' name='LabelFontsize' min='2' max='50'><br><br>
                 <label>Schriftfarbe:</label>
-                  <input type='color' name='TagFontColor' value='#000000'><br><br>
+                  <input type='color' name='LabelFontColor' value='#000000'><br><br>
                 <label>abgerundet:</label>
-                  <input type='radio' name='TagRounded' value='Rounded' checked='true'>
+                  <input type='radio' name='LabelRounded' value='Rounded' checked='true'>
                   <label for='Rounded'>ja</label>
-                  <input type='radio' name='TagRounded' value='Rectangular'>
+                  <input type='radio' name='LabelRounded' value='Rectangular'>
                   <label for='Rectangular'>nein</label><br><br><br>
               <label>Name des erstellten Templates:</label>
                 <input type='text' name='TemplateName'>
@@ -555,7 +555,7 @@ function CreateTemplate()
         </html>";
 }
 
-function EditTemplate($header, $background, $menu, $articleContainer, $footer, $button, $tag)
+function EditTemplate($header, $background, $menu, $articleContainer, $footer, $button, $Label)
 {
 
 }
