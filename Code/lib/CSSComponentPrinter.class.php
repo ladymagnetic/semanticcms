@@ -32,7 +32,7 @@ class CSSComponentPrinter
 			
 		}
 	
-		$css .= "height: ".$data['Height']."%; width: calc(100% - 20px); padding: 0px 10px; margin-bottom: 10px";					
+		$css .= "height: ".$data['Height']."%; width: calc(100% - 20px); padding: 0px 10px; margin-bottom: 10px; display: flex; align-items: center;}";					
  
 		$css .=	"}\nh1{margin:0;}\n";
 		
@@ -159,7 +159,7 @@ class CSSComponentPrinter
 	
 	public static function GetArticleContainer(array $data)
 	{
-		$main = "main {clear:both; padding: 10px; widht: width: calc(".$data['Width']."% - 20px); margin-bottom: 10px;";
+		$main = "main {clear:both; padding: 10px; width: calc(".$data['Width']."% - 20px); margin-bottom: 10px;";
 		
 		if(strcmp($data['Position'], "left") == 0)	
 		{
