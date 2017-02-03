@@ -964,17 +964,17 @@ class DbUser
 	*/
 	public function ApplyPasswordChangesToUser($userId, $password, $newPassword, $newPasswordRepeat)
 	{
-		$result = $this->database->ExecuteQuery("SELECT password FROM user WHERE id ='".$userId."'");
+		$result = $this->FetchArray($this->GetUserInformationById($userId))['password'];
 
-		if ($result == true)
+		if ($result != '')
 		{
-			$pwCheck = password_verify($password, $this->database->FetchArray($result)['password']);
+			$pwCheck = password_verify($password, $result);
 
 			if($pwCheck && ($newPassword == $newPasswordRepeat))
 			{
 				$hash = password_hash($newPassword, PASSWORD_BCRYPT, array('cost' => 12));
 
-				$changePassword = $this->database->ExecuteQuery("UPDATE user SET password = '".$hash."' WHERE id ='".$userId."'");
+				$changePassword = $this->database->ExecuteQuery("UPDATE user SET password = '".$hash."' WHERE id =".$userId."");
 				return true;
 			}
 			return false;
