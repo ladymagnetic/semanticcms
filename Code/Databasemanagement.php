@@ -22,6 +22,7 @@ $dbContent = new DbContent($config['cms_db']['dbhost'], $config['cms_db']['dbuse
 /* Begin: React to user actions -------------------------------*/
 // Submit button with the name 'exportDatabase' was clicked
 if (isset($_POST['exportDatabase'])) {
+    // todo: aufrufen von db->DownloadDB($dbhost, $dbuser, $dbpwd, 	$dbname)
 }
 // Submit button with the name 'importDatabase' was clicked
 else if (isset($_POST['importDatabase'])) {

@@ -18,11 +18,44 @@ use SemanticCms\Model\Permission;
 /** Database related objects */
 $db = new DbEngine($config['cms_db']['dbhost'],$config['cms_db']['dbuser'],$config['cms_db']['dbpass'],$config['cms_db']['database']);
 $dbContent = new DbContent($config['cms_db']['dbhost'], $config['cms_db']['dbuser'], $config['cms_db']['dbpass'], $config['cms_db']['database']);
-$websiteId = 0;
+
+$websiteId = -1; // value "-1" means no websites exist
+if (isset($_POST['websiteId'])) {
+    // if we saved the id of the selected website -> restore it
+    $websiteId = $_POST['websiteId'];
+}
+
 
 /* Begin: React to user actions -------------------------------*/
+// Submit button with the name 'newWebsite' was clicked
+if (isset($_POST['newWebsite'])) {
+    $templates = $dbContent->SelectAllTemplates();
+    if ($dbContent->GetResultCount($templates) < 1) {
+        die("Es exististieren keine Templates");
+    } else {
+        // The first template in the array will be the default template
+        $defaultTemplate = $dbContent->FetchArray($templates);
+
+        $headerTitle = "Meine Webseite";
+        $result = $dbContent->InsertWebsite($headerTitle, " ", " ", " ", " ", 0, 0, $defaultTemplate['id']);
+        if (!$result) {
+            die("Webseite konnte nicht erzeugt werden!");
+        } else {
+            // Get the id of the website we just created
+            $websites = $dbContent->SelectAllWebsiteByHeadertitle($headerTitle);
+            if ($dbContent->GetResultCount($websites) < 1) {
+                die("Die Webseite konnte nicht gefunden werden!");
+            }
+            // Select the created website and let the user change the website´s options
+            $websiteId = $dbContent->FetchArray($websites)['id'];
+            EditWebsiteOptions();
+        }
+
+        return;
+    }
+}
 // Submit button with the name 'newPage' was clicked
-if (isset($_POST['newPage'])) {
+else if (isset($_POST['newPage'])) {
     // Insert a new page
     $templates = $dbContent->SelectAllTemplates();
     if ($dbContent->GetResultCount($templates) < 1) {
@@ -44,21 +77,17 @@ if (isset($_POST['newPage'])) {
 }
 // Submit button with the name 'options' was clicked
 else if (isset($_POST['options'])) {
-    EditWebsiteOptions($websiteId);
+    EditWebsiteOptions();
     return;
 }
 // Submit button with the name 'saveWebsiteChanges' was clicked
 else if (isset($_POST['saveWebsiteChanges'])) {
     $loginEnabled = isset($_POST['loginEnabled']) ? 1 : 0;
     $guestbookEnabled = isset($_POST['guestbookEnabled']) ? 1 : 0;
-    $contactContent = isset($_POST['contactEnabled']) ?
-        $_POST['contactContent'] : '';
-    $imprintContent = isset($_POST['imprintEnabled']) ?
-        $_POST['imprintContent'] : '';
-    $privacyInformationContent = isset($_POST['privacyInformationEnabled']) ?
-        $_POST['privacyInformationContent'] : '';
-    $gtcContent = isset($_POST['gtcEnabled']) ?
-        $_POST['gtcContent'] : '';
+    $contactContent = $_POST['contactContent'];
+    $imprintContent = $_POST['imprintContent'];
+    $privacyInformationContent = $_POST['privacyInformationContent'];
+    $gtcContent = $_POST['gtcContent'];
 
     $queryResult = $dbContent->SelectTemplateByTemplatename($_POST['technicalSiteTemplateId']);
     $templateId = $dbContent->FetchArray($queryResult)['id'];
@@ -66,9 +95,6 @@ else if (isset($_POST['saveWebsiteChanges'])) {
     $dbContent->UpdateWebsiteById($websiteId, $_POST['headerTitle'], $contactContent, $imprintContent,
         $privacyInformationContent, $gtcContent, $loginEnabled, $guestbookEnabled,
         $templateId);
-
-    /*$debug->debug("neue optionen:---".$websiteId."---".$_POST['headerTitle']."---".$contactContent."---".$imprintContent."---".
-        $privacyInformationContent."---".$gtcContent."---".$loginEnabled."---".$guestbookEnabled."----".$templateId);*/
 }
 // Submit button with the name 'siteDetails' was clicked
 else if (isset($_POST['pageDetails'])) {
@@ -99,6 +125,10 @@ else if (isset($_POST['editContent'])) {
     header("Location: Articlemanagement.php?pageName=$pageTitle");
     return;
 }
+// Submit button with the name 'setCurrentWebsite' was clicked
+else if (isset($_POST['setCurrentWebsite'])) {
+    $websiteId = intval($_POST['website']);
+}
 /* End: React to user actions -------------------------------*/
 ?>
 
@@ -122,7 +152,7 @@ else if(!isset($_SESSION['permissions']))
     die($config['error']['permissionNotSet']);
 }
 /*  Check if user has the permission to see this page */
-else if(!in_array(Permission::Pagemanagment, $_SESSION['permissions']))
+else if(!in_array(Permission::Pagemanagement, $_SESSION['permissions']))
 {
     die($config['error']['permissionMissing']);
 }
@@ -139,26 +169,62 @@ BackendComponentPrinter::PrintDatatablesPlugin();
 
     <?php
 
+    echo "<form method=\"post\" action=''>
+            <input id=\"newWebsite\" name=\"newWebsite\" type=\"submit\" value=\"Neue Webseite\">
+          </form><br><br>";
 
-    /* Print Pages table */
-    $pages = $dbContent->SelectAllPages();
-    BackendComponentPrinter::PrintTableStart(array("Seite", "Template", "Aktionen", "Relative Position"));
-    while ($page = $dbContent->FetchArray($pages))
-    {
-        $siteTitle = $page['title'];
-        $queryResult = $dbContent->SelectTemplateById($page['template_id']);
-        $siteTemplate = $dbContent->FetchArray($queryResult);
-        $siteActions = "<form method='post' action=''>
+    $websites = $dbContent->SelectAllWebsite();
+    $nrOfWebsites = $dbContent->GetResultCount($websites);
+    if ($nrOfWebsites < 1) {
+        echo "Es wurde noch keine Webseite erstellt!<br><br>";
+    } else {
+        /* -------------- let the user select the website -------------- */
+        if ($websiteId < 1) {
+            $websiteId = 1; // set the default selected websiteId if no website is currently
+                            // selected
+        }
+        echo "<form method='post' action=''>
+                <label for='website'>Webseite</label>";
+        // fetch all existing websites
+        $queryResult = $dbContent->SelectAllWebsite();
+        echo "<select name='website' size='1'>";
+        while ($website = $dbContent->FetchArray($queryResult)) {
+            $option =  "<option ";
+            if ($website['id'] == $websiteId) {
+                $option .= "selected='selected' ";
+            }
+            $option .= "value='".$website['id']."'>";
+            $option .= $website['headertitle']."</option>";
+            echo $option;
+        }
+        echo "</select>
+              <input id='setCurrentWebsite' name='setCurrentWebsite' type='submit' value='Auswählen'>
+              </form>";
+
+        /* -------------- Print Pages table -------------- */
+        $pages = $dbContent->SelectAllPages();
+        BackendComponentPrinter::PrintTableStart(array("Seite", "Template", "Aktionen", "Relative Position"));
+        while ($page = $dbContent->FetchArray($pages)) {
+            if ($page['website_id'] != $websiteId) {
+                continue; // display only pages which belong to the currently selected website
+            }
+            $siteTitle = $page['title'];
+            $queryResult = $dbContent->SelectTemplateById($page['template_id']);
+            $siteTemplate = $dbContent->FetchArray($queryResult);
+            $siteActions = "<form method='post' action=''>
                 <input id='pageDetails' name='pageDetails' type='submit' value='Details'>
                 <input id='deletePage' name='deletePage' type='submit' value='Löschen'>
                 <input id='editContent' name='editContent' type='submit' value='Inhalte bearbeiten'>
-                <input id='pageId' name='pageId' type='hidden' value='".$page['id']."'>
-                <input id='pageTitle' name='pageTitle' type='hidden' value='".$page['title']."'></form>";
-        $siteRelativePosition = $page['relativeposition'];
+                <input id='pageId' name='pageId' type='hidden' value='" . $page['id'] . "'>
+                
+                <input id='pageTitle' name='pageTitle' type='hidden' value='" . $page['title'] . "'>
+                <input id='websiteId' name='websiteId' type='hidden' value='" . $websiteId . "'></form>";
+            $siteRelativePosition = $page['relativeposition'];
 
-        BackendComponentPrinter::PrintTableRow(array($siteTitle, $siteTemplate['templatename'], $siteActions, $siteRelativePosition));
+            BackendComponentPrinter::PrintTableRow(array($siteTitle, $siteTemplate['templatename'], $siteActions, $siteRelativePosition));
+        }
+        BackendComponentPrinter::PrintTableEnd();
     }
-    BackendComponentPrinter::PrintTableEnd();
 
     /**
      * Opens the page for the editing of the page details
@@ -177,6 +243,7 @@ BackendComponentPrinter::PrintDatatablesPlugin();
 
         /* Global variables */
         global $dbContent;
+        global $websiteId;
 
         /* Datatables */
         BackendComponentPrinter::PrintDatatablesPlugin();
@@ -190,14 +257,15 @@ BackendComponentPrinter::PrintDatatablesPlugin();
         // let the user edit page details
         echo "<form method='post' action=''>
                 <input id='pageId' name='pageId' type='hidden' value='".$page['id']."'>
-                
+                <input id='websiteId' name='websiteId' type='hidden' value='".$websiteId."'> 
+        
                 <label for='pageTitle'>Seitentitel</label>
                 <input id='pageTitle' name='pageTitle' value='".$page['title']."'>
                 <br><br>
                 <label for='relativePosition'>Relative Position</label>
                 <input id='relativePosition' name='relativePosition' value='".$page['relativeposition']."'>
                 <br><br>
-                <label for='templateId'>Template</label>";
+                <label for='templateName'>Template</label>";
         // fetch all existing templates
         $queryResult = $dbContent->SelectAllTemplates();
         echo "<select name='templateName' size='1'>
@@ -223,10 +291,10 @@ BackendComponentPrinter::PrintDatatablesPlugin();
     }
 
     /**
-     * Opens the page for the editing of the page details
+     * Opens the page for the editing of the currently selected website details
      *
      */
-    function EditWebsiteOptions($websiteId)
+    function EditWebsiteOptions()
     {
         BackendComponentPrinter::PrintHead("Seitenverwaltung", $jquery=true);
         //*----- Permissions ----- */
@@ -237,11 +305,20 @@ BackendComponentPrinter::PrintDatatablesPlugin();
         BackendComponentPrinter::PrintSidebar($_SESSION['permissions']);
         //*----- Permissions End ----- */
 
-        /* Global variables */
-        global $dbContent;
-
         /* Datatables */
         BackendComponentPrinter::PrintDatatablesPlugin();
+
+        /* Global variables */
+        global $dbContent;
+        global $websiteId;
+
+        if ($websiteId < 1) {
+            die("Es wurde keine gültige Website ausgewählt!");
+        }
+        $website = $dbContent->FetchArray($dbContent->SelectWebsiteById($websiteId));
+        if (null == $website) {
+            die("Es wurde noch keine Webseite erstellt!");
+        }
 
         /* specific style because of summernote */
         echo
@@ -263,13 +340,7 @@ BackendComponentPrinter::PrintDatatablesPlugin();
             <h1><i class='fa fa-users fontawesome'></i> Webseiten-Einstellungen</h1>
                 <form method='post' action='Pagemanagement.php'>";
 
-        $website = $dbContent->FetchArray($dbContent->SelectWebsiteById($websiteId));
-        if ($dbContent->GetResultCount($website) < 1) {
-            echo "Es wurde noch keine Webseite erstellt!<br><br>"; // todo button für neue webseite einfügen
-        }
-
         // let the user edit website details
-        // todo: felder-werte aus der website übernehmen
         echo "<form method='post' action=''>
                 <input id='websiteId' name='websiteId' type='hidden' value='".$websiteId."'>
                 
@@ -277,15 +348,19 @@ BackendComponentPrinter::PrintDatatablesPlugin();
                 <input id='headerTitle' name='headerTitle' value='".$website['headertitle']."'>
                 <br><br>
                 <label for='loginEnabled'>Login aktivieren</label>
-                <input type='checkbox' id='loginEnabled' name='loginEnabled' value=''>
-                <br><br>
+                <input type='checkbox' id='loginEnabled' name='loginEnabled' value=''";
+        if (boolval($website['login'])) {
+            echo " checked";
+        };
+        echo "><br><br>
                 <label for='guestbookEnabled'>Gästebuch aktivieren</label>
-                <input type='checkbox' id='guestbookEnabled' name='guestbookEnabled' value=''>
-                <br><br>
-                
-                <label for='imprintEnabled'>Impressum aktivieren</label>
-                <input type='checkbox' id='imprintEnabled' name='imprintEnabled' value=''>
-                 <div id='summernoteImprint' name='summernoteImprint'></div><br><br>
+                <input type='checkbox' id='guestbookEnabled' name='guestbookEnabled' value=''";
+        if (boolval($website['guestbook'])) {
+            echo " checked";
+        };
+        echo "><br><br>
+                <label for='summernoteImprint'>Impressum</label>
+                 <div id='summernoteImprint' name='summernoteImprint'>".$website['imprint']."</div>
             <script>
                 $(document).ready(function() {
                     $('#summernoteImprint').summernote({
@@ -300,9 +375,8 @@ BackendComponentPrinter::PrintDatatablesPlugin();
             <input id='imprintContent' name='imprintContent' type='hidden'>
                 <br><br>
                 
-                <label for='contactEnabled'>Kontakt-Formular aktivieren</label>
-                <input type='checkbox' id='contactEnabled' name='contactEnabled' value=''>
-                <div id='summernoteContact' name='summernoteContact'></div><br><br>
+                <label for='summernoteContact'>Kontakt-Formular</label>
+                <div id='summernoteContact' name='summernoteContact'>".$website['contact']."</div>
             <script>
                 $(document).ready(function() {
                     $('#summernoteContact').summernote({
@@ -317,9 +391,8 @@ BackendComponentPrinter::PrintDatatablesPlugin();
             <input id='contactContent' name='contactContent' type='hidden'>
                 <br><br>
                 
-                <label for='privacyInformationEnabled'>Datenschutz-Seite aktivieren</label>
-                <input type='checkbox' id='privacyInformationEnabled' name='privacyInformationEnabled' value=''>
-                <div id='summernotePrivacyInformation' name='summernotePrivacyInformation'></div><br><br>
+                <label for='summernotePrivacyInformation'>Datenschutz-Seite</label>
+                <div id='summernotePrivacyInformation' name='summernotePrivacyInformation'>".$website['privacyinformation']."</div>
             <script>
                 $(document).ready(function() {
                     $('#summernotePrivacyInformation').summernote({
@@ -334,9 +407,8 @@ BackendComponentPrinter::PrintDatatablesPlugin();
             <input id='privacyInformationContent' name='privacyInformationContent' type='hidden'>
                 <br><br>
                 
-                <label for='gtcEnabled'>AGB-Seite aktivieren</label>
-                <input type='checkbox' id='gtcEnabled' name='gtcEnabled' value=''>
-                <div id='summernoteGTC' name='summernoteGTC'></div><br><br>
+                <label for='summernoteGTC'>AGB-Seite</label>
+                <div id='summernoteGTC' name='summernoteGTC'>".$website['gtc']."</div>
             <script>
                 $(document).ready(function() {
                     $('#summernoteGTC').summernote({
@@ -390,10 +462,20 @@ BackendComponentPrinter::PrintDatatablesPlugin();
     }
     ?>
 
-    <form method="post" action=''>
-        <input id="newPage" name="newPage" type="submit" value="Neue Seite">
-        <input id="options" name="options" type="submit" value="Optionen">
-    </form>
+    <?php
+    global $websiteId;
+
+    if ($websiteId > 0) {
+        // display this form only if the current websiteId is valid
+        echo "<form method='post' action=''>
+            <input id='newPage' name='newPage' type='submit' value='Neue Seite'>
+            <input id='options' name='options' type='submit' value='Optionen'>
+
+            <input id='websiteId' name='websiteId' type='hidden' value='" . $websiteId . "'>
+        </form>";
+    }
+?>
+
 </main>
 </body>
 
