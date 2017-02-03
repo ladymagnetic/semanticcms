@@ -186,9 +186,9 @@ class DbContent
 
 		$selectAllWebsiteByHeadertitle = "SELECT * FROM website WHERE headertitle = ?";
 		$this->database->PrepareStatement("selectAllWebsiteByHeadertitle", $selectAllWebsiteByHeadertitle);
-		
-		
-		
+
+
+
 		//*nur für Testzwecke*//
 		//DELETE website.*, page.*, article.* FROM website INNER JOIN page on website.id = page.website_id INNER JOIN article ON article.page_id = page.id WHERE website.id = ?
 		//$deleteWebsiteAndPageAndArticle = "DELETE website.*, page.*, article.* FROM website INNER JOIN page on website.id = page.website_id INNER JOIN article ON article.page_id = page.id";
@@ -1423,7 +1423,7 @@ class DbContent
 		 {
 			$logUsername = $_SESSION['username'];
 			$logRolename = $_SESSION['rolename'];
-			$logDescription = 'Die Website <strong>'.$rolename.'</strong> wurde neu erstellt.';
+			$logDescription = 'Die Website <strong>'.$headertitle.'</strong> wurde neu erstellt.';
 			$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
 			return true;
 		 }
@@ -1538,7 +1538,7 @@ class DbContent
 	}
 
 
-	
+
 	/**
 	* delete one website, the pages and the articles by website_id
 	* @param int $website_id the id of the website
