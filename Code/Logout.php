@@ -1,4 +1,9 @@
 <?php
+/**
+* logout page 
+* @author Tamara Graf
+*/
+
 // Start the session
 session_start();
 // remove all session variables

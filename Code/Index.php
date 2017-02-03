@@ -1,4 +1,9 @@
 <?php
+/**
+* login page 
+* @author Tamara Graf
+*/
+
 // Start the session
 session_start();
 session_regenerate_id();
@@ -46,13 +51,7 @@ session_regenerate_id();
 		
 			$nameInput =  $_POST["username"];
 			$password = $_POST["password"];
-			
-		/*	$salt = mcrypt_create_iv(60, MCRYPT_RAND );	
-			$hash = password_hash($password, PASSWORD_BCRYPT, array('salt' => $salt, 'cost' => 12));
-			//var_dump(password_verify($password, $hash));
-			
-			//$hash = hash('sha512', $password); */
-			
+					
 			$login = $database->LoginUser($nameInput, $password);	
 						
 			if($login)
