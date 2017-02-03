@@ -142,16 +142,20 @@ $dbContent = new DbContent($config['cms_db']['dbhost'], $config['cms_db']['dbuse
 if(isset($_POST['save'])) {
   $templateParser = new TemplateParser();
   $backgroundColor = $_POST['BackgroundColor'];
-  $backgroundPicture = $_POST['BackgroundPicture'];
+  $backgroundPicture = 'hallo';//$_POST['BackgroundPicture'];
   $height = $_POST['Height'];
   $font = $_POST['Font'];
   $fontsize = $_POST['Fontsize'];
   $fontColor = $_POST['FontColor'];
   $position = $_POST['Position'];
-  $logo = $_POST['Logo'];
+  $filename = $_FILES['Logo']['name'];
+  $filesize = $_FILES['Logo']['size'];
+  $filetmpname = $_FILES['Logo']['tmp_name'];
+  $filetype = $_FILES['Logo']['type'];
+  $logo = PictureSave($filename, $filesize, $filetmpname, $filetype);
   $templateParser->SaveHeader($height, $position, $font, $fontsize, $fontColor, $backgroundColor, $backgroundPicture, $logo);
   $webBackgroundcolor = $_POST['WebColor'];
-  $webBackgroundpic = $_POST['WebPicture'];
+  $webBackgroundpic = 'hallo';//$_POST['WebPicture'];
   $webBackPicPosition = $_POST['WebPicPosition'];
   $templateParser->SaveBackground($webBackgroundcolor, $webBackgroundpic, $webBackPicPosition);
   $menuWidth = $_POST['MenuWidth'];
@@ -172,7 +176,7 @@ if(isset($_POST['save'])) {
   $navFontColor = $_POST['NavFontColor'];
   $navButtonBackgroundColor = $_POST['NavButtonBackgroundColor'];
   $articleBackColor = $_POST['ArticleBackColor'];
-  $articleBackgroundPicture = $_POST['ArticleBackgroundPicture'];
+  $articleBackgroundPicture = 'hallo';//$_POST['ArticleBackgroundPicture'];
   $articleWidth = $_POST['ArticleWidth'];
   $templateParser->SaveArticleContainer($articlePosition, $articleNumber, $navigation, $navigationPostion, $navFont, $navFontsize, $navFontColor, $navButtonBackgroundColor, $articleBackColor, $articleBackgroundPicture, $articleWidth);
   $footerHeight = $_POST['FooterHeight'];
@@ -180,7 +184,7 @@ if(isset($_POST['save'])) {
   $footerFontsize = $_POST['FooterFontsize'];
   $footerFontColor = $_POST['FooterFontColor'];
   $footerBackColorPicker = $_POST['FooterBackColorPicker'];
-  $footerBackPicture = $_POST['FooterBackPicture'];
+  $footerBackPicture = 'hallo';//$_POST['FooterBackPicture'];
   $orderFooter = $_POST['OrderFooter'];
   $templateParser->SaveFooter($footerHeight, $footerFont, $footerFontsize, $footerFontColor, $footerBackColorPicker, $footerBackPicture, $orderFooter);
   $buttonRounded = $_POST['ButtonRounded'];
@@ -189,7 +193,7 @@ if(isset($_POST['save'])) {
   $buttonFontsize = $_POST['ButtonFontsize'];
   $buttonFontColor = $_POST['ButtonFontColor'];
   $buttonBackgroundColor = $_POST['ButtonBackgroundColor'];
-  $buttonBackgroundPic = $_POST['ButtonBackgroundPic'];
+  $buttonBackgroundPic = 'hallo';//$_POST['ButtonBackgroundPic'];
   $templateParser->SaveButton($buttonRounded, $button3D, $buttonFont, $buttonFontsize, $buttonFontColor, $buttonBackgroundColor, $buttonBackgroundPic);
   $loginBackgroundColor = $_POST['LoginBackgroundColor'];
   $loginForegroundColor = $_POST['LoginForegroundColor'];
@@ -307,7 +311,7 @@ function CreateTemplate()
   echo
           "<body><main>
         		<h1><i class='fa fa-paint-brush fontawesome'></i> Templates</h1>
-            <form  action='TemplateConstruction.php' method='post'>
+            <form enctype='multipart/form-data' action='TemplateConstruction.php' method='post'>
             <h2>Header</h2>
             <label>Position: </label>
 
@@ -351,7 +355,7 @@ function CreateTemplate()
               <input type='color' name='FontColor' value='#000000'>
               <br><br>
             <label>Logo: </label>
-              <input type='file' name='Logo'>
+              <input name='Logo' type='file' accept='image/jpeg,image/gif,image/x-png'>
               <br><br>
             <h2>Hintergrund von der Website</h2>
               <input type='radio' name='WebsiteBackground' value='WebsiteColor' checked='true' onclick='onWebsiteColorPicker()'>
@@ -551,4 +555,57 @@ function EditTemplate($header, $background, $menu, $articleContainer, $footer, $
 {
 
 }
+
+
+function PictureSave($filename, $filesize, $filetmpname, $filetype)
+{
+  $upload_folder = 'frontend/media/';
+  $name = pathinfo($filename, PATHINFO_FILENAME);
+  $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+
+
+
+
+  //Überprüfung der Dateiendung
+  $allowed_extensions = array('image/png', 'image/jpg', 'image/jpeg', 'image/gif');
+  if(!in_array(strtolower($filetype), $allowed_extensions)) {
+   die("Ungültige Dateiendung. Nur png, jpg, jpeg und gif-Dateien sind erlaubt");
+ }
+
+  //Überprüfung der Dateigröße
+  $max_size = 5*1024*1024;
+  if($filesize > $max_size) {
+   die("Bitte keine Dateien größer 5Mb hochladen");
+  }
+
+  //Überprüfung dass das Bild keine Fehler enthält
+  if(function_exists('exif_imagetype')) { //exif_imagetype erfordert die exif-Erweiterung
+   $allowed_types = array(IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF);
+   $detected_type = exif_imagetype($filetmpname);
+   if(!in_array($detected_type, $allowed_types)) {
+   die("Nur der Upload von Bilddateien ist gestattet");
+   }
+  }
+
+  //Pfad zum Upload
+  $new_path = $upload_folder.$name.'.'.$extension;
+  $picturename = $name.'.'.$extension;
+
+  //Neuer Dateiname falls die Datei bereits existiert
+  if(file_exists($new_path)) { //Falls Datei existiert, hänge eine Zahl an den Dateinamen
+   $id = 1;
+   do {
+   $new_path = $upload_folder.$name.'_'.$id.'.'.$extension;
+   $picturename = $name.'_'.$id.'.'.$extension;
+   $id++;
+   } while(file_exists($new_path));
+  }
+
+  //Alles okay, verschiebe Datei an neuen Pfad
+  move_uploaded_file($filetmpname, $new_path);
+
+  return $picturename;
+
+}
+
 ?>
