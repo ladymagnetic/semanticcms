@@ -190,14 +190,18 @@ class DbEngine
 	public function DownloadDB($dbhost, $dbuser, $dbpwd, 	$dbname)
 		{
 			$storagepath = "01_Datenbank/Backup/";
-
 			$pathToMysqldump = "media\mysqldump ";
 
 			$dumpfile = $storagepath .$dbname . "_" . date("Y-m-d_H-i-s") . ".sql";
-
 			passthru("$pathToMysqldump --opt --host=$dbhost --user=$dbuser --password=$dbpwd $dbname > $dumpfile");
+			echo "$dumpfile ";
 
-			echo "$dumpfile "; passthru("tail -1 $dumpfile");
+			passthru("tail -1 $dumpfile");
+
+			echo
+			"<div class='info'>
+			<strong>Info!</strong> Die Datebank wurde erfolgreich exportiert. Sie heißt: ".$dumpfile."
+			</div>";
 		}
 
 
