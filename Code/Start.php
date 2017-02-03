@@ -88,9 +88,11 @@ session_start();
 		BackendComponentPrinter::PrintTableRow(array("Templates", $allTemplates));
 		BackendComponentPrinter::PrintTableEnd();
 
+		echo "<br><br><br>";
+
 	?>
 
-	
+
 </main>
 </body>
 
