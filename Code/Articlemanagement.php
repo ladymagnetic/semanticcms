@@ -507,13 +507,13 @@ function EditArticle($pageName, $articleId, $dbContent, $dbUser)
             while ($selectedlabelRow = $dbContent->FetchArray($selectedlabelRows))
             {
                 echo
-                    "<option selected value='".$selectedlabelRow['Labelname']."'>".$selectedlabelRow['Labelname']."</option>";
+                    "<option selected value='".$selectedlabelRow['labelname']."'>".$selectedlabelRow['labelname']."</option>";
             }
             $labelRows = $dbContent->SelectAllLabels();
             while ($labelRow = $dbContent->FetchArray($labelRows))
             {
                 echo
-                    "<option value='".$labelRow['Labelname']."'>".$labelRow['Labelname']."</option>";
+                    "<option value='".$labelRow['labelname']."'>".$labelRow['labelname']."</option>";
             }
             echo
                 "</select><br><br>";
