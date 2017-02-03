@@ -69,13 +69,13 @@ class BackendComponentPrinter
 			<div id=\"logo\" style=\"cursor: pointer;\" onclick=\"window.location='Start.php';\"></div>
 			<ul>";
             // Je nach Rechten bestimmte Menue-Punkte gar nicht erst sichtbar
-            if (in_array(Permission::Usermanagment, $permissions)) {
+            if (in_array(Permission::Usermanagement, $permissions)) {
                 echo "<li property='name'><a property='url' href=\"Usermanagement.php\" title=\"Benutzerverwaltung\"><i class=\"fa fa-users fontawesome\"></i> Benutzerverwaltung</a></li>";
             }
-            if (in_array(Permission::Pagemanagment, $permissions)) {
+            if (in_array(Permission::Pagemanagement, $permissions)) {
                 echo "<li property='name'><a property='url' href=\"Pagemanagement.php\" title=\"Seitenverwaltung\"><i class=\"fa fa-file-text fontawesome\"></i> Seitenverwaltung</a></li>";
             }
-            if (in_array(Permission::Articlemanagment, $permissions)) {
+            if (in_array(Permission::Articlemanagement, $permissions)) {
                 echo "<li property='name'><a property='url' href=\"Articlemanagement.php\" title=\"Inhaltsverwaltung\"><i class=\"fa fa-align-justify fontawesome\"></i> Inhaltsverwaltung</a></li>";
             }
             if (in_array(Permission::Templateconstruction, $permissions)) {
