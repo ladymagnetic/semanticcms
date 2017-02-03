@@ -89,18 +89,18 @@ else if (isset($_POST['publish']))
     // assign labels
     foreach ($_POST['labels'] as $selectedOption)
     {
-        $labelId = $dbContent->FetchArray($dbContent->SelectLableIdByLablename(mb_strtolower($selectedOption)))['id'];
+        $labelId = $dbContent->FetchArray($dbContent->SelectLabelIdByLabelname(mb_strtolower($selectedOption)))['id'];
         if ($labelId != "" && $labelId != null)
         {
             $labelId = intval($labelId);
         }
         else
         {
-            $dbContent->InsertLable(mb_strtolower($selectedOption), "label.".mb_strtolower($selectedOption));
-            $labelId = intval($dbContent->FetchArray($dbContent->SelectLableIdByLablename(mb_strtolower($selectedOption))));
+            $dbContent->InsertLabel(mb_strtolower($selectedOption), "label.".mb_strtolower($selectedOption));
+            $labelId = intval($dbContent->FetchArray($dbContent->SelectLabelIdByLabelname(mb_strtolower($selectedOption))));
         }
         $articleId = intval($dbContent->FetchArray($dbContent->SelectArticleByHeader($header))['id']);
-        $dbContent->InsertLable_Article($labelId, $articleId);
+        $dbContent->InsertLabel_Article($labelId, $articleId);
     }
 }
 // if submit button with name 'updateArticle' is pressed
@@ -133,22 +133,22 @@ else if (isset($_POST['updateArticle']))
     $dbContent->UpdateArticleToPage($articleId, $header, $content, $date, $pageId, $authorId, $type, $public, $description);
 
     // delete all labels to assign all current labels
-    $dbContent->DeleteLable_ArticleByArticleId($articleId);
+    $dbContent->DeleteLabel_ArticleByArticleId($articleId);
   
     // assign labels
     foreach ($_POST['labels'] as $selectedOption)
     {  
-        $labelId = $dbContent->FetchArray($dbContent->SelectLableIdByLablename(mb_strtolower($selectedOption)))['id'];
+        $labelId = $dbContent->FetchArray($dbContent->SelectLabelIdByLabelname(mb_strtolower($selectedOption)))['id'];
         if ($labelId != "" && $labelId != null)
         { 
             $labelId = intval($labelId);
         }
         else
         {
-            $dbContent->InsertLable(mb_strtolower($selectedOption), "label.".mb_strtolower($selectedOption));
-            $labelId = intval($dbContent->FetchArray($dbContent->SelectLableIdByLablename(mb_strtolower($selectedOption)))['id']);
+            $dbContent->InsertLabel(mb_strtolower($selectedOption), "label.".mb_strtolower($selectedOption));
+            $labelId = intval($dbContent->FetchArray($dbContent->SelectLabelIdByLabelname(mb_strtolower($selectedOption)))['id']);
         }
-        $dbContent->InsertLable_Article($labelId, $articleId);
+        $dbContent->InsertLabel_Article($labelId, $articleId);
     }
 }
 
@@ -346,11 +346,11 @@ function CreateNewArticle($pageName, $dbContent)
                 </script>";
             echo 
                 "<label for='labels[]'>Labels</label><select required style='width: 500px;' id='labels' name='labels[]' multiple='multiple'>";
-            $labelRows = $dbContent->SelectAllLables();
+            $labelRows = $dbContent->SelectAllLabels();
             while ($labelRow = $dbContent->FetchArray($labelRows))
             {
                 echo
-                    "<option value='".$labelRow['lablename']."'>".$labelRow['lablename']."</option>";
+                    "<option value='".$labelRow['labelname']."'>".$labelRow['labelname']."</option>";
             }
             echo
                 "</select><br><br>";
@@ -503,17 +503,17 @@ function EditArticle($pageName, $articleId, $dbContent, $dbUser)
                 </script>";
             echo 
                 "<label for='labels[]'>Labels</label><select required style='width: 500px;' id='labels' name='labels[]' multiple='multiple'>";
-            $selectedlabelRows = $dbContent->SelectAllLablesFromAnArticleById($articleRow['id']);
+            $selectedlabelRows = $dbContent->SelectAllLabelsFromAnArticleById($articleRow['id']);
             while ($selectedlabelRow = $dbContent->FetchArray($selectedlabelRows))
             {
                 echo
-                    "<option selected value='".$selectedlabelRow['lablename']."'>".$selectedlabelRow['lablename']."</option>";
+                    "<option selected value='".$selectedlabelRow['labelname']."'>".$selectedlabelRow['labelname']."</option>";
             }
-            $labelRows = $dbContent->SelectAllLables();
+            $labelRows = $dbContent->SelectAllLabels();
             while ($labelRow = $dbContent->FetchArray($labelRows))
             {
                 echo
-                    "<option value='".$labelRow['lablename']."'>".$labelRow['lablename']."</option>";
+                    "<option value='".$labelRow['labelname']."'>".$labelRow['labelname']."</option>";
             }
             echo
                 "</select><br><br>";
