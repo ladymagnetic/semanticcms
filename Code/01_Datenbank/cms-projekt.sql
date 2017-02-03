@@ -127,20 +127,20 @@ INSERT INTO `ban_reason` (`id`, `reason`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `lable`
+-- Tabellenstruktur für Tabelle `label`
 --
 
-CREATE TABLE `lable` (
+CREATE TABLE `label` (
   `id` int(11) NOT NULL,
-  `lablename` varchar(255) NOT NULL,
+  `labelname` varchar(255) NOT NULL,
   `uri` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Daten für Tabelle `lable`
+-- Daten für Tabelle `label`
 --
 
-INSERT INTO `lable` (`id`, `lablename`, `uri`) VALUES
+INSERT INTO `label` (`id`, `labelname`, `uri`) VALUES
 (1, 'italien', 'Italien.uri'),
 (2, 'spanien', 'Spanien.uri'),
 (3, 'portugal', 'Portugal.uri'),
@@ -165,19 +165,19 @@ INSERT INTO `lable` (`id`, `lablename`, `uri`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `lable_article`
+-- Tabellenstruktur für Tabelle `label_article`
 --
 
-CREATE TABLE `lable_article` (
-  `lable_id` int(11) NOT NULL,
+CREATE TABLE `label_article` (
+  `label_id` int(11) NOT NULL,
   `article_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Daten für Tabelle `lable_article`
+-- Daten für Tabelle `label_article`
 --
 
-INSERT INTO `lable_article` (`lable_id`, `article_id`) VALUES
+INSERT INTO `label_article` (`label_id`, `article_id`) VALUES
 (1, 9),
 (1, 15),
 (4, 7),
@@ -202,19 +202,19 @@ INSERT INTO `lable_article` (`lable_id`, `article_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `lable_user`
+-- Tabellenstruktur für Tabelle `label_user`
 --
 
-CREATE TABLE `lable_user` (
-  `lable_id` int(11) NOT NULL,
+CREATE TABLE `label_user` (
+  `label_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Daten für Tabelle `lable_user`
+-- Daten für Tabelle `label_user`
 --
 
-INSERT INTO `lable_user` (`lable_id`, `user_id`) VALUES
+INSERT INTO `label_user` (`label_id`, `user_id`) VALUES
 (1, 5),
 (2, 9),
 (4, 8),
@@ -504,23 +504,23 @@ ALTER TABLE `ban_reason`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `lable`
+-- Indizes für die Tabelle `label`
 --
-ALTER TABLE `lable`
+ALTER TABLE `label`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `lable_article`
+-- Indizes für die Tabelle `label_article`
 --
-ALTER TABLE `lable_article`
-  ADD UNIQUE KEY `tag_id` (`lable_id`,`article_id`),
+ALTER TABLE `label_article`
+  ADD UNIQUE KEY `tag_id` (`label_id`,`article_id`),
   ADD KEY `article_id` (`article_id`);
 
 --
--- Indizes für die Tabelle `lable_user`
+-- Indizes für die Tabelle `label_user`
 --
-ALTER TABLE `lable_user`
-  ADD UNIQUE KEY `tag_id` (`lable_id`,`user_id`),
+ALTER TABLE `label_user`
+  ADD UNIQUE KEY `tag_id` (`label_id`,`user_id`),
   ADD KEY `user_id` (`user_id`);
 
 --
@@ -601,9 +601,9 @@ ALTER TABLE `ban`
 ALTER TABLE `ban_reason`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
--- AUTO_INCREMENT für Tabelle `lable`
+-- AUTO_INCREMENT für Tabelle `label`
 --
-ALTER TABLE `lable`
+ALTER TABLE `label`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 --
 -- AUTO_INCREMENT für Tabelle `logtable`
@@ -645,18 +645,18 @@ ALTER TABLE `website`
 --
 
 --
--- Constraints der Tabelle `lable_article`
+-- Constraints der Tabelle `label_article`
 --
-ALTER TABLE `lable_article`
-  ADD CONSTRAINT `lable_article_ibfk_1` FOREIGN KEY (`lable_id`) REFERENCES `lable` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `lable_article_ibfk_2` FOREIGN KEY (`article_id`) REFERENCES `article` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `label_article`
+  ADD CONSTRAINT `label_article_ibfk_1` FOREIGN KEY (`label_id`) REFERENCES `label` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `label_article_ibfk_2` FOREIGN KEY (`article_id`) REFERENCES `article` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints der Tabelle `lable_user`
+-- Constraints der Tabelle `label_user`
 --
-ALTER TABLE `lable_user`
-  ADD CONSTRAINT `lable_user_ibfk_1` FOREIGN KEY (`lable_id`) REFERENCES `lable` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `lable_user_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `label_user`
+  ADD CONSTRAINT `label_user_ibfk_1` FOREIGN KEY (`label_id`) REFERENCES `label` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `label_user_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints der Tabelle `searchphrase_user`
