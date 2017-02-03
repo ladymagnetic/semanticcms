@@ -169,7 +169,7 @@ else if(!isset($_SESSION['permissions']))
     die($config['error']['permissionNotSet']);  		
 }
 /*  Check if user has the permission the see this page */
-else if(!in_array(Permission::Articlemanagment, $_SESSION['permissions']))
+else if(!in_array(Permission::Articlemanagement, $_SESSION['permissions']))
 {
     die($config['error']['permissionMissing']);  	  
 }	
