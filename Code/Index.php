@@ -26,7 +26,7 @@ session_regenerate_id();
 		<input id="username" name="username" type="text" required="true" placeholder="Username">
 		<input id="password" name="password" type="password" required="true" placeholder="Passwort">
 		<button id="ok" name="action" value="login"> OK </button>
-		<button id="forgotPassword" name="action" value="forgotPassword"> Passwort vergessen</button>
+		<a href="ForgotPassword.php"><button id="forgotPassword" type="button"> Passwort vergessen</button></a>
 	</form>
 
 	<?php
@@ -72,10 +72,10 @@ session_regenerate_id();
 					$_SESSION['permissions'] = array();
 					
 					array_push($_SESSION['permissions'],Permission::Backendlogin);
-					if($permissions["guestbookmanagement"] == 1)	array_push($_SESSION['permissions'],Permission::Guestbookmanagment);
-					if($permissions["usermanagement"] == 1)			array_push($_SESSION['permissions'],Permission::Usermanagment);
-					if($permissions["pagemanagement"] == 1) 		array_push($_SESSION['permissions'],Permission::Pagemanagment);
-					if($permissions["articlemanagement"] == 1) 		array_push($_SESSION['permissions'],Permission::Articlemanagment);
+					if($permissions["guestbookmanagement"] == 1)	array_push($_SESSION['permissions'],Permission::Guestbookmanagement);
+					if($permissions["usermanagement"] == 1)			array_push($_SESSION['permissions'],Permission::Usermanagement);
+					if($permissions["pagemanagement"] == 1) 		array_push($_SESSION['permissions'],Permission::Pagemanagement);
+					if($permissions["articlemanagement"] == 1) 		array_push($_SESSION['permissions'],Permission::Articlemanagement);
 					if($permissions["templateconstruction"] == 1) 	array_push($_SESSION['permissions'],Permission::Templateconstruction);
 					if($permissions["guestbookusage"] == 1) 		array_push($_SESSION['permissions'],Permission::Guestbookusage);
 					if($permissions["databasemanagement"] == 1) 	array_push($_SESSION['permissions'],Permission::Databasemanagement);
