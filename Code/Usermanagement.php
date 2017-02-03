@@ -219,7 +219,7 @@ BackendComponentPrinter::PrintHead("Benutzerverwaltung", $jquery=true);
         die($config['error']['permissionNotSet']);  		
     }
     /*  Check if user has the permission the see this page */
-    else if(!in_array(Permission::Usermanagment, $_SESSION['permissions']))
+    else if(!in_array(Permission::Usermanagement, $_SESSION['permissions']))
     {
         die($config['error']['permissionMissing']);  	  
     }

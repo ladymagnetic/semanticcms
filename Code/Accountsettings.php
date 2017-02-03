@@ -96,7 +96,7 @@ echo
 echo
         "</form>
         <h2>Passwort ändern</h2>
-        <form method='post' action='Usermanagement.php'>";
+        <form method='post' action='Accountsettings.php'>";
 echo
         "<label for='currentPassword'>aktuelles Passwort</label>
         <input required id='currentPassword' name='currentPassword' type='password'><br><br>
