@@ -260,7 +260,7 @@ while ($row = $dbUser->FetchArray($userRows))
                     }
                 }
                 // if banenddate is later than now
-                $todays_date = date("Y-m-d");
+                $todays_date = date("Y-m-d H:i:s");
                 $exp_date = $banRow['enddatetime'];
                 $today = strtotime($todays_date);
                 $expiration_date = strtotime($exp_date);
