@@ -123,11 +123,11 @@ class DbContent
 
 
 
-		$selectAllLable_Article = "SELECT * FROM lable_article";
-		$this->database->PrepareStatement("selectAllLable_Article", $selectAllLable_Article );
+		$selectAllLabel_Article = "SELECT * FROM label_article";
+		$this->database->PrepareStatement("selectAlllabel_Article", $selectAllLabel_Article );
 
-		$selectAllLablesFromAnArticleById = "SELECT * FROM article INNER JOIN lable_article  ON article.id = lable_article.article_id INNER JOIN Lable ON lable_article.lable_id = lable.id WHERE article.id = ?";
-		$this->database->PrepareStatement("selectAllLablesFromAnArticleById", $selectAllLablesFromAnArticleById );
+		$selectAllLabelsFromAnArticleById = "SELECT * FROM article INNER JOIN label_article  ON article.id = label_article.article_id INNER JOIN label ON label_article.label_id = label.id WHERE article.id = ?";
+		$this->database->PrepareStatement("selectAllLabelsFromAnArticleById", $selectAllLabelsFromAnArticleById );
 
 
 
@@ -145,8 +145,8 @@ class DbContent
 
 
 
-		$selectAllLable_User = "SELECT * FROM lable_user";
-		$this->database->PrepareStatement("selectAllLable_User", $selectAllLable_User);
+		$selectAllLabel_User = "SELECT * FROM label_user";
+		$this->database->PrepareStatement("selectAllLabel_User", $selectAllLabel_User);
 
 
 
@@ -171,17 +171,17 @@ class DbContent
 
 
 
-		$selectLableByLableId = "SELECT * FROM lable WHERE id = ?";
-		$this->database->PrepareStatement("selectLableByLableId", $selectLableByLableId);
+		$selectLabelByLabelId = "SELECT * FROM label WHERE id = ?";
+		$this->database->PrepareStatement("selectLabelByLabelId", $selectLabelByLabelId);
 
-		$selectLableIdByLablename = "SELECT id FROM lable WHERE lablename = ?";
-		$this->database->PrepareStatement("selectLableIdByLablename", $selectLableIdByLablename);
+		$selectLabelIdByLabelname = "SELECT id FROM label WHERE labelname = ?";
+		$this->database->PrepareStatement("selectLabelIdByLabelname", $selectLabelIdByLabelname);
 
 		$selectArticleByHeader = "SELECT * FROM article WHERE header = ?";
 		$this->database->PrepareStatement("selectArticleByHeader", $selectArticleByHeader);
 
-		$selectAllLables = "SELECT * FROM lable";
-		$this->database->PrepareStatement("selectAllLables", $selectAllLables);
+		$selectAllLabels = "SELECT * FROM label";
+		$this->database->PrepareStatement("selectAllLabels", $selectAllLabels);
 
 
 		$selectAllWebsiteByHeadertitle = "SELECT * FROM website WHERE headertitle = ?";
@@ -675,25 +675,25 @@ class DbContent
 
 
 	/**
-	* select all lable_article
+	* select all label_article
 	* @param void
 	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
-	public function SelectAllLable_Article()
+	public function SelectAllLabel_Article()
 	{
-		return $this->database->ExecutePreparedStatement("selectAllLable_Article", array());
+		return $this->database->ExecutePreparedStatement("selectAllLabel_Article", array());
 	}
 
 
 
 	/**
-	* select all lable from an article by id
+	* select all label from an article by id
 	* @param int $articleId the id of the article
 	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
-	public function SelectAllLablesFromAnArticleById($articleId)
+	public function SelectAllLabelsFromAnArticleById($articleId)
 	{
-		return $this->database->ExecutePreparedStatement("selectAllLablesFromAnArticleById", array($articleId));
+		return $this->database->ExecutePreparedStatement("selectAllLabelsFromAnArticleById", array($articleId));
 	}
 
 
@@ -766,15 +766,15 @@ class DbContent
 
 
 	/**
-	* creates a new lable
-	* @param string $lablename the name of the lable
-	* @param string $uri the uri of the lable
-	* @return boolean true|false successful (true) when the query could be executed correctly and lable is generated
+	* creates a new label
+	* @param string $labelname the name of the label
+	* @param string $uri the uri of the label
+	* @return boolean true|false successful (true) when the query could be executed correctly and label is generated
 	*/
-	public function InsertLable($lablename, $uri)
+	public function InsertLabel($labelname, $uri)
 	{
-		$lablename = $this->database->RealEscapeString($lablename);
-		$result = $this->database->ExecuteQuery("INSERT INTO lable (id, lablename, uri) VALUES (NULL, '".$lablename."', '".$uri."') ");
+		$labelname = $this->database->RealEscapeString($labelname);
+		$result = $this->database->ExecuteQuery("INSERT INTO label (id, labelname, uri) VALUES (NULL, '".$labelname."', '".$uri."') ");
 
 		if($result==true)
 		{
@@ -791,14 +791,14 @@ class DbContent
 	/**********/
 
 	/**
-	* updates a special lable by uri
-	* @param string $lablename
+	* updates a special label by uri
+	* @param string $labelname
 	* @param string $uri
-	* @return boolean true|false successful (true) when the query could be executed correctly and the changes in terms of the lable are done
+	* @return boolean true|false successful (true) when the query could be executed correctly and the changes in terms of the label are done
 	*/
-	public function UpdateLableByUri($lablename, $uri)
+	public function UpdateLabelByUri($labelname, $uri)
 	{
-		$result = $this->database->ExecuteQuery("UPDATE lable SET lablename  = '".$lablename."'  WHERE uri  = '".$uri."'" );
+		$result = $this->database->ExecuteQuery("UPDATE label SET labelname  = '".$labelname."'  WHERE uri  = '".$uri."'" );
 
 		if($result==true)
 		{
@@ -814,15 +814,15 @@ class DbContent
 
 
 	/**
-	* updates a special lable by id
-	* @param int $lableId
-	* @param string $lablename
+	* updates a special label by id
+	* @param int $labelId
+	* @param string $labelname
 	* @param string $uri
-	* @return boolean true|false successful (true) when the query could be executed correctly and the changes in terms of the lable are done
+	* @return boolean true|false successful (true) when the query could be executed correctly and the changes in terms of the label are done
 	*/
-	public function UpdateLableById($lableId, $lablename, $uri)
+	public function UpdateLabelById($labelId, $labelname, $uri)
 	{
-		$result = $this->database->ExecuteQuery("UPDATE lable SET lablename  ='".$lablename."', uri  = '".$uri."'  WHERE id = ". $lableId);
+		$result = $this->database->ExecuteQuery("UPDATE label SET labelname  ='".$labelname."', uri  = '".$uri."'  WHERE id = ". $labelId);
 
 		if($result==true)
 		{
@@ -980,13 +980,13 @@ class DbContent
 
 
 	/**
-	* delets lable_articles
+	* delets label_articles
 	* @param int $articleId the id of the article (foreign key)
-	* @return boolean true|false successful (true) when the query could be executed correctly and the lable_article is deleted
+	* @return boolean true|false successful (true) when the query could be executed correctly and the label_article is deleted
 	*/
-	public function DeleteLable_ArticleByArticleId($articleId)
+	public function DeleteLabel_ArticleByArticleId($articleId)
 	{
-		$result = $this->database->ExecuteQuery("DELETE FROM lable_article WHERE article_id = ".$articleId);
+		$result = $this->database->ExecuteQuery("DELETE FROM label_article WHERE article_id = ".$articleId);
 
 		if($result==true)
 		{
@@ -1004,13 +1004,13 @@ class DbContent
 
 
 	 /**
-	 * delets lable_articles
-	 * @param int $lableId the id of the lable (foreign key)
-	 * @return boolean true|false successful (true) when the query could be executed correctly and the lable_article is deleted
+	 * delets label_articles
+	 * @param int $labelId the id of the label (foreign key)
+	 * @return boolean true|false successful (true) when the query could be executed correctly and the label_article is deleted
 	 */
-	 public function DeleteLable_ArticleByLableId($lableId)
+	 public function DeleteLabel_ArticleByLabelId($labelId)
 	 {
-	 	$result = $this->database->ExecuteQuery("DELETE FROM lable_article WHERE lable_id = ".$lableId);
+	 	$result = $this->database->ExecuteQuery("DELETE FROM label_article WHERE label_id = ".$labelId);
 
 	 	if($result==true)
 	 	{
@@ -1028,12 +1028,12 @@ class DbContent
 
 
   	/**
-	* delets all lable_articles
-	* @return boolean true|false successful (true) when the query could be executed correctly and all lable_articles are deleted
+	* delets all label_articles
+	* @return boolean true|false successful (true) when the query could be executed correctly and all label_articles are deleted
   	*/
-  	public function DeleteAllLable_Article()
+  	public function DeleteAllLabel_Article()
   	{
-  		$result = $this->database->ExecuteQuery("DELETE FROM lable_Article");
+  		$result = $this->database->ExecuteQuery("DELETE FROM label_Article");
 
   		if($result==true)
   		{
@@ -1048,14 +1048,14 @@ class DbContent
 
 
 	/**
- 	* creates new lable_articles
- 	* @param int $lableId the id of the lable (foreign key)
+ 	* creates new label_articles
+ 	* @param int $labelId the id of the label (foreign key)
  	* @param int $articleId the id of the article (foreign key)
-	* @return boolean true|false successful (true) when the query could be executed correctly and a lable_article is created
+	* @return boolean true|false successful (true) when the query could be executed correctly and a label_article is created
  	*/
- 	public function InsertLable_Article($lableId, $articleId)
+ 	public function InsertLabel_Article($labelId, $articleId)
  	{
- 		$result = $this->database->ExecuteQuery("INSERT INTO lable_article (lable_id, article_id) VALUES (".$lableId.", ".$articleId.")");
+ 		$result = $this->database->ExecuteQuery("INSERT INTO label_article (label_id, article_id) VALUES (".$labelId.", ".$articleId.")");
 
  		if($result==true)
  		{
@@ -1071,14 +1071,14 @@ class DbContent
 
 
 	/**
-	* updates lable_articles by lable_id
-	* @param int $lableId the id of the lable (foreign key)
+	* updates label_articles by label_id
+	* @param int $labelId the id of the label (foreign key)
 	* @param int $articleId the id of the article (foreign key)
-	* @return boolean true|false successful (true) when the query could be executed correctly and a lable_article is updated
+	* @return boolean true|false successful (true) when the query could be executed correctly and a label_article is updated
 	*/
-	public function UpdateLable_ArticleByLableId($lableId, $articleId)
+	public function UpdateLabel_ArticleByLabelId($labelId, $articleId)
 	{
-		$result = $this->database->ExecuteQuery("UPDATE lable_article SET article_id  = ".$articleId."  WHERE lable_id  = " .$lableId);
+		$result = $this->database->ExecuteQuery("UPDATE label_article SET article_id  = ".$articleId."  WHERE label_id  = " .$labelId);
 
 		if($result==true)
 		{
@@ -1093,14 +1093,14 @@ class DbContent
 
 
 	/**
-	* updates lable_articles by lable_id by article_id
-	* @param int $lableId the id of the lable (foreign key)
+	* updates label_articles by label_id by article_id
+	* @param int $labelId the id of the label (foreign key)
 	* @param int $articleId the id of the article (foreign key)
-	* @return boolean true|false successful (true) when the query could be executed correctly and a lable_article is updated
+	* @return boolean true|false successful (true) when the query could be executed correctly and a label_article is updated
 	*/
-	public function UpdateLable_ArticleByArticleId($lableId, $articleId)
+	public function UpdateLabel_ArticleByArticleId($labelId, $articleId)
 	{
-		$result = $this->database->ExecuteQuery("UPDATE lable_article SET lable_id  = ".$lableId."  WHERE article_id  = " .$articleId);
+		$result = $this->database->ExecuteQuery("UPDATE label_article SET label_id  = ".$labelId."  WHERE article_id  = " .$articleId);
 
 		if($result==true)
 		{
@@ -1151,25 +1151,25 @@ class DbContent
 
 
 	/**
-	* select all lable_user
+	* select all label_user
 	* @param void
 	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
-	public function SelectAllLable_User()
+	public function SelectAllLabel_User()
 	{
-		return $this->database->ExecutePreparedStatement("selectAllLable_User", array());
+		return $this->database->ExecutePreparedStatement("selectAllLabel_User", array());
 	}
 
 
 
 	/**
-	* delete all lable_user
+	* delete all label_user
 	* @param void
-	* @return boolean true|false successful (true) when the query could be executed correctly and all lable_users are deleted
+	* @return boolean true|false successful (true) when the query could be executed correctly and all label_users are deleted
 	*/
-	public function DeleteAllLable_User()
+	public function DeleteAllLabel_User()
 	{
-		$result = $this->database->ExecuteQuery("DELETE FROM lable_user");
+		$result = $this->database->ExecuteQuery("DELETE FROM label_user");
 
 		if($result==true)
 		{
@@ -1186,13 +1186,13 @@ class DbContent
 
 
 	/**
-	* delete lable_user by article_id
+	* delete label_user by article_id
 	* @param int $userId the user's id (foreign key)
-	* @return boolean true|false successful (true) when the query could be executed correctly and a lable_users is deleted
+	* @return boolean true|false successful (true) when the query could be executed correctly and a label_users is deleted
 	*/
-	public function DeleteLable_UserByArticleId($userId)
+	public function DeleteLabel_UserByArticleId($userId)
 	{
-		$result = $this->database->ExecuteQuery("DELETE FROM lable_user WHERE user_id = ".$userId);
+		$result = $this->database->ExecuteQuery("DELETE FROM label_user WHERE user_id = ".$userId);
 
 		if($result==true)
 		{
@@ -1208,13 +1208,13 @@ class DbContent
 
 
 	/**
-	* delete lable_user by lable_id
-	* @param int $lableId the id of the lable (foreign key)
-	* @return boolean true|false successful (true) when the query could be executed correctly and a lable_users is deleted
+	* delete label_user by labe-_id
+	* @param int $labelId the id of the label (foreign key)
+	* @return boolean true|false successful (true) when the query could be executed correctly and a label_users is deleted
 	*/
-	public function DeleteLable_UserByLableId($lableId)
+	public function DeleteLabel_UserByLabelId($labelId)
 	{
-		$result = $this->database->ExecuteQuery("DELETE FROM lable_user WHERE lable_id = ".$lableId);
+		$result = $this->database->ExecuteQuery("DELETE FROM label_user WHERE label_id = ".$labelId);
 
 		if($result==true)
 		{
@@ -1229,14 +1229,14 @@ class DbContent
 
 
 	/**
-	* cerates lable_user
-	* @param int $lableId the id of the lable (foreign key)
+	* cerates label_user
+	* @param int $labelId the id of the label (foreign key)
 	* @param int $userId the user's id (foreign key)
-	* @return boolean true|false successful (true) when the query could be executed correctly and a lable_users is created
+	* @return boolean true|false successful (true) when the query could be executed correctly and a label_users is created
 	*/
-	public function InsertLable_User($lableId, $userId)
+	public function InsertLabel_User($labelId, $userId)
 	{
-		$result = $this->database->ExecuteQuery("INSERT INTO lable_user (lable_id, user_id) VALUES (".$lableId.", ".$userId.")");
+		$result = $this->database->ExecuteQuery("INSERT INTO label_user (label_id, user_id) VALUES (".$labelId.", ".$userId.")");
 
 		if($result==true)
 		{
@@ -1253,17 +1253,15 @@ class DbContent
 
 
 	/**
-	* update lable_user by lable_id
-	* @param int $lableId the id of the lable (foreign key)
+	* update label_user by label_id
+	* @param int $labelId the id of the label (foreign key)
 	* @param int $userId the user's id (foreign key)
-	* @return boolean true|false successful (true) when the query could be executed correctly and a lable_users is updated
+	* @return boolean true|false successful (true) when the query could be executed correctly and a label_users is updated
 	*/
-	public function UpdateLable_UserByLableId($lableId, $userId)
+	public function UpdateLabel_UserByLabelId($labelId, $userId)
 	{
 
-		$result = $this->database->ExecuteQuery("UPDATE lable_user SET user_id  = ".$userId."  WHERE lable_id  = " .$lableId);
-
-		//$lable = ... SELECT lablename FROM lable WHERE id = ".$lableId."....;
+		$result = $this->database->ExecuteQuery("UPDATE label_user SET user_id  = ".$userId."  WHERE label_id  = " .$labelId);
 
 		if($result==true)
 		{
@@ -1278,14 +1276,14 @@ class DbContent
 
 
 	/**
-	* update lable_user by article_id
-	* @param int $lableId the id of the lable (foreign key)
+	* update label_user by article_id
+	* @param int $labelId the id of the label (foreign key)
 	* @param int $userId the user's id (foreign key)
-	* @return boolean true|false successful (true) when the query could be executed correctly and a lable_users is updated
+	* @return boolean true|false successful (true) when the query could be executed correctly and a label_users is updated
 	*/
-	public function UpdateLable_UserByArticleId($lableId, $userId)
+	public function UpdateLabel_UserByArticleId($labelId, $userId)
 	{
-		$result = $this->database->ExecuteQuery("UPDATE lable_user SET lable_id  = ".$lableId."  WHERE user_id  = " .$userId);
+		$result = $this->database->ExecuteQuery("UPDATE label_user SET label_id  = ".$labelId."  WHERE user_id  = " .$userId);
 
 		if($result==true)
 		{
@@ -1451,25 +1449,25 @@ class DbContent
 
 
 	/**
-	* selects all lables by lableid
-	* @param int $lableId the id of the lable
+	* selects all labels by labelid
+	* @param int $labelId the id of the label
 	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
-	public function SelectLableByLableId($lableId)
+	public function SelectLabelByLabelId($labelId)
 	{
-		return $this->database->ExecutePreparedStatement("selectLableByLableId", array($lableId));
+		return $this->database->ExecutePreparedStatement("selectLabelByLabelId", array($labelId));
 	}
 
 
 
 	/**
-	* selects all lables by lablename
-	* @param string $lablename the lablename of the lable
+	* selects all labels by labelname
+	* @param string $labelname the labelname of the label
 	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
-	public function SelectLableIdByLablename($lablename)
+	public function SelectLabelIdByLabelname($labelname)
 	{
-		return $this->database->ExecutePreparedStatement("selectLableIdByLablename", array($lablename));
+		return $this->database->ExecutePreparedStatement("selectLabelIdByLabelname", array($labelname));
 	}
 
 
@@ -1487,13 +1485,13 @@ class DbContent
 
 
 	/**
-	* select all lables
+	* select all labels
 	* @param void
 	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
 	*/
-	public function SelectAllLables()
+	public function SelectAllLabels()
 	{
-		return $this->database->ExecutePreparedStatement("selectAllLables", array());
+		return $this->database->ExecutePreparedStatement("selectAllLabels", array());
 	}
 
 
