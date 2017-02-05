@@ -1,8 +1,7 @@
 <?php
 /**
-* Contains the class FrontendBuilder.
+* Contains the class DbEngine.
 * @author Tamara Graf
-* @author Mirjam Donhauser
 */
 
 /* namespace */
