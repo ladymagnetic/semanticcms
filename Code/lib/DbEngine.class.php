@@ -1,4 +1,10 @@
 <?php
+/**
+* Contains the class FrontendBuilder.
+* @author Tamara Graf
+* @author Mirjam Donhauser
+*/
+
 /* namespace */
 namespace SemanticCms\DatabaseAbstraction;
 /* use namespace(s) */
@@ -6,6 +12,7 @@ use Mysqli;
 
 /**
 * Provides basic functionality for communication with the database
+* @author Tamara Graf
 */
 class DbEngine
 {
@@ -81,7 +88,7 @@ class DbEngine
 	/**
 	* Executes a specifc query with the given parameters
 	* @param string $name query name (same as used in PrepareStatement())
-	* @param array $params query parameter array
+	* @param array $values query parameter array
 	* @return Mysqli\mysqli_result|boolean Result of the query or FALSE on failure
 	*/
 	public function ExecutePreparedStatement($name, array $values)
@@ -128,9 +135,9 @@ class DbEngine
 		return mysqli_query($this->conn, $query);
 	}
 
-	/*
+	/**
 	* Escapes a string used for a database query
-	* @param string $string string that should be escapeshellarg
+	* @param string $string string that should be escaped for mysql database
 	* @return string|null the escaped string or null if an error occured
 	*/
 	public function RealEscapeString($string)
@@ -180,59 +187,5 @@ class DbEngine
 	{
 		$this->ExecuteQuery("INSERT INTO logtable (id, logdate , username, rolename, description) VALUES (NULL, NOW(), '".$username."', '".$rolename."', '".$description."')");
 	}
-
-
-
-
-	/**
-	* Download the database
-	* @param string $dbhost the host
-	* @param string $dbuser the username
-	* @param string $dbpwd the password
-	* @param string $dbname the databasename
-	*/
-	public function DownloadDB($dbhost, $dbuser, $dbpwd, 	$dbname)
-		{
-			$storagepath = "01_Datenbank/Backup/";
-			$pathToMysqldump = "media\mysqldump ";
-
-			$dumpfile = $storagepath .$dbname . "_" . date("Y-m-d_H-i-s") . ".sql";
-			passthru("$pathToMysqldump --opt --host=$dbhost --user=$dbuser --password=$dbpwd $dbname > $dumpfile");
-
-			passthru("tail -1 $dumpfile");
-
-			echo
-			"<div class='info'>
-			<strong>Info!</strong> Die Datenbank wurde erfolgreich exportiert. Sie befindet sich in dem Ordner: ".$dumpfile."
-			</div>";
-		}
-
-
-
-
-		/**
-		* DownloadDBTest()
-		* nur für Testzwecke = nicht verwenden!
-		*/
-		/*
-		public function DownloadDBTest()
-		{
-			$dbhost = 'localhost';
-			$dbuser = 'root';
-			$dbpwd =  '';
-			$dbname =  'cms-projekt';
-
-			$storagepath = "01_Datenbank/Backup/";
-
-			$pathToMysqldump = "media\mysqldump ";
-
-			$dumpfile = $storagepath .$dbname . "_" . date("Y-m-d_H-i-s") . ".sql";
-
-			passthru("$pathToMysqldump --opt --host=$dbhost --user=$dbuser --password=$dbpwd $dbname > $dumpfile");
-
-			echo "$dumpfile "; passthru("tail -1 $dumpfile");
-		}
-*/
-
 }
 ?>
