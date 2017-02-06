@@ -213,6 +213,31 @@ class DbEngine
 	}
 
 
+	
+	
+	
+	/**
+	* Upload the database
+	* @param string $dbhost the host
+	* @param string $dbuser the username
+	* @param string $dbpwd the password
+	* @param string $dbname the databasename
+	*/
+	public function UploadDB($dbhost, $dbuser, $dbpwd, $dbname)
+	{
+		$pathToUploadFile = "01_Datenbank/cms-projekt.sql";
+		$pathToMysql= "media\mysql ";
+
+ 		//Allgemein: mysql -h localhost -u root -p DatenbankInPhpMyAdmin < Datenbankname.sql
+
+		passthru("$pathToMysql -h $dbhost  --u $dbuser -p $dbpwd $pathToUploadFile > $pathToUploadFile");
+	 	
+		echo
+		"<div class='info'>
+		<strong>Info!</strong> Diese Datenbank wurde hochgeladen: ".$pathToUploadFile."
+		</div>";
+	}
+	
 
 
 	/**
@@ -239,9 +264,30 @@ class DbEngine
 	}
 	*/
 
- 
+	/**
+	* UploadDBTest()
+	* nur für Testzwecke = nicht verwenden!
+	*/
+ 	public function UploadDBTest()
+	{
+		/*
+		$dbhost = 'localhost';
+ 		$dbuser = 'root';
+ 		$dbpwd =  '';
+ 		$dbname =  'cms-projekt';
+ 		$importpath = "01_Datenbank/cms-projekt.php";
 
+ 		$pathToMysql= "media\mysql.exe";
+		*/
+ 		passthru("mysql -h localhost -u root -p cms-projekt < cms-projekt.sql");
 
+		//mysql -h localhost -u root -p DatenbankInPhpMyAdmin < Datenbankname.sql
+
+		echo
+		"<div class='info'>
+		<strong>Info! </strong> Die Datenbank wurde hochgeladen. </div>";
+
+ 	}
 }
 ?>
 
