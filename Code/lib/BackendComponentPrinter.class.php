@@ -18,38 +18,6 @@ class BackendComponentPrinter
     private static $jQueryIsIncluded = false;
 
     /* -------- Methods --------- */
-
-	/* -------- BEISPIEL METHODEN - BITTE LÖSCHEN WENN NICHT MEHR BENÖTIGT --------- */
-
-	// /**
-	// * print_showall_navigation()
-	// * Print back and next navigation buttons
-	// * @params string $action .php-script used
-	// * @params int $page current page
-	// * @params boolean $next true: draw next button, false: no next button needed
-	// */
-	// public static function print_showall_navigation($action, $page, $next)
-	// {
-	 // echo "<section id=\"tablenav\">";
-	 // if($page > 0)
-	 // {
-	  // echo   "<form class=\"inline\" method=\"POST\" action=\"".$action."\">".
-			 // "<button class=\"btn navbtn\" type=\"submit\" name=\"showall\">Seite zurück</button>".
-			 // "<input type=\"hidden\" name=\"pagenum\" value=\"".($page-1)."\">".
-			 // "</form>";
-	 // }
-
-	 // if($next)
-	 // {
-	  // echo   "<form class=\"inline\" method=\"POST\" action=\"".$action."\">".
-			 // "<button class=\"btn navbtn\" type=\"submit\" name=\"showall\">Seite vor</button>".
-			 // "<input type=\"hidden\" name=\"pagenum\" value=\"".($page+1)."\">".
-			 // "</form>";
-	 // }
-	 // echo "</section>";
-	// }
-
-
 	/**
 	* Prints the sidebar navigation menu incl. the start logo. Menu items will not be displayed if the user does not have the
     * corresponding permission.
@@ -165,44 +133,6 @@ class BackendComponentPrinter
         echo "</tbody>
             </table>";
     }
-
-    // /**
-    // * Prints a table row with the given values to quarantine table
-    // * @params array $values Values to print to the table (Please use the following keys: content, score, from, to, sub, date and id!)
-    // * @result status 0 (error) / 1 (success)
-    // */
-    // public static function print_table_row(array $values)
-    // {
-    // // is $valus an array?
-    // if(!is_array($values)) { return 0; }
-    // // does $values have the key and values[key] is not set to NULL?
-    // if(!(      isset($values['content'])
-    // && isset($values['score'])
-    // && isset($values['from'])
-    // && isset($values['to'])
-    // && isset($values['sub'])
-    // && isset($values['date'])
-    // && isset($values['id'])
-    // )) { return 0; }
-
-    // // convert date into day-month-year hour-minute-second format
-    // $date = strftime('%d.%m.%Y %H:%M:%S', $values['date']);
-
-    // // print table row
-    // echo "<tr ".parent::get_content_col_class($values['content'])." >";
-    // echo "<td class=\"b_above\"><a href=\"header.php?id=".$values['id']."\" title=\"Header dieser Email anzeigen.\">".parent::get_content_readable($values['content']). "</a></td>";
-    // echo "<td class=\"b_above b_left\">".$values['score']. "</td>";
-    // echo "<td class=\"b_above b_left\">".htmlspecialchars($values['from']). "</td>";
-    // echo "<td class=\"b_above b_left\">".htmlspecialchars($values['to']). "</td>";
-    // echo "<td class=\"b_above b_left\"><a href=\"header.php?id=".$values['id']."\" title=\"Header dieser Email anzeigen.\">".htmlspecialchars($values['sub']). "</a></td>";
-    // echo "<td class=\"b_above b_left\">".$date."</td>";
-    // echo "<td class=\"b_above b_left\">";
-    // echo "<button class=\"btn\" title=\"Diese E-Mail freigeben.\" form=\"rel\" type=\"submit\" name=\"release\" value=\"".$values['id'].":".$values['to']."\">Freigeben</button>";
-    // echo "</td>";
-    // echo "</tr>";
-
-    // return 1;
-    // }
 
     /**
      * Prints a dropdown list together with a label

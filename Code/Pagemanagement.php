@@ -29,30 +29,8 @@ if (isset($_POST['websiteId'])) {
 /* Begin: React to user actions -------------------------------*/
 // Submit button with the name 'newWebsite' was clicked
 if (isset($_POST['newWebsite'])) {
-    $templates = $dbContent->SelectAllTemplates();
-    if ($dbContent->GetResultCount($templates) < 1) {
-        die("Es exististieren keine Templates");
-    } else {
-        // The first template in the array will be the default template
-        $defaultTemplate = $dbContent->FetchArray($templates);
-
-        $headerTitle = "Meine Webseite";
-        $result = $dbContent->InsertWebsite($headerTitle, " ", " ", " ", " ", 0, 0, $defaultTemplate['id']);
-        if (!$result) {
-            die("Webseite konnte nicht erzeugt werden!");
-        } else {
-            // Get the id of the website we just created
-            $websites = $dbContent->SelectAllWebsiteByHeadertitle($headerTitle);
-            if ($dbContent->GetResultCount($websites) < 1) {
-                die("Die Webseite konnte nicht gefunden werden!");
-            }
-            // Select the created website and let the user change the website´s options
-            $websiteId = $dbContent->FetchArray($websites)['id'];
-            EditWebsiteOptions();
-        }
-
-        return;
-    }
+    EditWebsiteOptions(true);
+    return;
 }
 // Submit button with the name 'newPage' was clicked
 else if (isset($_POST['newPage'])) {
@@ -92,9 +70,20 @@ else if (isset($_POST['saveWebsiteChanges'])) {
     $queryResult = $dbContent->SelectTemplateByTemplatename($_POST['technicalSiteTemplateId']);
     $templateId = $dbContent->FetchArray($queryResult)['id'];
 
-    $dbContent->UpdateWebsiteById($websiteId, $_POST['headerTitle'], $contactContent, $imprintContent,
-        $privacyInformationContent, $gtcContent, $loginEnabled, $guestbookEnabled,
-        $templateId);
+    if ($websiteId < 1) {
+        // $websiteId is not valid -> we create a new website
+        $result = $dbContent->InsertWebsite($_POST['headerTitle'], $contactContent, $imprintContent,
+            $privacyInformationContent, $gtcContent, $loginEnabled, $guestbookEnabled,
+            $templateId);
+        if (!$result) {
+            die("Webseite konnte nicht erzeugt werden!");
+        }
+    } else {
+        // $websiteId is valid -> we update an existing website
+        $dbContent->UpdateWebsiteById($websiteId, $_POST['headerTitle'], $contactContent, $imprintContent,
+            $privacyInformationContent, $gtcContent, $loginEnabled, $guestbookEnabled,
+            $templateId);
+    }
 }
 // Submit button with the name 'siteDetails' was clicked
 else if (isset($_POST['pageDetails'])) {
@@ -114,10 +103,23 @@ else if (isset($_POST['deletePage'])) {
         'pageId', $_POST['pageId']);
     return;
 }
+// Submit button with the name 'deleteWebsite' was clicked
+else if (isset($_POST['deleteWebsite'])) {
+    BackendComponentPrinter::AskIfReallyDelete('Seitenverwaltung', 'Pagemanagement.php',
+        'website', $_POST['website']);
+    return;
+}
 // User has confirmed the deletion of a page
 else if (isset($_POST['reallyDelete'])) {
-    $pageId = intval($_POST['pageId']);
-    $dbContent->DeletePageById($pageId);
+    if (isset($_POST['pageId'])) {
+        // a page should be deleted
+        $pageId = intval($_POST['pageId']);
+        $dbContent->DeletePageById($pageId);
+    } else if (isset($_POST['website'])) {
+        // a website should be deleted
+        $websiteIdToDelete = intval($_POST['website']);
+        $dbContent->DeleteWebsiteById($websiteIdToDelete);
+    }
 }
 // Submit button with the name 'editContent' was clicked
 else if (isset($_POST['editContent'])) {
@@ -184,7 +186,7 @@ BackendComponentPrinter::PrintDatatablesPlugin();
                             // selected
         }
         echo "<form method='post' action=''>
-                <label for='website'>Webseite</label>";
+                <label for='website'><strong>Webseite</strong></label>";
         // fetch all existing websites
         $queryResult = $dbContent->SelectAllWebsite();
         echo "<select name='website' size='1'>";
@@ -199,7 +201,8 @@ BackendComponentPrinter::PrintDatatablesPlugin();
         }
         echo "</select>
               <input id='setCurrentWebsite' name='setCurrentWebsite' type='submit' value='Auswählen'>
-              </form>";
+              <input id='deleteWebsite' name='deleteWebsite' type='submit' value='Löschen'>
+              </form><br><br>";
 
         /* -------------- Print Pages table -------------- */
         $pages = $dbContent->SelectAllPages();
@@ -293,8 +296,9 @@ BackendComponentPrinter::PrintDatatablesPlugin();
     /**
      * Opens the page for the editing of the currently selected website details
      *
+     * @param boolean $websiteIsToBeCreated If true, we are going to create the website, which options we want to edit.
      */
-    function EditWebsiteOptions()
+    function EditWebsiteOptions($websiteIsToBeCreated = false)
     {
         BackendComponentPrinter::PrintHead("Seitenverwaltung", $jquery=true);
         //*----- Permissions ----- */
@@ -312,12 +316,36 @@ BackendComponentPrinter::PrintDatatablesPlugin();
         global $dbContent;
         global $websiteId;
 
-        if ($websiteId < 1) {
-            die("Es wurde keine gültige Website ausgewählt!");
-        }
-        $website = $dbContent->FetchArray($dbContent->SelectWebsiteById($websiteId));
-        if (null == $website) {
-            die("Es wurde noch keine Webseite erstellt!");
+        if ($websiteIsToBeCreated) {
+            // set some default values
+            $websiteId = -1;
+            $headerTitle = "";
+            $login = false;
+            $guestbook = false;
+            $imprint = "      ";
+            $contact = "      ";
+            $privacyinformation = "      ";
+            $gtc = "      ";
+            $templateId = 1;
+
+        } else {
+            if ($websiteId < 1) {
+                die("Es wurde keine gültige Website ausgewählt!");
+            }
+            $website = $dbContent->FetchArray($dbContent->SelectWebsiteById($websiteId));
+            if (null == $website) {
+                die("Es wurde noch keine Webseite erstellt!");
+            }
+
+            // take the values from the selected website
+            $headerTitle = $website['headertitle'];
+            $login = $website['login'];
+            $guestbook = $website['guestbook'];
+            $imprint = $website['imprint'];
+            $contact = $website['contact'];
+            $privacyinformation = $website['privacyinformation'];
+            $gtc = $website['gtc'];
+            $templateId = $website['template_id'];
         }
 
         /* specific style because of summernote */
@@ -345,22 +373,22 @@ BackendComponentPrinter::PrintDatatablesPlugin();
                 <input id='websiteId' name='websiteId' type='hidden' value='".$websiteId."'>
                 
                 <label for='headerTitle'>Headertitel</label>
-                <input id='headerTitle' name='headerTitle' value='".$website['headertitle']."'>
+                <input id='headerTitle' name='headerTitle' value='".$headerTitle."' required style='width: 500px;'>
                 <br><br>
                 <label for='loginEnabled'>Login aktivieren</label>
                 <input type='checkbox' id='loginEnabled' name='loginEnabled' value=''";
-        if (boolval($website['login'])) {
+        if (boolval($login)) {
             echo " checked";
         };
         echo "><br><br>
                 <label for='guestbookEnabled'>Gästebuch aktivieren</label>
                 <input type='checkbox' id='guestbookEnabled' name='guestbookEnabled' value=''";
-        if (boolval($website['guestbook'])) {
+        if (boolval($guestbook)) {
             echo " checked";
         };
         echo "><br><br>
                 <label for='summernoteImprint'>Impressum</label>
-                 <div id='summernoteImprint' name='summernoteImprint'>".$website['imprint']."</div>
+                 <div id='summernoteImprint' name='summernoteImprint'>".$imprint."</div>
             <script>
                 $(document).ready(function() {
                     $('#summernoteImprint').summernote({
@@ -376,7 +404,7 @@ BackendComponentPrinter::PrintDatatablesPlugin();
                 <br><br>
                 
                 <label for='summernoteContact'>Kontakt-Formular</label>
-                <div id='summernoteContact' name='summernoteContact'>".$website['contact']."</div>
+                <div id='summernoteContact' name='summernoteContact'>".$contact."</div>
             <script>
                 $(document).ready(function() {
                     $('#summernoteContact').summernote({
@@ -392,7 +420,7 @@ BackendComponentPrinter::PrintDatatablesPlugin();
                 <br><br>
                 
                 <label for='summernotePrivacyInformation'>Datenschutz-Seite</label>
-                <div id='summernotePrivacyInformation' name='summernotePrivacyInformation'>".$website['privacyinformation']."</div>
+                <div id='summernotePrivacyInformation' name='summernotePrivacyInformation'>".$privacyinformation."</div>
             <script>
                 $(document).ready(function() {
                     $('#summernotePrivacyInformation').summernote({
@@ -408,7 +436,7 @@ BackendComponentPrinter::PrintDatatablesPlugin();
                 <br><br>
                 
                 <label for='summernoteGTC'>AGB-Seite</label>
-                <div id='summernoteGTC' name='summernoteGTC'>".$website['gtc']."</div>
+                <div id='summernoteGTC' name='summernoteGTC'>".$gtc."</div>
             <script>
                 $(document).ready(function() {
                     $('#summernoteGTC').summernote({
@@ -426,23 +454,17 @@ BackendComponentPrinter::PrintDatatablesPlugin();
                 <label for='technicalSiteTemplateId'>Template für die Webseiten-Details-Seite</label>";
         // fetch all existing templates
         $queryResult = $dbContent->SelectAllTemplates();
-        echo "<select name='technicalSiteTemplateId' size='1'>
-              <option></option>";
-        $templateAssigned = false;
+        echo "<select name='technicalSiteTemplateId' size='1'>";
         while ($template = $dbContent->FetchArray($queryResult)){
-            if ($template['id'] == $website['template_id']) {
+            if ($template['id'] == $templateId) {
                 echo "<option selected='selected'>".$template['templatename']."</option>";
-                $templateAssigned = true;
             } else {
                 echo "<option>".$template['templatename']."</option>";
             }
         }
         echo "</select>
-             </label>";
-        if (!$templateAssigned) {
-            echo "<label>Der Webseite ist kein Template zugewiesen!</label>";
-        }
-                echo "<br><br>";
+             </label>
+             <br><br>";
 
         echo "<br><br>
                 <input id='saveWebsiteChanges' name='saveWebsiteChanges' type='submit' value='Änderungen speichern'>
