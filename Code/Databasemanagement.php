@@ -26,6 +26,7 @@ if (isset($_POST['exportDatabase'])) {
 }
 // Submit button with the name 'importDatabase' was clicked
 else if (isset($_POST['importDatabase'])) {
+    $db->UploadDB($config['cms_db_export']['dbhost'],$config['cms_db_export']['dbuser'],$config['cms_db_export']['dbpass'],$config['cms_db_export']['database']);
 }
 /* End: React to user actions -------------------------------*/
 ?>
