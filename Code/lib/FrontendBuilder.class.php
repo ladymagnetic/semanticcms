@@ -21,7 +21,7 @@ use SemanticCms\DatabaseAbstraction\DbContent;
 use SemanticCms\config;
 
 /**
-* Provides functionality for building a frontend page.
+* Provides functionality for building frontend pages and websites with css files.
 * @author Tamara Graf
 */
 class FrontendBuilder
@@ -85,7 +85,7 @@ class FrontendBuilder
 		if(!file_exists($cssPath)) { self::createCSS($websiteData["template"]); }
 
 		// create technical pages
-		self::createTechnicalPages($technicalPages, $websiteData["headertitle"], $websiteData["template"]);
+		self::createTechnicalPages($technicalPages, $websiteData["headertitle"], $websiteId, $websiteData["template"]);
 	}
 
 	/**
@@ -165,7 +165,7 @@ class FrontendBuilder
 	*
 	*
 	*/
-	private function createTechnicalPages($technicalPages, $websiteName, $cssName)
+	private function createTechnicalPages($technicalPages, $websiteName, $websiteId, $cssName)
 	{
 		$globallogin = false;
 		$guestbook = false;
@@ -188,7 +188,7 @@ class FrontendBuilder
 				fwrite($handle, HTML::GetHead($page['pagetitle'], $cssName));
 				fwrite($handle, "<body>");
 				fwrite($handle, HTML::GetHeader($websiteName));
-				fwrite($handle, HTML::GetMenu());
+				fwrite($handle, HTML::GetMenu("", $websiteId));
 				fwrite($handle, HTML::GetMain($page['content']));
 				fwrite($handle, HTML::GetFooter($technicalPages));
 				fwrite($handle, "\n</body></html>");
@@ -207,8 +207,8 @@ class FrontendBuilder
 				fwrite($loginhandle, HTML::GetHtmlStart());
 				fwrite($loginhandle, HTML::GetHead("Login/Logout", $cssName));
 				fwrite($loginhandle, "<body>");
-				fwrite($loginhandle, HTML::GetHeader($websiteName));
-				fwrite($loginhandle, HTML::GetMenu());
+				fwrite($loginhandle, HTML::GetHeader($websiteName, "", true));
+				fwrite($loginhandle, HTML::GetMenu("", $websiteId));
 				fwrite($loginhandle, HTML::GetMain('',1));
 				fwrite($loginhandle, HTML::GetFooter($technicalPages));
 				fwrite($loginhandle, "\n</body></html>");
@@ -223,8 +223,8 @@ class FrontendBuilder
 				fwrite($registerhandle, HTML::GetHtmlStart());
 				fwrite($registerhandle, HTML::GetHead("Registrierung", $cssName));
 				fwrite($registerhandle, "<body>");
-				fwrite($registerhandle, HTML::GetHeader($websiteName));
-				fwrite($registerhandle, HTML::GetMenu());
+				fwrite($registerhandle, HTML::GetHeader($websiteName, "", true));
+				fwrite($registerhandle, HTML::GetMenu("", $websiteId));
 				fwrite($registerhandle, HTML::GetMain('',2));
 				fwrite($registerhandle, HTML::GetFooter($technicalPages));
 				fwrite($registerhandle, "\n</body></html>");
@@ -265,12 +265,12 @@ class FrontendBuilder
 		// write HTML + PHP Code
 		$handle = fopen(utf8_decode($pagePath), "x");
 
-			fwrite($handle, HTML::GetPhpStart());
-			fwrite($handle, HTML::GetHtmlStart($globallogin, $false));
+			fwrite($handle, HTML::GetPhpStart($globallogin));
+			fwrite($handle, HTML::GetHtmlStart($globallogin, false));
 			fwrite($handle, HTML::GetHead($pageName, $cssName));
 			fwrite($handle, "<body>");
-			fwrite($handle, HTML::GetHeader($websiteData["headertitle"]));
-			fwrite($handle, HTML::GetMenu($pageName));
+			fwrite($handle, HTML::GetHeader($websiteData["headertitle"], "", $globallogin));
+			fwrite($handle, HTML::GetMenu($pageName, $websiteId));
 			fwrite($handle, HTML::GetArticleContainer($pageName));
 			fwrite($handle, HTML::GetFooter($technicalPages));
  			fwrite($handle, "\n</body></html>");
@@ -288,12 +288,13 @@ class FrontendBuilder
 		$cssPath = self::cssFilePath($cssName);
 
 		$headerData = self::$templateParser->GetHeader($cssName);
-		$buttonData = self::$templateParser->GetButton($cssName);
-		$footerData = self::$templateParser->GetFooter($cssName);
+		$backgroundData = self::$templateParser->GetBackground($cssName);
 		$menuData = self::$templateParser->GetMenu($cssName);
 		$articleContainerData = self::$templateParser->GetArticleContainer($cssName);
-		$backgroundData = self::$templateParser->GetBackground($cssName);
-		$tagData = self::$templateParser->GetTag($cssName);
+		$footerData = self::$templateParser->GetFooter($cssName);
+		$buttonData = self::$templateParser->GetButton($cssName);
+		$loginFieldData = self::$templateParser->GetLogin($cssName);
+		$tagData = self::$templateParser->GetLabel($cssName);
 
 		var_dump($headerData);
 		echo "<br><br><br>";
@@ -306,11 +307,12 @@ class FrontendBuilder
 		var_dump($backgroundData);
 		echo "<br><br><br>";
 		var_dump($tagData);
+		echo "<br><br><br>";
+		echo "Loginfeld: <br>";
+		var_dump($loginFieldData);
 
 		// write css Code
-		/*
 		$cssHandle = fopen(utf8_decode($cssPath), "x");
-
 			fwrite($cssHandle, CSS::GetBackground($backgroundData));
 			fwrite($cssHandle, CSS::GetHeader($headerData));
 			fwrite($cssHandle, CSS::GetMenu($menuData));
@@ -318,7 +320,8 @@ class FrontendBuilder
 			fwrite($cssHandle, CSS::GetArticleContainer($articleContainerData));
 			fwrite($cssHandle, CSS::GetFooter($footerData));
 			fwrite($cssHandle, CSS::GetButton($buttonData));
-		fclose($cssHandle);*/
+			fwrite($cssHandle, CSS::GetLoginField($loginFieldData));
+		fclose($cssHandle);
 	}
 
 	/****************************/
@@ -416,7 +419,6 @@ class FrontendBuilder
 			$tp[TechnicalPage::GTC]['filename'] = "AGBs";
 			$tp[TechnicalPage::GTC]['content'] = $websiteData['gtc'];
 		}
-
 		if($websiteData['login'] == 1 ) { $tp[TechnicalPage::LOGIN]['pagetitle'] = "login";}
 		if($websiteData['guestbook'] == 1 ) { $tp[TechnicalPage::GUESTBOOK]['pagetitle'] = "guestbook";}
 
@@ -426,6 +428,7 @@ class FrontendBuilder
 
 /**
 * Provides an enumeration replacement for technical pages used in class FrontendBuilder
+* @author Tamara Graf
 */
 abstract class TechnicalPage
 {

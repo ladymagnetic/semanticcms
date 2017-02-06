@@ -1,19 +1,22 @@
 <?php
 /**
 * Contains the class CSSComponentPrinter.
+* @author Tamara Graf
 */
 
 /* namespace */
 namespace SemanticCms\ComponentPrinter\Frontend;
 
 /**
-* Provides static functions for creating the frontend css file.
+* Provides static functions for creating the frontend css file and is used by the FrontendBuilder class.
+* @author Tamara Graf
 */
 class CSSComponentPrinter
-{
+{	
 	/**
-	* Ends the table and prints invisible form with given action.
-	* @params string $action action to be performed by the <form>
+	* Get the css string for the header design
+	* @param array $data Array filled with the header template data given by TemplateParser class
+	* @return string css string
 	*/
 	public static function GetHeader(array $data)
 	{
@@ -23,27 +26,45 @@ class CSSComponentPrinter
 					"font-size: ".$data['Fontsize']."px;".
 					"font-family: \"".$data['Font']."\",\"Serif\";";
 		
-		if(!empty($data['Backgroundcolor']))
+		// background
+		if(!empty($data['Backgroundpic']))
 		{
-			$css .= "background-color: ".$data['Backgroundcolor'].";";
+			$image = "../media/".$data['Backgroundpic'];
+			$css .= "background-image: url(\"".$image."\");";
 		}
 		else 
 		{
-			
+			$css .= "background-color: ".$data['Backgroundcolor'].";";
 		}
-	
+		
 		$css .= "height: ".$data['Height']."%; width: calc(100% - 20px); padding: 0px 10px; margin-bottom: 10px; display: flex; align-items: center;}";					
  
+		// position
+		if(strcmp($data['Position'], "left") == 0)	
+		{
+			$css .= "justify-content: start;";
+		}
+		else if(strcmp($data['Position'], "center") == 0)
+		{
+			$css .= "justify-content: center;";
+		}
+		else if(strcmp($data['Position'], "right") == 0)
+		{
+			$css .= "justify-content: end;";
+		}			
+ 
 		$css .=	"}\nh1{margin:0;}\n";
+		
+		// logo
+		$css .= "header img{height:70%;margin-right:5px;}";
 		
 		return $css;
 	}
 	
-	
 	/**
-	*
-	*
-	*
+	* Get the css string for the menu design
+	* @param array $data Array filled with the menu template data given by TemplateParser class
+	* @return string css string
 	*/
 	public static function GetMenu(array $data)
 	{
@@ -94,15 +115,21 @@ class CSSComponentPrinter
 		$nav .=				"}\n";
 		$ul .=				"}\n";
 		$li .=				"}\n";
-		$a .=				"} #currentPage {font-weight: bold; text-decoration: underline;}\n";		
+		$a .=				"} #currentPage {font-weight: bold; text-decoration: underline;}\n";	
+
+		$links =	"#registerLink, #loginOutLink {	color: ".$data['Fontcolor'].";".
+													"font-size: ".$data['Fontsize']."px;".
+													"font-family: \"".$data['Font']."\",\"Serif\";".
+													"text-decoration: none; margin: 0px 5px 5px 5px; float: right;}";	
 		
-		return $nav."".$ul."".$li."".$a."".$special;
+		
+		return $nav."".$ul."".$li."".$a."".$special."\n".$links;
 	}
 	
 	/**
-	*
-	*
-	*
+	* Get the css string for the button design
+	* @param array $data Array filled with the button template data given by TemplateParser class
+	* @return string css string
 	*/
 	public static function GetButton(array $data)
 	{
@@ -115,8 +142,16 @@ class CSSComponentPrinter
 		$css .= "cursor: pointer;";
 		if(strcmp($data['Rounded'], "Rounded") == 0)	$css .= "border-radius: 4px;";
 		
-		if(!empty($data['Backgroundcolor'])) { $css .= "background-color: ".$data['Backgroundcolor'].";";}
-		//	else { /* BILD */}
+		// background
+		if(!empty($data['Backgroundpic']))
+		{
+			$image = "../media/".$data['Backgroundpic'];
+			$css .= "background-image: url(\"".$image."\");";
+		}
+		else 
+		{
+			$css .= "background-color: ".$data['Backgroundcolor'].";";
+		}
 		
 		if(strcmp($data['Button3D'], "ja") == 0)
 		{
@@ -135,6 +170,11 @@ class CSSComponentPrinter
 		return $css;
 	}
 
+	/**
+	* Get the css string for the article und label design
+	* @param array $data Array filled with the label template data given by TemplateParser class
+	* @return string css string
+	*/
 	public static function GetArticle(array $data)
 	{
 		$article =	".article {margin-bottom: 10px; padding: 5px; border: solid #555 1px; background-color: beige;}".
@@ -150,13 +190,17 @@ class CSSComponentPrinter
 									"font-family: \"".$data['Font']."\",\"sans-serif\";";
 		if(strcmp($data['Rounded'], "Rounded") == 0)	$lables .= "border-radius: 4px;";
 		if(!empty($data['Backgroundcolor'])) { $lables .= "background-color: ".$data['Backgroundcolor'].";";}
-		else {}
 		$lables .=	"} .article ul li:last-child {margin-right: 0px;}";
 					
 		$css = $article."\n".$headline."\n".$infoline."\n".$lables."\n";
 		return $css;
 	}
 	
+	/**
+	* Get the css string for the article container design
+	* @param array $data Array filled with the article container template data given by TemplateParser class
+	* @return string css string
+	*/
 	public static function GetArticleContainer(array $data)
 	{
 		$main = "main {clear:both; padding: 10px; width: calc(".$data['Width']."% - 20px); margin-bottom: 10px;";
@@ -172,25 +216,49 @@ class CSSComponentPrinter
 		{
 			$main .= "float: right;";
 		}	
-		if(!empty($data['Backgroundcolor'])) { $main .= "background-color: ".$data['Backgroundcolor'].";";}
-		//	else { /* BILD */}	
+		
+		// background
+		if(!empty($data['Backgroundpic']))
+		{
+			$image = "../media/".$data['Backgroundpic'];
+			$main .= "background-image: url(\"".$image."\");";
+		}
+		else 
+		{
+			$main .= "background-color: ".$data['Backgroundcolor'].";";
+		}
 
 		return $main."}\n";
 	}
 	
+	/**
+	* Get the css string for the background design
+	* @param array $data Array filled with the background template data given by TemplateParser class
+	* @return string css string
+	*/
 	public static function GetBackground(array $data)
 	{
 		$css = " body {margin: 10px; padding: 0; height: 100vh; ";
 		
-		if(!empty($data['Color']))
+		if(!empty($data['Picture']))
+		{
+			$image = "../media/".$data['Picture'];
+			$css .= "background: url(\"".$image."\") repeat-y ".$data['PicturePosition'].";";
+		}
+		else 
 		{
 			$css .= "background-color: ".$data['Color'].";";
 		}
-		else {}
 		
 		$css .=	"}\n";
 		return $css;
 	}
+	
+	/**
+	* Get the css string for the footer design
+	* @param array $data Array filled with the footer template data given by TemplateParser class
+	* @return string css string
+	*/
 	public static function GetFooter(array $data)
 	{
 		// order is missing!!!
@@ -201,16 +269,18 @@ class CSSComponentPrinter
 					"font-size: ".$data['Fontsize']."px;".
 					"font-family: \"".$data['Font']."\",\"Serif\";";
 		
-		if(!empty($data['Backgroundcolor']))
+		// background
+		if(!empty($data['Backgroundpic']))
 		{
-			$css .= "background-color: ".$data['Backgroundcolor'].";";
+			$image = "../media/".$data['Backgroundpic'];
+			$css .= "background-image: url(\"".$image."\");";
 		}
 		else 
 		{
-			
+			$css .= "background-color: ".$data['Backgroundcolor'].";";
 		}
 	
-		$css .= "height: calc(".$data['Height']."% + 10px); width: calc(100% - 20px); padding: 10px; margin-bottom: 10px;".
+		$css .= "min-height: calc(".$data['Height']."% + 10px); width: calc(100% - 20px); padding: 10px; margin-bottom: 10px;".
 				"clear: both;";
  
 		$css .=	"}\n";
@@ -221,5 +291,27 @@ class CSSComponentPrinter
 		return $css;
 	}
 	
+	/**
+	* Get the css string for the login field design
+	* @param array $data Array filled with the login field template data given by TemplateParser class
+	* @return string css string
+	*/
+	public static function GetLoginField(array $data)
+	{
+		$css = "#login {";
+				// Font settings
+				"color: ".$data['Fontcolor'].";".
+				"font-size: ".$data['Fontsize']."px;".
+				"font-family: \"".$data['Font']."\",\"Serif\";";
+		$css .= "background-color: ".$data['Backgroundcolor'].";";
+		$css .= "display: inline-flex; flex-direction: column; padding: 20px; border: 1px solid #333;}";
+		
+		$css .= "\n#login input{background-color: ".$data['ForegroundColor'].";}";
+		$css .= "\n#login input:first-child{margin-bottom: 5px;}\n#login p{margin: 5px 0px;}";
+		$css .= "\n#fields{flex-direction: column;}\n#login span{display: flex;}";
+		$css .= "\n#login span button {align-self: center;margin-left: 5px;}";
+		$css .= "\n#login a{font-size:".(0.7*$data['Fontsize'])."px; color: ".$data['Fontcolor'].";}";
+		return $css;
+	}
 }
 ?>

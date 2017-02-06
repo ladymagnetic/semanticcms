@@ -21,8 +21,9 @@ class HTMLComponentPrinter
  	private function __construct(){}
 
 	/**
-	* Method to get the head tag of the page
-	* @params string $css only the name of the css without any file extension or path information
+	* Method to get the head tag of the page	
+	* @param string $title the title of the website
+	* @param string $css only the name of the css without any file extension or path information
 	* @return string containing the head tag
 	*/
 	public static function GetHead($title, $css)
@@ -96,16 +97,25 @@ class HTMLComponentPrinter
 	* Method to get the header string for a frontend page. A link to an image source is optional.
 	* @param string $title title of the website
 	* @param string $imgSource Defaults to empty string. File path for the image.
+	* @param boolean $globallogin Defaults to false. true enables login navigation
 	* @return string header string
 	*/
-	public static function GetHeader($title, $imgSource="")
+	public static function GetHeader($title, $imgSource="", $globallogin=false)
 	{
+		$prehead = "";
+		if($globallogin)
+		{
+			$prehead =  "<?php if(isset(\$_SESSION['username'])){ echo \"<a id=\\\"loginOutLink\\\" href=\\\"login_logout.php\\\">Logout</a>\"; }".
+						"else { echo \"<a id=\\\"loginOutLink\\\" href=\\\"login_logout.php\\\">Login</a>\";".
+						"echo \"<a id=\\\"registerLink\\\" href=\\\"register.php\\\">Registrieren</a>\"; } ?>";
+		}
+		
 		$header =	"<header typeof=\"WPHeader\">";
 		if(!empty($imgSource)) $header = $header."<img src=\"..\media\\".$imgSource."\" property=\"image\">";
 		$header =	$header."<h1 property=\"name\">".htmlspecialchars($title)."</h1>".
 					"</header>";
 
-		return $header;
+		return $prehead."\n".$header;
 	}
 
 
@@ -180,12 +190,13 @@ class HTMLComponentPrinter
 				$main .=
 					"<?php function PrintLoginField() {".
 					"echo \"<h2 property=\\\"headline\\\"> Login </h2>\".".
-					"\"<form method=\\\"post\\\" action=\\\"login_logout.php\\\">\".".
+					"\"<form id=\\\"login\\\" method=\\\"post\\\" action=\\\"login_logout.php\\\">\".".
 					"\"<a href=\\\"register.php\\\"><button type=\\\"button\\\"> Registrieren </button></a>\".".
+					"\"<p>oder</p><span><span id=\\\"fields\\\">\".".
 					"\"<input id=\\\"username\\\" name=\\\"username\\\" type=\\\"text\\\" required=\\\"true\\\" placeholder=\\\"Username oder Email\\\">\".".
-					"\"<input id=\\\"password\\\" name=\\\"password\\\" type=\\\"password\\\" required=\\\"true\\\" placeholder=\\\"Passwort\\\">\".".
-					"\"<button name=\\\"action\\\" value=\\\"login\\\"> OK </button>\".".
-					"\"<a href=\\\"ForgotPassword.php\\\"><button type=\\\"button\\\"> Passwort vergessen</button></a></form>\";}".
+					"\"<input id=\\\"password\\\" name=\\\"password\\\" type=\\\"password\\\" required=\\\"true\\\" placeholder=\\\"Passwort\\\"></span>\".".
+					"\"<button name=\\\"action\\\" value=\\\"login\\\"> OK </button></span>\".".
+					"\"<a href=\\\"ForgotPassword.php\\\">Passwort vergessen?</a></form>\";}".
 					"if(\$_SERVER['REQUEST_METHOD']=='POST') { if(\$_POST['action'] == \"login\") {".
 					"\$database = new DbUser(\$config['cms_db']['dbhost'],\$config['cms_db']['dbuser'],\$config['cms_db']['dbpass'],\$config['cms_db']['database']);".
 					"if(!isset(\$_POST['username']) || !isset(\$_POST['password'])) { die(\"<p> Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut. </p>\"); }".
@@ -218,7 +229,6 @@ class HTMLComponentPrinter
 	*/
 	public static function GetFooter(array $pages)
 	{
-		// schema.org fehlt noch
 		$footer =	"<footer typeof=\"WPFooter\"> <ul>";
 		foreach($pages as $page)
 		{
