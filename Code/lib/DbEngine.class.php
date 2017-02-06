@@ -186,5 +186,62 @@ class DbEngine
 	{
 		$this->ExecuteQuery("INSERT INTO logtable (id, logdate , username, rolename, description) VALUES (NULL, NOW(), '".$username."', '".$rolename."', '".$description."')");
 	}
+
+	
+	
+	/**
+	* Download the database
+	* @param string $dbhost the host
+	* @param string $dbuser the username
+	* @param string $dbpwd the password
+	* @param string $dbname the databasename
+	*/
+	public function DownloadDB($dbhost, $dbuser, $dbpwd, $dbname)
+	{
+		$storagepath = "01_Datenbank/Backup/";
+		$pathToMysqldump = "media\mysqldump ";
+
+		$dumpfile = $storagepath .$dbname . "_" . date("Y-m-d_H-i-s") . ".sql";
+		passthru("$pathToMysqldump --opt --host=$dbhost --user=$dbuser --password=$dbpwd $dbname > $dumpfile");
+
+		passthru("tail -1 $dumpfile");
+
+		echo
+		"<div class='info'>
+		<strong>Info!</strong> Die Datenbank wurde erfolgreich exportiert. Sie befindet sich in dem Ordner: ".$dumpfile."
+		</div>";
+	}
+
+
+
+
+	/**
+	* DownloadDBTest()
+	* nur für Testzwecke = nicht verwenden!
+	*/
+	/*
+	public function DownloadDBTest()
+	{
+		$dbhost = 'localhost';
+		$dbuser = 'root';
+		$dbpwd =  '';
+		$dbname =  'cms-projekt';
+
+		$storagepath = "01_Datenbank/Backup/";
+
+		$pathToMysqldump = "media\mysqldump ";
+
+		$dumpfile = $storagepath .$dbname . "_" . date("Y-m-d_H-i-s") . ".sql";
+
+		passthru("$pathToMysqldump --opt --host=$dbhost --user=$dbuser --password=$dbpwd $dbname > $dumpfile");
+
+		echo "$dumpfile "; passthru("tail -1 $dumpfile");
+	}
+	*/
+
+ 
+
+
 }
 ?>
+
