@@ -451,7 +451,7 @@ BackendComponentPrinter::PrintDatatablesPlugin();
             <input id='gtcContent' name='gtcContent' type='hidden'>
                 <br><br>
                 
-                <label for='technicalSiteTemplateId'>Template für die Webseiten-Details-Seite</label>";
+                <label for='technicalSiteTemplateId'>Template</label>";
         // fetch all existing templates
         $queryResult = $dbContent->SelectAllTemplates();
         echo "<select name='technicalSiteTemplateId' size='1'>";

@@ -162,8 +162,9 @@ class BackendComponentPrinter
      * Prints a dropdown list with selectable fonts as options together with a label
      * @param $label The corresponding label string
      * @param $name The name attribute of the dropdown list
+     * @param $selected The default selected font option string
      */
-    public static function PrintFontsDropdownList($label, $name)
+    public static function PrintFontsDropdownList($label, $name, $selected)
     {
         $fontNames = array(
             "Arial",
@@ -186,7 +187,7 @@ class BackendComponentPrinter
             "MS Serif"
         );
 
-        self::PrintDropdownList($label, $name, $fontNames, 1, $fontNames[0]);
+        self::PrintDropdownList($label, $name, $fontNames, 1, $selected);
     }
 
     /**
