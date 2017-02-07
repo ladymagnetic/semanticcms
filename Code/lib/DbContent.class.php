@@ -1220,24 +1220,38 @@ class DbContent
 	* @param int $website_id the id of the website
 	* @return boolean true|false successful (true) when the query could be executed correctly and a website, the pages and the article is deleted
 	*/
-	public function DeleteWebsiteById($id)
+		public function DeleteWebsiteById($id)
 	{
 		 $logDeletedWebsite = $this->FetchArray($this->SelectWebsiteById($id))['headertitle'];
-		 $result = $this->database->ExecutePreparedStatement("deleteWebsiteAndPageAndArticleByWebsiteId", array($id));
 
-			if($result==true)
-			{
-				$logUsername = $_SESSION['username'];
-				$logRolename = $_SESSION['rolename'];
-				$logDescription = 'Folgende Website incl. Seiten und Artikeln wurde gelöscht: <strong>'.$logDeletedWebsite.'</strong>';
-				$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-				return true;
-			}
-			else
-			{
-				 return false;
-			}
+		 $query = "DELETE FROM website WHERE website.id = ".$id;
+		 $result = $this->database->ExecuteQuery($query);
+		 $result2 = $this->database->ExecuteQuery("SELECT page.id AS SeitenID FROM page WHERE page.website_id =".$id);
+
+		 if($result2)
+		 {
+			 while($pageid = $this->database->FetchArray($result2))
+			 {
+				  $result3 = $this->database->ExecuteQuery("DELETE FROM page	WHERE page.website_id =". $id);
+					$result4 = $this->database->ExecuteQuery("DELETE FROM article WHERE article.page_id = ".$pageid['SeitenID']);
+			 }
+		 }
+
+		 
+		if($result==true)
+		{
+			$logUsername = $_SESSION['username'];
+			$logRolename = $_SESSION['rolename'];
+			$logDescription = 'Folgende Website incl. Seiten und Artikeln wurde gelöscht: <strong>'.$logDeletedWebsite.'</strong>';
+			$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+			return true;
+		}
+		else
+		{
+			 return false;
+		}
 	 }
+
 
 
 	/**
