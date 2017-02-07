@@ -1,4 +1,11 @@
 <?php
+/**
+* Contains the class DbUser.
+* @author Mirjam Donhauser
+* @author Cornelia Ott
+*/
+
+
 /* namespace */
 namespace SemanticCms\DatabaseAbstraction;
 

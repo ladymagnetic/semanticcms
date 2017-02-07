@@ -488,10 +488,6 @@ class DbContent
 
 
 
-
-
-
-
 	/**
 	* select one page by the title of the page
 	* @param string $title is the title of the page

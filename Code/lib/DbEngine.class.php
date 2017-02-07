@@ -262,12 +262,11 @@ class DbEngine
 
 
 	/**
-	* DownloadDBTest()
-	* nur für Testzwecke = nicht verwenden!
+	* Download the database
+	* only useful for test purposes
 	* @author Mirjam Donhauser
 	*/
-	/*
-	public function DownloadDBTest()
+ 	public function DownloadDBTest()
 	{
 		$dbhost = 'localhost';
 		$dbuser = 'root';
@@ -280,35 +279,52 @@ class DbEngine
 
 		$dumpfile = $storagepath .$dbname . "_" . date("Y-m-d_H-i-s") . ".sql";
 
-		passthru("$pathToMysqldump --opt --host=$dbhost --user=$dbuser --password=$dbpwd $dbname > $dumpfile");
+		passthru("$pathToMysqldump --opt --host=$dbhost --user=$dbuser --password=$dbpwd $dbname > $dumpfile", $rueckgabewert);
 
 		echo "$dumpfile "; passthru("tail -1 $dumpfile");
+
+		if($rueckgabewert==0)
+		{
+			echo
+			"<div class='info' style='background-color:lime;'>
+			<strong>Info!</strong> Die Datenbank wurde erfolgreich exportiert. Sie befindet sich in dem Ordner: ".$dumpfile."
+			</div>";
+		}
+		else
+		{
+			echo
+			"<div class='info' style='background-color:red;'>
+			<strong>Info!</strong> Der Export der Datenbank war nicht erfolgreich.
+			</div>";
+		}
 	}
-	*/
+
 
 	/**
-	* UploadDBTest()
-	* nur für Testzwecke = nicht verwenden!
-  * @author Mirjam Donhauser
+	* Upload the database
+	* only useful for test purposes
+	* @author Mirjam Donhauser
 	*/
  	public function UploadDBTest()
 	{
-		/*
-		$dbhost = 'localhost';
- 		$dbuser = 'root';
- 		$dbpwd =  '';
- 		$dbname =  'cms-projekt';
- 		$importpath = "01_Datenbank/cms-projekt.php";
-
- 		$pathToMysql= "media\mysql.exe";
-		*/
- 		passthru("mysql -h localhost -u root -p cms-projekt < cms-projekt.sql");
+	 	passthru("mysql -h localhost -u root -p cms-projekt < cms-projekt.sql", $rueckgabewert);
 
 		//mysql -h localhost -u root -p DatenbankInPhpMyAdmin < Datenbankname.sql
 
-		echo
-		"<div class='info'>
-		<strong>Info! </strong> Die Datenbank wurde hochgeladen. </div>";
+		if($rueckgabewert == 0)
+		{
+			echo
+			"<div class='info' style='background-color:lime;'>
+			<strong>Info!</strong> Diese Datenbank erfolgreich wurde hochgeladen.
+			</div>";
+		}
+		else
+		{
+			echo
+			"<div class='info' style='background-color:red;'>
+			<strong>Info!</strong> Der Import der Datenbank ist fehlgeschlagen.
+			</div>";
+		}
 
  	}
 }
