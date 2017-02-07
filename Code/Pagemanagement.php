@@ -8,13 +8,16 @@ require_once 'lib/DbEngine.class.php';
 require_once 'lib/DbContent.class.php';
 require_once 'lib/Permission.enum.php';
 require_once 'config/config.php';
+require_once 'lib/FrontendBuilder.class.php';
 
 /* use namespace(s) */
 use SemanticCms\ComponentPrinter\BackendComponentPrinter;
 use SemanticCms\DatabaseAbstraction\DbEngine;
 use SemanticCms\DatabaseAbstraction\DbContent;
 use SemanticCms\Model\Permission;
+use SemanticCms\FrontendGenerator\FrontendBuilder;
 
+FrontendBuilder::Init();
 /** Database related objects */
 $db = new DbEngine($config['cms_db']['dbhost'],$config['cms_db']['dbuser'],$config['cms_db']['dbpass'],$config['cms_db']['database']);
 $dbContent = new DbContent($config['cms_db']['dbhost'], $config['cms_db']['dbuser'], $config['cms_db']['dbpass'], $config['cms_db']['database']);
@@ -37,7 +40,7 @@ else if (isset($_POST['newPage'])) {
     // Insert a new page
     $templates = $dbContent->SelectAllTemplates();
     if ($dbContent->GetResultCount($templates) < 1) {
-        die("Es exististieren keine Templates");
+        BackendComponentPrinter::PrintResultMessage("Es exististieren keine Templates", true);
     } else {
         // The first template in the array will be the default template
         $defaultTemplate = $dbContent->FetchArray($templates);
@@ -50,7 +53,12 @@ else if (isset($_POST['newPage'])) {
         } while($dbContent->PagetitleAlreadyExists($newTitle));
 
         $relativePosition = $dbContent->GetHighestRelativeNumber()+1;
-        $dbContent->InsertPage($newTitle, $relativePosition, $defaultTemplate['id'], $websiteId);
+        $result = $dbContent->InsertPage($newTitle, $relativePosition, $defaultTemplate['id'], $websiteId);
+        if (!$result) {
+            BackendComponentPrinter::PrintResultMessage("Seite konnte nicht erzeugt werden!", true);
+        } else {
+            FrontendBuilder::MakeNewPage($newTitle, $defaultTemplate['filelink'], $websiteId);
+        }
     }
 }
 // Submit button with the name 'options' was clicked
@@ -76,13 +84,23 @@ else if (isset($_POST['saveWebsiteChanges'])) {
             $privacyInformationContent, $gtcContent, $loginEnabled, $guestbookEnabled,
             $templateId);
         if (!$result) {
-            die("Webseite konnte nicht erzeugt werden!");
+            BackendComponentPrinter::PrintResultMessage("Webseite konnte nicht erzeugt werden!", true);
+        } else {
+            // get the id of the inserted website
+            $queryResult = $dbContent->SelectAllWebsite();
+            while ($website = $dbContent->FetchArray($queryResult)) {
+                if ($website['headertitle'] == $_POST['headerTitle']) {
+                    $websiteId = $website['id'];
+                }
+            }
+            FrontendBuilder::MakeNewSite($websiteId);
         }
     } else {
         // $websiteId is valid -> we update an existing website
         $dbContent->UpdateWebsiteById($websiteId, $_POST['headerTitle'], $contactContent, $imprintContent,
             $privacyInformationContent, $gtcContent, $loginEnabled, $guestbookEnabled,
             $templateId);
+        //FrontendBuilder::UpdateSite(); // todo
     }
 }
 // Submit button with the name 'siteDetails' was clicked
@@ -92,10 +110,17 @@ else if (isset($_POST['pageDetails'])) {
 }
 // Submit button with the name 'savePageChanges' was clicked
 else if (isset($_POST['savePageChanges'])) {
+    $oldPage = $dbContent->FetchArray($dbContent->SelectPageById($_POST['pageId']));
+    $queryResult = $dbContent->SelectTemplateById($oldPage['template_id']);
+    $oldTemplatePath = $dbContent->FetchArray($queryResult)['filelink'];
+
     $queryResult = $dbContent->SelectTemplateByTemplatename($_POST['templateName']);
-    $templateId = $dbContent->FetchArray($queryResult)['id'];
+    $newTemplate = $dbContent->FetchArray($queryResult);
+
     $dbContent->UpdatePageById($_POST['pageId'], $_POST['pageTitle'],
-        $_POST['relativePosition'], $templateId, $websiteId);
+        $_POST['relativePosition'], $newTemplate['id'], $websiteId);
+    FrontendBuilder::UpdatePage($oldPage['title'], $oldTemplatePath, $_POST['pageTitle'],
+        $newTemplate['filelink'], $oldPage['website_id'], $websiteId);
 }
 // Submit button with the name 'deletePage' was clicked
 else if (isset($_POST['deletePage'])) {
@@ -114,11 +139,16 @@ else if (isset($_POST['reallyDelete'])) {
     if (isset($_POST['pageId'])) {
         // a page should be deleted
         $pageId = intval($_POST['pageId']);
+        $page = $dbContent->FetchArray($dbContent->SelectPageById($pageId));
+        $queryResult = $dbContent->SelectTemplateById($page['template_id']);
+        $templatePath = $dbContent->FetchArray($queryResult)['filelink'];
         $dbContent->DeletePageById($pageId);
+        FrontendBuilder::DeletePage($page['title'], $templatePath, $page['website_id']);
     } else if (isset($_POST['website'])) {
         // a website should be deleted
         $websiteIdToDelete = intval($_POST['website']);
         $dbContent->DeleteWebsiteById($websiteIdToDelete);
+        FrontendBuilder::DeleteSite($websiteIdToDelete);
     }
 }
 // Submit button with the name 'editContent' was clicked
@@ -330,11 +360,13 @@ BackendComponentPrinter::PrintDatatablesPlugin();
 
         } else {
             if ($websiteId < 1) {
-                die("Es wurde keine gültige Website ausgewählt!");
+                BackendComponentPrinter::PrintResultMessage("Es wurde keine gültige Website ausgewählt!", true);
+                return;
             }
             $website = $dbContent->FetchArray($dbContent->SelectWebsiteById($websiteId));
             if (null == $website) {
-                die("Es wurde noch keine Webseite erstellt!");
+                BackendComponentPrinter::PrintResultMessage("Es wurde noch keine Webseite erstellt!", true);
+                return;
             }
 
             // take the values from the selected website
