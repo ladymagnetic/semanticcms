@@ -104,7 +104,7 @@ else if (isset($_POST['saveWebsiteChanges'])) {
         $dbContent->UpdateWebsiteById($websiteId, $_POST['headerTitle'], $contactContent, $imprintContent,
             $privacyInformationContent, $gtcContent, $loginEnabled, $guestbookEnabled,
             $templateId);
-        //FrontendBuilder::UpdateSite(); // todo
+        FrontendBuilder::UpdateSite($websiteId);
     }
 }
 // Submit button with the name 'siteDetails' was clicked
