@@ -683,10 +683,10 @@ class DbUser
 		if($id == 1)
 		{
 			$result = $this->database->ExecuteQuery("UPDATE role SET rolename ='".$rolename."',  uri ='".$uri."',   guestbookmanagement ='".$ja."',  usermanagement ='".$ja."', pagemanagement ='".$ja."', articlemanagement ='".$ja."', guestbookusage ='".$ja."' , templateconstruction ='".$ja."', databasemanagement ='".$ja."', backendlogin ='".$ja."' WHERE id = '". $id."'");
-		  $_SESSION['rolename'] = $rolename;
 
 			if($result==true)
 			{
+			  $_SESSION['rolename'] = $rolename;
 				if (($rolenameBevoreUpdate == $rolename) && ($uriBevoreUpdate == $uri))
 				{
 				echo
@@ -722,8 +722,7 @@ class DbUser
 		else
 		{
 					$result = $this->database->ExecuteQuery("UPDATE role SET uri ='".$uri."',  rolename ='".$rolename."',  guestbookmanagement ='".$guestbookmanagement."',  usermanagement ='".$usermanagement."', pagemanagement ='".$pagemanagement."', articlemanagement ='".$articlemanagement."', guestbookusage ='".$guestbookusage."' , templateconstruction ='".$templateconstruction."', databasemanagement ='".$databasemanagement."', backendlogin ='".$backendlogin."' WHERE id = '". $id."'");
-					$_SESSION['rolename'] = $rolename;
-
+				
 					if($result==true)
 					{
 						$logUsername = $_SESSION['username'];
