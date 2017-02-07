@@ -164,7 +164,7 @@ class BackendComponentPrinter
      * @param $name The name attribute of the dropdown list
      * @param $selected The default selected font option string
      */
-    public static function PrintFontsDropdownList($label, $name, $selected)
+    public static function PrintFontsDropdownList($label, $name, $selected="Arial")
     {
         $fontNames = array(
             "Arial",
