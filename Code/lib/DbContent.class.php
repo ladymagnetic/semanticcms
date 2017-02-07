@@ -1259,7 +1259,14 @@ class DbContent
 	public function UpdateWebsiteById($websiteId, $headertitle, $contact, $imprint, $privacyinformation, $gtc, $login, $guestbook, $template_id)
 	{
 		$websiteHeadertitleBevoreUpdate = $this->FetchArray($this->SelectWebsiteById($headertitle))['headertitle'];
-		$result = $this->database->ExecuteQuery("UPDATE website SET headertitle  ='".$headertitle."', contact = '".$contact."', imprint  = '".$imprint."',  privacyinformation = '".$privacyinformation."', gtc ='".$gtc."', login = ".$login.", guestbook = ".$guestbook.", template_id = ".$template_id." WHERE id = ". $websiteId);
+		$set = "SET headertitle ='".$headertitle."', ";
+		if(is_null($contact)) $set .= "contact = NULL, "; else $set .= "contact='".$contact."', ";
+		if(is_null($imprint)) $set .= "imprint = NULL, "; else $set .= "imprint='".$imprint."', ";
+		if(is_null($privacyinformation)) $set .= "privacyinformation = NULL, "; else $set .= "privacyinformation='".$privacyinformation."', ";
+		if(is_null($gtc)) $set .= " gtc = NULL, "; else $set .= "gtc = '".$gtc."', ";
+		$set .= "login = ".$login.", guestbook = ".$guestbook.", template_id = ".$template_id;
+
+		$result = $this->database->ExecuteQuery("UPDATE website ".$set." WHERE id = ". $websiteId);
 
 		if($result==true)
 		{
@@ -1303,9 +1310,16 @@ class DbContent
 	*/
 	public function InsertWebsite($headertitle, $contact, $imprint, $privacyinformation, $gtc, $login, $guestbook, $template_id)
 	{
-		$result = $this->database->ExecuteQuery("INSERT INTO website (id, headertitle, contact, imprint, privacyinformation, gtc, login, guestbook, template_id) VALUES (NULL, '".$headertitle."', '".$contact."', '".$imprint."', '".$privacyinformation."', '".$gtc."', ".$login.", ".$guestbook.",  ".$template_id.")");
-
-		 if($result==true)
+		$val = "VALUES ( NULL, '".$headertitle."', ";
+		if(is_null($contact)) $val .= "NULL, "; else $val .= "'".$contact."', ";
+		if(is_null($imprint)) $val .= "NULL, "; else $val .= "'".$imprint."', ";
+		if(is_null($privacyinformation)) $val .= "NULL, "; else $val .= "'".$privacyinformation."', ";
+		if(is_null($gtc)) $val .= "NULL, "; else $val .= "'".$gtc."', ";
+		$val .= $login.", ".$guestbook.",  ".$template_id.")";
+		
+		$result = $this->database->ExecuteQuery("INSERT INTO website (id, headertitle, contact, imprint, privacyinformation, gtc, login, guestbook, template_id) ".$val);
+		
+		if($result==true)
 		 {
 			$logUsername = $_SESSION['username'];
 			$logRolename = $_SESSION['rolename'];
