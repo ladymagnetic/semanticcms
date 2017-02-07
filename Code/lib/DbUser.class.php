@@ -1075,19 +1075,30 @@ class DbUser
 
 		if ($result != '')
 		{
-			$pwCheck = password_verify($password, $result);
-
-			if($pwCheck && ($newPassword == $newPasswordRepeat))
-			{
-				$hash = password_hash($newPassword, PASSWORD_BCRYPT, array('cost' => 12));
-
-				$changePassword = $this->database->ExecuteQuery("UPDATE user SET password = '".$hash."' WHERE id =".$userId."");
-				return true;
+				$pwCheck = password_verify($password, $result);
+				if($pwCheck && ($newPassword == $newPasswordRepeat))
+				{
+					$hash = password_hash($newPassword, PASSWORD_BCRYPT, array('cost' => 12));
+					$changePassword = $this->database->ExecuteQuery("UPDATE user SET password = '".$hash."' WHERE id =".$userId."");
+					echo
+							"<div class='info' style='background-color:lime;'>
+							<strong>Info!</strong> Die Änderungen bei dem Passwort wurden übernommen!!!
+							</div>";
+				 	return true;
+				}
+				else
+				{
+						echo
+								"<div class='info' style='background-color:red;'>
+								<strong>Info!</strong> Die Änderungen bei dem Passwort wurden nicht übernommen!!!
+								</div>";
+						return false;
+				}
 			}
+		else
+		{
 			return false;
 		}
-		else
-		{ return false; }
 	}
 
 
