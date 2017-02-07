@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 12. Jan 2017 um 12:45
--- Server-Version: 10.1.19-MariaDB
--- PHP-Version: 5.6.28
+-- Erstellungszeit: 07. Feb 2017 um 13:19
+-- Server-Version: 10.1.16-MariaDB
+-- PHP-Version: 5.6.24
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -84,22 +84,6 @@ CREATE TABLE `ban` (
   `begindatetime` datetime NOT NULL,
   `enddatetime` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Daten für Tabelle `ban`
---
-
-INSERT INTO `ban` (`id`, `user_id`, `reason_id`, `description`, `begindatetime`, `enddatetime`) VALUES
-(1, 3, 5, 'Lästig', '2016-12-22 21:48:50', '2016-12-22 21:48:50'),
-(2, 8, 6, 'Lästig', '2016-12-11 21:48:50', '2016-12-31 21:48:50'),
-(3, 8, 5, 'Sonstiges', '2016-08-16 21:48:50', '2016-12-16 21:48:50'),
-(4, 8, 5, 'Sonstiges', '2016-12-11 21:48:50', '2016-12-31 21:48:50'),
-(5, 3, 2, 'mehrmaliges Missachtung von Seiten-Regeln', '2016-12-11 21:48:50', '2016-12-31 21:48:50'),
-(6, 4, 6, 'Mehrmalige Falscheingabe des Passwortes - schon wieder', '2016-12-22 21:48:50', '2016-12-22 21:48:50'),
-(7, 13, 4, 'Spam', '2014-02-12 21:48:50', '2017-11-17 21:48:50'),
-(8, 14, 6, 'Mehrmalige Falscheingabe des Passwortes - schon wieder', '2016-08-16 21:48:50', '2018-12-14 21:48:50'),
-(9, 8, 4, 'Spam', '2016-12-11 21:48:50', '2016-12-31 21:48:50'),
-(10, 11, 2, 'Beleidigung der anderen Gäste', '2016-12-11 21:48:50', '3000-12-31 21:48:50');
 
 -- --------------------------------------------------------
 
@@ -238,53 +222,6 @@ CREATE TABLE `logtable` (
   `description` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Daten für Tabelle `logtable`
---
-
-INSERT INTO `logtable` (`id`, `logdate`, `username`, `rolename`, `description`) VALUES
-(1, '2017-01-07', 'Wer ist gerade angemeldet?', 'Welche Rolle hat der angemeldete Benutzer?', 'Welcher Articel wurde neu eingefügt? => $header'),
-(2, '2017-01-08', 'Wer ist gerade angemeldet?', 'Welche Rolle hat der angemeldete Benutzer?', 'Welcher Articel wurde neu eingefügt? => $header'),
-(3, '2017-01-08', 'Wer ist gerade angemeldet?', 'Welche Rolle hat der angemeldete Benutzer?', 'Welcher Articel wurde neu eingefügt? => $header'),
-(4, '2017-01-08', 'Admin-Admin', 'Admin', 'An dem Artikel <strong>Elefanten</strong> wurden Änderugen vorgenommen.'),
-(5, '2017-01-08', 'Admin-Admin', 'Admin', 'Folgendes Template wurde erstellt: <br> <strong>Wald'),
-(6, '2017-01-08', 'Admin-Admin', 'Admin', 'Folgende Seite wurde erstellt: <br> <strong>Neue Seite3'),
-(7, '2017-01-08', 'Admin-Admin', 'Admin', 'Folgende Seite wurde erstellt: <br> <strong>Neue Seite4'),
-(8, '2017-01-08', 'Admin-Admin', 'Admin', 'Folgende Seite wurde erstellt: <br> <strong>Neue Seite5'),
-(9, '2017-01-08', 'Admin-Admin', 'Admin', 'Folgende Seite wurde erstellt: <br> <strong>Neue Seite6'),
-(10, '2017-01-08', 'Admin-Admin', 'Admin', 'Folgende Seite wurde geändert: <br> <strong>Zoo'),
-(11, '2017-01-08', 'Admin-Admin', 'Admin', 'Folgender Artikel wurde gelöscht: <br> <strong>Elefanten</strong>'),
-(12, '2017-01-08', 'Admin-Admin', 'Admin', 'An dem Artikel <strong>Elefanten</strong> wurden Änderugen vorgenommen.'),
-(13, '2017-01-08', 'Tami', 'Redakteur', 'An dem Artikel <strong>Elefanten</strong> wurden Änderugen vorgenommen.'),
-(14, '2017-01-08', 'Tami', 'Redakteur', 'Folgende Seite wurde gelöscht: <br> <strong>Neue Seite6'),
-(15, '2017-01-08', 'Tami', 'Redakteur', 'Folgende Seite wurde gelöscht: <br> <strong>Neue Seite1'),
-(16, '2017-01-08', 'Tami', 'Redakteur', 'Folgende Seite wurde gelöscht: <br> <strong>Neue Seite2'),
-(17, '2017-01-08', 'Tami', 'Redakteur', 'Folgende Seite wurde gelöscht: <br> <strong>Neue Seite3'),
-(18, '2017-01-08', 'Tami', 'Redakteur', 'Folgende Seite wurde gelöscht: <br> <strong>Neue Seite4'),
-(19, '2017-01-08', 'Tami', 'Redakteur', 'Folgende Seite wurde gelöscht: <br> <strong>Neue Seite5'),
-(20, '2017-01-09', 'Admin-Admin', 'Admin', 'Folgendes Template wurde erstellt: <br> <strong>TEST'),
-(21, '2017-01-09', 'Admin-Admin', 'Admin', 'Folgendes Template wurde gelöscht: <br> <strong>TEST'),
-(22, '2017-01-09', 'Admin-Admin', 'Admin', 'Folgende Seite wurde erstellt: <br> <strong>Neue Seite1'),
-(23, '2017-01-09', 'Admin-Admin', 'Admin', 'Folgende Seite wurde geändert: <br> <strong>Neue Seite1(neue Überschrift: Häuser)'),
-(24, '2017-01-09', 'Admin-Admin', 'Admin', 'Folgende Seite wurde gelöscht: <br> <strong>Häuser'),
-(25, '2017-01-10', 'Designer-Designer', 'Designer', 'Folgender Artikel wurde gelöscht: <br> <strong>Brasilien</strong>'),
-(26, '2017-01-10', 'Designer-Designer', 'Designer', 'Folgender Artikel wurde neu eingefügt: <br> <strong>Brasilien</strong>'),
-(27, '2017-01-10', 'Designer-Designer', 'Designer', 'An dem Artikel <strong>Brasilien</strong> wurden Änderugen vorgenommen.'),
-(28, '2017-01-10', 'Designer-Designer', 'Designer', 'An dem Artikel <strong>Brasilien</strong> wurden Änderugen vorgenommen.'),
-(29, '2017-01-10', 'Designer-Designer', 'Designer', 'An dem Artikel <strong>Brasilien</strong> wurden Änderugen vorgenommen.'),
-(30, '2017-01-10', 'Designer-Designer', 'Designer', 'An dem Artikel <strong>Brasilien</strong> wurden Änderugen vorgenommen.'),
-(31, '2017-01-10', 'Tami', 'Redakteur', 'Folgender Artikel wurde neu eingefügt: <br> <strong>Das Nilpferd - Steckbrief</strong>'),
-(32, '2017-01-10', 'Tami', 'Redakteur', 'An dem Artikel <strong>Das Nilpferd - Steckbrief</strong> wurden Änderugen vorgenommen.'),
-(33, '2017-01-10', 'Tami', 'Redakteur', 'An dem Artikel <strong>Das Nilpferd - Steckbrief</strong> wurden Änderugen vorgenommen.'),
-(34, '2017-01-10', 'Tami', 'Redakteur', 'Folgende Seite wurde geändert: <br> <strong>Autos(neue Überschrift: Auto)'),
-(35, '2017-01-10', 'Tami', 'Redakteur', 'Folgende Seite wurde geändert: <br> <strong>Zoo(neue Überschrift: Zoos)'),
-(36, '2017-01-10', 'Admin-Admin', 'Admin', 'Folgendes Template wurde erstellt: <br> <strong>Feuerwehr'),
-(37, '2017-01-10', 'Admin-Admin', 'Admin', 'Folgendes Template wurde erstellt: <br> <strong>Skyfall'),
-(38, '2017-01-10', 'Admin-Admin', 'Admin', 'Folgende Seite wurde erstellt: <br> <strong>Neue Seite1'),
-(39, '2017-01-10', 'Admin-Admin', 'Admin', 'Folgende Seite wurde gelöscht: <br> <strong>Neue Seite1'),
-(40, '2017-01-12', 'Admin', 'Admin', 'Folgender Artikel wurde neu eingefügt: <br> <strong>Nashorn</strong>'),
-(41, '2017-01-12', 'Admin', 'Admin', 'Folgender Artikel wurde neu eingefügt: <br> <strong>Test</strong>');
-
 -- --------------------------------------------------------
 
 --
@@ -412,15 +349,6 @@ CREATE TABLE `template` (
   `templatename` varchar(255) NOT NULL,
   `filelink` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Daten für Tabelle `template`
---
-
-INSERT INTO `template` (`id`, `templatename`, `filelink`) VALUES
-(11, 'Wald', 'templates/Wald.xml'),
-(12, 'Feuerwehr', 'templates/Feuerwehr.xml'),
-(13, 'Skyfall', 'templates/Skyfall.xml');
 
 -- --------------------------------------------------------
 
