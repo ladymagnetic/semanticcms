@@ -591,7 +591,6 @@ class DbUser
 
 				if($result==true)
 				{
-
 					echo
 							"<div class='info' style='background-color:red;'>
 							<strong>Info!</strong> Man kann die Rolle dieses Users nicht ändern!
@@ -795,10 +794,18 @@ class DbUser
 
 		if($result==true)
 		{
+			echo
+					"<div class='info' style='background-color:lime;'>
+					<strong>Info!</strong> Die Änderungen wurden übernommen!
+					</div>";
 			return true;
 		}
 		else
 		{
+			echo
+					"<div class='info' style='background-color:red;'>
+					<strong>Info!</strong> Die Änderungen wurden nicht übernommen!
+					</div>";
 			 return false;
 		}
 	}
