@@ -652,32 +652,76 @@ class DbUser
 	public function UpdateRoleById($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $databasemanagement, $backendlogin, $id)
 	{
 		$rolenameBevoreUpdate =  $this->FetchArray($this->SelectRoleById($id))['rolename'];
+		$uriBevoreUpdate			=  $this->FetchArray($this->SelectRoleBYId($id))['uri'];
 
-		$result = $this->database->ExecuteQuery("UPDATE role SET uri ='".$uri."',  rolename ='".$rolename."',  guestbookmanagement ='".$guestbookmanagement."',  usermanagement ='".$usermanagement."', pagemanagement ='".$pagemanagement."', articlemanagement ='".$articlemanagement."', guestbookusage ='".$guestbookusage."' , templateconstruction ='".$templateconstruction."', databasemanagement ='".$databasemanagement."', backendlogin ='".$backendlogin."' WHERE id = '". $id."'");
+		$ja = 1;
 
-		if($result==true)
+		if($id == 1)
 		{
-			$logUsername = $_SESSION['username'];
-			$logRolename = $_SESSION['rolename'];
+			$result = $this->database->ExecuteQuery("UPDATE role SET rolename ='".$rolename."',  uri ='".$uri."',   guestbookmanagement ='".$ja."',  usermanagement ='".$ja."', pagemanagement ='".$ja."', articlemanagement ='".$ja."', guestbookusage ='".$ja."' , templateconstruction ='".$ja."', databasemanagement ='".$ja."', backendlogin ='".$ja."' WHERE id = '". $id."'");
 
-			if($rolenameBevoreUpdate == $rolename)
+			if($result==true)
 			{
-				$rolenameChanged = $rolename;
+				if (($rolenameBevoreUpdate == $rolename) && ($uriBevoreUpdate == $uri))
+				{
+				echo
+						"<div class='info'>
+						<strong>Info!</strong> Man kann die Rechte dieser Rolle nicht ändern!
+						</div>";
+				}
+				else
+				{
+					$logUsername = $_SESSION['username'];
+					$logRolename = $_SESSION['rolename'];
+
+					if($rolenameBevoreUpdate == $rolename)
+					{
+						$rolenameChanged = $rolename;
+					}
+					else
+						{
+							$rolenameChanged = $rolenameBevoreUpdate. ' (neuer Rollenname: '.$rolename.') ';
+						}
+
+					$logDescription = 'An der Rolle <strong>'.$rolenameChanged.'</strong> wurden Änderungen vorgenommen. Die Rechte sind davon nicht betroffen.';
+					$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+					return true;
+				}
 			}
 			else
-				{
-					$rolenameChanged = $rolenameBevoreUpdate. ' (neuer Rollenname: '.$rolename.') ';
-				}
-
-			$logDescription = 'An der Rolle <strong>'.$rolenameChanged.'</strong> wurden Änderungen vorgenommen.';
-			$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-
-			return true;
+			{
+				 return false;
+			}
 		}
 		else
 		{
-			 return false;
-		}
+					$result = $this->database->ExecuteQuery("UPDATE role SET uri ='".$uri."',  rolename ='".$rolename."',  guestbookmanagement ='".$guestbookmanagement."',  usermanagement ='".$usermanagement."', pagemanagement ='".$pagemanagement."', articlemanagement ='".$articlemanagement."', guestbookusage ='".$guestbookusage."' , templateconstruction ='".$templateconstruction."', databasemanagement ='".$databasemanagement."', backendlogin ='".$backendlogin."' WHERE id = '". $id."'");
+
+					if($result==true)
+					{
+						$logUsername = $_SESSION['username'];
+						$logRolename = $_SESSION['rolename'];
+
+						if($rolenameBevoreUpdate == $rolename)
+						{
+							$rolenameChanged = $rolename;
+						}
+						else
+							{
+								$rolenameChanged = $rolenameBevoreUpdate. ' (neuer Rollenname: '.$rolename.') ';
+							}
+
+						$logDescription = 'An der Rolle <strong>'.$rolenameChanged.'</strong> wurden Änderungen vorgenommen.';
+						$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+						return true;
+					}
+					else
+					{
+						 return false;
+					}
+			}
 	}
 
 
