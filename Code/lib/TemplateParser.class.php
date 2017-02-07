@@ -351,7 +351,7 @@ class TemplateParser
 
   		$loginArray;
 			$i=0;
-			while(is_object($login = $doc->getElementsByTagName("Label")->item($i)))
+			while(is_object($login = $doc->getElementsByTagName("Login")->item($i)))
 			{
 				foreach($login->childNodes as $nodename)
 			  {
