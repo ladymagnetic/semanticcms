@@ -70,10 +70,14 @@ else if (isset($_POST['options'])) {
 else if (isset($_POST['saveWebsiteChanges'])) {
     $loginEnabled = isset($_POST['loginEnabled']) ? 1 : 0;
     $guestbookEnabled = isset($_POST['guestbookEnabled']) ? 1 : 0;
-    $contactContent = $_POST['contactContent'];
-    $imprintContent = $_POST['imprintContent'];
-    $privacyInformationContent = $_POST['privacyInformationContent'];
-    $gtcContent = $_POST['gtcContent'];
+    $contactContent = isset($_POST['contactEnabled']) ?
+        $_POST['contactContent'] : "NULL";
+    $imprintContent = isset($_POST['imprintEnabled']) ?
+        $_POST['imprintContent'] : "NULL";
+    $privacyInformationContent = isset($_POST['privacyInformationEnabled']) ?
+        $_POST['privacyInformationContent'] : "NULL";
+    $gtcContent = isset($_POST['gtcEnabled']) ?
+        $_POST['gtcContent'] : "NULL";
 
     $queryResult = $dbContent->SelectTemplateByTemplatename($_POST['technicalSiteTemplateId']);
     $templateId = $dbContent->FetchArray($queryResult)['id'];
@@ -346,16 +350,21 @@ BackendComponentPrinter::PrintDatatablesPlugin();
         global $dbContent;
         global $websiteId;
 
+        $contactEnabled = false;
+        $imprintEnabled = false;
+        $privacyInformationEnabled = false;
+        $gtcEnabled = false;
+
         if ($websiteIsToBeCreated) {
             // set some default values
             $websiteId = -1;
             $headerTitle = "";
             $login = false;
             $guestbook = false;
-            $imprint = "      ";
-            $contact = "      ";
-            $privacyinformation = "      ";
-            $gtc = "      ";
+            $imprint = "";
+            $contact = "";
+            $privacyInformation = "";
+            $gtc = "";
             $templateId = 1;
 
         } else {
@@ -374,9 +383,29 @@ BackendComponentPrinter::PrintDatatablesPlugin();
             $login = $website['login'];
             $guestbook = $website['guestbook'];
             $imprint = $website['imprint'];
+            if (!empty(trim($imprint)) && 'NULL' != trim($imprint)) {
+                $imprintEnabled = true;
+            } else {
+                $imprint = "";
+            }
             $contact = $website['contact'];
-            $privacyinformation = $website['privacyinformation'];
+            if (!empty(trim($contact)) && 'NULL' != trim($contact)) {
+                $contactEnabled = true;
+            } else {
+                $contact = "";
+            }
+            $privacyInformation = $website['privacyinformation'];
+            if (!empty(trim($privacyInformation)) && 'NULL' != trim($privacyInformation)) {
+                $privacyInformationEnabled = true;
+            } else {
+                $privacyInformation = "";
+            }
             $gtc = $website['gtc'];
+            if (!empty(trim($gtc)) && 'NULL' != trim($gtc)) {
+                $gtcEnabled = true;
+            } else {
+                $gtc = "";
+            }
             $templateId = $website['template_id'];
         }
 
@@ -407,20 +436,28 @@ BackendComponentPrinter::PrintDatatablesPlugin();
                 <label for='headerTitle'>Headertitel</label>
                 <input id='headerTitle' name='headerTitle' value='".$headerTitle."' required style='width: 500px;'>
                 <br><br>
+                
                 <label for='loginEnabled'>Login aktivieren</label>
                 <input type='checkbox' id='loginEnabled' name='loginEnabled' value=''";
         if (boolval($login)) {
             echo " checked";
         };
+
         echo "><br><br>
                 <label for='guestbookEnabled'>Gästebuch aktivieren</label>
                 <input type='checkbox' id='guestbookEnabled' name='guestbookEnabled' value=''";
         if (boolval($guestbook)) {
             echo " checked";
         };
+
         echo "><br><br>
-                <label for='summernoteImprint'>Impressum</label>
-                 <div id='summernoteImprint' name='summernoteImprint'>".$imprint."</div>
+                <label for='imprintEnabled'>Impressum</label>
+                <input type='checkbox' id='imprintEnabled' name='imprintEnabled' value=''";
+        if ($imprintEnabled) {
+            echo " checked";
+        }
+                echo ">
+                <div id='summernoteImprint' name='summernoteImprint'>".$imprint."</div>
             <script>
                 $(document).ready(function() {
                     $('#summernoteImprint').summernote({
@@ -432,10 +469,15 @@ BackendComponentPrinter::PrintDatatablesPlugin();
                     });
                 });
             </script>
-            <input id='imprintContent' name='imprintContent' type='hidden'>
+            <input id='imprintContent' name='imprintContent' type='hidden' value='".$imprint."'>
                 <br><br>
                 
-                <label for='summernoteContact'>Kontakt-Formular</label>
+                <label for='contactEnabled'>Kontakt-Formular</label>
+                <input type='checkbox' id='contactEnabled' name='contactEnabled' value=''";
+        if ($contactEnabled) {
+            echo " checked";
+        }
+        echo ">
                 <div id='summernoteContact' name='summernoteContact'>".$contact."</div>
             <script>
                 $(document).ready(function() {
@@ -448,11 +490,16 @@ BackendComponentPrinter::PrintDatatablesPlugin();
                     });
                 });
             </script>
-            <input id='contactContent' name='contactContent' type='hidden'>
+            <input id='contactContent' name='contactContent' type='hidden' value='".$contact."'>
                 <br><br>
                 
-                <label for='summernotePrivacyInformation'>Datenschutz-Seite</label>
-                <div id='summernotePrivacyInformation' name='summernotePrivacyInformation'>".$privacyinformation."</div>
+                <label for='privacyInformationEnabled'>Datenschutz-Seite</label>
+                <input type='checkbox' id='privacyInformationEnabled' name='privacyInformationEnabled' value=''";
+        if ($privacyInformationEnabled) {
+            echo " checked";
+        }
+        echo ">
+                <div id='summernotePrivacyInformation' name='summernotePrivacyInformation'>".$privacyInformation."</div>
             <script>
                 $(document).ready(function() {
                     $('#summernotePrivacyInformation').summernote({
@@ -464,10 +511,15 @@ BackendComponentPrinter::PrintDatatablesPlugin();
                     });
                 });
             </script>
-            <input id='privacyInformationContent' name='privacyInformationContent' type='hidden'>
+            <input id='privacyInformationContent' name='privacyInformationContent' type='hidden' value='".$privacyInformation."'>
                 <br><br>
                 
-                <label for='summernoteGTC'>AGB-Seite</label>
+                <label for='gtcEnabled'>AGB-Seite</label>
+                <input type='checkbox' id='gtcEnabled' name='gtcEnabled' value=''";
+        if ($gtcEnabled) {
+            echo " checked";
+        }
+        echo ">
                 <div id='summernoteGTC' name='summernoteGTC'>".$gtc."</div>
             <script>
                 $(document).ready(function() {
@@ -480,7 +532,7 @@ BackendComponentPrinter::PrintDatatablesPlugin();
                     });
                 });
             </script>
-            <input id='gtcContent' name='gtcContent' type='hidden'>
+            <input id='gtcContent' name='gtcContent' type='hidden' value='".$gtc."'>
                 <br><br>
                 
                 <label for='technicalSiteTemplateId'>Template</label>";
@@ -500,19 +552,8 @@ BackendComponentPrinter::PrintDatatablesPlugin();
 
         echo "<br><br>
                 <input id='saveWebsiteChanges' name='saveWebsiteChanges' type='submit' value='Änderungen speichern'>
+                <input id='back' name='back' type='submit' value='Zurück'><form>
                 </form>";
-        echo "<form method='post' action='Pagemanagement.php'><input id='back' name='back' type='submit' value='Zurück'><form>";
-
-        // todo: ein-/ausblenden
-        /*echo "<script>
-        $(document).ready(function() {
-           $('#summernoteImprint').hide();
-           
-           $('#imprintEnabled').click(function () {
-               $('#summernoteImprint').fadeToggle();
-           });
-        });
-        </script>";*/
     }
     ?>
 
