@@ -144,6 +144,9 @@ else if (isset($_POST['reallyDelete'])) {
         // a page should be deleted
         $pageId = intval($_POST['pageId']);
         $page = $dbContent->FetchArray($dbContent->SelectPageById($pageId));
+        // set the current website
+        $websiteId = $page['website_id'];
+        // delete page
         $queryResult = $dbContent->SelectTemplateById($page['template_id']);
         $templatePath = $dbContent->FetchArray($queryResult)['filelink'];
         $dbContent->DeletePageById($pageId);
@@ -154,6 +157,14 @@ else if (isset($_POST['reallyDelete'])) {
         FrontendBuilder::DeleteSite($websiteIdToDelete);
         $dbContent->DeleteWebsiteById($websiteIdToDelete);
     }
+} else if (isset($_POST['back']) && isset($_POST['pageId'])) {
+    $pageId = intval($_POST['pageId']);
+    $page = $dbContent->FetchArray($dbContent->SelectPageById($pageId));
+    // set the current website
+    $websiteId = $page['website_id'];
+} else if (isset($_POST['back']) && isset($_POST['website'])) {
+    // set the current website
+    $websiteId = intval($_POST['website']);
 }
 // Submit button with the name 'editContent' was clicked
 else if (isset($_POST['editContent'])) {
@@ -287,8 +298,7 @@ BackendComponentPrinter::PrintDatatablesPlugin();
 
         echo
         "<main>
-            <h1><i class='fa fa-users fontawesome'></i> Seitendetails</h1>
-                <form method='post' action='Pagemanagement.php'>";
+            <h1><i class='fa fa-users fontawesome'></i> Seitendetails</h1>";
         $page = $dbContent->FetchArray($dbContent->SelectPageById($pageId));
 
         // let the user edit page details
@@ -323,8 +333,8 @@ BackendComponentPrinter::PrintDatatablesPlugin();
         }
         echo "<br><br>
                 <input id='savePageChanges' name='savePageChanges' type='submit' value='Änderungen speichern'>
+                <input id='back' name='back' type='submit' value='Zurück'>
                 </form>";
-        echo "<form method='post' action='Pagemanagement.php'><input id='back' name='back' type='submit' value='Zurück'><form>";
     }
 
     /**

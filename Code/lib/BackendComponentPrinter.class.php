@@ -253,11 +253,10 @@ class BackendComponentPrinter
             "<input id='".$customDataKey."' name='".$customDataKey."' type='hidden' value='".$customDataValue."'><br><br>".
             "<p>Möchten Sie wirklich löschen?</p>".
             "<p><img src='media/Pictures/Gnome-edit-delete.png' height='auto' width='250px'></p>".
-            "<input id='reallyDelete' name='reallyDelete' type='submit' value='Löschen'>";
+            "<input id='reallyDelete' name='reallyDelete' type='submit' value='Löschen'>
+            <input id='back' name='back' type='submit' value='Zurück'>";
         echo
         "</form>";
-        echo
-        "<form method='post' action='".$actionPage."'><input id='back' name='back' type='submit' value='Zurück'><form>";
         echo
         "</main></body></html>";
 
