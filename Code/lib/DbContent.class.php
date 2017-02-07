@@ -71,7 +71,7 @@ class DbContent
 		$allPagesWithTemplate = "SELECT page.title, page.website_id ".
 								"FROM page INNER JOIN template ON page.template_id = template.id ".
 								"WHERE templatename = ?;";
-								
+
 		$allSitesWithTemplate = "SELECT website.id ".
 								"FROM website INNER JOIN template ON website.template_id = template.id ".
 								"WHERE templatename = ?;";
@@ -396,7 +396,7 @@ class DbContent
 	* Selects all pages with title, relativeposition and templatename orderd by their relative position ascending
 	* @param int websiteId Id indicating the website and defaults to 1 (May contain a numeric string, e.g. "1" instead of 1)
 	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
-	* @author Tamara Graf	
+	* @author Tamara Graf
 	*/
 	public function GetAllPagesOfWebsite($websiteId=1)
 	{
@@ -430,9 +430,9 @@ class DbContent
 	{
 		if(!is_string($templatename)) return null;
 		return $this->database->ExecutePreparedStatement("allSitesWithTemplate", array($templatename));
-	}	
-	
-	
+	}
+
+
 	/**
 	* Selects information of a given website.
 	* Selects the fields website.headertitle, website.contact, website.imprint, website.privacyinformation, website.gtc, website.login, website.guestbook
@@ -679,8 +679,21 @@ class DbContent
 	{
 		if(!($this->TemplatenameAlreadyExists($templatename)))
 		{
+			if(	$templatename == '')
+			{
+
+				echo
+						"<div class='info' style='background-color:red;'>
+						<strong>Info!</strong> Das Template muss einen Namen haben!!!
+						</div>";
+				return false;
+
+			}
+			else
+			{
 			$templatename = $this->database->RealEscapeString($templatename);
 			$result = $this->database->ExecuteQuery("INSERT INTO template (id, templatename, filelink) VALUES (NULL, '".$templatename."', '".$filelink."') ");
+			}
 
 			if($result==true)
 			{
@@ -697,7 +710,14 @@ class DbContent
 				return false;
 			}
 		}
-		else  return false;
+		else
+		{
+			echo
+					"<div class='info' style='background-color:red;'>
+					<strong>Info!</strong> Es gibt schon ein Template mit diesem Namen!!!
+					</div>";
+			return false;
+		}
 	}
 
 
