@@ -1,4 +1,11 @@
 <?php
+/**
+* File containing the class DbContent
+* @author Mirjam Donhauser
+* @author Cornelia Ott
+* @author Tamara Graf
+*/
+
 /* namespace */
 namespace SemanticCms\DatabaseAbstraction;
 
@@ -7,12 +14,15 @@ require_once 'DbEngine.class.php';
 
 
 /**
-* Provides functionality for communication with the database according to page content
+* Provides functionality for communication with the database according to page content.
+* @author Mirjam Donhausers
+* @author Cornelia Ott
+* @author Tamara Graf
 */
 class DbContent
 {
-	/** @var DbEngine*/
-	private $database;			// DbEngine object
+	/** @var DbEngine DbEngine object fro database connection*/
+	private $database;
 
 
 	/* ---- Constructor / Destructor ---- */
@@ -58,13 +68,18 @@ class DbContent
 						"WHERE website_id = ? ".
 						"ORDER BY page.relativeposition ASC;";
 
-		$allPagesWithTemplate = "SELECT page.title ".
+		$allPagesWithTemplate = "SELECT page.title, page.website_id ".
 								"FROM page INNER JOIN template ON page.template_id = template.id ".
+								"WHERE templatename = ?;";
+								
+		$allSitesWithTemplate = "SELECT website.id ".
+								"FROM website INNER JOIN template ON website.template_id = template.id ".
 								"WHERE templatename = ?;";
 
 		if(!$this->database->PrepareStatement("allPages", $allPages)) die("Abfrage konnte nicht erstellt werden.");
 		if(!$this->database->PrepareStatement("allPagesOfSite", $allPagesSite)) die("Abfrage konnte nicht erstellt werden.");
 		if(!$this->database->PrepareStatement("allPagesWithTemplate", $allPagesWithTemplate)) die("Abfrage konnte nicht erstellt werden.");
+		if(!$this->database->PrepareStatement("allSitesWithTemplate", $allSitesWithTemplate)) die("Abfrage konnte nicht erstellt werden.");
 
 		// Website
 		$websiteById =  "SELECT website.headertitle, website.contact, website.imprint, website.privacyinformation, website.gtc, website.login, website.guestbook, template.templatename AS template ".
@@ -368,6 +383,7 @@ class DbContent
 	* Selects all pages with title, relativeposition and templatename orderd by their relative position ascending
 	* @param void
 	* @return Mysqli\mysqli_result Query Result for use with FetchArray()
+	* @author Tamara Graf
 	*/
 	public function GetAllPages()
 	{
@@ -380,6 +396,7 @@ class DbContent
 	* Selects all pages with title, relativeposition and templatename orderd by their relative position ascending
 	* @param int websiteId Id indicating the website and defaults to 1 (May contain a numeric string, e.g. "1" instead of 1)
 	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
+	* @author Tamara Graf	
 	*/
 	public function GetAllPagesOfWebsite($websiteId=1)
 	{
@@ -393,6 +410,7 @@ class DbContent
 	* Selects the title of all pages that use a specific template
 	* @param string $templatename Name of the template
 	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
+	* @author Tamara Graf
 	*/
 	public function GetAllPagesWithTemplate($templatename)
 	{
@@ -401,11 +419,27 @@ class DbContent
 	}
 
 	/**
+	* Method to get all website ids of websites that use the given template.
+	*
+	* Selects the id of all websites that use a specific template
+	* @param string $templatename Name of the template
+	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
+	* @author Tamara Graf
+	*/
+	public function GetAllSitesWithTemplate($templatename)
+	{
+		if(!is_string($templatename)) return null;
+		return $this->database->ExecutePreparedStatement("allSitesWithTemplate", array($templatename));
+	}	
+	
+	
+	/**
 	* Selects information of a given website.
 	* Selects the fields website.headertitle, website.contact, website.imprint, website.privacyinformation, website.gtc, website.login, website.guestbook
 	* and template.templatename (named template in the row array)
 	* @param int $id id of the website. May be a numeric string ("1" instead of 1)
 	* @return Mysqli\mysqli_result|null Query Result for use with FetchArray(), null if an error occured
+	* @author Tamara Graf
 	*/
 	public function GetWebsiteInfoById($id)
 	{
@@ -544,37 +578,6 @@ class DbContent
 		}
 	}
 
-
-
-	/**
-	* delete one special page by title
-	* @param string $title the title of the page
-	* @return boolean true|false successful (true) when the query could be executed correctly and the page is deleted
-	*/
-/*	public function DeletePageByTitle($title)
-	{
-		$result = $this->database->ExecutePreparedStatement("deletePageByTitle", array($title));
-
-		if($result==true)
-		{
-			$logUsername = 'Wer ist gerade angemeldet?';
-			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';		//pagemanegement muss true sein!
-			$logDescription = 'Folgende Page wurde gelöscht:';
-
-			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-
-			var_dump($re);
-
-			return true;
-		}
-		else
-		{
-			 return false;
-		}
-	}
-*/
-
-
 	/**
 	* delete one special template by id
 	* @param int $templateId the id of the template
@@ -599,38 +602,6 @@ class DbContent
 			 return false;
 		}
 	}
-
-
-
-	/**
-	* delete one special template by name
-	* @param string $templatename the templatename of the template
-	* @return boolean true|false successful (true) when the query could be executed correctly and the template is deleted
-	*/
-/*	public function DeleteTemplateByTemplatename($templatename)
-	{
-		$result = $this->database->ExecutePreparedStatement("deleteTemplateByTemplatename", array($templatename));
-
-		if($result==true)
-			{
-				$logUsername = 'Wer ist gerade angemeldet?';
-				$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';		//pagemanegement muss true sein!
-				$logDescription = 'Folgendes Template wurde gelöscht:';
-
-				$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-
-				var_dump($re);
-
-				return true;
-			}
-			else
-			{
-				 return false;
-			}
-	}
-
-
-*/
 
 	/**
 	* checks whether the title of a page already exists in the database
@@ -837,37 +808,6 @@ class DbContent
 
 
 	/**
-	* updates a special page by title
-	* @param string $title
-	* @param int $relativeposition
-	* @param int $templateId
-	* @param int $websiteId
-	* @return boolean true|false successful (true) when the query could be executed correctly and the changes in terms of the page are done
-	*/
-/*	public function UpdatePageByTitle($title, $relativeposition, $templateId, $websiteId)
-	{
-		$result = $this->database->ExecuteQuery("UPDATE page SET relativeposition = ".$relativeposition.", template_id = ".$templateId.",  website_id = ".$websiteId." WHERE templatename = '". $templatename."'");
-
-		if($result==true)
-		{		//warum wurde der User gedebannt und wer hat das gemacht?
-
-			$logUsername = 'Wer ist gerade angemeldet?';
-			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
-			$logDescription = 'Das Template mit dem Namen abc wurde geändert.';
-
-			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-
-			return true;
-		}
-		else
-		{
-				return false;
-		}
-	}
-*/
-
-
-	/**
 	* updates a special page by id
 	* @param int $pageId
 	* @param string $title
@@ -906,35 +846,6 @@ class DbContent
 		}
 	}
 
-
-	/**
-	* updates a special template by templatename
-	* @param string $templatename
-	* @param string $filelink
-	* @return boolean true|false successful (true) when the query could be executed correctly and the changes in terms of the template are done
-	*/
-/*	public function UpdateTemplateByTemplatename($templatename, $filelink)
-	{
-		$result = $this->database->ExecuteQuery("UPDATE template SET filelink  ='".$filelink."'  WHERE templatename = '". $templatename."'");
-
-		if($result==true)
-		{
-			$logUsername = 'Wer ist gerade angemeldet?';
-			$logRolename = 'Welche Rolle hat der angemeldete Benutzer?';
-			$logDescription = 'Das Template mit dem Namen abc wurde geändert.';
-
-			$re = $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-*/
-
-
 	/**
 	* updates template by id
 	* @param int $templateId
@@ -972,13 +883,6 @@ class DbContent
 		}
 	}
 
-
-
-
-
-
-
-
 	/**
 	* delets label_articles
 	* @param int $articleId the id of the article (foreign key)
@@ -998,10 +902,6 @@ class DbContent
 			return false;
 		}
 	}
-
-
-
-
 
 	 /**
 	 * delets label_articles
@@ -1182,9 +1082,6 @@ class DbContent
 		}
 	}
 
-
-
-
 	/**
 	* delete label_user by article_id
 	* @param int $userId the user's id (foreign key)
@@ -1203,9 +1100,6 @@ class DbContent
 			return false;
 		}
 	}
-
-
-
 
 	/**
 	* delete label_user by labe-_id
@@ -1226,10 +1120,8 @@ class DbContent
 		}
 	}
 
-
-
 	/**
-	* cerates label_user
+	* creates label_user
 	* @param int $labelId the id of the label (foreign key)
 	* @param int $userId the user's id (foreign key)
 	* @return boolean true|false successful (true) when the query could be executed correctly and a label_users is created
@@ -1248,9 +1140,6 @@ class DbContent
 			return false;
 		}
 	}
-
-
-
 
 	/**
 	* update label_user by label_id
@@ -1273,8 +1162,6 @@ class DbContent
 		}
 	}
 
-
-
 	/**
 	* update label_user by article_id
 	* @param int $labelId the id of the label (foreign key)
@@ -1295,13 +1182,6 @@ class DbContent
 		}
 	}
 
-
-
-
-
-
-
-
 	/**
 	* Select all websites
 	* @param void
@@ -1312,8 +1192,6 @@ class DbContent
 		 return	$this->database->ExecutePreparedStatement("selectAllWebsite", array());
 	}
 
-
-
 	/**
 	* select all websites by id
 	* @param int $id the id of the website
@@ -1323,8 +1201,6 @@ class DbContent
 	{
 		 return	$this->database->ExecutePreparedStatement("selectWebsiteById", array($id));
 	}
-
-
 
 	/**
 	* delete one website by id
@@ -1349,9 +1225,6 @@ class DbContent
 				return false;
 		 }
 	}
-
-
-
 
 	/**
 	* update one website by id
@@ -1399,8 +1272,6 @@ class DbContent
 		}
 	}
 
-
-
 	/**
 	* creates new websites
 	* @param string $headertitle
@@ -1431,8 +1302,6 @@ class DbContent
 		 }
 	}
 
-
-
 	/**
 	* Returns all articles of a particular page with id, header, content, publicationdate, description and author
 	* as well as information about being public/private (field name: public) and type
@@ -1446,8 +1315,6 @@ class DbContent
 		return $this->database->ExecutePreparedStatement("allArticlesOfPage", array($pagename));
 	}
 
-
-
 	/**
 	* selects all labels by labelid
 	* @param int $labelId the id of the label
@@ -1457,8 +1324,6 @@ class DbContent
 	{
 		return $this->database->ExecutePreparedStatement("selectLabelByLabelId", array($labelId));
 	}
-
-
 
 	/**
 	* selects all labels by labelname
@@ -1470,8 +1335,6 @@ class DbContent
 		return $this->database->ExecutePreparedStatement("selectLabelIdByLabelname", array($labelname));
 	}
 
-
-
 	/**
 	* selects all articles by header
 	* @param string $header the header of the article
@@ -1481,8 +1344,6 @@ class DbContent
 	{
 		return $this->database->ExecutePreparedStatement("selectArticleByHeader", array($header));
 	}
-
-
 
 	/**
 	* select all labels
@@ -1494,8 +1355,6 @@ class DbContent
 		return $this->database->ExecutePreparedStatement("selectAllLabels", array());
 	}
 
-
-
 	/**
 	* selects all websites by headertitle
 	* @param string $headertitle the headertitle of the website
@@ -1505,10 +1364,6 @@ class DbContent
 	{
 		return $this->database->ExecutePreparedStatement("selectAllWebsiteByHeadertitle", array($headertitle));
 	}
-
-
-
-
 
 	/**
 	* download the database
@@ -1523,8 +1378,6 @@ class DbContent
      $this->database->DownloadDB($dbhost, $dbuser, $dbpwd, $dbname);
 	}
 
-
-
 	/**
 	* download the database (nur zum Testen)
 	* @param void
@@ -1534,8 +1387,6 @@ class DbContent
 	{
      $this->database->DownloadDBTest();
 	}
-
-
 
 	/**
 	* delete one website, the pages and the articles by website_id
@@ -1560,8 +1411,5 @@ class DbContent
 				return false;
 		 }
 	}
-
-
 }
-
 ?>
