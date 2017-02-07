@@ -175,9 +175,9 @@ class CSSComponentPrinter
 	* @param array $data Array filled with the label template data given by TemplateParser class
 	* @return string css string
 	*/
-	public static function GetArticle(array $data)
+	public static function GetArticle(array $data, $background)
 	{
-		$article =	".article {margin-bottom: 10px; padding: 5px; border: solid #555 1px; background-color: beige;}".
+		$article =	".article {margin-bottom: 10px; padding: 5px; border: solid #555 1px; background-color: ".$background.";}".
 					".article:last-child {margin-bottom: 0px;}";
 		$headline = ".article h2 {margin: 0; padding: 0;}";
 		$infoline = ".article .info {font-size: smaller;font-style: italic;display: inline-block;padding: 0;padding-left: 10px;}".

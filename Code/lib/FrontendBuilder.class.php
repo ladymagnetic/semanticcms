@@ -399,7 +399,7 @@ class FrontendBuilder
 			fwrite($cssHandle, CSS::GetBackground($backgroundData));
 			fwrite($cssHandle, CSS::GetHeader($headerData));
 			fwrite($cssHandle, CSS::GetMenu($menuData));
-			fwrite($cssHandle, CSS::GetArticle($tagData));
+			fwrite($cssHandle, CSS::GetArticle($tagData, $articleContainerData['ContentBackground']));
 			fwrite($cssHandle, CSS::GetArticleContainer($articleContainerData));
 			fwrite($cssHandle, CSS::GetFooter($footerData));
 			fwrite($cssHandle, CSS::GetButton($buttonData));
