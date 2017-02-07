@@ -134,17 +134,34 @@ class FrontendBuilder
 		$sitePath = self::websiteDirPath($websiteData["headertitle"]);
 		
 		// delete technicalPages
-		self::deleteTechnicalPages($technicalPages, $websiteData["headertitle"], $websiteData["template"]);
+		self::deleteTechnicalPages($technicalPages, $websiteData["headertitle"]);
 		
 		// delete all other pages
 		$allPagesOfSite =self::$db->GetAllPagesOfWebsite($websiteId);
 		while($page = self::$db->FetchArray($allPagesOfSite))
 		{
-			self::DeletePage($page['title'], $page['templatename'], $websiteId);
+			$pagePath = self::pageFilePath($page['title'], $websiteData["headertitle"]);
+			if(file_exists($pagePath))
+			{
+				unlink($pagePath);
+				if(!self::isUsedTemplate($page['templatename']))
+				{
+					$cssPath = self::cssFilePath($page['templatename']);
+					if(file_exists($cssFilePath)) { unlink($cssFilePath); }
+				}
+			}
 		}
 		
 		// delete folder
 		rmdir($sitePath);
+		
+		// delete css if no longer used
+		$templateName = basename($websiteData["template"], ".xml");
+		if(!self::isUsedTemplate($templateName))
+		{
+			$cssPath = self::cssFilePath($templateName);
+			if(file_exists($cssFilePath)) { unlink($cssFilePath); }
+		}
 		
 		return true;
 	}
@@ -163,11 +180,8 @@ class FrontendBuilder
 		if(file_exists($pagePath))
 		{
 			unlink($pagePath);
-			
 			$templateName = basename($templatePath, ".xml");
-			$result = self::$db->GetAllPagesWithTemplate($templateName);
-
-			if(self::$db->GetResultCount($result) == 0)
+			if(!self::isUsedTemplate($templateName))
 			{
 				$cssPath = self::cssFilePath($templateName);
 				if(file_exists($cssFilePath)) { unlink($cssFilePath); }
@@ -192,14 +206,19 @@ class FrontendBuilder
 			self::createCSS($cssPath);
 
 			// all pages using this template have to be redone due to logo in template
-			$result = self::$db->GetAllPagesWithTemplate($cssName);	// cssName == templateName
+			$result1 = self::$db->GetAllPagesWithTemplate($cssName);	// cssName == templateName
+			$result2 = self::$db->GetAllSitesWithTemplate($cssName);
 		
-			while($page = self::$db->FetchArray($result))
+			if($result1){
+			while($page = self::$db->FetchArray($result1))
 			{
-				$pagePath = self::pageFilePath($page["title"]);
+				$pagePath = self::pageFilePath($page["title"], $page["website_id"]);
 				unlink($pagePath);
 				self::createPage($page["title"], $cssName, $page["website_id"]);
-			}
+			}}
+			
+			if($result2){
+			while($site = self::$db->FetchArray($result2)) {self::UpdateSite($site["id"]);}}
 		}
 	}
 
@@ -207,9 +226,18 @@ class FrontendBuilder
 	*
 	*
 	*/
-	public static function UpdateSite()
+	public static function UpdateSite($websiteId)
 	{
+		$websiteData = self::$db->FetchArray(self::$db->GetWebsiteInfoById($websiteId));
+		self::DeleteSite($websiteId);
+		self::MakeNewSite($websiteId);
 		
+		// recreate all page of site
+		$allPagesOfSite =self::$db->GetAllPagesOfWebsite($websiteId);
+		while($page = self::$db->FetchArray($allPagesOfSite))
+		{
+			self::MakeNewPage($page['title'], $page["templatename"], $websiteId);
+		}
 	}
 	
 	/**
@@ -396,11 +424,9 @@ class FrontendBuilder
 	* Deletes the pages given by the $technicalPages array. Method checks if file exists.
 	* @param array $technicalPages 
 	* @param string $websiteName
-	* @param string $cssName
 	*/
-	private function deleteTechnicalPages($technicalPages, $websiteName, $cssName)
+	private function deleteTechnicalPages($technicalPages, $websiteName)
 	{
-		// css loeschen??
 		$globallogin = false;
 		$guestbook = false;
 
@@ -528,6 +554,27 @@ class FrontendBuilder
 		if($websiteData['guestbook'] == 1 ) { $tp[TechnicalPage::GUESTBOOK]['pagetitle'] = "guestbook";}
 
 		return $tp;
+	}
+	
+	
+	/**
+	* Method to check if a template is used anywhere
+	* @param string $templateName
+	* @return boolean value indicating if template is still in use or not
+	*/
+	private function isUsedTemplate($templateName)
+	{		
+		$result1 = self::$db->GetAllPagesWithTemplate($templateName);
+		$result2 = self::$db->GetAllSitesWithTemplate($templateName);
+		
+		if(self::$db->GetResultCount($result1) == 0 && self::$db->GetResultCount($result2) == 0)
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
 	}
 }
 

@@ -81,16 +81,16 @@ class CSSComponentPrinter
 		// Order
 		if(strcmp($data['Order'], "horizontal") == 0)
 		{
-			$nav .= "display: table; width: ".$data['Width']."%; height:".$data['Height']."px; margin-bottom: 10px;".
+			$nav .= "display: table; width: ".$data['Width']."%; height:".$data['Height']."%; margin-bottom: 10px;".
 					"padding: 0px 5px;";
 			$ul .= "display: table-row; text-align: center;";
-			$li .= "display: table-cell; height: ".$data['Height']."px; vertical-align: middle;";
+			$li .= "display: table-cell; height: ".$data['Height']."%; vertical-align: middle;";
 			$a .=  "border-left: 1px solid #333;";
 			$special .= " nav li:first-child a { border-left: none;}\n";
 		}
 		else if(strcmp($data['Order'], "vertical") == 0)
 		{
-			$nav .= "display: flex; width: ".$data['Width']."%; min-height: ".$data['Height']."px;".
+			$nav .= "display: flex; width: ".$data['Width']."%; min-height: ".$data['Height']."%;".
 					"flex-direction: column; justify-content: center;";
 			$ul .= "padding: 5px;";
 			$li .= "text-align: center; margin: 2px 0; border-bottom: 1px solid #333;";

@@ -162,8 +162,8 @@ class HTMLComponentPrinter
 								" '<div class=\'info\'> veröffentlicht am <span>'.\$pubdate->format('d. F Y').'</span>'.".
 								" ' von <span>'.htmlspecialchars(\$article['author']).'</span></div>'.".
 								" '<div class=\'content\'>'.\$article['content'].'</div><ul>';".
-								"\$res = \$db->SelectAllLablesFromAnArticleById(\$article['id']);".
-								"while(\$label = \$db->FetchArray(\$res)) {echo '<li>'.htmlspecialchars(\$label['lablename']).'</li>';}".
+								"\$res = \$db->SelectAllLabelsFromAnArticleById(\$article['id']);".
+								"if(\$res){while(\$label = \$db->FetchArray(\$res)) {echo '<li>'.htmlspecialchars(\$label['labelname']).'</li>';}}".
 							"echo '</ul></section>';}}";
 
 		$article .= "?> </main>";
