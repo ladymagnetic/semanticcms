@@ -69,25 +69,16 @@ function random_string() {
 
 
 
-if(isset($_POST['send']) ) {
-	$empfaenger = "th.schuster12@web.de";
-	$betreff = "Passwort vergessen";
-	$text = "blablabla";
 
-	mail($empfaenger, $betreff, $text);
-
-
-
-
-
- echo "Ein Link um dein Passwort zurückzusetzen wurde an deine E-Mail-Adresse gesendet.";
 
  //}
  //}
-}
+
 
 ?>
 <main>
+	<?php
+		BackendComponentPrinter::PrintSidebar(array());?>
 	<h1>Passwort vergessen</h1>
 Gib hier deine E-Mail-Adresse ein, um ein neues Passwort anzufordern.<br><br>
 
@@ -100,13 +91,24 @@ echo $error;
 <form action="ForgotPassword.php" method="post">
 E-Mail:<br>
 <input type="email" name="email" value="<?php echo isset($_POST['email']) ? htmlentities($_POST['email']) : ''; ?>"><br>
-<input type="submit" name="send" value="Neues Passwort">
+<input type="submit" name="send" value="Neues Passwort"><br><br>
 </form>
 	<?php
-	// Form Handling nach POST
-	/*if($_SERVER['REQUEST_METHOD']=='POST')
-	{
-	}*/
+	if(isset($_POST['send']) ) {
+		$empfaenger = "th.schuster12@web.de";
+		$betreff = "Passwort vergessen";
+		$text = "blablabla";
+
+		mail($empfaenger, $betreff, $text);
+
+
+
+
+
+	 echo "Ein Link um dein Passwort zurückzusetzen wurde an deine E-Mail-Adresse gesendet.
+	 				<a href='Index.php'/>
+					<p>Zurück zur Loginseite</p>";
+	}
 	?>
 </main>
 </body>

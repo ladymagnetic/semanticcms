@@ -52,6 +52,7 @@ session_start();
     <h1><i class='fa fa-home fontawesome'></i>Startseite</h1>
 		<h4>Letzte Änderungen</h4>
 		<?php
+		BackendComponentPrinter::PrintDatatablesPlugin();
     BackendComponentPrinter::PrintTableStart(array("Logdatum", "Benutzername", "Rolle", "Beschreibung"));
 
 		$changes = $dbUser->SelectAllLogs();
