@@ -155,9 +155,11 @@ class HTMLComponentPrinter
 		$article = "<main property=\"mainContentOfPage\" typeof=\"WebPageElement\"><?php ";
 
 		$article .= "\$result = \$db->GetAllArticlesOfPage(\"".$pageName."\");".
+					"\$showall = false;if(isset(\$_SESSION['globallogin'])){if(isset(\$_SESSION['username'])){\$showall=true;}}else {\$showall=true;}".
 					"while(\$article = \$db->FetchArray(\$result)) { ".
 						"\$pubdate = new DateTime(\$article['publicationdate']); \$curdate = new DateTime(date('Y-m-d'));".
 						"if (\$pubdate <= \$curdate){".
+							" if(\$article['public']==0 && !\$showall) {continue;} ".
 							"echo '<section class=\'article\'> <h2 property=\"headline\">'.htmlspecialchars(\$article['header']).'</h2>'.".
 								" '<div class=\'info\'> veröffentlicht am <span>'.\$pubdate->format('d. F Y').'</span>'.".
 								" ' von <span>'.htmlspecialchars(\$article['author']).'</span></div>'.".

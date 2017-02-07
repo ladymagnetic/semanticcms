@@ -325,6 +325,9 @@ class FrontendBuilder
 				fwrite($registerhandle, "\n</body></html>");
 
 			fclose($registerhandle);
+			
+			// forgot password
+			// not implemented
 		}
 
 		if($guestbook)
@@ -390,21 +393,6 @@ class FrontendBuilder
 		$buttonData = self::$templateParser->GetButton($cssName);
 		$loginFieldData = self::$templateParser->GetLogin($cssName);
 		$tagData = self::$templateParser->GetLabel($cssName);
-
-		var_dump($headerData);
-		echo "<br><br><br>";
-		var_dump($footerData);
-		echo "<br><br><br>";
-		var_dump($menuData);
-		echo "<br><br><br>";
-		var_dump($articleContainerData);
-		echo "<br><br><br>";
-		var_dump($backgroundData);
-		echo "<br><br><br>";
-		var_dump($tagData);
-		echo "<br><br><br>";
-		echo "Loginfeld: <br>";
-		var_dump($loginFieldData);
 
 		// write css Code
 		$cssHandle = fopen(utf8_decode($cssPath), "x");

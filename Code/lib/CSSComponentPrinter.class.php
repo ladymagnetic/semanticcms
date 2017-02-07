@@ -203,10 +203,11 @@ class CSSComponentPrinter
 	*/
 	public static function GetArticleContainer(array $data)
 	{
-		$main = "main {clear:both; padding: 10px; width: calc(".$data['Width']."% - 20px); margin-bottom: 10px;";
+		$main = "main { padding: 10px; width: calc(".$data['Width']."% - 20px); margin-bottom: 0px;";
 		
 		if(strcmp($data['Position'], "left") == 0)	
 		{
+			$main .= "float: left;";
 		}
 		else if(strcmp($data['Position'], "center") == 0)
 		{
@@ -260,9 +261,7 @@ class CSSComponentPrinter
 	* @return string css string
 	*/
 	public static function GetFooter(array $data)
-	{
-		// order is missing!!!
-		
+	{	
 		$css = 	"footer {".
 					// Font settings
 					"color: ".$data['Fontcolor'].";".
@@ -280,13 +279,25 @@ class CSSComponentPrinter
 			$css .= "background-color: ".$data['Backgroundcolor'].";";
 		}
 	
-		$css .= "min-height: calc(".$data['Height']."% + 10px); width: calc(100% - 20px); padding: 10px; margin-bottom: 10px;".
+		$css .= "min-height: calc(".$data['Height']."% + 10px); width: calc(100% - 20px); padding: 10px; margin-bottom: 10px; margin-top: 10px; display: inline-flex; align-items: center;".
 				"clear: both;";
  
 		$css .=	"}\n";
 		
-		$css .= "footer ul {padding: 0; margin: 0; list-style-type: none;}\n";
+		$css .= "footer ul {padding: 0; margin: 0; list-style-type: none; display: inline-flex;}\n";
 		$css .= "footer ul li a {text-decoration: none;color: inherit;}\n";
+		
+		if(strcmp($data['Order'], "Horizontal") == 0) 
+		{
+			$css .= "footer {justify-content: center;}\n";
+			$css .= "footer ul{flex-direction: row-reverse;}\n";
+			$css .= "footer ul li{margin-left: 10px;}\n";
+			$css .= "footer ul li:last-child{margin-left: 0px;}\n";
+		}
+		else
+		{
+			$css .= "footer ul{flex-direction: column-reverse;}\n;";
+		}
 		
 		return $css;
 	}
