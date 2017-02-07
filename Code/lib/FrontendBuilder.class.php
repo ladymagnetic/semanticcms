@@ -270,6 +270,10 @@ class FrontendBuilder
 		if(array_search("guestbook", array_column($technicalPages, 'pagetitle')) != NULL )
 			{$guestbook = true; unset($technicalPages[TechnicalPage::GUESTBOOK]);}
 
+		$headerData = self::$templateParser->GetHeader($cssName);
+		$logo = $headerData["Logo"];
+
+
 		// technical pages for footer
 		foreach($technicalPages as $page)
 		{
@@ -282,7 +286,7 @@ class FrontendBuilder
 				fwrite($handle, HTML::GetHtmlStart());
 				fwrite($handle, HTML::GetHead($page['pagetitle'], $cssName));
 				fwrite($handle, "<body>");
-				fwrite($handle, HTML::GetHeader($websiteName, "", $globallogin));
+				fwrite($handle, HTML::GetHeader($websiteName, $logo, $globallogin));
 				fwrite($handle, HTML::GetMenu("", $websiteId));
 				fwrite($handle, HTML::GetMain($page['content']));
 				fwrite($handle, HTML::GetFooter($technicalPages));
@@ -302,7 +306,7 @@ class FrontendBuilder
 				fwrite($loginhandle, HTML::GetHtmlStart());
 				fwrite($loginhandle, HTML::GetHead("Login/Logout", $cssName));
 				fwrite($loginhandle, "<body>");
-				fwrite($loginhandle, HTML::GetHeader($websiteName, "", true));
+				fwrite($loginhandle, HTML::GetHeader($websiteName, $logo, true));
 				fwrite($loginhandle, HTML::GetMenu("", $websiteId));
 				fwrite($loginhandle, HTML::GetMain('',1));
 				fwrite($loginhandle, HTML::GetFooter($technicalPages));
@@ -318,7 +322,7 @@ class FrontendBuilder
 				fwrite($registerhandle, HTML::GetHtmlStart());
 				fwrite($registerhandle, HTML::GetHead("Registrierung", $cssName));
 				fwrite($registerhandle, "<body>");
-				fwrite($registerhandle, HTML::GetHeader($websiteName, "", true));
+				fwrite($registerhandle, HTML::GetHeader($websiteName, $logo, true));
 				fwrite($registerhandle, HTML::GetMenu("", $websiteId));
 				fwrite($registerhandle, HTML::GetMain('',2));
 				fwrite($registerhandle, HTML::GetFooter($technicalPages));
@@ -351,7 +355,8 @@ class FrontendBuilder
 		if(!is_dir($sitePath)) {mkdir($sitePath);} // sitePath should exists but check anyway
 
 		$technicalPages = self::getTechnicalPageArray($websiteData);
-
+		$headerData = self::$templateParser->GetHeader($cssName);
+		$logo = $headerData["Logo"];
 
 
 		$globallogin = false;
@@ -362,7 +367,6 @@ class FrontendBuilder
 		{$guestbook = true; unset($technicalPages[TechnicalPage::GUESTBOOK]);}
 		// do not care about guestbook atm
 
-
 		// write HTML + PHP Code
 		$handle = fopen(utf8_decode($pagePath), "x");
 
@@ -370,7 +374,7 @@ class FrontendBuilder
 			fwrite($handle, HTML::GetHtmlStart($globallogin, false));
 			fwrite($handle, HTML::GetHead($pageName, $cssName));
 			fwrite($handle, "<body>");
-			fwrite($handle, HTML::GetHeader($websiteData["headertitle"], "", $globallogin));
+			fwrite($handle, HTML::GetHeader($websiteData["headertitle"], $logo, $globallogin));
 			fwrite($handle, HTML::GetMenu($pageName, $websiteId));
 			fwrite($handle, HTML::GetArticleContainer($pageName));
 			fwrite($handle, HTML::GetFooter($technicalPages));
