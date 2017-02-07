@@ -1219,28 +1219,29 @@ class DbContent
 	}
 
 	/**
-	* delete one website by id
-	* @param int $id the id of the website
-	* @return boolean true|false successful (true) when the query could be executed correctly and a website is deleted
+	* delete one website, the pages and the articles by website_id
+	* @param int $website_id the id of the website
+	* @return boolean true|false successful (true) when the query could be executed correctly and a website, the pages and the article is deleted
 	*/
 	public function DeleteWebsiteById($id)
 	{
-		$logDeletedWebsite = $this->FetchArray($this->SelectWebsiteById($id))['headertitle'];
-		$result = $this->database->ExecutePreparedStatement("deleteWebsiteById", array($id));
+		 $logDeletedWebsite = $this->FetchArray($this->SelectWebsiteById($website_id))['headertitle'];
+		 $result = $this->database->ExecutePreparedStatement("deleteWebsiteAndPageAndArticleByWebsiteId", array($website_id));
 
-		 if($result==true)
-		 {
-			 $logUsername = $_SESSION['username'];
-			 $logRolename = $_SESSION['rolename'];
-			 $logDescription = 'Folgende Website wurde gelöscht: <strong>'.$logDeletedWebsite.'</strong>';
-			 $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-			 return true;
-		 }
-		 else
-		 {
-				return false;
-		 }
-	}
+			if($result==true)
+			{
+				$logUsername = $_SESSION['username'];
+				$logRolename = $_SESSION['rolename'];
+				$logDescription = 'Folgende Website incl. Seiten und Artikeln wurde gelöscht: <strong>'.$logDeletedWebsite.'</strong>';
+				$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+				return true;
+			}
+			else
+			{
+				 return false;
+			}
+	 }
+
 
 	/**
 	* update one website by id
@@ -1402,30 +1403,6 @@ class DbContent
 	public function DownloadDBContentTest()
 	{
      $this->database->DownloadDBTest();
-	}
-
-	/**
-	* delete one website, the pages and the articles by website_id
-	* @param int $website_id the id of the website
-	* @return boolean true|false successful (true) when the query could be executed correctly and a website, the pages and the article is deleted
-	*/
-	public function DeleteWebsiteAndPageAndArticleByWebsiteId($website_id)
-	{
-		$logDeletedWebsite = $this->FetchArray($this->SelectWebsiteById($website_id))['headertitle'];
-		$result = $this->database->ExecutePreparedStatement("deleteWebsiteAndPageAndArticleByWebsiteId", array($website_id));
-
-		 if($result==true)
-		 {
-			 $logUsername = $_SESSION['username'];
-			 $logRolename = $_SESSION['rolename'];
-			 $logDescription = 'Folgende Website incl. Seiten und Artikeln wurde gelöscht: <strong>'.$logDeletedWebsite.'</strong>';
-			 $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-			 return true;
-		 }
-		 else
-		 {
-				return false;
-		 }
 	}
 }
 ?>
