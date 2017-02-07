@@ -262,5 +262,26 @@ class BackendComponentPrinter
         "</main></body></html>";
 
     }
+
+    /**
+     * Prints an info box at the top of the site with a custom info or error message.
+     * @param boolean $isError True if an error message should be displayed.
+     * Otherwise the message is only an info message.
+     */
+    public static function PrintResultMessage($messageText, $isError=false)
+    {
+        if ($isError) {
+            echo
+            "<div class='info'>
+		            <strong>Fehler!</strong> $messageText
+		        </div>";
+        } else {
+            echo
+            "<div class='info'  style='background-color:green;'>
+		            <strong>Info!</strong> $messageText
+		        </div>";
+        }
+
+    }
 }
 ?>
