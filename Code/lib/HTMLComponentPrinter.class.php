@@ -218,7 +218,7 @@ class HTMLComponentPrinter
 				break;
 			// register page
 			case 2:
-				$main = "<main>Warnung: Implementierung fehlt!</main>";
+				$main .= self::getRegisterCode()."</main>";				
 				break;
 		}
 		return $main;
@@ -239,6 +239,48 @@ class HTMLComponentPrinter
 		$footer .=	"</ul></footer>";
 
 		return $footer;
+	}
+	
+	/** 
+	* Method to get the register page main code
+	* @return string containing the 
+	*/
+	private static function getRegisterCode()
+	{
+		$reg =	"<?php require_once '../lib/DbUser.class.php';use SemanticCms\DatabaseAbstraction\DbUser;". 
+				"function printRegisterForm(){".
+				"echo \"<h2 property=\\\"headline\\\"> Registrierung </h2> <form id=\\\"register\\\" action=\\\"register.php\\\" method=\\\"POST\\\">\".".
+				"\"<span><label for=\\\"username\\\" form=\\\"register\\\">Benutzername:</label>\".".
+				"\"<input id=\\\"username\\\" name=\\\"username\\\" type=\\\"text\\\" required=\\\"true\\\"></span>\".".
+				"\"<span><label for=\\\"firstname\\\" form=\\\"register\\\">Vorname:</label>\".".
+				"\"<input id=\\\"firstname\\\" name=\\\"firstname\\\" type=\\\"text\\\" required=\\\"true\\\" placeholder=\\\"Max\\\"></span>\".".
+				"\"<span><label for=\\\"lastname\\\" form=\\\"register\\\">Nachname:</label>\".".
+				"\"<input id=\\\"lastname\\\" name=\\\"lastname\\\" type=\\\"text\\\" required=\\\"true\\\" placeholder=\\\"Muster\\\"></span>\".".
+				"\"<span><label for=\\\"email\\\" form=\\\"register\\\">E-Mail-Adresse:</label>\".".
+				"\"<input id=\\\"email\\\" name=\\\"email\\\" type=\\\"email\\\" required=\\\"true\\\" placeholder=\\\"mail@example.de\\\"></span>\".".
+				"\"<span><label for=\\\"date\\\" form=\\\"register\\\">Geburtsdatum:</label>\".".
+				"\"<input id=\\\"date\\\" name=\\\"birthdate\\\" type=\\\"date\\\" required=\\\"true\\\" placeholder=\\\"yyyy-mm-dd\\\" pattern=\\\"(19|20)[0-9]{2}-(0[1-9]|1[0-2])-(3[0-1]|[1-2][0-9]|0[1-9])\\\" title=\\\"Datum im Format: yyyy-mm-dd, z.b 2001-12-31\\\"></span>\".".
+				"\"<span><label for=\\\"password_1\\\" form=\\\"register\\\">Passwort:</label>\".".
+				"\"<input id=\\\"password_1\\\" name=\\\"password_1\\\" type=\\\"password\\\" required=\\\"true\\\"></span>\".".
+				"\"<span><label for=\\\"password_2\\\" form=\\\"register\\\">Passwort nochmal:</label>\".".
+				"\"<input id=\\\"password_2\\\" name=\\\"password_2\\\" type=\\\"password\\\" required=\\\"true\\\"></span>\".".
+				"\"<span><button type=\\\"reset\\\"> Eingabe zurücksetzen </button>\".".
+				"\"<button name=\\\"action\\\" value=\\\"register\\\"> Registrieren </button></form></span>\";}".
+				"if(\$_SERVER['REQUEST_METHOD']=='POST'){if(\$_POST['action'] == \"register\"){".
+				"\$database = new DbUser(\$config['cms_db']['dbhost'],\$config['cms_db']['dbuser'],\$config['cms_db']['dbpass'],\$config['cms_db']['database']);".
+				"if(!isset(\$_POST['username'])||!isset(\$_POST['firstname'])||!isset(\$_POST['lastname'])||!isset(\$_POST['email'])||".
+				"!isset(\$_POST['birthdate'])||!isset(\$_POST['password_1'])||!isset(\$_POST['password_2']))".
+				"{printRegisterForm();die(\"<p>Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.</p>\");}else{".
+				"if(empty(\$_POST['username'])||empty(\$_POST['firstname'])||empty(\$_POST['lastname'])||empty(\$_POST['email'])||".
+				"empty(\$_POST['birthdate'])||empty(\$_POST['password_1'])||empty(\$_POST['password_2']))".
+				"{printRegisterForm();die(\"<p>Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.</p>\");}".
+				"if(strcmp(\$_POST['password_1'],\$_POST['password_2'])==0){".
+				"if(\$database->EmailAlreadyExists(\$_POST['email'])){printRegisterForm();die(\"<p>E-Mail-Adresse existiert bereits.</p>\");}".
+				"if(\$database->UsernameAlreadyExists(\$_POST['username'])){printRegisterForm();die(\"<p>Username existiert bereits.</p>\");}".
+				"if(\$database->RegistrateUser(2, \$_POST['lastname'], \$_POST['firstname'], \$_POST['username'], \$_POST['password_1'], \$_POST['email'], \$_POST['birthdate']))".
+				"{echo \"<p> Registrierung erfolgreich <p>\";}else{printRegisterForm();die(\"<p>Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.</p>\");}}".
+				"else {printRegisterForm();die(\"<p>Passwörter stimmen nicht überein.</p>\");}}}}else{printRegisterForm();}?>";
+		return $reg;
 	}
 }
 ?>
