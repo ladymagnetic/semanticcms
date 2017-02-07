@@ -272,6 +272,7 @@ if(isset($_POST['save'])) {
   $menuOrder = $_POST['Order'];
   $templateParser->SaveMenu($menuWidth, $menuHeight, $menuPosition, $menuFont, $menuFontsize, $menuFontColor, $menuBackgroundColor, $menuOrder);
   $articlePosition = $_POST['ArticlePosition'];
+  $articleContentBack = $_POST['ArticleContent'];
   $articleNumber = $_POST['Articlenumber'];
   $navigation = $_POST['Navigation'];
   $navigationPostion = $_POST['NavigationPosition'];
@@ -298,7 +299,7 @@ if(isset($_POST['save'])) {
 
   }
   $articleWidth = $_POST['ArticleWidth'];
-  $templateParser->SaveArticleContainer($articlePosition, $articleNumber, $navigation, $navigationPostion, $navFont, $navFontsize, $navFontColor, $navButtonBackgroundColor, $articleBackColor, $articleBackgroundPicture, $articleWidth);
+  $templateParser->SaveArticleContainer($articlePosition, $articleNumber, $navigation, $navigationPostion, $navFont, $navFontsize, $navFontColor, $navButtonBackgroundColor, $articleBackColor, $articleBackgroundPicture, $articleWidth, $articleContentBack);
   $footerHeight = $_POST['FooterHeight'];
   $footerFont = $_POST['FooterFont'];
   $footerFontsize = $_POST['FooterFontsize'];
@@ -416,6 +417,7 @@ else if(isset($_POST['save2']))
     $menuOrder = $_POST['Order'];
     $templateParser->SaveMenu($menuWidth, $menuHeight, $menuPosition, $menuFont, $menuFontsize, $menuFontColor, $menuBackgroundColor, $menuOrder);
     $articlePosition = $_POST['ArticlePosition'];
+    $articleContentBack = $_POST['ArticleContent'];
     $articleNumber = $_POST['Articlenumber'];
     $navigation = $_POST['Navigation'];
     $navigationPostion = $_POST['NavigationPosition'];
@@ -435,7 +437,7 @@ else if(isset($_POST['save2']))
     }
 
     $articleWidth = $_POST['ArticleWidth'];
-    $templateParser->SaveArticleContainer($articlePosition, $articleNumber, $navigation, $navigationPostion, $navFont, $navFontsize, $navFontColor, $navButtonBackgroundColor, $articleBackColor, $articleBackgroundPicture, $articleWidth);
+    $templateParser->SaveArticleContainer($articlePosition, $articleNumber, $navigation, $navigationPostion, $navFont, $navFontsize, $navFontColor, $navButtonBackgroundColor, $articleBackColor, $articleBackgroundPicture, $articleWidth, $articleContentBack);
     $footerHeight = $_POST['FooterHeight'];
     $footerFont = $_POST['FooterFont'];
     $footerFontsize = $_POST['FooterFontsize'];
@@ -693,6 +695,9 @@ function CreateTemplate()
                   <div class='ArticleBackgroundPicDiv'>
                     <input type='file' name='ArticleBackgroundPicture' accept='image/jpeg,image/gif,image/x-png'>
                   </div><br><br></pre>
+              <pre><label>Inhalthintergrundfarbe:</label>
+
+                <input type='color' name='ArticleContent' value='#ffffff'><br><br></pre>
               <pre><label>Artikelcontainerbreite:</label>
 
                 <input type='number' name='ArticleWidth' min='10' max='100' value='50'><label for='ArticleWidth'>%</label><br><br></pre>
@@ -1143,9 +1148,13 @@ echo
               "<pre><label>Artikelcontainerbreite:</label>
 
                 <input type='number' name='ArticleWidth' value='".$articleContainer['Width']."' min='10' max='100'><label for='ArticleWidth'>%</label><br><br></pre>
+              <pre><label>Inhalthintergrundfarbe:</label>
+
+                <input type='color' name='ArticleContent' value='".$articleContainer['ContentBackground']."'></pre>
               <pre><label>Artikelanzahl auf einer Seite</label>
 
                 <input type='number' name='Articlenumber'  id='Sitenumber' min='0' max='250' onchange='onNavigation()' value='".$articleContainer['NumberOfArticle']."'><br><br>
+
                 <div class='Sitenavigation'>
                   <h4>Navigation innerhalb der Artikelseiten:</h4><br><br>";
                   if($articleContainer['Navigation'] == 'ArrowButton')
@@ -1424,7 +1433,7 @@ echo
                 }
  echo
 
-              "<label>Name des erstellten Templates:</label>               <input type='text' name='TemplateName' value='".$templateName."' ><br><br>
+              "<label>Name des erstellten Templates:</label>               <input type='text' name='TemplateName' value='".$templateName."' readonly><br><br>
             <input type='submit' name='save' value='speichern'><br><br>
             </form>
         	</main>

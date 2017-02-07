@@ -92,7 +92,7 @@ class TemplateParser
 	* Save the ArticleContainer data of the TemplateConstruction.php in an XML-file
 	*
 	*/
-	public function SaveArticleContainer($Position, $NumberOfArticle, $Navigation, $NavigationPosition, $NavFont, $NavFontsize, $NavFontColor, $NavButtonBackground, $Backgroundcolor, $Backgroundpic, $Width)
+	public function SaveArticleContainer($Position, $NumberOfArticle, $Navigation, $NavigationPosition, $NavFont, $NavFontsize, $NavFontColor, $NavButtonBackground, $Backgroundcolor, $Backgroundpic, $Width, $ContentBackground)
 	{
 		$this->root->appendChild($fourthNode = $this->dom->createElement("ArticleContainer"));
 		$fourthNode->appendChild($this->dom->createElement("Position", $Position));
@@ -106,6 +106,7 @@ class TemplateParser
 		$fourthNode->appendChild($this->dom->createElement("Backgroundcolor", $Backgroundcolor));
 		$fourthNode->appendChild($this->dom->createElement("Backgroundpic", $Backgroundpic));
 		$fourthNode->appendChild($this->dom->createElement("Width", $Width));
+		$fourthNode->appendChild($this->dom->createElement("ContentBackground", $ContentBackground));
 	}
 
 	/**
