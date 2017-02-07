@@ -13,7 +13,7 @@
 
   /* use namespace(s) */
   use SemanticCms\ComponentPrinter\BackendComponentPrinter;
-  use Semantic\FrontendGenerator\FrontendBuilder;
+  use SemanticCms\FrontendGenerator\FrontendBuilder;
 
   BackendComponentPrinter::PrintHead("Templates", true);
 ?>
@@ -206,8 +206,8 @@ BackendComponentPrinter::printSidebar($_SESSION['permissions']);
 $dbContent = new DbContent($config['cms_db']['dbhost'], $config['cms_db']['dbuser'], $config['cms_db']['dbpass'], $config['cms_db']['database']);
 
 if(isset($_POST['save'])) {
-  $frontend = new FrontendBuilder();
-  $frontend->Init();
+  FrontendBuilder::Init();
+
   $templateParser = new TemplateParser();
   $backgroundColor = $_POST['BackgroundColor'];
   $backgroundPicture = "";
@@ -221,7 +221,11 @@ if(isset($_POST['save'])) {
   }
   else
   {
-  $backgroundPicture = $_POST['HeaderBackground'];
+    if($_POST['HeaderBackground'] != "null")
+    {
+      $backgroundPicture = $_POST['HeaderBackground'];
+    }
+
   }
   $height = $_POST['Height'];
   $font = $_POST['Font'];
@@ -250,7 +254,11 @@ if(isset($_POST['save'])) {
   }
   else
   {
-  $webBackgroundpic = $_POST['WebsiteBack'];
+    if($_POST['WebsiteBack'] != "null")
+    {
+      $webBackgroundpic = $_POST['WebsiteBack'];
+    }
+
   }
   $webBackPicPosition = $_POST['WebPicPosition'];
   $templateParser->SaveBackground($webBackgroundcolor, $webBackgroundpic, $webBackPicPosition);
@@ -283,7 +291,11 @@ if(isset($_POST['save'])) {
   }
   else
   {
-  $articleBackgroundPicture = $_POST['ArticleBack'];
+    if($_POST['ArticleBack'] != "null")
+    {
+      $articleBackgroundPicture = $_POST['ArticleBack'];
+    }
+
   }
   $articleWidth = $_POST['ArticleWidth'];
   $templateParser->SaveArticleContainer($articlePosition, $articleNumber, $navigation, $navigationPostion, $navFont, $navFontsize, $navFontColor, $navButtonBackgroundColor, $articleBackColor, $articleBackgroundPicture, $articleWidth);
@@ -303,7 +315,11 @@ if(isset($_POST['save'])) {
   }
   else
   {
-  $footerBackPicture = $_POST['FooterBack'];
+    if($_POST['FooterBack'] != "null")
+    {
+      $footerBackPicture = $_POST['FooterBack'];
+    }
+
   }
   $orderFooter = $_POST['OrderFooter'];
   $templateParser->SaveFooter($footerHeight, $footerFont, $footerFontsize, $footerFontColor, $footerBackColorPicker, $footerBackPicture, $orderFooter);
@@ -324,7 +340,11 @@ if(isset($_POST['save'])) {
   }
   else
   {
-  $buttonBackgroundPic = $_POST['ButtonBack'];
+    if($_POST['ButtonBack'] != "null")
+    {
+      $buttonBackgroundPic = $_POST['ButtonBack'];
+    }
+
   }
   $templateParser->SaveButton($buttonRounded, $button3D, $buttonFont, $buttonFontsize, $buttonFontColor, $buttonBackgroundColor, $buttonBackgroundPic);
   $loginBackgroundColor = $_POST['LoginBackgroundColor'];
@@ -341,7 +361,7 @@ if(isset($_POST['save'])) {
   $templateParser->SaveLabel($labelBackgroundColor, $labelfont, $labelFontsize, $labelFontColor, $labelRounded);
   $templateName = $_POST['TemplateName'];
   $templateParser->SaveTemplate($templateName);
-  $frontend->UpdateTemplate('templates/'.$templateName.'.xml');
+  FrontendBuilder::UpdateTemplate('templates/'.$templateName.'.xml');
 }
 else if(isset($_POST['save2']))
 {
@@ -877,7 +897,7 @@ function EditTemplate($header, $background, $menu, $articleContainer, $footer, $
                     </div>
 
                   <input type='radio' name='Background' id='HeaderBackgroundPic' value='Picture' onclick='onColorPicturePicker()'> <label for='Picture'> Bild</label>
-                    <div class='PictureUpload'>
+                    <div class='PictureUpload'><input name='HeaderBackground' type='hidden' value='null'>
                       <input type='file' name='BackgroundPicture' accept='image/jpeg,image/gif,image/x-png'>
                     </div>
 
@@ -894,6 +914,7 @@ function EditTemplate($header, $background, $menu, $articleContainer, $footer, $
 
                   <input type='radio' name='Background' id='HeaderBackgroundPic' value='Picture' checked='true' onclick='onColorPicturePicker()'> <label for='Picture'> Bild</label>
                     <div class='PictureUpload'>
+
                       <label>ausgewähltes Bild:<input name='HeaderBackground' type='hidden' value='".$header['Backgroundpic']."'>                                 ".$header['Backgroundpic']."</label>
 
                       <label>neues Hintergrundbild auswählen:  </label>                  <input type='file' name='BackgroundPicture' accept='image/jpeg,image/gif,image/x-png'>
@@ -933,7 +954,7 @@ function EditTemplate($header, $background, $menu, $articleContainer, $footer, $
                       </div>
 
                     <input type='radio' name='WebsiteBackground' id='WebsiteBackgroundPic' value='WebsitePicture' onclick='onColorPicturePicker()'><label for='WebsitePicture'> Bild</label>
-                    <div class='WebsitePictureUpload'>
+                    <div class='WebsitePictureUpload'><input name='WebsiteBack' type='hidden' value='null'>
                         <input type='file' name='WebPicture' accept='image/jpeg,image/gif,image/x-png'>
                         <label>Position</label>
 
@@ -1097,7 +1118,7 @@ echo
                         <input type='color' name='ArticleBackColor' value='".$articleContainer['Backgroundcolor']."'>
                       </div>
                     <input type='radio' name='ArticleBackground' id='ArticleBackPicPicker' value='ArticleBackgroundPic' onclick='onColorPicturePicker()'> <label for='ArticleBackgroundPic'>Bild</label>
-                      <div class='ArticleBackgroundPicDiv'>
+                      <div class='ArticleBackgroundPicDiv'><input name='ArticleBack' type='hidden' value='null'>
                         <input type='file' name='ArticleBackgroundPicture' accept='image/jpeg,image/gif,image/x-png'>
                       </div><br><br></pre>";
               }
@@ -1240,7 +1261,7 @@ echo
                           <input type='color' name='FooterBackColorPicker' value='".$footer['Backgroundcolor']."'>
                         </div>
                       <input type='radio' name='FooterBackground' id='FooterBackPicPicker' value='FooterBackgroundPic' onclick='onColorPicturePicker()'> <label for='FooterBackgroundPic'>Bild</label>
-                        <div class='FooterBackPic'>
+                        <div class='FooterBackPic'><input name='FooterBack' type='hidden' value='null'>
                           <input type='file' name='FooterBackPicture' accept='image/jpeg,image/gif,image/x-png'>
                         </div><br><br></pre>";
               }
@@ -1330,7 +1351,7 @@ echo
                           <input type='color' name='ButtonBackgroundColor' value='".$button['Backgroundcolor']."'>
                         </div>
                       <input type='radio' name='ButtonBackground' id='ButtonBackgroundPicPicker' value='ButtonBackPic' onclick='onColorPicturePicker()'> <label for='ButtonBackPic'>Bild</label>
-                        <div class='BtnBackPic'>
+                        <div class='BtnBackPic'><input name='ButtonBack' type='hidden' value='null'>
                           <input type='file' name='ButtonBackgroundPic' accept='image/jpeg,image/gif,image/x-png'>
                         </div><br><br></pre>";
               }
