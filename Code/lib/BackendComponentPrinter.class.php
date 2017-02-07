@@ -207,7 +207,7 @@ class BackendComponentPrinter
             $('table').DataTable({
                 'language': {
                     'lengthMenu': '_MENU_ Werte pro Seite',
-                    'zeroRecords': 'Nichts gefunden - Entschuldigung',
+                    'zeroRecords': 'Nichts gefunden',
                     'info': 'Seite _PAGE_ von _PAGES_',
                     'infoEmpty': 'Nichts vorhanden',
                     'infoFiltered': '(gefiltert von _MAX_ gesamt)',
