@@ -68,8 +68,9 @@ class DbContent
 						"WHERE website_id = ? ".
 						"ORDER BY page.relativeposition ASC;";
 
-		$allPagesWithTemplate = "SELECT page.title, page.website_id ".
+		$allPagesWithTemplate = "SELECT page.title, page.website_id, website.headertitle as websiteName ".
 								"FROM page INNER JOIN template ON page.template_id = template.id ".
+								"INNER JOIN website ON website.id = page.website_id ".
 								"WHERE templatename = ?;";
 
 		$allSitesWithTemplate = "SELECT website.id ".

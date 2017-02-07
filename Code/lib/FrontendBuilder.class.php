@@ -212,9 +212,9 @@ class FrontendBuilder
 			if($result1){
 			while($page = self::$db->FetchArray($result1))
 			{
-				$pagePath = self::pageFilePath($page["title"], $page["website_id"]);
+				$pagePath = self::pageFilePath($page["title"], $page["websiteName"]);
 				unlink($pagePath);
-				self::createPage($page["title"], $cssName, $page["website_id"]);
+				self::createPage($page["title"], $page["website_id"], $cssName);
 			}}
 
 			if($result2){
@@ -342,15 +342,7 @@ class FrontendBuilder
 	*/
 	private function createPage($pageName, $websiteId, $cssName)
 	{
-
-echo "cssName: ";
-		var_dump($cssName);
-
 		$websiteData = self::$db->FetchArray(self::$db->GetWebsiteInfoById($websiteId));
-		echo "<br> websiteId: ";
-		var_dump($websiteId);
-		echo "<br> websiteData: ";
-		var_dump($websiteData);
 
 		$pagePath = self::pageFilePath($pageName, $websiteData["headertitle"]);
 		if(file_exists($pagePath)) return;
