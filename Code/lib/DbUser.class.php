@@ -399,7 +399,7 @@ class DbUser
 		if ($logUsername == $logDeletedUser)
 		{
 			echo
-					"<div class='info'>
+					"<div class='info' style='background-color:red;'>
 					<strong>Info!</strong> Man kann sich nicht selber löschen!!!
 					</div>";
 			return false;
@@ -407,7 +407,7 @@ class DbUser
 		elseif ($userId == 1)
 		{
 			echo
- 				 "<div class='info'>
+ 				 "<div class='info' style='background-color:red;'>
  				 <strong>Info!</strong> Man kann diesen Administrator nicht löschen!!!
  				 </div>";
  		 return false;
@@ -500,7 +500,7 @@ class DbUser
  		if ($this->CountUsersWithASpecialRoleByRoleId($roleId) > 0)
 		{
 			echo
-	        "<div class='info'>
+	        "<div class='info' style='background-color:red;'>
 	        <strong>Info!</strong> Die Rolle wurde nicht gelöscht, weil sie immer noch in Verwendung ist!!!
 	        </div>";
 			return false;
@@ -509,19 +509,11 @@ class DbUser
 		{
 			$logDeletedRolename = $this->FetchArray($this->SelectRoleById($roleId))['rolename'];
 
-			if(($logDeletedRolename == 'Admin') || ($roleId == 1))
+			if($roleId == 1)
 			{
 				echo
-				"<div class='info'>
-				<strong>Info!</strong> Die Rolle Admin kann nicht gelöscht werden!!!
-				</div>";
-				return false;
-			}
-			elseif ($logDeletedRolename == 'Administrator')
-			{
-				echo
-				"<div class='info'>
-				<strong>Info!</strong> Die Rolle Administrator kann nicht gelöscht werden!!!
+				"<div class='info' style='background-color:red;'>
+				<strong>Info!</strong> Diese Rolle kann nicht gelöscht werden!!!
 				</div>";
 				return false;
 			}
@@ -665,7 +657,7 @@ class DbUser
 				if (($rolenameBevoreUpdate == $rolename) && ($uriBevoreUpdate == $uri))
 				{
 				echo
-						"<div class='info'>
+						"<div class='info' style='background-color:red;'>
 						<strong>Info!</strong> Man kann die Rechte dieser Rolle nicht ändern!
 						</div>";
 				}
@@ -850,7 +842,7 @@ class DbUser
 		if($logUsername == $BannedUsername)
 		{
 			echo
-					"<div class='info'>
+					"<div class='info' style='background-color:red;'>
 					<strong>Info!</strong> Man kann sich nicht selber sperren!!!
 					</div>";
 			return false;
