@@ -342,6 +342,32 @@ class DbUser
 
 
 	/**
+	* checks whether the rolename already exists in database
+	* @param string $rolename the name of the role
+	* @return boolean true|false successful (true) when rolename already exists in database, false when the rolename doesn't exist
+	*/
+	public function RolenameAlreadyExists($rolename)
+	{
+		$result = $this->database->ExecuteQuery("SELECT * FROM role WHERE rolename = '".$rolename."'");
+
+		 if($result==true && $this->database->GetResultCount($result) > 0)
+		 {
+			 echo
+					 "<div class='info' style='background-color:red;'>
+					 <strong>Info!</strong> Es gibt bereits eine Rolle mit dem Namen ".$rolename."!!!
+					 </div>";
+			 return true;	// there is a role with this rolename
+		 }
+		 else
+		 {
+			 return false;
+		 }
+	}
+
+
+
+
+	/**
 	* insert user in database to registrate a new user
 	* @param string $username the user's username
 	* @param string $firstname the user's firstname
@@ -620,19 +646,23 @@ class DbUser
 	*/
 	public function NewRole($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $databasemanagement, $backendlogin)
 	{
-		$result = $this->database->ExecuteQuery("INSERT INTO role (id, uri, rolename, guestbookmanagement, usermanagement, pagemanagement, articlemanagement, guestbookusage, templateconstruction, databasemanagement, backendlogin) VALUES (NULL, '".$uri."', '".$rolename."', ".$guestbookmanagement.", ".$usermanagement.", ".$pagemanagement.", ".$articlemanagement.", ".$guestbookusage.",  ".$templateconstruction.",  ".$databasemanagement.",  ".$backendlogin.")");
 
-		 if($result==true)
-		 {
-			$logUsername = $_SESSION['username'];
-			$logRolename = $_SESSION['rolename'];
-			$logDescription = 'Die Rolle <strong>'.$rolename.'</strong> wurde neu angelegt.';
-			$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-			return true;
-		 }
-		 else
-		 {
-		 	 return false;
+	if(!($this->RolenameAlreadyExists($rolename)))
+	{
+			$result = $this->database->ExecuteQuery("INSERT INTO role (id, uri, rolename, guestbookmanagement, usermanagement, pagemanagement, articlemanagement, guestbookusage, templateconstruction, databasemanagement, backendlogin) VALUES (NULL, '".$uri."', '".$rolename."', ".$guestbookmanagement.", ".$usermanagement.", ".$pagemanagement.", ".$articlemanagement.", ".$guestbookusage.",  ".$templateconstruction.",  ".$databasemanagement.",  ".$backendlogin.")");
+
+	 			if($result==true)
+				 {
+					$logUsername = $_SESSION['username'];
+					$logRolename = $_SESSION['rolename'];
+					$logDescription = 'Die Rolle <strong>'.$rolename.'</strong> wurde neu angelegt.';
+					$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+					return true;
+				 }
+				 else
+				 {
+				 	 return false;
+				 }
 		 }
 	}
 
@@ -722,7 +752,7 @@ class DbUser
 		else
 		{
 					$result = $this->database->ExecuteQuery("UPDATE role SET uri ='".$uri."',  rolename ='".$rolename."',  guestbookmanagement ='".$guestbookmanagement."',  usermanagement ='".$usermanagement."', pagemanagement ='".$pagemanagement."', articlemanagement ='".$articlemanagement."', guestbookusage ='".$guestbookusage."' , templateconstruction ='".$templateconstruction."', databasemanagement ='".$databasemanagement."', backendlogin ='".$backendlogin."' WHERE id = '". $id."'");
-				
+
 					if($result==true)
 					{
 						$logUsername = $_SESSION['username'];
