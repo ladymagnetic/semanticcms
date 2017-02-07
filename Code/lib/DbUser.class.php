@@ -501,7 +501,7 @@ class DbUser
 		{
 			echo
 	        "<div class='info' style='background-color:red;'>
-	        <strong>Info!</strong> Die Rolle wurde nicht gelöscht, weil sie immer noch in Verwendung ist!!!
+	        <strong>Info!</strong> Die Rolle kann nicht gelöscht werden weil sie immer noch in Verwendung ist!!!
 	        </div>";
 			return false;
 		}
