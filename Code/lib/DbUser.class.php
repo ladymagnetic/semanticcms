@@ -917,6 +917,14 @@ class DbUser
 					</div>";
 			return false;
 		}
+		elseif ($user_id == 1)
+		{
+			echo
+					"<div class='info' style='background-color:red;'>
+					<strong>Info!</strong> Man kann diesen User nicht sperren!!!
+					</div>";
+			return false;
+		}
 		else
 		{
 			$result = $this->database->ExecuteQuery("INSERT INTO ban (id, user_id, reason_id, description, begindatetime, enddatetime) VALUES (NULL, ".$user_id.", ".$reason_id.", '".$description."', '".$begindatetime."', '".$enddatetime."')");
