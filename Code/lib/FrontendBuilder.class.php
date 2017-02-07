@@ -64,10 +64,10 @@ class FrontendBuilder
 	/*************************/
 
 	/**
-	* Method to create a new webpage
+	* Method to create a new website. 
 	*
 	* @param int $websiteId id of the website to be . May be a numeric string (e.g. "1" instead of 1).
-	*
+	* @return boolean Success status: false indicates an error with the parameters otherwise true. (Note: This does not indicate if a new site was created or not.)
 	*/
 	public static function MakeNewSite($websiteId)
 	{
@@ -86,6 +86,8 @@ class FrontendBuilder
 
 		// create technical pages
 		self::createTechnicalPages($technicalPages, $websiteData["headertitle"], $websiteId, $websiteData["template"]);
+	
+		return true;
 	}
 
 	/**
@@ -117,7 +119,61 @@ class FrontendBuilder
 		return true;
 	}
 
+	/**
+	* Method to delete an existing website. 
+	*
+	* @param int $websiteId id of the website to be . May be a numeric string (e.g. "1" instead of 1).
+	* @return boolean Success status: false indicates an error with the parameters otherwise true. (Note: This does not indicate if a site was deleted or not.)
+	*/
+	public static function DeleteSite($websiteId)
+	{
+		if(!is_numeric($websiteId)) return false;
+		
+		$websiteData = self::$db->FetchArray(self::$db->GetWebsiteInfoById($websiteId));
+		$technicalPages = self::getTechnicalPageArray($websiteData);
+		$sitePath = self::websiteDirPath($websiteData["headertitle"]);
+		
+		// delete technicalPages
+		self::deleteTechnicalPages($technicalPages, $websiteData["headertitle"], $websiteData["template"]);
+		
+		// delete all other pages
+		$allPagesOfSite =self::$db->GetAllPagesOfWebsite($websiteId);
+		while($page = self::$db->FetchArray($allPagesOfSite))
+		{
+			self::DeletePage($page['title'], $page['templatename'], $websiteId);
+		}
+		
+		// delete folder
+		rmdir($sitePath);
+		
+		return true;
+	}
+	
+	/**
+	* Delete a single page
+	* Deletes the given page (and css file corresponding to the template if no other page uses it).
+	* Method checks if the page exists.
+	* @params string $pageName name of the page
+	* @params string $templatePath full path (incl, its name) to the template used for the site
+	*/
+	public static function DeletePage($pageName, $templatePath, $websiteId=1)
+	{
+		$websiteData = self::$db->FetchArray(self::$db->GetWebsiteInfoById($websiteId));		
+		$pagePath = self::pageFilePath($pageName, $websiteData["headertitle"]);
+		if(file_exists($pagePath))
+		{
+			unlink($pagePath);
+			
+			$templateName = basename($templatePath, ".xml");
+			$result = self::$db->GetAllPagesWithTemplate($templateName);
 
+			if(self::$db->GetResultCount($result) == 0)
+			{
+				$cssPath = self::cssFilePath($templateName);
+				if(file_exists($cssFilePath)) { unlink($cssFilePath); }
+			}
+		}
+	}
 
 	/**
 	* Updates the css file for the given template.
@@ -135,18 +191,27 @@ class FrontendBuilder
 			unlink($cssFilePath);
 			self::createCSS($cssPath);
 
-		/*	// all pages using this template have to be redone due to title field in template
+			// all pages using this template have to be redone due to logo in template
 			$result = self::$db->GetAllPagesWithTemplate($cssName);	// cssName == templateName
-		*/
+		
 			while($page = self::$db->FetchArray($result))
 			{
 				$pagePath = self::pageFilePath($page["title"]);
 				unlink($pagePath);
-				self::createPage($page["title"], $cssName);
+				self::createPage($page["title"], $cssName, $page["website_id"]);
 			}
 		}
 	}
 
+	/**
+	*
+	*
+	*/
+	public static function UpdateSite()
+	{
+		
+	}
+	
 	/**
 	* UpdatePage()
 	* Updates a given page if its title changed.
@@ -162,8 +227,10 @@ class FrontendBuilder
 	/**
 	* Creates the technical pages of a website.
 	* Creates all technical pages of a given website: login/logout/register, guestbook (not implemented), contact, imprint, gtc and privacyinformation.
-	*
-	*
+	* @param array $technicalPages 
+	* @param string $websiteName
+	* @param string $websiteId
+	* @param string $cssName
 	*/
 	private function createTechnicalPages($technicalPages, $websiteName, $websiteId, $cssName)
 	{
@@ -187,7 +254,7 @@ class FrontendBuilder
 				fwrite($handle, HTML::GetHtmlStart());
 				fwrite($handle, HTML::GetHead($page['pagetitle'], $cssName));
 				fwrite($handle, "<body>");
-				fwrite($handle, HTML::GetHeader($websiteName));
+				fwrite($handle, HTML::GetHeader($websiteName, "", $globallogin));
 				fwrite($handle, HTML::GetMenu("", $websiteId));
 				fwrite($handle, HTML::GetMain($page['content']));
 				fwrite($handle, HTML::GetFooter($technicalPages));
@@ -324,6 +391,44 @@ class FrontendBuilder
 		fclose($cssHandle);
 	}
 
+	/**
+	* Method to delete all technical pages of a website.
+	* Deletes the pages given by the $technicalPages array. Method checks if file exists.
+	* @param array $technicalPages 
+	* @param string $websiteName
+	* @param string $cssName
+	*/
+	private function deleteTechnicalPages($technicalPages, $websiteName, $cssName)
+	{
+		// css loeschen??
+		$globallogin = false;
+		$guestbook = false;
+
+		if(array_search("login", array_column($technicalPages, 'pagetitle')) != NULL )
+			{$globallogin = true; unset($technicalPages[TechnicalPage::LOGIN]);}
+		if(array_search("guestbook", array_column($technicalPages, 'pagetitle')) != NULL )
+			{$guestbook = true; unset($technicalPages[TechnicalPage::GUESTBOOK]);}
+		
+		foreach($technicalPages as $page)
+		{
+			$pagePath = self::pageFilePath($page['filename'], $websiteName);
+			if(file_exists($pagePath)) { unlink($pagePath); }
+		}
+		
+		if($globallogin)
+		{
+			$pagePath = self::pageFilePath("login_logout", $websiteName);
+			if(file_exists($pagePath)) { unlink($pagePath); }
+			$pagePath = self::pageFilePath("register", $websiteName);
+			if(file_exists($pagePath)) { unlink($pagePath); }
+		}
+		
+		if($guestbook)
+		{
+			// not implemented
+		}
+	}
+	
 	/****************************/
 	/* ----- Helper methods -----*
 	/****************************/

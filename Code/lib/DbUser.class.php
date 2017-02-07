@@ -404,6 +404,14 @@ class DbUser
 					</div>";
 			return false;
 		}
+		elseif ($userId == 1)
+		{
+			echo
+ 				 "<div class='info'>
+ 				 <strong>Info!</strong> Man kann diesen Administrator nicht löschen!!!
+ 				 </div>";
+ 		 return false;
+		}
 		else
 		{
 			$result = $this->database->ExecutePreparedStatement("deleteUserById", array($userId));
