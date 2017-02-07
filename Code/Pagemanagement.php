@@ -451,7 +451,7 @@ BackendComponentPrinter::PrintDatatablesPlugin();
         };
 
         echo "><br><br>
-                <label for='imprintEnabled'>Impressum</label>
+                <label for='imprintEnabled'>Impressum aktivieren</label>
                 <input type='checkbox' id='imprintEnabled' name='imprintEnabled' value=''";
         if ($imprintEnabled) {
             echo " checked";
@@ -472,7 +472,7 @@ BackendComponentPrinter::PrintDatatablesPlugin();
             <input id='imprintContent' name='imprintContent' type='hidden' value='".$imprint."'>
                 <br><br>
                 
-                <label for='contactEnabled'>Kontakt-Formular</label>
+                <label for='contactEnabled'>Kontakt-Formular aktivieren</label>
                 <input type='checkbox' id='contactEnabled' name='contactEnabled' value=''";
         if ($contactEnabled) {
             echo " checked";
@@ -493,7 +493,7 @@ BackendComponentPrinter::PrintDatatablesPlugin();
             <input id='contactContent' name='contactContent' type='hidden' value='".$contact."'>
                 <br><br>
                 
-                <label for='privacyInformationEnabled'>Datenschutz-Seite</label>
+                <label for='privacyInformationEnabled'>Datenschutz-Seite aktivieren</label>
                 <input type='checkbox' id='privacyInformationEnabled' name='privacyInformationEnabled' value=''";
         if ($privacyInformationEnabled) {
             echo " checked";
@@ -514,7 +514,7 @@ BackendComponentPrinter::PrintDatatablesPlugin();
             <input id='privacyInformationContent' name='privacyInformationContent' type='hidden' value='".$privacyInformation."'>
                 <br><br>
                 
-                <label for='gtcEnabled'>AGB-Seite</label>
+                <label for='gtcEnabled'>AGB-Seite aktvieren</label>
                 <input type='checkbox' id='gtcEnabled' name='gtcEnabled' value=''";
         if ($gtcEnabled) {
             echo " checked";
