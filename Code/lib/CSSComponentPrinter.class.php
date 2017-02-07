@@ -296,20 +296,20 @@ class CSSComponentPrinter
 		}
 		else
 		{
-			$css .= "footer ul{flex-direction: column-reverse;}\n;";
+			$css .= "footer ul{flex-direction: column-reverse;}\n";
 		}
 		
 		return $css;
 	}
 	
 	/**
-	* Get the css string for the login field design
-	* @param array $data Array filled with the login field template data given by TemplateParser class
+	* Get the css string for the login and register field design
+	* @param array $data Array filled with the login/register field template data given by TemplateParser class
 	* @return string css string
 	*/
 	public static function GetLoginField(array $data)
 	{
-		$css = "#login {";
+		$css = "#login, #register {";
 				// Font settings
 				"color: ".$data['Fontcolor'].";".
 				"font-size: ".$data['Fontsize']."px;".
@@ -317,11 +317,14 @@ class CSSComponentPrinter
 		$css .= "background-color: ".$data['Backgroundcolor'].";";
 		$css .= "display: inline-flex; flex-direction: column; padding: 20px; border: 1px solid #333;}";
 		
-		$css .= "\n#login input{background-color: ".$data['ForegroundColor'].";}";
+		$css .= "\n#login input, #register input{background-color: ".$data['ForegroundColor'].";}";
 		$css .= "\n#login input:first-child{margin-bottom: 5px;}\n#login p{margin: 5px 0px;}";
 		$css .= "\n#fields{flex-direction: column;}\n#login span{display: flex;}";
 		$css .= "\n#login span button {align-self: center;margin-left: 5px;}";
 		$css .= "\n#login a{font-size:".(0.7*$data['Fontsize'])."px; color: ".$data['Fontcolor'].";}";
+		
+		$css .= "\n#register span{display: inline-flex;justify-content: space-between;margin-bottom: 5px;}";
+		$css .= "\n#register span:last-child{margin-bottom: 0px;margin-top: 10px;}#register span label{margin-right: 10px;}\n";
 		return $css;
 	}
 }

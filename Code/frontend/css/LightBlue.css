@@ -1,0 +1,29 @@
+ body {margin: 10px; padding: 0; height: 100vh; background-color: #c9c9c9;}
+header {color: #000000;font-size: 13px;font-family: "Arial","Serif";background-color: #70d3fa;height: 15%; width: calc(100% - 20px); padding: 0px 10px; margin-bottom: 10px; display: flex; align-items: center;}justify-content: center;}
+h1{margin:0;}
+header img{height:70%;margin-right:5px;}nav{	background-color: #70d3fa;display: table; width: 90%; height:20%; margin-bottom: 10px;padding: 0px 5px;margin-left: auto; margin-right: auto; margin-bottom: 10px;}
+nav ul{ list-style-type: none; margin: 0; padding: 0;display: table-row; text-align: center;}
+nav ul li{display: table-cell; height: 20%; vertical-align: middle;}
+nav li a{	color: #000000;font-size: 10px;font-family: "Arial","Serif";text-decoration: none; display: block;border-left: 1px solid #333;} #currentPage {font-weight: bold; text-decoration: underline;}
+ nav li:first-child a { border-left: none;}
+
+#registerLink, #loginOutLink {	color: #000000;font-size: 10px;font-family: "Arial","Serif";text-decoration: none; margin: 0px 5px 5px 5px; float: right;}.article {margin-bottom: 10px; padding: 5px; border: solid #555 1px; background-color: beige;}.article:last-child {margin-bottom: 0px;}
+.article h2 {margin: 0; padding: 0;}
+.article .info {font-size: smaller;font-style: italic;display: inline-block;padding: 0;padding-left: 10px;}.article .info span {font-weight:bold;}
+.article ul {list-style: none;margin: 0;padding: 5px;}.article ul li {display: inline-block; padding: 5px; margin-right: 5px;border: 1px solid #555;color: #70d3fa;font-size: 10px;font-family: "Arial","sans-serif";border-radius: 4px;background-color: #3a3a3a;} .article ul li:last-child {margin-right: 0px;}
+main { padding: 10px; width: calc(100% - 20px); margin-bottom: 0px;margin-left: auto; margin-right: auto;background-color: #808080;}
+footer {color: #000000;font-size: 12px;font-family: "Arial","Serif";background-color: #70d3fa;min-height: calc(10% + 10px); width: calc(100% - 20px); padding: 10px; margin-bottom: 10px; margin-top: 10px; display: inline-flex; align-items: center;clear: both;}
+footer ul {padding: 0; margin: 0; list-style-type: none; display: inline-flex;}
+footer ul li a {text-decoration: none;color: inherit;}
+footer ul{flex-direction: column-reverse;}
+button {color: #000000;font-size: 10px;font-family: "Arial","Serif";cursor: pointer;border-radius: 4px;background-color: #09b4f4;box-shadow:	1px 1px 1px rgba(255,255,255, 0.5),inset 1px 1px 1px rgba(255,255,255, 0.5),-1px -1px 1px rgba(0,0,0, 0.2),inset -1px -1px 1px rgba(0,0,0, 0.5);border: 1px solid #333;background-image: linear-gradient(rgba(255,255,255, 0.3), rgba(0,0,0, 0.3))}
+#login, #register {background-color: #808080;display: inline-flex; flex-direction: column; padding: 20px; border: 1px solid #333;}
+#login input, #register input{background-color: #70d3fa;}
+#login input:first-child{margin-bottom: 5px;}
+#login p{margin: 5px 0px;}
+#fields{flex-direction: column;}
+#login span{display: flex;}
+#login span button {align-self: center;margin-left: 5px;}
+#login a{font-size:8.4px; color: #000000;}
+#register span{display: inline-flex;justify-content: space-between;margin-bottom: 5px;}
+#register span:last-child{margin-bottom: 0px;margin-top: 10px;}#register span label{margin-right: 10px;}

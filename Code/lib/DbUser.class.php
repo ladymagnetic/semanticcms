@@ -715,6 +715,14 @@ class DbUser
 		$rolenameBevoreUpdate =  $this->FetchArray($this->SelectRoleById($id))['rolename'];
 		$uriBevoreUpdate			=  $this->FetchArray($this->SelectRoleBYId($id))['uri'];
 
+		$guestbookmanagementBevoreUpdate  =  $this->FetchArray($this->SelectRoleBYId($id))['guestbookmanagement'];
+		$usermanagementBevoreUpdate			  =  $this->FetchArray($this->SelectRoleBYId($id))['usermanagement'];
+		$pagemanagementBevoreUpdate       =  $this->FetchArray($this->SelectRoleBYId($id))['pagemanagement'];
+		$articlemanagementBevoreUpdate    =  $this->FetchArray($this->SelectRoleBYId($id))['articlemanagement'];
+		$guestbookusageBevoreUpdate       =   $this->FetchArray($this->SelectRoleById($id))['guestbookusage'];
+		$templateconstructionBevoreUpdate =  $this->FetchArray($this->SelectRoleBYId($id))['templateconstruction'];
+		$databasemanagementBevoreUpdate   =  $this->FetchArray($this->SelectRoleBYId($id))['databasemanagement'];
+
 		$ja = 1;
 		$nein = 0;
 
@@ -759,10 +767,20 @@ class DbUser
 		}
 		elseif ($id == 2) // das ist der User mit der Rolle 2 (Gast) => Admin kann selber entscheiden ob er das Recht "guestbookusage" hat oder nicht. Alle anderen Recht sind ihm NICHT zugewiesen.
 		{
-			$result = $this->database->ExecuteQuery("UPDATE role SET rolename ='".$rolename."',  uri ='".$uri."',   guestbookmanagement ='".$nein."',  usermanagement ='".$nein."', pagemanagement ='".$nein."', articlemanagement ='".$nein."', guestbookusage ='".$guestbookusage."' , templateconstruction ='".$nein."', databasemanagement ='".$nein."', backendlogin ='".$nein."' WHERE id = '". $id."'");
+			$result = $this->database->ExecuteQuery("UPDATE role SET rolename ='".$rolename."',  uri ='".$uri."', guestbookmanagement ='".$nein."',  usermanagement ='".$nein."', pagemanagement ='".$nein."', articlemanagement ='".$nein."', guestbookusage ='".$guestbookusage."' , templateconstruction ='".$nein."', databasemanagement ='".$nein."', backendlogin ='".$nein."' WHERE id = '". $id."'");
 
   		if($result==true)
 			{
+
+				if (($guestbookmanagementBevoreUpdate!=$guestbookmanagement) || ($usermanagementBevoreUpdate!=$usermanagement) || ($pagemanagementBevoreUpdate != $pagemanagement ) || ($articlemanagementBevoreUpdate != $articlemanagement) || ($templateconstructionBevoreUpdate != $templateconstruction) || ($databasemanagementBevoreUpdate != $databasemanagement))
+				{
+					echo
+							"<div class='info' style='background-color:red;'>
+							<strong>Info!</strong> Es kann bei der Rolle Gast nur das Recht 'Gästebuch nutzen' verändert werden!
+							</div>";
+				}
+				else
+				{
 					$logUsername = $_SESSION['username'];
 					$logRolename = $_SESSION['rolename'];
 
@@ -777,14 +795,13 @@ class DbUser
 
 					$logDescription = 'An der Rolle <strong>'.$rolenameChanged.'</strong> wurden Änderungen vorgenommen.';
 					$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-
 					return true;
+				}
 			}
 			else
 			{
 				 return false;
 			}
-
 
 		}
 		else
