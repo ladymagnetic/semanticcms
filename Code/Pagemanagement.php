@@ -71,13 +71,13 @@ else if (isset($_POST['saveWebsiteChanges'])) {
     $loginEnabled = isset($_POST['loginEnabled']) ? 1 : 0;
     $guestbookEnabled = isset($_POST['guestbookEnabled']) ? 1 : 0;
     $contactContent = isset($_POST['contactEnabled']) ?
-        $_POST['contactContent'] : "NULL";
+        $_POST['contactContent'] : 'NULL';
     $imprintContent = isset($_POST['imprintEnabled']) ?
-        $_POST['imprintContent'] : "NULL";
+        $_POST['imprintContent'] : 'NULL';
     $privacyInformationContent = isset($_POST['privacyInformationEnabled']) ?
-        $_POST['privacyInformationContent'] : "NULL";
+        $_POST['privacyInformationContent'] : 'NULL';
     $gtcContent = isset($_POST['gtcEnabled']) ?
-        $_POST['gtcContent'] : "NULL";
+        $_POST['gtcContent'] : 'NULL';
 
     $queryResult = $dbContent->SelectTemplateByTemplatename($_POST['technicalSiteTemplateId']);
     $templateId = $dbContent->FetchArray($queryResult)['id'];
@@ -151,8 +151,8 @@ else if (isset($_POST['reallyDelete'])) {
     } else if (isset($_POST['website'])) {
         // a website should be deleted
         $websiteIdToDelete = intval($_POST['website']);
-        $dbContent->DeleteWebsiteById($websiteIdToDelete);
         FrontendBuilder::DeleteSite($websiteIdToDelete);
+        $dbContent->DeleteWebsiteById($websiteIdToDelete);
     }
 }
 // Submit button with the name 'editContent' was clicked
