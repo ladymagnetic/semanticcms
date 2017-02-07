@@ -235,17 +235,28 @@ class DbEngine
 	*/
 	public function UploadDB($dbhost, $dbuser, $dbpwd, $dbname)
 	{
-		$pathToUploadFile = "01_Datenbank/cms-projekt.sql";
+	  $pathToUploadFile = "01_Datenbank/cms-projekt.sql";
+	  $databasename = "cms-projekt";
 		$pathToMysql= "media\mysql ";
 
- 		//Allgemein: mysql -h localhost -u root -p DatenbankInPhpMyAdmin < Datenbankname.sql
+		//mysql  -h localhost -u root -p DatenbankInPhpMyAdmin < Datenbankname.sql
+		passthru("$pathToMysql -h $dbhost  -u $dbuser -p $dbpwd $databasename < $pathToUploadFile", $rueckgabewert);
 
-		passthru("$pathToMysql -h $dbhost  --u $dbuser -p $dbpwd $pathToUploadFile > $pathToUploadFile");
-
+		if($rueckgabewert == 0)
+		{
 		echo
-		"<div class='info'>
+		"<div class='info' style='background-color:lime;'>
 		<strong>Info!</strong> Diese Datenbank wurde hochgeladen: ".$pathToUploadFile."
 		</div>";
+		}
+		else
+		{
+			echo
+			"<div class='info' style='background-color:red;'>
+			<strong>Info!</strong> Der Import der Datenbank ist fehlgeschlagen. ".$pathToUploadFile."
+			</div>";
+		}
+
 	}
 
 
