@@ -187,14 +187,15 @@ class DbEngine
 		$this->ExecuteQuery("INSERT INTO logtable (id, logdate , username, rolename, description) VALUES (NULL, NOW(), '".$username."', '".$rolename."', '".$description."')");
 	}
 
-	
-	
+
+
 	/**
 	* Download the database
 	* @param string $dbhost the host
 	* @param string $dbuser the username
 	* @param string $dbpwd the password
 	* @param string $dbname the databasename
+	* @author Mirjam Donhauser
 	*/
 	public function DownloadDB($dbhost, $dbuser, $dbpwd, $dbname)
 	{
@@ -202,26 +203,35 @@ class DbEngine
 		$pathToMysqldump = "media\mysqldump ";
 
 		$dumpfile = $storagepath .$dbname . "_" . date("Y-m-d_H-i-s") . ".sql";
-		passthru("$pathToMysqldump --opt --host=$dbhost --user=$dbuser --password=$dbpwd $dbname > $dumpfile");
+		passthru("$pathToMysqldump --opt --host=$dbhost --user=$dbuser --password=$dbpwd $dbname > $dumpfile", $rueckgabewert);
 
-		passthru("tail -1 $dumpfile");
+		passthru("tail -1 $dumpfile", $rueckgabewert_2);
 
-		echo
-		"<div class='info'>
-		<strong>Info!</strong> Die Datenbank wurde erfolgreich exportiert. Sie befindet sich in dem Ordner: ".$dumpfile."
-		</div>";
+		if(($rueckgabewert==0)&&($rueckgabewert_2==1))
+		{
+			echo
+			"<div class='info' style='background-color:lime;'>
+			<strong>Info!</strong> Die Datenbank wurde erfolgreich exportiert. Sie befindet sich in dem Ordner: ".$dumpfile."
+			</div>";
+		}
+		elseif(($rueckgabewert!=0)||($rueckgabewert_2!=1))
+		{
+			echo
+			"<div class='info' style='background-color:red;'>
+			<strong>Info!</strong> Der Export der Datenbank war nicht erfolgreich.
+			</div>";
+		}
 	}
 
 
-	
-	
-	
+
 	/**
 	* Upload the database
 	* @param string $dbhost the host
 	* @param string $dbuser the username
 	* @param string $dbpwd the password
 	* @param string $dbname the databasename
+	* @author Mirjam Donhauser
 	*/
 	public function UploadDB($dbhost, $dbuser, $dbpwd, $dbname)
 	{
@@ -231,18 +241,19 @@ class DbEngine
  		//Allgemein: mysql -h localhost -u root -p DatenbankInPhpMyAdmin < Datenbankname.sql
 
 		passthru("$pathToMysql -h $dbhost  --u $dbuser -p $dbpwd $pathToUploadFile > $pathToUploadFile");
-	 	
+
 		echo
 		"<div class='info'>
 		<strong>Info!</strong> Diese Datenbank wurde hochgeladen: ".$pathToUploadFile."
 		</div>";
 	}
-	
+
 
 
 	/**
 	* DownloadDBTest()
 	* nur für Testzwecke = nicht verwenden!
+	* @author Mirjam Donhauser
 	*/
 	/*
 	public function DownloadDBTest()
@@ -267,6 +278,7 @@ class DbEngine
 	/**
 	* UploadDBTest()
 	* nur für Testzwecke = nicht verwenden!
+  * @author Mirjam Donhauser
 	*/
  	public function UploadDBTest()
 	{
@@ -290,4 +302,3 @@ class DbEngine
  	}
 }
 ?>
-
