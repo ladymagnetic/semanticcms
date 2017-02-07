@@ -1222,8 +1222,8 @@ class DbContent
 	*/
 	public function DeleteWebsiteById($id)
 	{
-		 $logDeletedWebsite = $this->FetchArray($this->SelectWebsiteById($website_id))['headertitle'];
-		 $result = $this->database->ExecutePreparedStatement("deleteWebsiteAndPageAndArticleByWebsiteId", array($website_id));
+		 $logDeletedWebsite = $this->FetchArray($this->SelectWebsiteById($id))['headertitle'];
+		 $result = $this->database->ExecutePreparedStatement("deleteWebsiteAndPageAndArticleByWebsiteId", array($id));
 
 			if($result==true)
 			{
