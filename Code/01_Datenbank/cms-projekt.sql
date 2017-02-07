@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 07. Feb 2017 um 19:57
+-- Erstellungszeit: 07. Feb 2017 um 20:19
 -- Server-Version: 10.1.16-MariaDB
 -- PHP-Version: 5.6.24
 
@@ -98,32 +98,6 @@ CREATE TABLE `label` (
   `uri` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Daten für Tabelle `label`
---
-
-INSERT INTO `label` (`id`, `labelname`, `uri`) VALUES
-(1, 'italien', 'Italien.uri'),
-(2, 'spanien', 'Spanien.uri'),
-(3, 'portugal', 'Portugal.uri'),
-(4, 'frankreich', 'Frankreich.uri'),
-(5, 'belgien', 'Belgien.uri'),
-(6, 'luxemburg', 'Luxemburg.uri'),
-(7, 'deutschland', 'Deutschland.uri'),
-(8, 'dänemark', 'Dänemark.uri'),
-(9, 'andorra', 'Andorra.uri'),
-(10, 'polen', 'Polen.uri'),
-(11, 'schweden', 'Schweden.uri'),
-(12, 'brasilien', 'Brasilien.uri'),
-(13, 'bolivien', 'Bolivien.uri'),
-(14, 'chile', 'Chile.uri'),
-(15, 'costa rica', 'CostaRica.uri'),
-(16, 'giraffe', 'uri.uri'),
-(17, 'zootier', 'uri.uri'),
-(18, 'südamerika', 'label.südamerika'),
-(19, 'nilpferd', 'label.nilpferd'),
-(20, 'steckbrief', 'label.steckbrief');
-
 -- --------------------------------------------------------
 
 --
@@ -145,20 +119,6 @@ CREATE TABLE `label_user` (
   `label_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Daten für Tabelle `label_user`
---
-
-INSERT INTO `label_user` (`label_id`, `user_id`) VALUES
-(1, 5),
-(2, 9),
-(4, 8),
-(7, 1),
-(7, 8),
-(12, 5),
-(15, 2),
-(15, 5);
 
 -- --------------------------------------------------------
 
@@ -187,23 +147,6 @@ CREATE TABLE `page` (
   `template_id` int(11) NOT NULL,
   `website_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Daten für Tabelle `page`
---
-
-INSERT INTO `page` (`id`, `title`, `relativeposition`, `template_id`, `website_id`) VALUES
-(1, 'Reisen', 5, 11, 1),
-(2, 'Fußball', 7, 11, 1),
-(3, 'Witze', 8, 13, 1),
-(4, 'Möbel', 9, 11, 1),
-(5, 'Haus', 20, 12, 1),
-(6, 'Auto', 30, 11, 1),
-(7, 'Katzen', 17, 11, 1),
-(8, 'Pferde', 13, 12, 1),
-(9, 'Zoo', 2, 11, 1),
-(10, 'Bäume', 12, 11, 1),
-(11, 'Pflanzen', 18, 11, 1);
 
 -- --------------------------------------------------------
 
@@ -246,23 +189,6 @@ CREATE TABLE `searchphrase` (
   `searchphrase` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Daten für Tabelle `searchphrase`
---
-
-INSERT INTO `searchphrase` (`id`, `searchphrase`) VALUES
-(1, 'Blumen im Garten'),
-(5, 'Eis in Spanien'),
-(6, 'Fahrrad auf der Straße'),
-(11, 'Fasching'),
-(8, 'Flasche Wasser'),
-(7, 'Gurken und Tomaten'),
-(10, 'Ostern'),
-(2, 'Pferde auf der Wiese'),
-(3, 'Sonne auf der Wiese'),
-(9, 'Strand'),
-(4, 'Strand in Brasilien');
-
 -- --------------------------------------------------------
 
 --
@@ -274,21 +200,6 @@ CREATE TABLE `searchphrase_user` (
   `searchphrase_id` int(11) NOT NULL,
   `searchdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Daten für Tabelle `searchphrase_user`
---
-
-INSERT INTO `searchphrase_user` (`user_id`, `searchphrase_id`, `searchdate`) VALUES
-(1, 1, '2016-12-19'),
-(1, 2, '2016-12-22'),
-(1, 5, '2000-03-09'),
-(2, 3, '1990-08-15'),
-(3, 2, '1998-10-22'),
-(4, 10, '1999-01-05'),
-(5, 6, '1992-01-05'),
-(5, 7, '2016-12-22'),
-(9, 7, '2016-12-22');
 
 -- --------------------------------------------------------
 
