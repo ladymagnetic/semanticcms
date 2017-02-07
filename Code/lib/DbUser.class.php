@@ -550,6 +550,14 @@ class DbUser
 				</div>";
 				return false;
 			}
+			elseif ($roleId == 2)
+			{
+				echo
+				"<div class='info' style='background-color:red;'>
+				<strong>Info!</strong> Diese Rolle kann nicht gelöscht werden!!!
+				</div>";
+				return false;
+			}
 			else
 			{
 				$result = $this->database->ExecutePreparedStatement("deleteRole", array($roleId));
@@ -708,8 +716,9 @@ class DbUser
 		$uriBevoreUpdate			=  $this->FetchArray($this->SelectRoleBYId($id))['uri'];
 
 		$ja = 1;
+		$nein = 0;
 
-		if($id == 1)
+		if($id == 1) // das ist der User mit der Rolle 1 (Admin) => Rechte sollen nicht geändert werden.
 		{
 			$result = $this->database->ExecuteQuery("UPDATE role SET rolename ='".$rolename."',  uri ='".$uri."',   guestbookmanagement ='".$ja."',  usermanagement ='".$ja."', pagemanagement ='".$ja."', articlemanagement ='".$ja."', guestbookusage ='".$ja."' , templateconstruction ='".$ja."', databasemanagement ='".$ja."', backendlogin ='".$ja."' WHERE id = '". $id."'");
 
@@ -747,6 +756,36 @@ class DbUser
 			{
 				 return false;
 			}
+		}
+		elseif ($id == 2) // das ist der User mit der Rolle 2 (Gast) => Admin kann selber entscheiden ob er das Recht "guestbookusage" hat oder nicht. Alle anderen Recht sind ihm NICHT zugewiesen.
+		{
+			$result = $this->database->ExecuteQuery("UPDATE role SET rolename ='".$rolename."',  uri ='".$uri."',   guestbookmanagement ='".$nein."',  usermanagement ='".$nein."', pagemanagement ='".$nein."', articlemanagement ='".$nein."', guestbookusage ='".$guestbookusage."' , templateconstruction ='".$nein."', databasemanagement ='".$nein."', backendlogin ='".$nein."' WHERE id = '". $id."'");
+
+  		if($result==true)
+			{
+					$logUsername = $_SESSION['username'];
+					$logRolename = $_SESSION['rolename'];
+
+					if($rolenameBevoreUpdate == $rolename)
+					{
+						$rolenameChanged = $rolename;
+					}
+					else
+						{
+							$rolenameChanged = $rolenameBevoreUpdate. ' (neuer Rollenname: '.$rolename.') ';
+						}
+
+					$logDescription = 'An der Rolle <strong>'.$rolenameChanged.'</strong> wurden Änderungen vorgenommen.';
+					$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+					return true;
+			}
+			else
+			{
+				 return false;
+			}
+
+
 		}
 		else
 		{
