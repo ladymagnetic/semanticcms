@@ -550,24 +550,49 @@ class DbUser
 	*/
 	public function AssignRole($roleId, $userId)
 	{
-		$result = $this->database->ExecuteQuery("UPDATE user SET role_id ='".$roleId."' WHERE id = '". $userId."'");
 
-		if($result==true)
+		if($userId == 1)
 		{
-			$logUsername = $_SESSION['username'];
-		  $whoIsAssigned	 = $this->FetchArray($this->GetUserInformationById($userId))['username'];
-			$logAssignedRolename = $this->FetchArray($this->SelectRoleById($roleId))['rolename'];
-			$logRolename =  $this->FetchArray($this->SelectRolenameByUsername($logUsername))['rolename'];
+				$roleId = 1;
+				$result = $this->database->ExecuteQuery("UPDATE user SET role_id ='".$roleId."' WHERE id = '". $userId."'");
 
-		 	$logDescription = 'Dem User <strong>'.$whoIsAssigned.'</strong> wurde die Rolle <strong>'.$logAssignedRolename.'</strong> zugewiesen.' ;
+				if($result==true)
+				{
 
-	  	$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+					echo
+							"<div class='info' style='background-color:red;'>
+							<strong>Info!</strong> Man kann die Rolle dieses Users nicht ändern!
+							</div>";
 
-			return true;
+					return true;
+				}
+				else
+				{
+					 return false;
+				}
+
 		}
 		else
 		{
-			 return false;
+				$result = $this->database->ExecuteQuery("UPDATE user SET role_id ='".$roleId."' WHERE id = '". $userId."'");
+
+				if($result==true)
+				{
+					$logUsername = $_SESSION['username'];
+				  $whoIsAssigned	 = $this->FetchArray($this->GetUserInformationById($userId))['username'];
+					$logAssignedRolename = $this->FetchArray($this->SelectRoleById($roleId))['rolename'];
+					$logRolename =  $this->FetchArray($this->SelectRolenameByUsername($logUsername))['rolename'];
+
+				 	$logDescription = 'Dem User <strong>'.$whoIsAssigned.'</strong> wurde die Rolle <strong>'.$logAssignedRolename.'</strong> zugewiesen.' ;
+
+			  	$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+
+					return true;
+				}
+				else
+				{
+					 return false;
+				}
 		}
 	}
 
