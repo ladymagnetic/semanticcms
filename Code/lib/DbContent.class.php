@@ -708,10 +708,6 @@ class DbContent
 		}
 		else
 		{
-			echo
-					"<div class='info' style='background-color:red;'>
-					<strong>Info!</strong> Es gibt schon ein Template mit diesem Namen!!!
-					</div>";
 			return false;
 		}
 	}
@@ -1316,9 +1312,9 @@ class DbContent
 		if(is_null($privacyinformation)) $val .= "NULL, "; else $val .= "'".$privacyinformation."', ";
 		if(is_null($gtc)) $val .= "NULL, "; else $val .= "'".$gtc."', ";
 		$val .= $login.", ".$guestbook.",  ".$template_id.")";
-		
+
 		$result = $this->database->ExecuteQuery("INSERT INTO website (id, headertitle, contact, imprint, privacyinformation, gtc, login, guestbook, template_id) ".$val);
-		
+
 		if($result==true)
 		 {
 			$logUsername = $_SESSION['username'];
