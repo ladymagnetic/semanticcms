@@ -342,6 +342,32 @@ class DbUser
 
 
 	/**
+	* checks whether the rolename already exists in database
+	* @param string $rolename the name of the role
+	* @return boolean true|false successful (true) when rolename already exists in database, false when the rolename doesn't exist
+	*/
+	public function RolenameAlreadyExists($rolename)
+	{
+		$result = $this->database->ExecuteQuery("SELECT * FROM role WHERE rolename = '".$rolename."'");
+
+		 if($result==true && $this->database->GetResultCount($result) > 0)
+		 {
+			 echo
+					 "<div class='info' style='background-color:red;'>
+					 <strong>Info!</strong> Es gibt bereits eine Rolle mit dem Namen ".$rolename."!!!
+					 </div>";
+			 return true;	// there is a role with this rolename
+		 }
+		 else
+		 {
+			 return false;
+		 }
+	}
+
+
+
+
+	/**
 	* insert user in database to registrate a new user
 	* @param string $username the user's username
 	* @param string $firstname the user's firstname
@@ -524,6 +550,14 @@ class DbUser
 				</div>";
 				return false;
 			}
+			elseif ($roleId == 2)
+			{
+				echo
+				"<div class='info' style='background-color:red;'>
+				<strong>Info!</strong> Diese Rolle kann nicht gelöscht werden!!!
+				</div>";
+				return false;
+			}
 			else
 			{
 				$result = $this->database->ExecutePreparedStatement("deleteRole", array($roleId));
@@ -565,7 +599,6 @@ class DbUser
 
 				if($result==true)
 				{
-
 					echo
 							"<div class='info' style='background-color:red;'>
 							<strong>Info!</strong> Man kann die Rolle dieses Users nicht ändern!
@@ -620,19 +653,23 @@ class DbUser
 	*/
 	public function NewRole($uri, $rolename, $guestbookmanagement, $usermanagement, $pagemanagement, $articlemanagement, $guestbookusage, $templateconstruction, $databasemanagement, $backendlogin)
 	{
-		$result = $this->database->ExecuteQuery("INSERT INTO role (id, uri, rolename, guestbookmanagement, usermanagement, pagemanagement, articlemanagement, guestbookusage, templateconstruction, databasemanagement, backendlogin) VALUES (NULL, '".$uri."', '".$rolename."', ".$guestbookmanagement.", ".$usermanagement.", ".$pagemanagement.", ".$articlemanagement.", ".$guestbookusage.",  ".$templateconstruction.",  ".$databasemanagement.",  ".$backendlogin.")");
 
-		 if($result==true)
-		 {
-			$logUsername = $_SESSION['username'];
-			$logRolename = $_SESSION['rolename'];
-			$logDescription = 'Die Rolle <strong>'.$rolename.'</strong> wurde neu angelegt.';
-			$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-			return true;
-		 }
-		 else
-		 {
-		 	 return false;
+	if(!($this->RolenameAlreadyExists($rolename)))
+	{
+			$result = $this->database->ExecuteQuery("INSERT INTO role (id, uri, rolename, guestbookmanagement, usermanagement, pagemanagement, articlemanagement, guestbookusage, templateconstruction, databasemanagement, backendlogin) VALUES (NULL, '".$uri."', '".$rolename."', ".$guestbookmanagement.", ".$usermanagement.", ".$pagemanagement.", ".$articlemanagement.", ".$guestbookusage.",  ".$templateconstruction.",  ".$databasemanagement.",  ".$backendlogin.")");
+
+	 			if($result==true)
+				 {
+					$logUsername = $_SESSION['username'];
+					$logRolename = $_SESSION['rolename'];
+					$logDescription = 'Die Rolle <strong>'.$rolename.'</strong> wurde neu angelegt.';
+					$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+					return true;
+				 }
+				 else
+				 {
+				 	 return false;
+				 }
 		 }
 	}
 
@@ -678,15 +715,24 @@ class DbUser
 		$rolenameBevoreUpdate =  $this->FetchArray($this->SelectRoleById($id))['rolename'];
 		$uriBevoreUpdate			=  $this->FetchArray($this->SelectRoleBYId($id))['uri'];
 
-		$ja = 1;
+		$guestbookmanagementBevoreUpdate  =  $this->FetchArray($this->SelectRoleBYId($id))['guestbookmanagement'];
+		$usermanagementBevoreUpdate			  =  $this->FetchArray($this->SelectRoleBYId($id))['usermanagement'];
+		$pagemanagementBevoreUpdate       =  $this->FetchArray($this->SelectRoleBYId($id))['pagemanagement'];
+		$articlemanagementBevoreUpdate    =  $this->FetchArray($this->SelectRoleBYId($id))['articlemanagement'];
+		$guestbookusageBevoreUpdate       =   $this->FetchArray($this->SelectRoleById($id))['guestbookusage'];
+		$templateconstructionBevoreUpdate =  $this->FetchArray($this->SelectRoleBYId($id))['templateconstruction'];
+		$databasemanagementBevoreUpdate   =  $this->FetchArray($this->SelectRoleBYId($id))['databasemanagement'];
 
-		if($id == 1)
+		$ja = 1;
+		$nein = 0;
+
+		if($id == 1) // das ist der User mit der Rolle 1 (Admin) => Rechte sollen nicht geändert werden.
 		{
 			$result = $this->database->ExecuteQuery("UPDATE role SET rolename ='".$rolename."',  uri ='".$uri."',   guestbookmanagement ='".$ja."',  usermanagement ='".$ja."', pagemanagement ='".$ja."', articlemanagement ='".$ja."', guestbookusage ='".$ja."' , templateconstruction ='".$ja."', databasemanagement ='".$ja."', backendlogin ='".$ja."' WHERE id = '". $id."'");
-		  $_SESSION['rolename'] = $rolename;
 
 			if($result==true)
 			{
+			  $_SESSION['rolename'] = $rolename;
 				if (($rolenameBevoreUpdate == $rolename) && ($uriBevoreUpdate == $uri))
 				{
 				echo
@@ -719,10 +765,48 @@ class DbUser
 				 return false;
 			}
 		}
+		elseif ($id == 2) // das ist der User mit der Rolle 2 (Gast) => Admin kann selber entscheiden ob er das Recht "guestbookusage" hat oder nicht. Alle anderen Recht sind ihm NICHT zugewiesen.
+		{
+			$result = $this->database->ExecuteQuery("UPDATE role SET rolename ='".$rolename."',  uri ='".$uri."', guestbookmanagement ='".$nein."',  usermanagement ='".$nein."', pagemanagement ='".$nein."', articlemanagement ='".$nein."', guestbookusage ='".$guestbookusage."' , templateconstruction ='".$nein."', databasemanagement ='".$nein."', backendlogin ='".$nein."' WHERE id = '". $id."'");
+
+  		if($result==true)
+			{
+
+				if (($guestbookmanagementBevoreUpdate!=$guestbookmanagement) || ($usermanagementBevoreUpdate!=$usermanagement) || ($pagemanagementBevoreUpdate != $pagemanagement ) || ($articlemanagementBevoreUpdate != $articlemanagement) || ($templateconstructionBevoreUpdate != $templateconstruction) || ($databasemanagementBevoreUpdate != $databasemanagement))
+				{
+					echo
+							"<div class='info' style='background-color:red;'>
+							<strong>Info!</strong> Es kann bei der Rolle Gast nur das Recht 'Gästebuch nutzen' verändert werden!
+							</div>";
+				}
+				else
+				{
+					$logUsername = $_SESSION['username'];
+					$logRolename = $_SESSION['rolename'];
+
+					if($rolenameBevoreUpdate == $rolename)
+					{
+						$rolenameChanged = $rolename;
+					}
+					else
+						{
+							$rolenameChanged = $rolenameBevoreUpdate. ' (neuer Rollenname: '.$rolename.') ';
+						}
+
+					$logDescription = 'An der Rolle <strong>'.$rolenameChanged.'</strong> wurden Änderungen vorgenommen.';
+					$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+					return true;
+				}
+			}
+			else
+			{
+				 return false;
+			}
+
+		}
 		else
 		{
 					$result = $this->database->ExecuteQuery("UPDATE role SET uri ='".$uri."',  rolename ='".$rolename."',  guestbookmanagement ='".$guestbookmanagement."',  usermanagement ='".$usermanagement."', pagemanagement ='".$pagemanagement."', articlemanagement ='".$articlemanagement."', guestbookusage ='".$guestbookusage."' , templateconstruction ='".$templateconstruction."', databasemanagement ='".$databasemanagement."', backendlogin ='".$backendlogin."' WHERE id = '". $id."'");
-					$_SESSION['rolename'] = $rolename;
 
 					if($result==true)
 					{
@@ -766,10 +850,18 @@ class DbUser
 
 		if($result==true)
 		{
+			echo
+					"<div class='info' style='background-color:lime;'>
+					<strong>Info!</strong> Die Änderungen wurden übernommen!
+					</div>";
 			return true;
 		}
 		else
 		{
+			echo
+					"<div class='info' style='background-color:red;'>
+					<strong>Info!</strong> Die Änderungen wurden nicht übernommen!
+					</div>";
 			 return false;
 		}
 	}
@@ -878,6 +970,14 @@ class DbUser
 			echo
 					"<div class='info' style='background-color:red;'>
 					<strong>Info!</strong> Man kann sich nicht selber sperren!!!
+					</div>";
+			return false;
+		}
+		elseif ($user_id == 1)
+		{
+			echo
+					"<div class='info' style='background-color:red;'>
+					<strong>Info!</strong> Man kann diesen User nicht sperren!!!
 					</div>";
 			return false;
 		}
@@ -1046,19 +1146,30 @@ class DbUser
 
 		if ($result != '')
 		{
-			$pwCheck = password_verify($password, $result);
-
-			if($pwCheck && ($newPassword == $newPasswordRepeat))
-			{
-				$hash = password_hash($newPassword, PASSWORD_BCRYPT, array('cost' => 12));
-
-				$changePassword = $this->database->ExecuteQuery("UPDATE user SET password = '".$hash."' WHERE id =".$userId."");
-				return true;
+				$pwCheck = password_verify($password, $result);
+				if($pwCheck && ($newPassword == $newPasswordRepeat))
+				{
+					$hash = password_hash($newPassword, PASSWORD_BCRYPT, array('cost' => 12));
+					$changePassword = $this->database->ExecuteQuery("UPDATE user SET password = '".$hash."' WHERE id =".$userId."");
+					echo
+							"<div class='info' style='background-color:lime;'>
+							<strong>Info!</strong> Die Änderungen bei dem Passwort wurden übernommen!!!
+							</div>";
+				 	return true;
+				}
+				else
+				{
+						echo
+								"<div class='info' style='background-color:red;'>
+								<strong>Info!</strong> Die Änderungen bei dem Passwort wurden nicht übernommen!!!
+								</div>";
+						return false;
+				}
 			}
+		else
+		{
 			return false;
 		}
-		else
-		{ return false; }
 	}
 
 

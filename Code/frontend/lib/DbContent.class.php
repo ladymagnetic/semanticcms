@@ -68,8 +68,9 @@ class DbContent
 						"WHERE website_id = ? ".
 						"ORDER BY page.relativeposition ASC;";
 
-		$allPagesWithTemplate = "SELECT page.title, page.website_id ".
+		$allPagesWithTemplate = "SELECT page.title, page.website_id, website.headertitle as websiteName ".
 								"FROM page INNER JOIN template ON page.template_id = template.id ".
+								"INNER JOIN website ON website.id = page.website_id ".
 								"WHERE templatename = ?;";
 
 		$allSitesWithTemplate = "SELECT website.id ".
@@ -708,10 +709,6 @@ class DbContent
 		}
 		else
 		{
-			echo
-					"<div class='info' style='background-color:red;'>
-					<strong>Info!</strong> Es gibt schon ein Template mit diesem Namen!!!
-					</div>";
 			return false;
 		}
 	}
@@ -1219,28 +1216,43 @@ class DbContent
 	}
 
 	/**
-	* delete one website by id
-	* @param int $id the id of the website
-	* @return boolean true|false successful (true) when the query could be executed correctly and a website is deleted
+	* delete one website, the pages and the articles by website_id
+	* @param int $website_id the id of the website
+	* @return boolean true|false successful (true) when the query could be executed correctly and a website, the pages and the article is deleted
 	*/
-	public function DeleteWebsiteById($id)
+		public function DeleteWebsiteById($id)
 	{
-		$logDeletedWebsite = $this->FetchArray($this->SelectWebsiteById($id))['headertitle'];
-		$result = $this->database->ExecutePreparedStatement("deleteWebsiteById", array($id));
+		 $logDeletedWebsite = $this->FetchArray($this->SelectWebsiteById($id))['headertitle'];
 
-		 if($result==true)
+		 $query = "DELETE FROM website WHERE website.id = ".$id;
+		 $result = $this->database->ExecuteQuery($query);
+		 $result2 = $this->database->ExecuteQuery("SELECT page.id AS SeitenID FROM page WHERE page.website_id =".$id);
+
+		 if($result2)
 		 {
-			 $logUsername = $_SESSION['username'];
-			 $logRolename = $_SESSION['rolename'];
-			 $logDescription = 'Folgende Website wurde gelöscht: <strong>'.$logDeletedWebsite.'</strong>';
-			 $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-			 return true;
+			 while($pageid = $this->database->FetchArray($result2))
+			 {
+				  $result3 = $this->database->ExecuteQuery("DELETE FROM page	WHERE page.website_id =". $id);
+					$result4 = $this->database->ExecuteQuery("DELETE FROM article WHERE article.page_id = ".$pageid['SeitenID']);
+			 }
 		 }
-		 else
-		 {
-				return false;
-		 }
-	}
+
+		 
+		if($result==true)
+		{
+			$logUsername = $_SESSION['username'];
+			$logRolename = $_SESSION['rolename'];
+			$logDescription = 'Folgende Website incl. Seiten und Artikeln wurde gelöscht: <strong>'.$logDeletedWebsite.'</strong>';
+			$this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
+			return true;
+		}
+		else
+		{
+			 return false;
+		}
+	 }
+
+
 
 	/**
 	* update one website by id
@@ -1258,7 +1270,14 @@ class DbContent
 	public function UpdateWebsiteById($websiteId, $headertitle, $contact, $imprint, $privacyinformation, $gtc, $login, $guestbook, $template_id)
 	{
 		$websiteHeadertitleBevoreUpdate = $this->FetchArray($this->SelectWebsiteById($headertitle))['headertitle'];
-		$result = $this->database->ExecuteQuery("UPDATE website SET headertitle  ='".$headertitle."', contact = '".$contact."', imprint  = '".$imprint."',  privacyinformation = '".$privacyinformation."', gtc ='".$gtc."', login = ".$login.", guestbook = ".$guestbook.", template_id = ".$template_id." WHERE id = ". $websiteId);
+		$set = "SET headertitle ='".$headertitle."', ";
+		if(is_null($contact)) $set .= "contact = NULL, "; else $set .= "contact='".$contact."', ";
+		if(is_null($imprint)) $set .= "imprint = NULL, "; else $set .= "imprint='".$imprint."', ";
+		if(is_null($privacyinformation)) $set .= "privacyinformation = NULL, "; else $set .= "privacyinformation='".$privacyinformation."', ";
+		if(is_null($gtc)) $set .= " gtc = NULL, "; else $set .= "gtc = '".$gtc."', ";
+		$set .= "login = ".$login.", guestbook = ".$guestbook.", template_id = ".$template_id;
+
+		$result = $this->database->ExecuteQuery("UPDATE website ".$set." WHERE id = ". $websiteId);
 
 		if($result==true)
 		{
@@ -1302,9 +1321,16 @@ class DbContent
 	*/
 	public function InsertWebsite($headertitle, $contact, $imprint, $privacyinformation, $gtc, $login, $guestbook, $template_id)
 	{
-		$result = $this->database->ExecuteQuery("INSERT INTO website (id, headertitle, contact, imprint, privacyinformation, gtc, login, guestbook, template_id) VALUES (NULL, '".$headertitle."', '".$contact."', '".$imprint."', '".$privacyinformation."', '".$gtc."', ".$login.", ".$guestbook.",  ".$template_id.")");
+		$val = "VALUES ( NULL, '".$headertitle."', ";
+		if(is_null($contact)) $val .= "NULL, "; else $val .= "'".$contact."', ";
+		if(is_null($imprint)) $val .= "NULL, "; else $val .= "'".$imprint."', ";
+		if(is_null($privacyinformation)) $val .= "NULL, "; else $val .= "'".$privacyinformation."', ";
+		if(is_null($gtc)) $val .= "NULL, "; else $val .= "'".$gtc."', ";
+		$val .= $login.", ".$guestbook.",  ".$template_id.")";
 
-		 if($result==true)
+		$result = $this->database->ExecuteQuery("INSERT INTO website (id, headertitle, contact, imprint, privacyinformation, gtc, login, guestbook, template_id) ".$val);
+
+		if($result==true)
 		 {
 			$logUsername = $_SESSION['username'];
 			$logRolename = $_SESSION['rolename'];
@@ -1402,30 +1428,6 @@ class DbContent
 	public function DownloadDBContentTest()
 	{
      $this->database->DownloadDBTest();
-	}
-
-	/**
-	* delete one website, the pages and the articles by website_id
-	* @param int $website_id the id of the website
-	* @return boolean true|false successful (true) when the query could be executed correctly and a website, the pages and the article is deleted
-	*/
-	public function DeleteWebsiteAndPageAndArticleByWebsiteId($website_id)
-	{
-		$logDeletedWebsite = $this->FetchArray($this->SelectWebsiteById($website_id))['headertitle'];
-		$result = $this->database->ExecutePreparedStatement("deleteWebsiteAndPageAndArticleByWebsiteId", array($website_id));
-
-		 if($result==true)
-		 {
-			 $logUsername = $_SESSION['username'];
-			 $logRolename = $_SESSION['rolename'];
-			 $logDescription = 'Folgende Website incl. Seiten und Artikeln wurde gelöscht: <strong>'.$logDeletedWebsite.'</strong>';
-			 $this->database->InsertNewLog($logUsername, $logRolename, $logDescription);
-			 return true;
-		 }
-		 else
-		 {
-				return false;
-		 }
 	}
 }
 ?>
